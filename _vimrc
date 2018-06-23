@@ -1,5 +1,4 @@
 " skip loading microsoft windows key editing commands
-
 let skip_loading_mswin=1
 " set colorscheme
 syntax enable
@@ -22,9 +21,11 @@ set shiftwidth=4  "indenting is 4 spaces
 set autoindent    "turns it on
 set smartindent   "does the right thing (mostly) in programs
 set cindent       "stricter rules for C programs
-set pastetoggle=<f5>
+set pastetoggle=<f5> 
 set colorcolumn=80
-
+" remap <leader> to spacebar (default \)
+noremap <space> <nop>
+let mapleader= "\<space>"
 
 "show line num file name leave space for command line
 set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap
@@ -39,12 +40,12 @@ function TidyUp()
     let origPos = getpos(".")
     " remove trailing whitespace on save
     :%s/\s\+$//e
+    " insert a space after every comma, \1 refs stuff inside \(\)
+    :%s/,\(\S\)/, \1/g
+    " collapse multiple blank lines with one
+    :%s#\(\n\n\)\n\+#\1#e
     " replace trailing empty lines
-    " https://stackoverflow.com/questions/7495932/how-can-i-trim-blank-lines-at-the-end-of-file-in-vim
     :%s#\($\n\s*\)\+\%$##e
-    "put an empty line at end of file
-
-    :$put _
     "previous command moves cursor, restore its original pos
     call setpos(".", origPos)
     :w
@@ -53,11 +54,11 @@ endfunction
 " vsvim for visual studio doesn't support some autocmd's, so remap save to tidyUp then save
 " vsvim doesn't support functions :(
 " nmap :w<cr> :call TidyUp()<cr>
-" instead map ctrl-z to string of commands
-" edit then undo to mark cursor position so we can return to it with <c-o> at the end
-" remove traliing whitespace, remove trailing empty lines, add empty line to end of file, return to old cursor pos, write
+" use e at the end of s/// to ignore error
+" remove traliing whitespace, collapse multi new lines with one,
+" remove trailing empty lines, return to old cursor pos, write
 " vsvim doesn't support end of line match
-nmap <c-z> <esc>xu:%s/\s\+$//e<cr>:%s#\($\n\s*\)\+\%$##e<cr>:$put _<cr><c-o>:w<cr>
+nmap <c-z> <esc>ma:%s#\s\+$##e<cr>:%s#\(\n\n\)\n\+#\1#e<cr>:%s#\(\n\s*\)\+\%$##e<cr>`a:w<cr>
 " an attempt to do get it to work in visual studio
 "nmap <c-z> <esc>xu:%s/\s\+$//e<cr>G?\S<cr>:.,$s#\n*##
 
@@ -75,6 +76,7 @@ nmap <c-h> <c-w>h
 nmap <c-l> <c-w>l
 
 " go to next non-white char on line above and below
+" NOT USEFUL
 nmap <c-j> jg_
 nmap <c-k> kg_
 " - go to first non-white char on prev line
@@ -82,8 +84,12 @@ nmap <c-k> kg_
 
 " yank to end of line
 nmap Y y$
+" nnoremap B 2b
+" nnoremap W 2w
+" nnoremap E 2e
 
-"search, go back 1, change in word
+"search, go back 1, change in word (n. to apply to next match)
+" or visual select then :s/word/otherword/g
 nmap <c-c> *Nciw
 
 " should probably just do the above and remove on these
@@ -92,17 +98,21 @@ nmap <c-y> "1yiw
 " paste in word from z reg 1
 nmap <c-p> viw"1p
 
-" perform normal mode movement while in insert mode
-" hmm, better off getting good at vim
+" perform normal mode movement while in insert mode?
 
 " like J, but reverse (for comma sep list)
+" NOT USEFUL
 nmap U i<cr><esc>k$F,l
 " like J, but reverse (for word sep list)
 nmap H i<cr><esc>k$B
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
-imap <c-[> <Esc>
+imap <c-[> <Esc>:w<cr>
+" replay macro (qq to start recording, q to stop)
+nnoremap Q @q
+" apply macro across visual selection
+vnoremap Q :norm @q<cr>
 
 " block comment (+) uncomment (_)
 " norm runs normoal mode commands in specified range, when in V mode
@@ -113,11 +123,22 @@ vmap _ :norm ^xxx<cr>
 " open file under cursor in vsplit
 nmap <c-w><c-f> <c-w>vgf
 
-" possibly useful nomral mode keys
+" Make a simple "search" text object, then cs to change search hit, n. to repeat
+" http://vim.wikia.com/wiki/Copy_or_change_search_hit
+vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
+    \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
+omap s :normal vs<CR>
+
+" possibly useful nomral mode keys:
 " ; will repeat t/T/f/F (movement to and find) commonds!
 " <c-w><c-w> cycle split windows
 " - goes to first nonwhite prev line
 " <c-m> goes to first nonwhite next line
 " K will search in man pages for the command under cursor
 " :sh will open a shell
-
+" di{ to delete method body, can do this with these as well: " ( [ ' {
+" :windo diffthis (diff windows in current tab, :diffoff! to turn it off)
+" :g/^\s*$/d global delete lines containing regex(whitespace-only lines)
+" :v/error\|warn\|fail/d opposite of global delete(g!//d) keep the lines containing the regex(error or warn or fail)
+" :tab sball -> convert everything to tabs
+" gt (next tab) gT(prev tab) #gt (jump to tab #)
