@@ -1,10 +1,15 @@
 " skip loading microsoft windows key editing commands
 let skip_loading_mswin=1
 " set colorscheme
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
 syntax enable
 colorscheme solarized
+
 " turn on keyword color differentiation
 set t_Co=256
+
 " turn on search highlighting and set it to blue
 set  incsearch ignorecase smartcase hlsearch
 hi Search guifg=White guibg=Black
@@ -21,7 +26,7 @@ set shiftwidth=4  "indenting is 4 spaces
 set autoindent    "turns it on
 set smartindent   "does the right thing (mostly) in programs
 set cindent       "stricter rules for C programs
-set pastetoggle=<f5> 
+set pastetoggle=<f5>
 set colorcolumn=80
 " remap <leader> to spacebar (default \)
 noremap <space> <nop>
@@ -84,31 +89,38 @@ nmap <c-k> kg_
 
 " yank to end of line
 nmap Y y$
-" nnoremap B 2b
-" nnoremap W 2w
-" nnoremap E 2e
 
-"search, go back 1, change in word (n. to apply to next match)
+"search, go back 1, change in word (then do n. to apply to next match)
 " or visual select then :s/word/otherword/g
 nmap <c-c> *Nciw
 
 " should probably just do the above and remove on these
-" nmap in word copy to reg 1
+" clipboard reg 1 yank in word
 nmap <c-y> "1yiw
-" paste in word from z reg 1
+" paste in word from reg 1
 nmap <c-p> viw"1p
 
 " perform normal mode movement while in insert mode?
 
 " like J, but reverse (for comma sep list)
 " NOT USEFUL
-nmap U i<cr><esc>k$F,l
-" like J, but reverse (for word sep list)
-nmap H i<cr><esc>k$B
+" nmap U i<cr><esc>k$F,l
+
+
+" map redo to U, <c-r> is used in Visual Studio for good refactoring shortcuts
+nnoremap U <c-r>
+
+" Bind p in visual mode to paste without overriding the current register
+" bad: this will go you back to your previous visual selection which is annoying, need to figure out how to go back to where you pasted
+" nnoremap p pgvy
+
+" like J, but reverse (for word sep list), pick a better letter H is used as a part of the broad page jump trio(H, M, L)
+" nmap H i<cr><esc>k$B
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
 imap <c-[> <Esc>:w<cr>
+nmap <c-[> <Esc>:w<cr>
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
 " apply macro across visual selection
@@ -117,11 +129,12 @@ vnoremap Q :norm @q<cr>
 " block comment (+) uncomment (_)
 " norm runs normoal mode commands in specified range, when in V mode
 " it gets fed the lines you selected
-vmap + :norm ^i// <cr>
-vmap _ :norm ^xxx<cr>
+vmap <c-/> :norm ^i// <cr>
+vmap <c-?> :norm ^xxx<cr>
 
 " open file under cursor in vsplit
 nmap <c-w><c-f> <c-w>vgf
+
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
@@ -139,6 +152,6 @@ omap s :normal vs<CR>
 " di{ to delete method body, can do this with these as well: " ( [ ' {
 " :windo diffthis (diff windows in current tab, :diffoff! to turn it off)
 " :g/^\s*$/d global delete lines containing regex(whitespace-only lines)
-" :v/error\|warn\|fail/d opposite of global delete(g!//d) keep the lines containing the regex(error or warn or fail)
+" :v/error\|warn\|fail/d opposite of global delete (equivalent to global inverse delete (g!//d)) keep the lines containing the regex(error or warn or fail)
 " :tab sball -> convert everything to tabs
 " gt (next tab) gT(prev tab) #gt (jump to tab #)

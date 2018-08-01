@@ -1,0 +1,7 @@
+// Pathogen super easy plugin manager (run install commands from git bash)
+https://github.com/tpope/vim-pathogen
+
+// Tabular (code alignment, Super useful)
+https://github.com/godlygeek/tabular
+https://www.youtube.com/watch?v=S33w7rcxbOk
+https://raw.githubusercontent.com/godlygeek/tabular/master/doc/Tabular.txt
