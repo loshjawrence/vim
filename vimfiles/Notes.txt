@@ -1,7 +1,22 @@
 // Pathogen super easy plugin manager (run install commands from git bash)
 https://github.com/tpope/vim-pathogen
 
-// Tabular (code alignment, Super useful)
+// Tabular (horizontal code alignment)
 https://github.com/godlygeek/tabular
 https://www.youtube.com/watch?v=S33w7rcxbOk
 https://raw.githubusercontent.com/godlygeek/tabular/master/doc/Tabular.txt
+
+// YouCompleteMe (very big, fair amount of setup, popular but didn't work for me)
+http://www.alexeyshmalko.com/2014/youcompleteme-ultimate-autocomplete-plugin-for-vim/
+cd ~/.vim/bundle
+git clone https://github.com/Valloric/YouCompleteMe.git
+cd YouCompleteMe
+git submodule update --init --recursive
+./install.sh --clang-completer
+
+add to _vimrc
+let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+
+
+// Smoothscroll
+https://github.com/terryma/vim-smooth-scroll.git

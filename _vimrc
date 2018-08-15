@@ -116,6 +116,10 @@ nnoremap U <c-r>
 
 " like J, but reverse (for word sep list), pick a better letter H is used as a part of the broad page jump trio(H, M, L)
 " nmap H i<cr><esc>k$B
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
@@ -135,6 +139,10 @@ vmap <c-?> :norm ^xxx<cr>
 " open file under cursor in vsplit
 nmap <c-w><c-f> <c-w>vgf
 
+" forward autocomplete(ctrl-p) mapped to tab
+" some auto complete plugins may map to tab so you might want to remove this
+" if using auto complete
+imap <Tab> <c-p>
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
@@ -155,3 +163,8 @@ omap s :normal vs<CR>
 " :v/error\|warn\|fail/d opposite of global delete (equivalent to global inverse delete (g!//d)) keep the lines containing the regex(error or warn or fail)
 " :tab sball -> convert everything to tabs
 " gt (next tab) gT(prev tab) #gt (jump to tab #)
+" c-p basic tab completion pulling from a variety of sources
+" c-n backwards c-p,
+" c-x c-l whole line completion
+" c-x c-o syntax aware omnicompletion
+" see this for native vim auto complete https://robots.thoughtbot.com/vim-you-complete-me
