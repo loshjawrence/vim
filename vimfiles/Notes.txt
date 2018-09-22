@@ -6,6 +6,17 @@ https://github.com/godlygeek/tabular
 https://www.youtube.com/watch?v=S33w7rcxbOk
 https://raw.githubusercontent.com/godlygeek/tabular/master/doc/Tabular.txt
 
+// Smoothscroll
+https://github.com/terryma/vim-smooth-scroll.git
+
+//fzf fuzzy file finder (need both the .vim plugin and actual install
+// vim:
+https://github.com/junegunn/fzf.vim.git
+// main fzf install:
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install
+
+
+//DIDN"T WORK (TRY LATER)
 // YouCompleteMe (very big, fair amount of setup, popular but didn't work for me)
 http://www.alexeyshmalko.com/2014/youcompleteme-ultimate-autocomplete-plugin-for-vim/
 cd ~/.vim/bundle
@@ -16,7 +27,3 @@ git submodule update --init --recursive
 
 add to _vimrc
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-
-
-// Smoothscroll
-https://github.com/terryma/vim-smooth-scroll.git
