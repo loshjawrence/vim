@@ -1,5 +1,5 @@
-" TODO: search versions of ci for loop
-" Would this be usefule: map f" (and others) as search versions of fFtT 
+" TODO: search versions of fFtT motions
+" i.e. Would this be useful: map f" (and others) as search versions of fFtT 
 " movements but finds pairs then you can hit n or N to move about
 
 " skip loading microsoft windows key editing commands
@@ -149,28 +149,18 @@ vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
 omap s :normal vs<CR>
 " Example: onoremap p i(       The onoremap command tells Vim that when it's waiting for a movement to give to an operator and it sees p, it should treat it like i(. When we ran dp it was like saying "delete parameters", which Vim translates to "delete inside parentheses".
 
- " Auto generate remappings
+ " Auto generate remappings, targets.vim does this nicely
  " Example: noremap ci, T,ct,
  " Add other text objects to perform ci and ca with
  " n means jump to next pair, l means jump to last pair
  " SINGLE LINE VERSION
- for charBound in [ "<Bar>", "/", "\\", "'", "`", "\"", "_", ".", ",", "*", "-", "&", "^", "+"]
-     for editType in ["c", "y"]
-         execute 'nnoremap ' . editType . 'i'  . charBound . ' T' . charBound . 'ct' . charBound
-         execute 'nnoremap ' . editType . 'in' . charBound . ' f' . charBound . ';T' . charBound . 'ct' . charBound
-         execute 'nnoremap ' . editType . 'il' . charBound . ' F' . charBound . ';f' . charBound . 'cT' . charBound
-     endfor
- endfor
-
-" for the reflected char bounds () {} [] <>
-" noremap cin( f(ci(
-" noremap cil( F)ci(
-" noremap cin{ f{ci{
-" noremap cil{ F}ci{
-" noremap cin[ f[ci[
-" noremap cil[ F]ci[
-" noremap cin< f<ci<
-" noremap cil< F>ci<
+ " for charBound in [ "<Bar>", "/", "\\", "'", "`", "\"", "_", ".", ",", "*", "-", "&", "^", "+"]
+ "     for editType in ["c", "y"]
+ "         execute 'nnoremap ' . editType . 'i'  . charBound . ' T' . charBound . 'ct' . charBound
+ "         execute 'nnoremap ' . editType . 'in' . charBound . ' f' . charBound . ';T' . charBound . 'ct' . charBound
+ "         execute 'nnoremap ' . editType . 'il' . charBound . ' F' . charBound . ';f' . charBound . 'cT' . charBound
+ "     endfor
+ " endfor
 
 " SEARCH VERSION
 " \d is a number
@@ -183,7 +173,6 @@ omap s :normal vs<CR>
 " search quote with white stuff in it /"\s+"
 " search quote with nothing /""
 " search quote followed by \ or quote followed by any char /"\\\|".
-
 " nnoremap ci" ?"<CR>vNc""<Esc>:noh<CR>i
 " nnoremap cin" /".*\S\+.*"<CR>:noh<CR>iasdf
 " nnoremap cil" ?".*\S\+.*"<CR>cs""<Esc>:noh<CR>i
@@ -210,6 +199,8 @@ omap s :normal vs<CR>
 " clipboard reg 1 yank in word nmode: "1yiw vmode: "
 " clipboard reg 1 yank in word nmode: "1yiw vmode: "1y
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
+" edit file under cursor: gf
+" open prevoius file: <c-6> good for toggling .h and .cpp (can also use fzf's :History command)
 
 
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
