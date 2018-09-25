@@ -1,17 +1,37 @@
-// Pathogen super easy plugin manager (run install commands from git bash)
-https://github.com/tpope/vim-pathogen
+git clone https://github.com/godlygeek/tabular
+git clone https://github.com/tomtom/tcomment_vim.git
+git clone https://github.com/wellle/targets.vim.git
+git clone https://github.com/terryma/vim-smooth-scroll.git
+git clone https://github.com/junegunn/fzf.vim.git
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install
+
+// Add plugin as submodule to backup repo
+git submodule add https://github.com/godlygeek/tabular vimfiles/bundle/tabular
+git submodule add https://github.com/tomtom/tcomment_vim.git vimfiles/bundle/tcomment_vim
+git submodule add https://github.com/terryma/vim-smooth-scroll.git vimfiles/bundle/vim-smooth-scroll
+git submodule add https://github.com/wellle/targets.vim.git vimfiles/bundle/targets.vim
+git submodule add https://github.com/junegunn/fzf.vim.git vimfiles/bundle/fzf.vim
+
+// Pathogen super easy plugin manager (run git clone from vimfiles/bundle folder)
+// clone this in the vimfiles/autoload folder
+git clone https://github.com/tpope/vim-pathogen
 
 // Tabular (horizontal code alignment)
-https://github.com/godlygeek/tabular
+git clone https://github.com/godlygeek/tabular
 https://www.youtube.com/watch?v=S33w7rcxbOk
 https://raw.githubusercontent.com/godlygeek/tabular/master/doc/Tabular.txt
 
-// Smoothscroll
-https://github.com/terryma/vim-smooth-scroll.git
+// tcomment
+git clone https://github.com/tomtom/tcomment_vim.git
 
-//fzf fuzzy file finder (need both the .vim plugin and actual install
-// vim:
-https://github.com/junegunn/fzf.vim.git
+// Smoothscroll
+git clone https://github.com/terryma/vim-smooth-scroll.git
+
+// Targets
+git clone https://github.com/wellle/targets.vim.git
+
+//fzf fuzzy file finder (need both the .vim plugin and actual install)
+git clone https://github.com/junegunn/fzf.vim.git
 // main fzf install:
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install
 
@@ -24,6 +44,5 @@ git clone https://github.com/Valloric/YouCompleteMe.git
 cd YouCompleteMe
 git submodule update --init --recursive
 ./install.sh --clang-completer
-
 add to _vimrc
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
