@@ -1,20 +1,33 @@
 git clone https://github.com/godlygeek/tabular
+git clone https://github.com/google/vim-searchindex.git
 git clone https://github.com/tomtom/tcomment_vim.git
 git clone https://github.com/wellle/targets.vim.git
 git clone https://github.com/terryma/vim-smooth-scroll.git
+git clone https://github.com/w0rp/ale.git
 git clone https://github.com/junegunn/fzf.vim.git
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install
 
 // Add plugin as submodule to backup repo
 git submodule add https://github.com/godlygeek/tabular vimfiles/bundle/tabular
+git submodule add https://github.com/w0rp/ale.git vimfiles/bundle/ale
+git submodule add https://github.com/google/vim-searchindex.git vimfiles/bundle/vim-searchindex
 git submodule add https://github.com/tomtom/tcomment_vim.git vimfiles/bundle/tcomment_vim
 git submodule add https://github.com/terryma/vim-smooth-scroll.git vimfiles/bundle/vim-smooth-scroll
 git submodule add https://github.com/wellle/targets.vim.git vimfiles/bundle/targets.vim
 git submodule add https://github.com/junegunn/fzf.vim.git vimfiles/bundle/fzf.vim
 
+install chocolatey.org
+from there install ctags, ripgrep
+
+// can update submodules with
+git submodule update --init --recursive
+
 // Pathogen super easy plugin manager (run git clone from vimfiles/bundle folder)
 // clone this in the vimfiles/autoload folder
 git clone https://github.com/tpope/vim-pathogen
+
+//searchindex (shows the total and occurance during search)
+git clone https://github.com/google/vim-searchindex.git
 
 // Tabular (horizontal code alignment)
 git clone https://github.com/godlygeek/tabular
@@ -34,7 +47,6 @@ git clone https://github.com/wellle/targets.vim.git
 git clone https://github.com/junegunn/fzf.vim.git
 // main fzf install:
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install
-
 
 //DIDN"T WORK (TRY LATER)
 // YouCompleteMe (very big, fair amount of setup, popular but didn't work for me)

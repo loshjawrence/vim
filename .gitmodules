@@ -13,3 +13,15 @@
 [submodule "vimfiles/bundle/fzf.vim"]
 	path = vimfiles/bundle/fzf.vim
 	url = https://github.com/junegunn/fzf.vim.git
+[submodule "vimfiles/bundle/vimfiles/bundle/ale"]
+	path = vimfiles/bundle/vimfiles/bundle/ale
+	url = https://github.com/w0rp/ale.git
+[submodule "vimfiles/bundle/vimfiles/bundle/vim-searchindex"]
+	path = vimfiles/bundle/vimfiles/bundle/vim-searchindex
+	url = https://github.com/google/vim-searchindex.git
+[submodule "vimfiles/bundle/ale"]
+	path = vimfiles/bundle/ale
+	url = https://github.com/w0rp/ale.git
+[submodule "vimfiles/bundle/vim-searchindex"]
+	path = vimfiles/bundle/vim-searchindex
+	url = https://github.com/google/vim-searchindex.git

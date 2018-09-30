@@ -8,12 +8,39 @@ execute pathogen#infect()
 syntax on
 filetype plugin indent on
 syntax enable
-colorscheme solarized
+set background=dark
+color jb4
+if has('termguicolors')
+  set termguicolors " 24-bit terminal
+endif
+
+" Show current line number
+set number
+" Show relative line numbers
+set relativenumber
+
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-" Use fuzzy file finder fzf 
+" Use fuzzy file finder fzf
 " (If installed using git: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install)
 set rtp+=~/.fzf
+
+" Toggle between header and source
+map <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+
+" just cd to project base dir and :!ctags -R to generate tags file
+" set path=$PWD/**
+
+" DOESN"T WORK
+" Always add the current file's directory to the path and tags list if not
+" already there. Add it to the beginning to speed up searches.
+" let s:default_path = escape(&path, '\ ') " store default value of 'path'
+" autocmd BufRead *
+"       \ let s:tempPath=escape(escape(expand("%:p:h"), ' '), '\ ') |
+"       \ exec "set path-=".s:tempPath |
+"       \ exec "set path-=".s:default_path |
+"       \ exec "set path^=".s:tempPath |
+"       \ exec "set path^=".s:default_path
 
 " turn on keyword color differentiation
 set t_Co=256
@@ -25,8 +52,8 @@ set backspace=indent,eol,start
 " force min window width
 set winwidth=110
 "set text to consolas size 11
-set guifont=Consolas:h14
-set lines=70 columns=140
+set guifont=Consolas:h12
+set lines=70 columns=120
 set tabstop=4     "tabs are at proper location
 set expandtab     "don't use actual tab character (ctrl-v)
 set shiftwidth=4  "indenting is 4 spaces
@@ -35,6 +62,9 @@ set smartindent   "does the right thing (mostly) in programs
 set cindent       "stricter rules for C programs
 set pastetoggle=<f5>
 set colorcolumn=80
+" let &colorcolumn=join(range(80,300),",")
+
+
 " remap <leader> to spacebar (default \)
 noremap <space> <nop>
 let mapleader= "\<space>"
@@ -82,6 +112,26 @@ nmap <c-z> <esc>ma:%s#\s\+$##e<cr>:%s#\(\n\n\)\n\+#\1#e<cr>:%s#\(\n\s*\)\+\%$##e
 "autocmd BufWritePre * exec TidyUp()
 "autocmd BufWritePre * :%s/\s\+$//e
 
+" Autoindent for func args will on (
+set cino+=(0
+
+" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
+nmap <leader>m :Marks<cr>
+nmap <leader>f :Files<cr>
+nmap <leader>h :History<cr>
+nmap <leader>b :Buffers<cr>
+nmap <leader>r :Rg<cr>
+
+" Tabularize plugin, to align this I highlighted then :Tabularize /:Tabularize
+vmap <leader>tt  :Tabularize /
+nmap <leader>tt  :Tabularize /
+vmap <leader>t=  :Tabularize /^[^=]*\zs=<cr>
+nmap <leader>t=  :Tabularize /^[^=]*\zs=<cr>
+vmap <leader>t,  :Tabularize /,<cr>
+nmap <leader>t,  :Tabularize /,<cr>
+vmap <leader>t<leader> :Tabularize /\s<cr>
+nmap <leader>t<leader> :Tabularize /\s<cr>
+
 " navigate by display lines
 nmap j gj
 nmap k gk
@@ -107,8 +157,10 @@ nnoremap U <c-r>
 " bad: this will put you back to your previous visual selection which is annoying, need to figure out how to go back to where you pasted
 " nnoremap p pgvy
 
-" like J, but reverse (for word sep list), pick a better letter H is used as a part of the broad page jump trio(H, M, L)
-" nmap H i<cr><esc>k$B
+" like J, but reverse (for comma sep list), pick a better letter H is used as a part of the broad page jump trio(H, M, L)
+nmap K T,i<cr><esc>k$T,
+
+" smooth scroll plugin
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
@@ -201,7 +253,6 @@ omap s :normal vs<CR>
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
 " edit file under cursor: gf
 " open prevoius file: <c-6> good for toggling .h and .cpp (can also use fzf's :History command)
-
-
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
+" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
 
