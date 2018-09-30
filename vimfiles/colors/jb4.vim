@@ -44,16 +44,24 @@ hi Statement guifg=#ffffff guibg=NONE guisp=NONE gui=none ctermfg=15 ctermbg=NON
 " hi Conditional guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
 " hi Exception guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
 
-" hi Identifier guifg=#000000 guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
+" hi Identifier guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
 hi Function guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
 hi CTagsFunction guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
+hi Typedef guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+hi Structure guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
 " hi Tag guifg=#000000 guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
+
 
 hi PreProc guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
 " hi PreCondit guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
 " hi Include guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
 " hi Define guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
 " hi Macro guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
+hi CTagsImport guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+
+hi CTagsGlobalConstant guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+hi CTagsGlobalVariable guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+hi CTagsDefinedName guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
 
 hi Type guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
 hi CTagsClass guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
@@ -61,14 +69,7 @@ hi CTagsStructure guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 cterm
 hi CTagsNamespace guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
 " hi StorageClass guifg=#90c7a2 guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
 " hi StorageClass guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Typedef guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Structure guifg=#e0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi EnumerationValue guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi CTagsImport guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
-
-hi CTagsGlobalConstant guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
-hi CTagsGlobalVariable guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
-hi CTagsDefinedName guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+" hi EnumerationValue guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
 
 hi Constant guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=70 ctermbg=NONE cterm=NONE
 " hi String guifg=#25bbcf guibg=NONE guisp=NONE gui=NONE ctermfg=38 ctermbg=NONE cterm=NONE
