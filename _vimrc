@@ -122,6 +122,9 @@ nmap <leader>h :History<cr>
 nmap <leader>b :Buffers<cr>
 nmap <leader>r :Rg<cr>
 
+" TagHighlight
+nmap <leader>h :UpdateTypesFile
+
 " Tabularize plugin, to align this I highlighted then :Tabularize /:Tabularize
 vmap <leader>tt  :Tabularize /
 nmap <leader>tt  :Tabularize /
@@ -129,8 +132,8 @@ vmap <leader>t=  :Tabularize /^[^=]*\zs=<cr>
 nmap <leader>t=  :Tabularize /^[^=]*\zs=<cr>
 vmap <leader>t,  :Tabularize /,<cr>
 nmap <leader>t,  :Tabularize /,<cr>
-vmap <leader>t<leader> :Tabularize /\s<cr>
-nmap <leader>t<leader> :Tabularize /\s<cr>
+vmap <leader>s   :Tabularize /\s<cr>
+nmap <leader>s   :Tabularize /\s<cr>
 
 " navigate by display lines
 nmap j gj

@@ -29,6 +29,7 @@ let g:colors_name = "jb4"
 "hi clear
 " hi Normal guifg=#deceb9 guibg=#012c33 guisp=#012c33 gui=NONE ctermfg=187 ctermbg=23 cterm=NONE
 hi Normal guifg=#d6bc9f guibg=#002b33 guisp=#002b33 gui=NONE ctermfg=180 ctermbg=23 cterm=NONE
+hi CTagsMember guifg=#d6bc9f guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
 
 hi IncSearch guifg=#50606d guibg=#cddaf0 guisp=#cddaf0 gui=NONE ctermfg=66 ctermbg=189 cterm=NONE
 hi WildMenu guifg=#000000 guibg=#804000 guisp=#804000 gui=NONE ctermfg=NONE ctermbg=3 cterm=NONE
@@ -36,45 +37,50 @@ hi SpecialComment guifg=#556065 guibg=NONE guisp=NONE gui=NONE ctermfg=241 cterm
 hi Title guifg=#60b0ea guibg=NONE guisp=NONE gui=NONE ctermfg=74 ctermbg=NONE cterm=NONE
 hi Folded guifg=#BBDDCC guibg=#4a4f4d guisp=#4a4f4d gui=NONE ctermfg=151 ctermbg=239 cterm=NONE
 
-hi Exception guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Typedef guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Repeat guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Label guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Operator guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Identifier guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
-hi Conditional guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Statement guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
+hi Statement guifg=#ffffff guibg=NONE guisp=NONE gui=none ctermfg=15 ctermbg=NONE cterm=NONE
+" hi Repeat guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+" hi Label guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+" hi Operator guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+" hi Conditional guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+" hi Exception guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+
+" hi Identifier guifg=#000000 guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
 hi Function guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
-hi PreProc guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
+hi CTagsFunction guifg=#ffffff guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
+" hi Tag guifg=#000000 guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
 
-hi PreCondit guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
-hi Include guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
-hi Define guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
-hi Macro guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
+hi PreProc guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=15 ctermbg=NONE cterm=NONE
+" hi PreCondit guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
+" hi Include guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
+" hi Define guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
+" hi Macro guifg=#aa7065 guibg=NONE guisp=NONE gui=NONE ctermfg=131 ctermbg=NONE cterm=NONE
 
-hi StorageClass guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-" hi StorageClass guifg=#c09a8a guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
-hi Structure guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
 hi Type guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
-hi EnumerationValue guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
 hi CTagsClass guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
-hi CTagsMember guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
-hi CTagsGlobalConstant guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
-hi CTagsImport guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
-hi CTagsGlobalVariable guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+hi CTagsStructure guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+hi CTagsNamespace guifg=#b0eddd guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+" hi StorageClass guifg=#90c7a2 guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+" hi StorageClass guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+hi Typedef guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+hi Structure guifg=#e0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+hi EnumerationValue guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=138 ctermbg=NONE cterm=NONE
+hi CTagsImport guifg=#e0baaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
 
-hi String guifg=#25bbcf guibg=NONE guisp=NONE gui=NONE ctermfg=38 ctermbg=NONE cterm=NONE
-hi Character guifg=#25bbcf guibg=NONE guisp=NONE gui=NONE ctermfg=240 ctermbg=NONE cterm=NONE
-hi SpecialChar guifg=#775779 guibg=NONE guisp=NONE gui=NONE ctermfg=241 ctermbg=NONE cterm=NONE
-" hi Number guifg=#9eab4b guibg=NONE guisp=NONE gui=NONE ctermfg=143 ctermbg=NONE cterm=NONE
-" hi Number guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=123 ctermbg=NONE cterm=NONE
-hi Number guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=123 ctermbg=NONE cterm=NONE
-hi Boolean guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=224 ctermbg=NONE cterm=NONE
+hi CTagsGlobalConstant guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+hi CTagsGlobalVariable guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+hi CTagsDefinedName guifg=#f0aaaa guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
+
 hi Constant guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=70 ctermbg=NONE cterm=NONE
+" hi String guifg=#25bbcf guibg=NONE guisp=NONE gui=NONE ctermfg=38 ctermbg=NONE cterm=NONE
+" hi Character guifg=#25bbcf guibg=NONE guisp=NONE gui=NONE ctermfg=240 ctermbg=NONE cterm=NONE
+" hi SpecialChar guifg=#775779 guibg=NONE guisp=NONE gui=NONE ctermfg=241 ctermbg=NONE cterm=NONE
+" hi Boolean guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=224 ctermbg=NONE cterm=NONE
 " hi Constant guifg=#90c7a2 guibg=NONE guisp=NONE gui=NONE ctermfg=115 ctermbg=NONE cterm=NONE
+" hi Number guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=123 ctermbg=NONE cterm=NONE
+" hi Number guifg=#9eab4b guibg=NONE guisp=NONE gui=NONE ctermfg=143 ctermbg=NONE cterm=NONE
 
 hi Todo guifg=#000000 guibg=#e0e0b8 guisp=#12e63c gui=NONE ctermfg=NONE ctermbg=40 cterm=NONE
-hi Cursor guifg=#6aa09a guibg=#000000 guisp=#000000 gui=NONE ctermfg=109 ctermbg=23 cterm=NONE
+hi Cursor guifg=#000000 guibg=#33dfef guisp=#33dfef gui=NONE ctermfg=109 ctermbg=23 cterm=NONE
 hi cursorim guifg=#192224 guibg=#536991 guisp=#536991 gui=NONE ctermfg=235 ctermbg=60 cterm=NONE
 
 hi Comment guifg=#12e63c guibg=NONE guisp=NONE gui=NONE ctermfg=40 ctermbg=NONE cterm=NONE
@@ -101,7 +107,7 @@ hi DiffChange guifg=NONE guibg=#c000c0 guisp=#c000c0 gui=NONE ctermfg=NONE cterm
 hi Error guifg=NONE guibg=#e04462 guisp=#e04462 gui=NONE ctermfg=NONE ctermbg=168 cterm=NONE
 hi PMenu guifg=#373334 guibg=#937b7a guisp=#937b7a gui=NONE ctermfg=237 ctermbg=95 cterm=NONE
 hi SpecialKey guifg=#90703B guibg=NONE guisp=NONE gui=NONE ctermfg=101 ctermbg=NONE cterm=NONE
-hi Tag guifg=#556065 guibg=NONE guisp=NONE gui=NONE ctermfg=241 ctermbg=NONE cterm=NONE
+" hi Tag guifg=#556065 guibg=NONE guisp=NONE gui=NONE ctermfg=241 ctermbg=NONE cterm=NONE
 hi PMenuThumb guifg=NONE guibg=#804000 guisp=#804000 gui=NONE ctermfg=NONE ctermbg=3 cterm=NONE
 hi Directory guifg=#bbd0df guibg=NONE guisp=NONE gui=NONE ctermfg=152 ctermbg=NONE cterm=NONE
 hi Underlined guifg=#80aae0 guibg=NONE guisp=NONE gui=NONE ctermfg=110 ctermbg=NONE cterm=NONE
@@ -112,5 +118,54 @@ hi LineNr guifg=#e0e0b8 guibg=#000000 guisp=#000000 gui=NONE ctermfg=187 ctermbg
 hi StatusLine guifg=#000000 guibg=#e0e0b8 guisp=#d0a59a gui=NONE ctermfg=234 ctermbg=181 cterm=NONE
 hi StatusLineNC guifg=#e0e0b8 guibg=#000000 guisp=#937b7a gui=NONE ctermfg=237 ctermbg=95 cterm=NONE
 hi VertSplit guifg=#000000 guibg=#000000 guisp=#000000 gui=NONE ctermfg=8 ctermbg=187 cterm=NONE
-hi Visual guifg=#000000 guibg=#33DFEF guisp=#33DFEF gui=NONE ctermfg=4 ctermbg=87 cterm=NONE
+hi Visual guifg=#000000 guibg=#33dfef guisp=#33dfef gui=NONE ctermfg=4 ctermbg=87 cterm=NONE
 hi SignColumn guibg=#000000 ctermbg=0
+
+
+" http://vimdoc.sourceforge.net/htmldoc/syntax.html#group-name
+	" *Comment	any comment
+    "
+	" *Constant	any constant
+	"  String		a string constant: "this is a string"
+	"  Character	a character constant: 'c', '\n'
+	"  Number		a number constant: 234, 0xff
+	"  Boolean	a boolean constant: TRUE, false
+	"  Float		a floating point constant: 2.3e10
+    "
+	" *Identifier	any variable name
+	"  Function	function name (also: methods for classes)
+    "
+	" *Statement	any statement
+	"  Conditional	if, then, else, endif, switch, etc.
+	"  Repeat		for, do, while, etc.
+	"  Label		case, default, etc.
+	"  Operator	"sizeof", "+", "*", etc.
+	"  Keyword	any other keyword
+	"  Exception	try, catch, throw
+    "
+	" *PreProc	generic Preprocessor
+	"  Include	preprocessor #include
+	"  Define		preprocessor #define
+	"  Macro		same as Define
+	"  PreCondit	preprocessor #if, #else, #endif, etc.
+    "
+	" *Type		int, long, char, etc.
+	"  StorageClass	static, register, volatile, const, inline, etc.
+	"  Structure	struct, union, enum, etc.
+	"  Typedef	A typedef
+    "
+	" *Special	any special symbol
+	"  SpecialChar	special character in a constant
+	"  Tag		you can use CTRL-] on this
+	"  Delimiter	character that needs attention
+	"  SpecialComment	special things inside a comment
+	"  Debug		debugging statements
+    "
+	" *Underlined	text that stands out, HTML links
+    "
+	" *Ignore		left blank, hidden  |hl-Ignore|
+    "
+	" *Error		any erroneous construct
+    "
+	" *Todo		anything that needs extra attention; mostly the
+	" 		keywords TODO FIXME and XXX

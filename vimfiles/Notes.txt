@@ -1,3 +1,5 @@
+git clone https://github.com/xolox/vim-easytags.git
+git clone https://github.com/xolox/vim-misc.git
 git clone https://github.com/godlygeek/tabular
 git clone https://github.com/google/vim-searchindex.git
 git clone https://github.com/tomtom/tcomment_vim.git
@@ -29,32 +31,30 @@ git clone https://github.com/tpope/vim-pathogen
 //searchindex (shows the total and occurance during search)
 git clone https://github.com/google/vim-searchindex.git
 
+// TagHightlight (out of the box highlighting for classes, funcs, etc)
+// :UpdateTypesFile (<leader>h) see typesfile for highlight syntax groups
+git clone https://github.com/vim-scripts/TagHighlight.git
+
+
 // Tabular (horizontal code alignment)
+// :Tab /regex
 git clone https://github.com/godlygeek/tabular
 https://www.youtube.com/watch?v=S33w7rcxbOk
 https://raw.githubusercontent.com/godlygeek/tabular/master/doc/Tabular.txt
 
-// tcomment
+// tcomment (highlight then gc)
 git clone https://github.com/tomtom/tcomment_vim.git
 
-// Smoothscroll
+// Smoothscroll (c-u and c-d will animate)
 git clone https://github.com/terryma/vim-smooth-scroll.git
 
-// Targets
+// Targets (cin/ cIl, cIna change in next/last slask,comma, arg 
+// ('I' will preserve surround whites))
 git clone https://github.com/wellle/targets.vim.git
 
-//fzf fuzzy file finder (need both the .vim plugin and actual install)
+//fzf fuzzy file finder (need both the .vim plugin and actual fzf install)
+// :Files :History :History/ :History: :Buffer :Tags :Rg (ripgrep,install)
+// :Ag (silver searcher, install)
 git clone https://github.com/junegunn/fzf.vim.git
 // main fzf install:
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install
-
-//DIDN"T WORK (TRY LATER)
-// YouCompleteMe (very big, fair amount of setup, popular but didn't work for me)
-http://www.alexeyshmalko.com/2014/youcompleteme-ultimate-autocomplete-plugin-for-vim/
-cd ~/.vim/bundle
-git clone https://github.com/Valloric/YouCompleteMe.git
-cd YouCompleteMe
-git submodule update --init --recursive
-./install.sh --clang-completer
-add to _vimrc
-let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
