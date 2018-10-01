@@ -14,9 +14,9 @@ let g:colors_name = "jb4"
 "hi TabLineSel
 "hi SpellRare
 "hi Float
-"hi CursorLine
 "hi Union
 "hi TabLineFill
+"hi CursorLine
 "hi CursorColumn
 "hi EnumerationName
 "hi SpellCap
@@ -28,10 +28,11 @@ let g:colors_name = "jb4"
 "hi TabLine
 "hi clear
 " hi Normal guifg=#deceb9 guibg=#012c33 guisp=#012c33 gui=NONE ctermfg=187 ctermbg=23 cterm=NONE
+" reds #c6a3b5 #9c6e80 #a6556a
 hi Normal guifg=#d6bc9f guibg=#002b33 guisp=#002b33 gui=NONE ctermfg=180 ctermbg=23 cterm=NONE
 hi CTagsMember guifg=#d6bc9f guibg=NONE guisp=NONE gui=NONE ctermfg=158 ctermbg=NONE cterm=NONE
 
-hi IncSearch guifg=#50606d guibg=#cddaf0 guisp=#cddaf0 gui=NONE ctermfg=66 ctermbg=189 cterm=NONE
+hi IncSearch guifg=#000000 guibg=#a6556a guisp=#a6556a gui=bold,underline ctermfg=66 ctermbg=189 cterm=NONE
 hi WildMenu guifg=#000000 guibg=#804000 guisp=#804000 gui=NONE ctermfg=NONE ctermbg=3 cterm=NONE
 hi SpecialComment guifg=#556065 guibg=NONE guisp=NONE gui=NONE ctermfg=241 ctermbg=NONE cterm=NONE
 hi Title guifg=#60b0ea guibg=NONE guisp=NONE gui=NONE ctermfg=74 ctermbg=NONE cterm=NONE
@@ -81,11 +82,8 @@ hi Constant guifg=#79def2 guibg=NONE guisp=NONE gui=NONE ctermfg=70 ctermbg=NONE
 " hi Number guifg=#9eab4b guibg=NONE guisp=NONE gui=NONE ctermfg=143 ctermbg=NONE cterm=NONE
 
 hi Todo guifg=#000000 guibg=#e0e0b8 guisp=#12e63c gui=NONE ctermfg=NONE ctermbg=40 cterm=NONE
-hi Cursor guifg=#000000 guibg=#33dfef guisp=#33dfef gui=NONE ctermfg=109 ctermbg=23 cterm=NONE
-hi cursorim guifg=#192224 guibg=#536991 guisp=#536991 gui=NONE ctermfg=235 ctermbg=60 cterm=NONE
 
 hi Comment guifg=#12e63c guibg=NONE guisp=NONE gui=NONE ctermfg=40 ctermbg=NONE cterm=NONE
-
 hi NonText guifg=#382920 guibg=#1c3447 guisp=#1c3447 gui=NONE ctermfg=237 ctermbg=23 cterm=NONE
 hi DiffText guifg=NONE guibg=#c00000 guisp=#c00000 gui=bold ctermfg=NONE ctermbg=1 cterm=bold
 hi ErrorMsg guifg=#c0c0c0 guibg=#c00000 guisp=#c00000 gui=bold ctermfg=7 ctermbg=1 cterm=bold
@@ -94,7 +92,7 @@ hi Debug guifg=#556065 guibg=NONE guisp=NONE gui=NONE ctermfg=241 ctermbg=NONE c
 hi PMenuSbar guifg=NONE guibg=#153040 guisp=#153040 gui=NONE ctermfg=NONE ctermbg=23 cterm=NONE
 hi Special guifg=#839196 guibg=NONE guisp=NONE gui=NONE ctermfg=66 ctermbg=NONE cterm=NONE
 hi PMenuSel guifg=#102015 guibg=#d0a59a guisp=#d0a59a gui=NONE ctermfg=234 ctermbg=181 cterm=NONE
-hi Search guifg=#bac5d0 guibg=#5a6d7d guisp=#5a6d7d gui=NONE ctermfg=146 ctermbg=66 cterm=NONE
+hi Search guifg=#000000 guibg=#a6556a guisp=#a6556a gui=bold,underline ctermfg=146 ctermbg=66 cterm=NONE
 hi Delimiter guifg=#556065 guibg=NONE guisp=NONE gui=NONE ctermfg=241 ctermbg=NONE cterm=NONE
 hi Question guifg=#AABBCC guibg=NONE guisp=NONE gui=NONE ctermfg=146 ctermbg=NONE cterm=NONE
 hi WarningMsg guifg=#fa8072 guibg=NONE guisp=NONE gui=NONE ctermfg=210 ctermbg=NONE cterm=NONE
@@ -121,6 +119,11 @@ hi StatusLineNC guifg=#e0e0b8 guibg=#000000 guisp=#937b7a gui=NONE ctermfg=237 c
 hi VertSplit guifg=#000000 guibg=#000000 guisp=#000000 gui=NONE ctermfg=8 ctermbg=187 cterm=NONE
 hi Visual guifg=#000000 guibg=#33dfef guisp=#33dfef gui=NONE ctermfg=4 ctermbg=87 cterm=NONE
 hi SignColumn guibg=#000000 ctermbg=0
+hi Cursor guifg=#000000 guibg=#33dfef guisp=#33dfef gui=NONE ctermfg=109 ctermbg=23 cterm=NONE
+hi cursorim guifg=#192224 guibg=#536991 guisp=#536991 gui=NONE ctermfg=235 ctermbg=60 cterm=NONE
+hi CursorLineNR guifg=#000000 guibg=#e0e0b8 guisp=#e0e0b8 gui=bold ctermfg=109 ctermbg=23 cterm=NONE
+"hi CursorLine
+"hi CursorColumn
 
 
 " http://vimdoc.sourceforge.net/htmldoc/syntax.html#group-name

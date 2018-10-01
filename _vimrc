@@ -1,4 +1,4 @@
-" TODO: search versions of fFtT motions
+:" TODO: search versions of fFtT motions
 " i.e. Would this be useful: map f" (and others) as search versions of fFtT 
 " movements but finds pairs then you can hit n or N to move about
 
@@ -46,7 +46,7 @@ map <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 set t_Co=256
 " turn on search highlighting and set it to blue
 set  incsearch ignorecase smartcase hlsearch
-hi Search guifg=Black guibg=Green
+" hi Search guifg=Black guibg=Green
 "allow backspace to work normally
 set backspace=indent,eol,start
 " force min window width
