@@ -126,14 +126,17 @@ nmap <leader>r :Rg<cr>
 nmap <leader>h :UpdateTypesFile
 
 " Tabularize plugin, to align this I highlighted then :Tabularize /:Tabularize
-vmap <leader>tt  :Tabularize /
-nmap <leader>tt  :Tabularize /
-vmap <leader>t=  :Tabularize /^[^=]*\zs=<cr>
-nmap <leader>t=  :Tabularize /^[^=]*\zs=<cr>
-vmap <leader>t,  :Tabularize /,<cr>
-nmap <leader>t,  :Tabularize /,<cr>
-vmap <leader>s   :Tabularize /\s<cr>
-nmap <leader>s   :Tabularize /\s<cr>
+" Should definitely checkout https://www.vim.org/scripts/script.php?script_id=294
+vnoremap  <leader>tt      :Tabularize  /
+nnoremap  <leader>tt      :Tabularize  /
+vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
+nnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
+vnoremap  <leader>t=      :Tabularize  /^[^=]*\zs=<cr>
+nnoremap  <leader>t=      :Tabularize  /^[^=]*\zs=<cr>
+vnoremap  <leader>t,      :Tabularize  /,<cr>
+nnoremap  <leader>t,      :Tabularize  /,<cr>
+vnoremap  <leader>ts      :Tabularize  /\S\+<cr>
+nnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 
 " navigate by display lines
 nmap j gj
