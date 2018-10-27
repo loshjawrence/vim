@@ -8,6 +8,8 @@ git clone https://github.com/terryma/vim-smooth-scroll.git
 git clone https://github.com/w0rp/ale.git
 git clone https://github.com/junegunn/fzf.vim.git
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install
+git clone https://github.com/xolox/vim-session/vim-session.git
+git clone https://github.com/xolox/vim-misc.git
 
 // Add plugin as submodule to backup repo
 git submodule add https://github.com/godlygeek/tabular vimfiles/bundle/tabular
@@ -17,7 +19,7 @@ git submodule add https://github.com/tomtom/tcomment_vim.git vimfiles/bundle/tco
 git submodule add https://github.com/terryma/vim-smooth-scroll.git vimfiles/bundle/vim-smooth-scroll
 git submodule add https://github.com/wellle/targets.vim.git vimfiles/bundle/targets.vim
 git submodule add https://github.com/junegunn/fzf.vim.git vimfiles/bundle/fzf.vim
-
+git submodule add https://github.com/xolox/vim-session/vim-session.git vimfiles/bundle/vim-session
 install chocolatey.org
 from there install ctags, ripgrep
 

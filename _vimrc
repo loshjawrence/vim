@@ -10,6 +10,7 @@ filetype plugin indent on
 syntax enable
 set background=dark
 color jb4
+" color jellybeans
 if has('termguicolors')
   set termguicolors " 24-bit terminal
 endif
@@ -26,7 +27,23 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 set rtp+=~/.fzf
 
 " Toggle between header and source
-map <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+
+" allow saving of marks for a session (save-->:mks!   savenew-->:mks ~/vimfiles/session/mysession.vim   load--> :source path-to-mysession.vim)
+" must use captial and 0-9 marks
+" see also http://vimdoc.sourceforge.net/htmldoc/motion.html#E20
+" http://vimdoc.sourceforge.net/htmldoc/usr_21.html#21.3
+set viminfo='1000,f1
+
+" should remove load prompts on external change (ex: git pull)
+" Trigger autoread when cursor stops moving
+" Trigger autoread when changing buffers inside vim
+set autoread
+au CursorHold,CursorHoldI * checktime
+au FocusGained,BufEnter * :checktime
+
+" tell ctags to look in current then up one until it finds it
+" set tags=./tags,tags;
 
 " just cd to project base dir and :!ctags -R to generate tags file
 " set path=$PWD/**
@@ -42,6 +59,10 @@ map <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 "       \ exec "set path^=".s:tempPath |
 "       \ exec "set path^=".s:default_path
 
+" don't silently wrap on inc search (use gg or G manually to continue search)
+set nowrapscan
+" make warnings more obvious (search wrap, etc)
+hi WarningMsg ctermfg=white ctermbg=red guifg=White guibg=Red gui=None
 " turn on keyword color differentiation
 set t_Co=256
 " turn on search highlighting and set it to blue
@@ -103,7 +124,7 @@ endfunction
 " remove traliing whitespace, collapse multi new lines with one,
 " remove trailing empty lines, return to old cursor pos, write
 " vsvim doesn't support end of line match
-nmap <c-z> <esc>ma:%s#\s\+$##e<cr>:%s#\(\n\n\)\n\+#\1#e<cr>:%s#\(\n\s*\)\+\%$##e<cr>`a:w<cr>
+nnoremap <c-z> <esc>ma:%s#\s\+$##e<cr>:%s#\(\n\n\)\n\+#\1#e<cr>:%s#\(\n\s*\)\+\%$##e<cr>`a:w<cr>
 " an attempt to do get it to work in visual studio
 "nmap <c-z> <esc>xu:%s/\s\+$//e<cr>G?\S<cr>:.,$s#\n*##
 
@@ -116,14 +137,26 @@ nmap <c-z> <esc>ma:%s#\s\+$##e<cr>:%s#\(\n\n\)\n\+#\1#e<cr>:%s#\(\n\s*\)\+\%$##e
 set cino+=(0
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
-nmap <leader>m :Marks<cr>
-nmap <leader>f :Files<cr>
-nmap <leader>h :History<cr>
-nmap <leader>b :Buffers<cr>
-nmap <leader>r :Rg<cr>
+nnoremap <leader>m :Marks<cr>
+nnoremap <leader>f :Files<cr>
+nnoremap <leader>h :History<cr>
+nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>r :Rg<cr>
 
 " TagHighlight
-nmap <leader>h :UpdateTypesFile
+nnoremap <leader>u :UpdateTypesFile
+
+" Go to tab by number
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
 
 " Tabularize plugin, to align this I highlighted then :Tabularize /:Tabularize
 " Should definitely checkout https://www.vim.org/scripts/script.php?script_id=294
@@ -139,43 +172,34 @@ vnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 nnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 
 " navigate by display lines
-nmap j gj
-nmap k gk
+nnoremap j gj
+nnoremap k gk
 
 " allow arrow keys to toggle the current window in split screen mode
-nmap <c-h> <c-w>h
-nmap <c-l> <c-w>l
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
 
 " yank to end of line
-nmap Y y$
+nnoremap Y y$
 
 " perform normal mode movement while in insert mode?
-
-" like J, but reverse (for comma sep list)
-" NOT USEFUL
-" nmap U i<cr><esc>k$F,l
-
 
 " map redo to U, <c-r> is used in Visual Studio for good refactoring shortcuts
 nnoremap U <c-r>
 
-" Bind p in visual mode to paste without overriding the current register
-" bad: this will put you back to your previous visual selection which is annoying, need to figure out how to go back to where you pasted
-" nnoremap p pgvy
-
 " like J, but reverse (for comma sep list), pick a better letter H is used as a part of the broad page jump trio(H, M, L)
-nmap K T,i<cr><esc>k$T,
+nnoremap K T,i<cr><esc>k$T,
 
 " smooth scroll plugin
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 5)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 5)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 8)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 8)<CR>
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
-imap <c-[> <Esc>:w<cr>
-nmap <c-[> <Esc>:w<cr>
+inoremap <c-[> <Esc>:w<cr>
+nnoremap <c-[> <Esc>:w<cr>
 
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
@@ -192,7 +216,7 @@ vnoremap Q :norm @q<cr>
 " tcommentary.vim (visual mode gc or <c-_><c-_>)
 
 " open file under cursor in vsplit
-nmap <c-w><c-f> <c-w>vgf
+" nnoremap <c-w><c-f> <c-w>vgf
 
 " forward autocomplete(ctrl-p) mapped to tab
 " hit c-p and c-n to navigate list
@@ -204,7 +228,7 @@ nmap <c-w><c-f> <c-w>vgf
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
 vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
     \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
-omap s :normal vs<CR>
+onoremap s :normal vs<CR>
 " Example: onoremap p i(       The onoremap command tells Vim that when it's waiting for a movement to give to an operator and it sees p, it should treat it like i(. When we ran dp it was like saying "delete parameters", which Vim translates to "delete inside parentheses".
 
  " Auto generate remappings, targets.vim does this nicely
@@ -243,7 +267,7 @@ omap s :normal vs<CR>
 " <c-m> goes to first nonwhite next line
 " K will search in man pages for the command under cursor
 " :sh will open a shell
-" di{ to delete method body, can do this with these as well: " ( [ '
+" di{ to delete method body, can do this with these as well: " ( [ ' <
 " :windo diffthis (diff windows in current tab, :diffoff! to turn it off)
 " :g/^\s*$/d global delete lines containing regex(whitespace-only lines)
 " :v/error\|warn\|fail/d opposite of global delete (equivalent to global inverse delete (g!//d)) keep the lines containing the regex(error or warn or fail)
@@ -261,4 +285,10 @@ omap s :normal vs<CR>
 " open prevoius file: <c-6> good for toggling .h and .cpp (can also use fzf's :History command)
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
+" :Vex vertical explorer (can navigate and search like normal vim, how to open file in tab?)
 
+
+
+" Bind p in visual mode to paste without overriding the current register
+" bad: this will put you back to your previous visual selection which is annoying, need to figure out how to go back to where you pasted
+" nnoremap p pgvy
