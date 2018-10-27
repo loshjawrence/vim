@@ -85,6 +85,9 @@ set pastetoggle=<f5>
 set colorcolumn=80
 " let &colorcolumn=join(range(80,300),",")
 
+" Open tag in tab, open tag in vsplit
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
 " remap <leader> to spacebar (default \)
 noremap <space> <nop>
@@ -286,6 +289,7 @@ onoremap s :normal vs<CR>
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
 " :Vex vertical explorer (can navigate and search like normal vim, how to open file in tab?)
+" can turn a split into a tab by doing c-w then T
 
 
 
