@@ -31,3 +31,6 @@
 [submodule "vimfiles/bundle/vim-misc"]
 	path = vimfiles/bundle/vim-misc
 	url = https://github.com/xolox/vim-misc.git
+[submodule "vimfiles/magicka.vim"]
+	path = vimfiles/magicka.vim
+	url = https://github.com/loshjawrence/magicka.vim
