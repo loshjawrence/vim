@@ -9,8 +9,11 @@ syntax on
 filetype plugin indent on
 syntax enable
 set background=dark
-color jb4
-" color jellybeans
+colorscheme alduin
+" colorscheme jellybeans
+" colorscheme alduin
+" colorscheme magicka
+" colorscheme hybrid
 if has('termguicolors')
   set termguicolors " 24-bit terminal
 endif
@@ -100,8 +103,10 @@ set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 
-" vim treats a sequences of [A-Za-z0-9_] or sequences of non-blank characters separated with white space as a word, sequences of non-blank characters separated with white space as a WORD. You can re-define what word mean to vim:
-" set iskeyword-=_
+" vim treats a sequences of [A-Za-z0-9_] as a `word` (WORD just goes to next whitespace)
+" You can re-define what word mean to vim, this removes the _ char from the set
+" of contiguous chars that defined a `word`
+set iskeyword-=_
 
 " example function for tidy up
 function TidyUp()
