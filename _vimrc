@@ -136,8 +136,9 @@ let mapleader= "\<space>"
 "show line num file name leave space for command line
 set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap wildmenu
 
-" use the bash shell for shell commands example :!ls
-set shell=/usr/bin/env\ bash
+" use the bash shell for shell commands example :!grep 
+" Could no longer do :History
+" set shell=/usr/bin/env\ bash
 
 set history=1000
 
@@ -339,6 +340,8 @@ onoremap s :normal vs<CR>
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
 " :Vex vertical explorer (can navigate and search like normal vim, how to open file in tab?)
 " can turn a split into a tab by doing c-w then T
+" zz to center the line you're on in the middle of the screen
+" zt to put the line you're on at the top of the screen
 
 
 
