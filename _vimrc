@@ -1,6 +1,8 @@
-:" TODO: search versions of fFtT motions
-" i.e. Would this be useful: map f" (and others) as search versions of fFtT 
-" movements but finds pairs then you can hit n or N to move about
+" TODO:
+" Insert preformatted comment block
+" Figure out how to compile and jump to errors (:cl :cn :cp (list, next, prev))
+" Better syntax highlighitng for c/cpp? Or just work on a good colorscheme
+" remap to something useful: - goes to first nonwhite prev line
 
 " skip loading microsoft windows key editing commands
 let skip_loading_mswin=1
@@ -11,12 +13,18 @@ syntax enable
 set background=dark
 colorscheme alduin
 " colorscheme jellybeans
-" colorscheme alduin
 " colorscheme magicka
 " colorscheme hybrid
+" colorscheme sourcerer
+" colorscheme Spink
 if has('termguicolors')
   set termguicolors " 24-bit terminal
 endif
+
+" set UTF-8 encoding
+set enc=utf-8
+set fenc=utf-8
+set termencoding=utf-8
 
 " Show current line number
 set number
@@ -36,7 +44,10 @@ nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 " must use captial and 0-9 marks
 " see also http://vimdoc.sourceforge.net/htmldoc/motion.html#E20
 " http://vimdoc.sourceforge.net/htmldoc/usr_21.html#21.3
-set viminfo='1000,f1
+" set viminfo='1000,f1
+
+" <c-a> and <c-x> commands for inc dec numbers wont interpret any number as octal (ex: 007 would go up to 010)
+set nrformats-=octal
 
 " should remove load prompts on external change (ex: git pull)
 " Trigger autoread when cursor stops moving
@@ -44,6 +55,27 @@ set viminfo='1000,f1
 set autoread
 au CursorHold,CursorHoldI * checktime
 au FocusGained,BufEnter * :checktime
+
+" dont scan included files during c-n c-p completion
+"set complete-=i
+
+set tabpagemax=50
+set viminfo^=!
+set sessionoptions-=options
+" leave at least n lines when scrolling
+" set scrolloff=1
+set sidescrolloff=5
+set display+=lastline
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+" Delete comment character when joining commented lines
+set formatoptions+=j
+
+" Triger `autoread` when files changes on disk
+" https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+" https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+" autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+" autocmd FileChangedShellPost *
+"   \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
 " tell ctags to look in current then up one until it finds it
 " set tags=./tags,tags;
@@ -62,21 +94,22 @@ au FocusGained,BufEnter * :checktime
 "       \ exec "set path^=".s:tempPath |
 "       \ exec "set path^=".s:default_path
 
-" don't silently wrap on inc search (use gg or G manually to continue search)
-set nowrapscan
 " make warnings more obvious (search wrap, etc)
 hi WarningMsg ctermfg=white ctermbg=red guifg=White guibg=Red gui=None
 " turn on keyword color differentiation
 set t_Co=256
-" turn on search highlighting and set it to blue
-set  incsearch ignorecase smartcase hlsearch
+" turn on incremental smartcase search highlighting (don't silently wrap, use gg and G to manually continue search)
+set incsearch ignorecase smartcase hlsearch nowrapscan
+" turn off highlights (turn off matches)
+nnoremap <c-m> :noh<cr>
+
 " hi Search guifg=Black guibg=Green
 "allow backspace to work normally
 set backspace=indent,eol,start
 " force min window width
-set winwidth=110
+set winwidth=120
 "set text to consolas size 11
-set guifont=Consolas:h12
+set guifont=Consolas:h11
 set lines=70 columns=120
 set tabstop=4     "tabs are at proper location
 set expandtab     "don't use actual tab character (ctrl-v)
@@ -85,23 +118,32 @@ set autoindent    "turns it on
 set smartindent   "does the right thing (mostly) in programs
 set cindent       "stricter rules for C programs
 set pastetoggle=<f5>
+
+" vertical bar of color indicating where the line break is
 set colorcolumn=80
+" wrap lines at 120 chars. 80 is somewaht antiquated with nowadays displays.
+" set textwidth=80
 " let &colorcolumn=join(range(80,300),",")
 
 " Open tag in tab, open tag in vsplit
-map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+map <c-T> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <a-v> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
 " remap <leader> to spacebar (default \)
 noremap <space> <nop>
 let mapleader= "\<space>"
 
 "show line num file name leave space for command line
-set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap
+set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap wildmenu
+
+" use the bash shell for shell commands example :!ls
+set shell=/usr/bin/env\ bash
+
+set history=1000
 
 " highlight trailing whitespace
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
+" highlight ExtraWhitespace ctermbg=red guibg=red
+" match ExtraWhitespace /\s\+$/
 
 " vim treats a sequences of [A-Za-z0-9_] as a `word` (WORD just goes to next whitespace)
 " You can re-define what word mean to vim, this removes the _ char from the set
@@ -147,12 +189,14 @@ set cino+=(0
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
 nnoremap <leader>m :Marks<cr>
 nnoremap <leader>f :Files<cr>
-nnoremap <leader>h :History<cr>
+nnoremap <leader>hh :History<cr>
+nnoremap <leader>h/ :History/<cr>
+nnoremap <leader>h: :History:<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr>
 
 " TagHighlight
-nnoremap <leader>u :UpdateTypesFile
+nnoremap <leader>u :UpdateTypesFile<cr>
 
 " Go to tab by number
 noremap <leader>1 1gt
@@ -179,6 +223,8 @@ nnoremap  <leader>t,      :Tabularize  /,<cr>
 vnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 nnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 
+
+
 " navigate by display lines
 nnoremap j gj
 nnoremap k gk
@@ -199,10 +245,10 @@ nnoremap U <c-r>
 nnoremap K T,i<cr><esc>k$T,
 
 " smooth scroll plugin
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 5)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 5)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 8)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 8)<CR>
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 3)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 3)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
@@ -271,9 +317,7 @@ onoremap s :normal vs<CR>
 " possibly useful nomral mode keys:
 " ; will repeat t and f (line movement to and find) commonds. , will repeat T and F commands (reverse)
 " <c-w><c-w> cycle split windows
-" - goes to first nonwhite prev line
-" <c-m> goes to first nonwhite next line
-" K will search in man pages for the command under cursor
+" K will search in man pages for the command under cursor (this has been remapped to to opposite of J)
 " :sh will open a shell
 " di{ to delete method body, can do this with these as well: " ( [ ' <
 " :windo diffthis (diff windows in current tab, :diffoff! to turn it off)
@@ -290,7 +334,7 @@ onoremap s :normal vs<CR>
 " clipboard reg 1 yank in word nmode: "1yiw vmode: "1y
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
 " edit file under cursor: gf
-" open prevoius file: <c-6> good for toggling .h and .cpp (can also use fzf's :History command)
+" open prevoius file: <c-6> good for toggling .h and .cpp (can also use fzf's :History command <leader>hh)
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
 " :Vex vertical explorer (can navigate and search like normal vim, how to open file in tab?)
@@ -298,6 +342,7 @@ onoremap s :normal vs<CR>
 
 
 
+" Bad but might have nugget of good idea
 " Bind p in visual mode to paste without overriding the current register
 " bad: this will put you back to your previous visual selection which is annoying, need to figure out how to go back to where you pasted
 " nnoremap p pgvy
