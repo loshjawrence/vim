@@ -12,8 +12,10 @@ filetype plugin indent on
 syntax enable
 set background=dark
 colorscheme alduin
+" colorscheme alduin2
 " colorscheme jellybeans
 " colorscheme magicka
+" colorscheme magicka2 " get alduin2 in shape then modify its colors into magicka (colors consistent make sense, matching char colorization like js)
 " colorscheme hybrid
 " colorscheme sourcerer
 " colorscheme Spink
