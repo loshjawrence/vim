@@ -1,14 +1,21 @@
 " TODO:
-" Insert preformatted comment block
 " Figure out how to compile and jump to errors (:cl :cn :cp (list, next, prev))
 " Better syntax highlighitng for c/cpp? Or just work on a good colorscheme
-" remap to something useful: - goes to first nonwhite prev line
+" remap to something useful: - goes to first nonwhite prev line TODO: other default mappings that aren't used at all remapped to something I need?
+" perform normal mode movement while in insert mode? TODO: learn insert mode stuff
+
 
 " skip loading microsoft windows key editing commands
 let skip_loading_mswin=1
 execute pathogen#infect()
 syntax on
+
+" smart indenting
 filetype plugin indent on
+set autoindent    "turns it on
+set smartindent   "does the right thing (mostly) in programs
+set cindent       "stricter rules for C programs
+
 syntax enable
 set background=dark
 colorscheme alduin
@@ -20,7 +27,7 @@ colorscheme alduin
 " colorscheme sourcerer
 " colorscheme Spink
 if has('termguicolors')
-  set termguicolors " 24-bit terminal
+    set termguicolors " 24-bit terminal
 endif
 
 " set UTF-8 encoding
@@ -116,9 +123,6 @@ set lines=70 columns=120
 set tabstop=4     "tabs are at proper location
 set expandtab     "don't use actual tab character (ctrl-v)
 set shiftwidth=4  "indenting is 4 spaces
-set autoindent    "turns it on
-set smartindent   "does the right thing (mostly) in programs
-set cindent       "stricter rules for C programs
 set pastetoggle=<f5>
 
 " vertical bar of color indicating where the line break is
@@ -225,21 +229,28 @@ vnoremap  <leader>t,      :Tabularize  /,<cr>
 nnoremap  <leader>t,      :Tabularize  /,<cr>
 vnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 nnoremap  <leader>ts      :Tabularize  /\S\+<cr>
+vnoremap  <leader>t/      :Tabularize  /\/\/
+nnoremap  <leader>t/      :Tabularize  /\/\/
 
-
+" Default vim behavior is to copy the deleted or changed text into the default register and prevents spam pasting
+" xnoremap p "_dP
 
 " navigate by display lines
 nnoremap j gj
 nnoremap k gk
 
-" allow arrow keys to toggle the current window in split screen mode
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-
 " yank to end of line
 nnoremap Y y$
 
-" perform normal mode movement while in insert mode?
+" Indent block
+nnoremap == gg=G<c-o>
+
+" Preformatted comment block (The ' key is used for last pos but that is taken care of with c-o and c-i)
+nnoremap ' O<esc>i/*<esc>50a*<esc>o<esc>50i*<esc>a*/<esc>Vk=o<tab>
+
+" Only hit < or > once to tab indent
+nnoremap < <<
+nnoremap > >>
 
 " map redo to U, <c-r> is used in Visual Studio for good refactoring shortcuts
 nnoremap U <c-r>
@@ -279,27 +290,27 @@ vnoremap Q :norm @q<cr>
 " hit c-p and c-n to navigate list
 " doesnt really work right with IDE's like visual studio as they also use tab
 " for tab completion
-" imap <Tab> <c-p>
+" inoremap <Tab> <c-p>
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
 vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
-    \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
+            \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
 onoremap s :normal vs<CR>
 " Example: onoremap p i(       The onoremap command tells Vim that when it's waiting for a movement to give to an operator and it sees p, it should treat it like i(. When we ran dp it was like saying "delete parameters", which Vim translates to "delete inside parentheses".
 
- " Auto generate remappings, targets.vim does this nicely
- " Example: noremap ci, T,ct,
- " Add other text objects to perform ci and ca with
- " n means jump to next pair, l means jump to last pair
- " SINGLE LINE VERSION
- " for charBound in [ "<Bar>", "/", "\\", "'", "`", "\"", "_", ".", ",", "*", "-", "&", "^", "+"]
- "     for editType in ["c", "y"]
- "         execute 'nnoremap ' . editType . 'i'  . charBound . ' T' . charBound . 'ct' . charBound
- "         execute 'nnoremap ' . editType . 'in' . charBound . ' f' . charBound . ';T' . charBound . 'ct' . charBound
- "         execute 'nnoremap ' . editType . 'il' . charBound . ' F' . charBound . ';f' . charBound . 'cT' . charBound
- "     endfor
- " endfor
+" Auto generate remappings, targets.vim does this nicely
+" Example: noremap ci, T,ct,
+" Add other text objects to perform ci and ca with
+" n means jump to next pair, l means jump to last pair
+" SINGLE LINE VERSION
+" for charBound in [ "<Bar>", "/", "\\", "'", "`", "\"", "_", ".", ",", "*", "-", "&", "^", "+"]
+"     for editType in ["c", "y"]
+"         execute 'nnoremap ' . editType . 'i'  . charBound . ' T' . charBound . 'ct' . charBound
+"         execute 'nnoremap ' . editType . 'in' . charBound . ' f' . charBound . ';T' . charBound . 'ct' . charBound
+"         execute 'nnoremap ' . editType . 'il' . charBound . ' F' . charBound . ';f' . charBound . 'cT' . charBound
+"     endfor
+" endfor
 
 " SEARCH VERSION
 " \d is a number
@@ -343,6 +354,7 @@ onoremap s :normal vs<CR>
 " :Vex vertical explorer (can navigate and search like normal vim, how to open file in tab?)
 " can turn a split into a tab by doing c-w then T
 " zz to center the line you're on in the middle of the screen
+" c-x subtracts 1 from number under curosr c-a adds.
 " zt to put the line you're on at the top of the screen
 
 
