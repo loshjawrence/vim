@@ -123,19 +123,20 @@ nnoremap <c-m> :noh<cr>
 "allow backspace to work normally
 set backspace=indent,eol,start
 " force min window width
-set winwidth=120
+set winwidth=100
 "set text to consolas size 11
 set guifont=Consolas:h11
-set lines=70 columns=120
+set lines=70 columns=150
 set tabstop=4     "tabs are at proper location
 set expandtab     "don't use actual tab character (ctrl-v)
 set shiftwidth=4  "indenting is 4 spaces
 set pastetoggle=<f5>
 
+" wrap lines at 120 chars. 80 is some what antiquated with nowadays displays.
+" force wrapping after 80 chars on line
+" set textwidth=80
 " vertical bar of color indicating where the line break is
 set colorcolumn=80
-" wrap lines at 120 chars. 80 is somewaht antiquated with nowadays displays.
-" set textwidth=80
 " let &colorcolumn=join(range(80,300),",")
 
 " Open tag in tab, open tag in vsplit
@@ -154,6 +155,9 @@ set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap wil
 " set shell=/usr/bin/env\ bash
 
 set history=1000
+
+" Show tags for the current buffer and switches to it
+nmap <F8> :TagbarToggle<CR><c-w><c-w>
 
 " highlight trailing whitespace
 " highlight ExtraWhitespace ctermbg=red guibg=red
@@ -199,6 +203,9 @@ nnoremap <c-z> <esc>ma:%s#\s\+$##e<cr>:%s#\(\n\n\)\n\+#\1#e<cr>:%s#\(\n\s*\)\+\%
 
 " Autoindent for func args will on (
 set cino+=(0
+
+" auto  {} on {
+inoremap { {<cr>}<esc>O
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
 nnoremap <leader>m :Marks<cr>
