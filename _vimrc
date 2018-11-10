@@ -5,7 +5,6 @@
 " remap to something useful: - goes to first nonwhite prev line TODO: other default mappings that aren't used at all remapped to something I need?
 " perform normal mode movement while in insert mode? TODO: learn insert mode stuff
 
-
 " skip loading microsoft windows key editing commands
 let skip_loading_mswin=1
 execute pathogen#infect()
@@ -139,6 +138,9 @@ set pastetoggle=<f5>
 set colorcolumn=80
 " let &colorcolumn=join(range(80,300),",")
 
+" minify the amount of highlighting done
+set synmaxcol=128
+syntax sync minlines=256
 " Open tag in tab, open tag in vsplit
 map <c-T> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 map <a-v> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
@@ -262,7 +264,7 @@ nnoremap Y y$
 " Preformatted comment block (The ' key is used for last pos but that is taken care of with c-o and c-i)
 nnoremap ' O<esc>i/*<esc>50a*<esc>o<esc>50i*<esc>a*/<esc>Vk=o<tab>
 
-" Only hit < or > once to tab indent
+" Only hit < or > once to tab indent, can be vis selected and repeated
 nnoremap < <<
 nnoremap > >>
 
