@@ -1,4 +1,5 @@
 " TODO:
+" https://dougblack.io/words/a-good-vimrc.html
 " Figure out how to compile and jump to errors (:cl :cn :cp (list, next, prev))
 " Better syntax highlighitng for c/cpp? Or just work on a good colorscheme
 " remap to something useful: - goes to first nonwhite prev line TODO: other default mappings that aren't used at all remapped to something I need?
@@ -39,6 +40,12 @@ set termencoding=utf-8
 set number
 " Show relative line numbers
 set relativenumber
+
+" redraw only when we need to.
+set lazyredraw
+
+" enable folding, shows all folds
+set foldenable
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
@@ -229,8 +236,8 @@ vnoremap  <leader>t,      :Tabularize  /,<cr>
 nnoremap  <leader>t,      :Tabularize  /,<cr>
 vnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 nnoremap  <leader>ts      :Tabularize  /\S\+<cr>
-vnoremap  <leader>t/      :Tabularize  /\/\/
-nnoremap  <leader>t/      :Tabularize  /\/\/
+vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
+nnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
 " Default vim behavior is to copy the deleted or changed text into the default register and prevents spam pasting
 " xnoremap p "_dP
@@ -242,8 +249,8 @@ nnoremap k gk
 " yank to end of line
 nnoremap Y y$
 
-" Indent block
-nnoremap == gg=G<c-o>
+" Indent whole file, turns out to be too painful even for medium files
+" nnoremap == gg=G<c-o>
 
 " Preformatted comment block (The ' key is used for last pos but that is taken care of with c-o and c-i)
 nnoremap ' O<esc>i/*<esc>50a*<esc>o<esc>50i*<esc>a*/<esc>Vk=o<tab>
@@ -329,6 +336,7 @@ onoremap s :normal vs<CR>
 
 
 " possibly useful nomral mode keys:
+" <c-w>gf to open file under cursor in a new tab
 " ; will repeat t and f (line movement to and find) commonds. , will repeat T and F commands (reverse)
 " <c-w><c-w> cycle split windows
 " K will search in man pages for the command under cursor (this has been remapped to to opposite of J)
