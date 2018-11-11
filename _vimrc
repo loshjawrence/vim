@@ -53,7 +53,7 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 set rtp+=~/.fzf
 
 " Toggle between header and source
-nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
 " allow saving of marks for a session (save-->:mks!   savenew-->:mks ~/vimfiles/session/mysession.vim   load--> :source path-to-mysession.vim)
 " must use captial and 0-9 marks
@@ -142,8 +142,8 @@ set colorcolumn=80
 set synmaxcol=128
 syntax sync minlines=256
 " Open tag in tab, open tag in vsplit
-map <c-T> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-map <a-v> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+map <c-T> :tab split<cr>:exec("tag ".expand("<cword>"))<cr>
+map <a-v> :vsp <cr>:exec("tag ".expand("<cword>"))<cr>
 
 " remap <leader> to spacebar (default \)
 noremap <space> <nop>
@@ -159,7 +159,7 @@ set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap wil
 set history=1000
 
 " Show tags for the current buffer and switches to it
-nmap <F8> :TagbarToggle<CR><c-w><c-w>
+nmap <F8> :TagbarToggle<cr><c-w><c-w>
 
 " highlight trailing whitespace
 " highlight ExtraWhitespace ctermbg=red guibg=red
@@ -221,6 +221,10 @@ nnoremap <leader>r :Rg<cr>
 " TagHighlight
 nnoremap <leader>u :UpdateTypesFile<cr>
 
+" Session: save vim session to ./Session.vim, load Session.vim
+nnoremap <leader>ss :mks!<cr>
+nnoremap <leader>so :source Session.vim<cr>
+
 " Go to tab by number
 noremap <leader>1 1gt
 noremap <leader>2 2gt
@@ -269,16 +273,24 @@ nnoremap < <<
 nnoremap > >>
 
 " map redo to U, <c-r> is used in Visual Studio for good refactoring shortcuts
-nnoremap U <c-r>
+" nnoremap U <c-r>
+
+" Now Ctrl-u and Ctrl-w will work as before, but they first use Ctrl-g u to start a new change, 
+" as far as undo is concerned. For example, in insert mode, you might type several lines then accidentally press Ctrl-u which deletes the last line. 
+" If you have used the above mapping, you can press Esc to return to normal mode, then u to undo, which will recover the last line. 
+inoremap <c-u> <c-g>u<c-u>
+inoremap <c-w> <c-g>u<c-w>
 
 " like J, but reverse (for comma sep list), pick a better letter H is used as a part of the broad page jump trio(H, M, L)
 nnoremap K T,i<cr><esc>k$T,
 
 " smooth scroll plugin
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 3)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 3)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 3)<cr>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 3)<cr>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<cr>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<cr>
+noremap <silent> <c-y> :call smooth_scroll#up(8, 0, 2)<cr>8j
+noremap <silent> <c-e> :call smooth_scroll#down(8, 0, 2)<cr>8k
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
@@ -310,9 +322,9 @@ vnoremap Q :norm @q<cr>
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
-vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
-            \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
-onoremap s :normal vs<CR>
+vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<cr><cr>
+            \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
+onoremap s :normal vs<cr>
 " Example: onoremap p i(       The onoremap command tells Vim that when it's waiting for a movement to give to an operator and it sees p, it should treat it like i(. When we ran dp it was like saying "delete parameters", which Vim translates to "delete inside parentheses".
 
 " Auto generate remappings, targets.vim does this nicely
@@ -339,23 +351,27 @@ onoremap s :normal vs<CR>
 " search quote with white stuff in it /"\s+"
 " search quote with nothing /""
 " search quote followed by \ or quote followed by any char /"\\\|".
-" nnoremap ci" ?"<CR>vNc""<Esc>:noh<CR>i
-" nnoremap cin" /".*\S\+.*"<CR>:noh<CR>iasdf
-" nnoremap cil" ?".*\S\+.*"<CR>cs""<Esc>:noh<CR>i
-
+" nnoremap ci" ?"<cr>vNc""<Esc>:noh<cr>i
+" nnoremap cin" /".*\S\+.*"<cr>:noh<cr>iasdf
+" nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
 " possibly useful nomral mode keys:
 " <c-w>gf to open file under cursor in a new tab
 " ; will repeat t and f (line movement to and find) commonds. , will repeat T and F commands (reverse)
 " <c-w><c-w> cycle split windows
+" c-w + h,j,k, or l will nav to other splits
+" c-w + s,v opens the same buffer in a horiz or vert split
 " K will search in man pages for the command under cursor (this has been remapped to to opposite of J)
 " :sh will open a shell
 " di{ to delete method body, can do this with these as well: " ( [ ' <
+" daw deletes around(includes white space) word use this instead of db unless you really need db
 " :windo diffthis (diff windows in current tab, :diffoff! to turn it off)
 " :g/^\s*$/d global delete lines containing regex(whitespace-only lines)
 " :v/error\|warn\|fail/d opposite of global delete (equivalent to global inverse delete (g!//d)) keep the lines containing the regex(error or warn or fail)
 " :tab sball -> convert everything to tabs
 " gt (next tab) gT(prev tab) #gt (jump to tab #)
+" :mks! to save Session.vim in current folder
+" :source Session.vim to open the Session.vim saved session
 " c-p basic tab completion pulling from a variety of sources
 " c-n, c-p open completion prompt (also for prompt navigation, prev, next)
 " c-x c-l whole line completion
@@ -368,11 +384,16 @@ onoremap s :normal vs<CR>
 " open prevoius file: <c-6> good for toggling .h and .cpp (can also use fzf's :History command <leader>hh)
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
-" :Vex vertical explorer (can navigate and search like normal vim, how to open file in tab?)
+" :Vex vertical explorer (can navigate and search like normal vim, READ THE F1 help looks configurable  to work like a tree)
 " can turn a split into a tab by doing c-w then T
 " zz to center the line you're on in the middle of the screen
-" c-x subtracts 1 from number under curosr c-a adds.
 " zt to put the line you're on at the top of the screen
+" c-y anc c-e scroll up and down keeping the cursor on the same line
+" c-x subtracts 1 from number under curosr c-a adds.
+
+" INSERT MODE
+" c-w deletes word
+" c-u deletes line
 
 
 
