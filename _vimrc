@@ -139,8 +139,9 @@ set colorcolumn=80
 " let &colorcolumn=join(range(80,300),",")
 
 " minify the amount of highlighting done
-set synmaxcol=128
-syntax sync minlines=256
+" set synmaxcol=128
+" syntax sync minlines=256
+
 " Open tag in tab, open tag in vsplit
 map <c-T> :tab split<cr>:exec("tag ".expand("<cword>"))<cr>
 map <a-v> :vsp <cr>:exec("tag ".expand("<cword>"))<cr>
@@ -289,8 +290,8 @@ noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 3)<cr>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 3)<cr>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<cr>
 noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<cr>
-noremap <silent> <c-y> :call smooth_scroll#up(8, 0, 2)<cr>8j
-noremap <silent> <c-e> :call smooth_scroll#down(8, 0, 2)<cr>8k
+noremap <silent> <c-y> :call smooth_scroll#up(10, 0, 2)<cr>10j
+noremap <silent> <c-e> :call smooth_scroll#down(10, 0, 2)<cr>10k
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
@@ -372,8 +373,7 @@ onoremap s :normal vs<cr>
 " gt (next tab) gT(prev tab) #gt (jump to tab #)
 " :mks! to save Session.vim in current folder
 " :source Session.vim to open the Session.vim saved session
-" c-p basic tab completion pulling from a variety of sources
-" c-n, c-p open completion prompt (also for prompt navigation, prev, next)
+" c-n, c-p tab-like completion pulling from variety of sources (also for prompt navigation, prev, next)
 " c-x c-l whole line completion
 " c-x c-o syntax aware omnicompletion
 " see this for native vim auto complete https://robots.thoughtbot.com/vim-you-complete-me
