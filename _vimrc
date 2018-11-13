@@ -391,6 +391,21 @@ onoremap s :normal vs<cr>
 " c-y anc c-e scroll up and down keeping the cursor on the same line
 " c-x subtracts 1 from number under curosr c-a adds.
 
+" REGISTERS
+" :reg to list whats in all the registers
+" "" is the unamed register (d,x,s,c) will go there
+" "0 is the last yank, 1-9 are the deletes, youngest to oldest
+" ". is the last insterted text, good for repeated pastes
+" "% is the current file name
+" ": most recent command. Ex: if you saved with :w then w will be in this reg
+" "+ is the system clipboard for copying into and out of vim
+" @: uses this register to execute the command again
+" "# is the name of the last edited file (what vim uses for c-6)
+" "= is the expression regiser: This is easier to understand with an example. If, in insert mode, you type Ctrl-r =, you will see a “=” sign in the command line. Then if you type 2+2 <enter>, 4 will be printed. This can be used to execute all sort of expressions, even calling external commands. To give another example, if you type Ctrl-r = and then, in the command line, system('ls') <enter>, the output of the ls command will be pasted in your buffer
+" "/ is the search register, the last thing searched for
+" Editing macros since they are stored in registers: For example, if you forgot to add a semicolon in the end of that w macro, just do something like :let @W='i;'. Noticed the upcased W? That’s just how we append a value to a register, using its upcased name, so here we are just appending the command i; to the register, to enter insert mode (i) and add a semicolon.
+"If you need to edit something in the middle of the register, just do :let @w='<Ctrl-r w>, change what you want, and close the quotes in the end. Done, no more recording a macro 10 times before you get it right.
+
 " INSERT MODE
 " c-w deletes word
 " c-u deletes line
