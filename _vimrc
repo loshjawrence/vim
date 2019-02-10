@@ -46,6 +46,9 @@ set lazyredraw
 " enable folding, shows all folds
 set foldenable
 
+" turn of errorbells
+set noeb
+
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Use fuzzy file finder fzf
