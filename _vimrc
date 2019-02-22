@@ -30,6 +30,12 @@ if has('termguicolors')
     set termguicolors " 24-bit terminal
 endif
 
+" gvim's tab-bar has no highlighting, so add it. cterm is for consoles, gui is for gvim gui
+hi TabLineSel ctermfg=red ctermbg=yellow guifg=red guibg=yellow
+hi TabLineFill ctermfg=lightgreen ctermbg=darkgreen guifg=lightgreen guibg=darkgreen
+hi TabLine ctermfg=blue ctermbg=yellow guifg=blue guibg=yellow
+hi Title ctermfg=lightblue ctermbg=magenta guifg=lightblue guibg=magenta
+
 " set UTF-8 encoding
 set enc=utf-8
 set fenc=utf-8
@@ -56,7 +62,7 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 set rtp+=~/.fzf
 
 " let g:rg_command = '
-"   \ rg --files --no-heading --fixed-strings 
+"   \ rg --files --no-heading --fixed-strings
 "   \ -g "{src,Source,Specs}*.{js,json,md,html,config,cpp,c,hpp,h,conf,rs,txt}"
 "   \ -g "!{.git,node_modules,vendor,ThirdParty}/*" '
 "
@@ -157,7 +163,7 @@ let mapleader= "\<space>"
 "show line num file name leave space for command line
 set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap wildmenu
 
-" use the bash shell for shell commands example :!grep 
+" use the bash shell for shell commands example :!grep
 " Could no longer do :History
 " set shell=/usr/bin/env\ bash
 
@@ -167,8 +173,10 @@ set history=1000
 nmap <F8> :TagbarToggle<cr><c-w><c-w>
 
 " highlight trailing whitespace
-" highlight ExtraWhitespace ctermbg=red guibg=red
-" match ExtraWhitespace /\s\+$/
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 
 " vim treats a sequences of [A-Za-z0-9_] as a `word` (WORD just goes to next whitespace)
 " You can re-define what word mean to vim, this removes the _ char from the set
