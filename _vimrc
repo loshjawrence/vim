@@ -30,11 +30,11 @@ if has('termguicolors')
     set termguicolors " 24-bit terminal
 endif
 
-" gvim's tab-bar has no highlighting, so add it. cterm is for consoles, gui is for gvim gui
-hi TabLineSel ctermfg=red ctermbg=yellow guifg=red guibg=yellow
-hi TabLineFill ctermfg=lightgreen ctermbg=darkgreen guifg=lightgreen guibg=darkgreen
-hi TabLine ctermfg=blue ctermbg=yellow guifg=blue guibg=yellow
-hi Title ctermfg=lightblue ctermbg=magenta guifg=lightblue guibg=magenta
+" Doesnt work. gvim's tab-bar has no highlighting, so add it. cterm is for consoles, gui is for gvim gui
+" hi TabLineSel ctermfg=red ctermbg=yellow guifg=red guibg=yellow
+" hi TabLineFill ctermfg=lightgreen ctermbg=darkgreen guifg=lightgreen guibg=darkgreen
+" hi TabLine ctermfg=blue ctermbg=yellow guifg=blue guibg=yellow
+" hi Title ctermfg=lightblue ctermbg=magenta guifg=lightblue guibg=magenta
 
 " set UTF-8 encoding
 set enc=utf-8
@@ -78,7 +78,7 @@ nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 " http://vimdoc.sourceforge.net/htmldoc/usr_21.html#21.3
 " set viminfo='1000,f1
 
-" <c-a> and <c-x> commands for inc dec numbers wont interpret any number as octal (ex: 007 would go up to 010)
+" <c-a> and <c-x> commands for inc dec numbers wont interpret any number as octal (ex: c-a on 007 would go up to 010)
 set nrformats-=octal
 
 " should remove load prompts on external change (ex: git pull)
@@ -121,12 +121,15 @@ au FocusGained,BufEnter * :checktime
 
 " make warnings more obvious (search wrap, etc)
 hi WarningMsg ctermfg=white ctermbg=red guifg=White guibg=Red gui=None
+
 " turn on keyword color differentiation
 set t_Co=256
+
 " turn on incremental smartcase search highlighting (don't silently wrap, use gg and G to manually continue search)
 set incsearch ignorecase smartcase hlsearch nowrapscan
-" turn off highlights (turn off matches)
-" nnoremap <c-m> :noh<cr>
+
+" turn off highlights (turn off search matches)
+nnoremap <c-m> :noh<cr>
 
 " hi Search guifg=Black guibg=Green
 "allow backspace to work normally
@@ -172,7 +175,7 @@ set history=1000
 " Show tags for the current buffer and switches to it
 nmap <F8> :TagbarToggle<cr><c-w><c-w>
 
-" highlight trailing whitespace
+" highlight trailing whitespace in normal mode
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
@@ -282,8 +285,6 @@ nnoremap k gk
 " yank to end of line
 nnoremap Y y$
 
-" Indent whole file, turns out to be too painful even for medium files
-" nnoremap == gg=G<c-o>
 
 " Preformatted comment block (The ' key is used for last pos but that is taken care of with c-o and c-i)
 nnoremap ' O<esc>i/*<esc>50a*<esc>o<esc>50i*<esc>a*/<esc>Vk=o<tab>
@@ -291,15 +292,18 @@ nnoremap ' O<esc>i/*<esc>50a*<esc>o<esc>50i*<esc>a*/<esc>Vk=o<tab>
 " Only hit < or > once to tab indent, can be vis selected and repeated
 nnoremap < <<
 nnoremap > >>
+" Indent whole file, turns out to be too painful even for medium files, just do current scope instead
+" nnoremap == gg=G<c-o>
+nnoremap == =i{<c-o>
 
 " map redo to U, <c-r> is used in Visual Studio for good refactoring shortcuts
 " nnoremap U <c-r>
 
-" Now Ctrl-u and Ctrl-w will work as before, but they first use Ctrl-g u to start a new change, 
+" Now Ctrl-u and Ctrl-w will work as before, but they first use Ctrl-g u to start a new change,
 " as far as undo is concerned. For example, in insert mode, you might type several lines then accidentally press Ctrl-u which deletes the last line. 
-" If you have used the above mapping, you can press Esc to return to normal mode, then u to undo, which will recover the last line. 
-inoremap <c-u> <c-g>u<c-u>
-inoremap <c-w> <c-g>u<c-w>
+" If you have used the above mapping, you can press Esc to return to normal mode, then u to undo, which will recover the last line.
+" inoremap <c-u> <c-g>u<c-u>
+" inoremap <c-w> <c-g>u<c-w>
 
 " like J, but reverse (for comma sep list), pick a better letter H is used as a part of the broad page jump trio(H, M, L)
 nnoremap K T,i<cr><esc>k$T,
@@ -428,8 +432,6 @@ onoremap s :normal vs<cr>
 " INSERT MODE
 " c-w deletes word
 " c-u deletes line
-
-
 
 " Bad but might have nugget of good idea
 " Bind p in visual mode to paste without overriding the current register
