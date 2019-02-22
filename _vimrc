@@ -46,8 +46,8 @@ set lazyredraw
 " enable folding, shows all folds
 set foldenable
 
-" turn of errorbells
-set noeb
+" turn of errorbells (no it doesn't)
+" set noeb
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
@@ -88,13 +88,6 @@ au FocusGained,BufEnter * :checktime
 " set tabpagemax=50
 " set viminfo^=!
 " set sessionoptions-=options
-" leave at least n lines when scrolling
-" set scrolloff=1
-" set sidescrolloff=5
-" set display+=lastline
-" set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-" Delete comment character when joining commented lines
-" set formatoptions+=j
 
 " Triger `autoread` when files changes on disk
 " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
@@ -127,7 +120,7 @@ set t_Co=256
 " turn on incremental smartcase search highlighting (don't silently wrap, use gg and G to manually continue search)
 set incsearch ignorecase smartcase hlsearch nowrapscan
 " turn off highlights (turn off matches)
-nnoremap <c-m> :noh<cr>
+" nnoremap <c-m> :noh<cr>
 
 " hi Search guifg=Black guibg=Green
 "allow backspace to work normally
@@ -375,8 +368,8 @@ onoremap s :normal vs<cr>
 " nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
 " possibly useful nomral mode keys:
-" <c-w>gf to open file under cursor in a new tab
-" ; will repeat t and f (line movement to and find) commonds. , will repeat T and F commands (reverse)
+" <c-w>gf to open file under cursor in a new tab, gf will open file in this tab
+" ; will repeat t/T and f/F (line movement to and find) commonds. , will repeat reverse directio direction
 " <c-w><c-w> cycle split windows
 " c-w + h,j,k, or l will nav to other splits
 " c-w + s,v opens the same buffer in a horiz or vert split
@@ -386,7 +379,7 @@ onoremap s :normal vs<cr>
 " daw deletes around(includes white space) word use this instead of db unless you really need db
 " :windo diffthis (diff windows in current tab, :diffoff! to turn it off)
 " :g/^\s*$/d global delete lines containing regex(whitespace-only lines)
-" :v/error\|warn\|fail/d opposite of global delete (equivalent to global inverse delete (g!//d)) keep the lines containing the regex(error or warn or fail)
+" :g!/error\|warn\|fail/d opposite of global delete (equivalent to global inverse delete (v//d)) keep the lines containing the regex(error or warn or fail)
 " :tab sball -> convert everything to tabs
 " gt (next tab) gT(prev tab) #gt (jump to tab #)
 " :mks! to save Session.vim in current folder
@@ -401,19 +394,19 @@ onoremap s :normal vs<cr>
 " edit file under cursor: gf
 " open prevoius file: <c-6> good for toggling .h and .cpp (can also use fzf's :History command <leader>hh)
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
-" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
+" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
 " :Vex vertical explorer (can navigate and search like normal vim, READ THE F1 help looks configurable  to work like a tree)
 " can turn a split into a tab by doing c-w then T
 " zz to center the line you're on in the middle of the screen
 " zt to put the line you're on at the top of the screen
 " c-y anc c-e scroll up and down keeping the cursor on the same line
-" c-x subtracts 1 from number under curosr c-a adds.
+" c-x subtracts 1 from number under curosr c-a adds 1
 
 " REGISTERS
 " :reg to list whats in all the registers
 " "" is the unamed register (d,x,s,c) will go there
 " "0 is the last yank, 1-9 are the deletes, youngest to oldest
-" ". is the last insterted text, good for repeated pastes
+" ". is THE LAST INSTERTED TEXT, GOOD FOR REPEATED PASTES
 " "% is the current file name
 " ": most recent command. Ex: if you saved with :w then w will be in this reg
 " "+ is the system clipboard for copying into and out of vim
