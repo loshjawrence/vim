@@ -129,7 +129,8 @@ set t_Co=256
 set incsearch ignorecase smartcase hlsearch nowrapscan
 
 " turn off highlights (turn off search matches)
-nnoremap <c-m> :noh<cr>
+" nnoremap <c-m> :noh<cr>
+nnoremap <cr> :noh<cr>
 
 " hi Search guifg=Black guibg=Green
 "allow backspace to work normally
