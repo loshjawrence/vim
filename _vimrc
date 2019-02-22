@@ -55,6 +55,14 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " (If installed using git: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install)
 set rtp+=~/.fzf
 
+" let g:rg_command = '
+"   \ rg --files --no-heading --fixed-strings 
+"   \ -g "{src,Source,Specs}*.{js,json,md,html,config,cpp,c,hpp,h,conf,rs,txt}"
+"   \ -g "!{.git,node_modules,vendor,ThirdParty}/*" '
+"
+" command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
+" let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
 " Toggle between header and source
 nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
@@ -77,16 +85,16 @@ au FocusGained,BufEnter * :checktime
 " dont scan included files during c-n c-p completion
 "set complete-=i
 
-set tabpagemax=50
-set viminfo^=!
-set sessionoptions-=options
+" set tabpagemax=50
+" set viminfo^=!
+" set sessionoptions-=options
 " leave at least n lines when scrolling
 " set scrolloff=1
-set sidescrolloff=5
-set display+=lastline
-set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+" set sidescrolloff=5
+" set display+=lastline
+" set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 " Delete comment character when joining commented lines
-set formatoptions+=j
+" set formatoptions+=j
 
 " Triger `autoread` when files changes on disk
 " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
@@ -174,22 +182,22 @@ nmap <F8> :TagbarToggle<cr><c-w><c-w>
 " of contiguous chars that defined a `word`
 set iskeyword-=_
 
-" example function for tidy up
-function TidyUp()
-    " save position of cursor
-    let origPos = getpos(".")
-    " remove trailing whitespace on save
-    :%s/\s\+$//e
-    " insert a space after every comma, \1 refs stuff inside \(\)
-    :%s/,\(\S\)/, \1/g
-    " collapse multiple blank lines with one
-    :%s#\(\n\n\)\n\+#\1#e
-    " replace trailing empty lines
-    :%s#\($\n\s*\)\+\%$##e
-    "previous command moves cursor, restore its original pos
-    call setpos(".", origPos)
-    :w
-endfunction
+" " example function for tidy up
+" function TidyUp()
+"     " save position of cursor
+"     let origPos = getpos(".")
+"     " remove trailing whitespace on save
+"     :%s/\s\+$//e
+"     " insert a space after every comma, \1 refs stuff inside \(\)
+"     :%s/,\(\S\)/, \1/g
+"     " collapse multiple blank lines with one
+"     :%s#\(\n\n\)\n\+#\1#e
+"     " replace trailing empty lines
+"     :%s#\($\n\s*\)\+\%$##e
+"     "previous command moves cursor, restore its original pos
+"     call setpos(".", origPos)
+"     :w
+" endfunction
 
 " vsvim for visual studio doesn't support some autocmd's, so remap save to tidyUp then save
 " vsvim doesn't support functions :(
@@ -208,14 +216,20 @@ nnoremap <c-z> <esc>ma:%s#\s\+$##e<cr>:%s#\(\n\n\)\n\+#\1#e<cr>:%s#\(\n\s*\)\+\%
 "autocmd BufWritePre * :%s/\s\+$//e
 
 " Autoindent for func args will on (
-set cino+=(0
+" set cino+=(0
 
 " auto  {} on {
-inoremap { {<cr>}<esc>O
+inoremap { {}<esc>i
+" inoremap ( ()<esc>i
+" inoremap ' ''<esc>i
+" inoremap " ""<esc>i
+" inoremap < <><esc>i
+" inoremap [ []<esc>i
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
 nnoremap <leader>m :Marks<cr>
-nnoremap <leader>f :Files<cr>
+nnoremap <leader>f :GFiles<cr>
+nnoremap <leader>F :Files<cr>
 nnoremap <leader>hh :History<cr>
 nnoremap <leader>h/ :History/<cr>
 nnoremap <leader>h: :History:<cr>
@@ -229,16 +243,17 @@ nnoremap <leader>u :UpdateTypesFile<cr>
 nnoremap <leader>ss :mks!<cr>
 nnoremap <leader>so :source Session.vim<cr>
 
+" Search replace
+nnoremap <leader>sr :s//g
+vnoremap <leader>sr :s//g
+
 " Go to tab by number
 noremap <leader>1 1gt
 noremap <leader>2 2gt
 noremap <leader>3 3gt
 noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
+noremap <a-a> gT
+noremap <a-d> gt
 noremap <leader>0 :tablast<cr>
 
 " Tabularize plugin, to align this I highlighted then :Tabularize /:Tabularize
@@ -304,7 +319,7 @@ nnoremap <c-[> <Esc>:w<cr>
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
 
-" apply macro across visual selection
+" apply macro across visual selection, VG to select until end of file
 vnoremap Q :norm @q<cr>
 
 " block comment (+) uncomment (_)
