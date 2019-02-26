@@ -3,6 +3,7 @@
   * cp vimfiles and _vimrc to home dir (windows: C:/Users/userName or ~/)
   * Note the github location in vimfiles/bundle and commit and push if it is fast and actually solves a problem or serves a need
 # How to profile to find a slow plugin
+
   * Start-up:
 vim --startuptime startup.report
 

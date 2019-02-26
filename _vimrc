@@ -29,7 +29,6 @@ colorscheme alduin
 if has('termguicolors')
     set termguicolors " 24-bit terminal
 endif
-
 " Doesnt work. gvim's tab-bar has no highlighting, so add it. cterm is for consoles, gui is for gvim gui
 " hi TabLineSel ctermfg=red ctermbg=yellow guifg=red guibg=yellow
 " hi TabLineFill ctermfg=lightgreen ctermbg=darkgreen guifg=lightgreen guibg=darkgreen
@@ -165,6 +164,8 @@ let mapleader= "\<space>"
 
 "show line num file name leave space for command line
 set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap wildmenu
+" Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
+set nomodeline
 
 " use the bash shell for shell commands example :!grep
 " Could no longer do :History
