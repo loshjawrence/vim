@@ -129,7 +129,6 @@ set t_Co=256
 set incsearch ignorecase smartcase hlsearch nowrapscan
 
 " turn off highlights (turn off search matches)
-" nnoremap <c-m> :noh<cr>
 nnoremap <cr> :noh<cr>
 
 " hi Search guifg=Black guibg=Green
@@ -249,8 +248,10 @@ nnoremap <leader>ss :mks!<cr>
 nnoremap <leader>so :source Session.vim<cr>
 
 " Search replace
-nnoremap <leader>sr :s//g
-vnoremap <leader>sr :s//g
+" replace in entire file
+nnoremap <leader>sr :%s//g<left><left>
+" replace on selected lines
+vnoremap <leader>sr :s//g<left><left>
 
 " Go to tab by number
 noremap <leader>1 1gt
@@ -332,7 +333,7 @@ vnoremap Q :norm @q<cr>
 " norm runs normoal mode commands in specified range, when in V mode
 " it gets fed the lines you selected
 " NOTE: you can't map to c-/
-" vmap <c-/> :norm ^i// <cr> 
+" vmap <c-/> :norm ^i// <cr>
 " vmap <c-?> :norm ^xxx<cr>
 " tcommentary.vim (visual mode gc or <c-_><c-_>)
 
