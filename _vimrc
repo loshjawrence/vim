@@ -1,21 +1,17 @@
 " TODO:
 " https://dougblack.io/words/a-good-vimrc.html
-" Figure out how to compile and jump to errors (:cl :cn :cp (list, next, prev))
+" https://dockyard.com/blog/2018/06/01/simple-vim-session-management-part-1
+" Figure out how to compile and jump to errors (:cl :cn :cp (i.e. list, next, prev))
 " Better syntax highlighitng for c/cpp? Or just work on a good colorscheme
 " remap to something useful: - goes to first nonwhite prev line TODO: other default mappings that aren't used at all remapped to something I need?
-" perform normal mode movement while in insert mode? TODO: learn insert mode stuff
+" perform normal mode movement while in insert mode? Just get better at staying in normal mode. TODO: learn insert mode stuff
 
 " skip loading microsoft windows key editing commands
 let skip_loading_mswin=1
+
 execute pathogen#infect()
+
 syntax on
-
-" smart indenting
-filetype plugin indent on
-set autoindent    "turns it on
-set smartindent   "does the right thing (mostly) in programs
-set cindent       "stricter rules for C programs
-
 syntax enable
 set background=dark
 colorscheme alduin
@@ -29,6 +25,7 @@ colorscheme alduin
 if has('termguicolors')
     set termguicolors " 24-bit terminal
 endif
+
 " Doesnt work. gvim's tab-bar has no highlighting, so add it. cterm is for consoles, gui is for gvim gui
 " hi TabLineSel ctermfg=red ctermbg=yellow guifg=red guibg=yellow
 " hi TabLineFill ctermfg=lightgreen ctermbg=darkgreen guifg=lightgreen guibg=darkgreen
@@ -36,23 +33,11 @@ endif
 " hi Title ctermfg=lightblue ctermbg=magenta guifg=lightblue guibg=magenta
 
 " set UTF-8 encoding
-set enc=utf-8
-set fenc=utf-8
-set termencoding=utf-8
+set enc=utf-8 fenc=utf-8 termencoding=utf-8
 
-" Show current line number
-set number
-" Show relative line numbers
-set relativenumber
-
-" redraw only when we need to.
-set lazyredraw
-
-" enable folding, shows all folds
-set foldenable
-
-" turn of errorbells (no it doesn't)
-" set noeb
+" Show current line number, rel num above below, redraw only when needed,
+" enable folds
+set number relativenumber lazyredraw foldenable
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
@@ -67,7 +52,6 @@ set rtp+=~/.fzf
 "
 " command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 " let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
 " Toggle between header and source
 nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
@@ -92,7 +76,8 @@ au FocusGained,BufEnter * :checktime
 
 " set tabpagemax=50
 " set viminfo^=!
-" set sessionoptions-=options
+set sessionoptions+=winpos
+set sessionoptions-=options
 
 " Triger `autoread` when files changes on disk
 " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
@@ -136,7 +121,7 @@ set backspace=indent,eol,start
 " force min window width
 set winwidth=100
 "set text to consolas size 11
-set guifont=Consolas:h11
+set guifont=Consolas:h8
 set lines=70 columns=150
 set tabstop=4     "tabs are at proper location
 set expandtab     "don't use actual tab character (ctrl-v)
@@ -164,8 +149,14 @@ let mapleader= "\<space>"
 
 "show line num file name leave space for command line
 set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap wildmenu
-" Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
-set nomodeline
+set nomodeline " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
+set visualbell t_vb=    " turn off error beep/flash
+set novisualbell " turn off visual bell
+" smart indenting
+filetype plugin indent on
+set autoindent    "turns it on
+set smartindent   "does the right thing (mostly) in programs
+set cindent       "stricter rules for C programs
 
 " use the bash shell for shell commands example :!grep
 " Could no longer do :History
@@ -319,6 +310,13 @@ noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<cr>
 noremap <silent> <c-y> :call smooth_scroll#up(10, 0, 2)<cr>10j
 noremap <silent> <c-e> :call smooth_scroll#down(10, 0, 2)<cr>10k
 
+" Source the vimrc so we don't have to refresh, edit the vimrc in new tab
+nmap <silent> <leader>vs :so $MYVIMRC<CR>
+nmap <silent> <leader>ve :tabnew $MYVIMRC<CR>
+
+" Less annoying backups (no more swp file in the directory you're working on)
+set backup backupdir=~/vimfiles writebackup
+
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
 inoremap <c-[> <Esc>:w<cr>
@@ -326,7 +324,6 @@ nnoremap <c-[> <Esc>:w<cr>
 
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
-
 " apply macro across visual selection, VG to select until end of file
 vnoremap Q :norm @q<cr>
 
