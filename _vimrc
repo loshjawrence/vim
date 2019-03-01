@@ -76,8 +76,18 @@ au FocusGained,BufEnter * :checktime
 
 " set tabpagemax=50
 " set viminfo^=!
-set sessionoptions+=winpos
 set sessionoptions-=options
+
+" Get vimrc to load across a session when vimrc written
+ function! UpdateVimRC()
+     for server in split(serverlist())
+         call remote_send(server, '<Esc>:source $HOME/_vimrc<CR>')
+     endfor
+ endfunction
+ augroup myvimrchooks
+ au!
+    autocmd bufwritepost _vimrc call UpdateVimRC()
+ augroup END
 
 " Triger `autoread` when files changes on disk
 " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
@@ -120,9 +130,9 @@ nnoremap <cr> :noh<cr>
 set backspace=indent,eol,start
 " force min window width
 set winwidth=100
-"set text to consolas size 11
-set guifont=Consolas:h8
-set lines=70 columns=150
+"set text to consolas, size
+set guifont=Consolas:h9
+" set lines=70 columns=150 " This will force resizing of sessions when you update the vimrc
 set tabstop=4     "tabs are at proper location
 set expandtab     "don't use actual tab character (ctrl-v)
 set shiftwidth=4  "indenting is 4 spaces
