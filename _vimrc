@@ -79,6 +79,7 @@ au FocusGained,BufEnter * :checktime
 set sessionoptions-=options
 
 " Get vimrc to load across a session when vimrc written
+" :so ~/_vimrc will source the vimrc so you don't have to reload
  function! UpdateVimRC()
      for server in split(serverlist())
          call remote_send(server, '<Esc>:source $HOME/_vimrc<CR>')
@@ -325,7 +326,13 @@ nmap <silent> <leader>vs :so $MYVIMRC<CR>
 nmap <silent> <leader>ve :tabnew $MYVIMRC<CR>
 
 " Less annoying backups (no more swp file in the directory you're working on)
-set backup backupdir=~/vimfiles writebackup
+" the "//" at the end of each directory means that file names will be built from the complete path to the file with all path separators substituted to percent "%" sign. This will ensure file name uniqueness in the preserve director
+set undodir=~/vimfiles//
+set backupdir=~/vimfiles//
+set directory=~/vimfiles//
+" Alternately can disable them
+" set nobackup
+" set noswapfile
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
