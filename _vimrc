@@ -430,6 +430,10 @@ onoremap s :normal vs<cr>
 " zt to put the line you're on at the top of the screen
 " c-y anc c-e scroll up and down keeping the cursor on the same line
 " c-x subtracts 1 from number under curosr c-a adds 1
+" zE remove all folds
+" [{ ]} will jump to beginning and end of a {} scope
+" vip will highlight a block bound by blank lines
+" % will jump to (), [], [] on a line
 
 " REGISTERS
 " :reg to list whats in all the registers
