@@ -434,6 +434,29 @@ onoremap s :normal vs<cr>
 " [{ ]} will jump to beginning and end of a {} scope
 " vip will highlight a block bound by blank lines
 " % will jump to (), [], [] on a line
+" INSERT MODE MOVEMENT:
+" CTRL-W    Delete word to the left of cursor
+" CTRL-J    Insert newline (easier than reaching for the return key)
+" CTRL-U    Delete everything to the left of cursor
+" CTRL-T    Indent current line
+" CTRL-D    Un-indent current line
+" CTRL-O    Goes to normal mode to execute 1 normal mode command
+" CTRL-H    Backspace
+" COMMAND MODE:
+" ctrl-n, p next previous command in history
+
+" [ COMMANDS (The ] key is the forward version of the [ key)
+" [ ctrl-i jump to first line in current and included files that contains the word under the cursor
+" [ ctrl-d jumpt to first #define found in current and included files matching the word under cursor
+" [/ cursor N times back to start of // comment
+" [( cursor N times back to unmatched (
+" [{ cursor N times back to unmatched {
+" [[ cursor N times back to unmatched [
+" [D list all defines found in current and lincluded files matching word under cursor
+" [I list all lines found in current and lincluded files matching word under cursor
+" [m cursor N times back to start of memeber function
+" gD go to def or word under cursor in current file
+" gd go to def or word under cursor in current function
 
 " REGISTERS
 " :reg to list whats in all the registers
