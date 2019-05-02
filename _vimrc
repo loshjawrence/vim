@@ -121,7 +121,7 @@ hi WarningMsg ctermfg=white ctermbg=red guifg=White guibg=Red gui=None
 set t_Co=256
 
 " turn on incremental smartcase search highlighting (don't silently wrap, use gg and G to manually continue search)
-set incsearch ignorecase smartcase hlsearch nowrapscan
+set incsearch ignorecase hlsearch nowrapscan smartcase
 
 " turn off highlights (turn off search matches)
 nnoremap <cr> :noh<cr>
@@ -397,6 +397,7 @@ onoremap s :normal vs<cr>
 " nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
 " possibly useful nomral mode keys:
+" :%!python -m json.tool // Prettify Json files (choco install python)
 " <c-w>gf to open file under cursor in a new tab, gf will open file in this tab
 " ; will repeat t/T and f/F (line movement to and find) commonds. , will repeat reverse directio direction
 " <c-w><c-w> cycle split windows
