@@ -31,13 +31,6 @@ set enc=utf-8 fenc=utf-8 termencoding=utf-8
 " Show current line number, relative line number above/below current line (current line shows file line number), redraw only when needed
 set number " lazyredraw " relativenumber
 
-" Make the current selected tab stand out in the tab bar
-" (doesn't work but for gvim, you would add guibg and guifg items on each line as well
-" :hi TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
-" :hi Title ctermfg=LightBlue ctermbg=Magenta
-:hi TabLine ctermfg=White ctermbg=Black
-:hi TabLineSel ctermfg=Black ctermbg=White
-
 " Highlights the  line that's being edited when in insert mode (in some way,depends on color scheme I think)
 " To make it more obvious which mode we are in given that we can't edit the
 " cursor type for terminal vim

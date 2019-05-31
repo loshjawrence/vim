@@ -91,8 +91,8 @@ hi         Pmenu             ctermfg=241   cterm=NONE       ctermbg=235
 hi         PmenuSel          ctermfg=187   cterm=NONE       ctermbg=235
 hi         PmenuSbar         ctermfg=235   cterm=NONE       ctermbg=235
 hi         PmenuThumb        ctermfg=235   cterm=NONE       ctermbg=235
-hi         TabLine           ctermfg=242   cterm=NONE       ctermbg=235
-hi         TabLineSel        ctermfg=247   cterm=NONE       ctermbg=235
+hi         TabLine           ctermfg=White   cterm=NONE       ctermbg=Black
+hi         TabLineSel        ctermfg=Black   cterm=NONE       ctermbg=White
 hi         TabLineFill       ctermfg=242   cterm=NONE       ctermbg=235
 hi         CursorLine        ctermfg=NONE  cterm=NONE       ctermbg=233
 hi         CursorColumn      ctermfg=NONE  cterm=NONE       ctermbg=233
