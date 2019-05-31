@@ -5,7 +5,8 @@ syntax on
 syntax enable
 " Note: on unix-like OS's you must put the .vim color scheme files (in this case alduin2.vim) in
 " /usr/share/vim/vim80/colors
-colorscheme alduin " sourcerer hybrid fantasy industry alduin
+
+colorscheme alduin3
 
 " Plugins. Execute :PlugInstall for any new ones you add
 " Auto install the vim-plug pluggin manager if its not there
