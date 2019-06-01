@@ -76,7 +76,10 @@ hi         ErrorMsg          ctermfg=131   cterm=NONE       ctermbg=NONE
 hi         WarningMsg        ctermfg=131   cterm=NONE       ctermbg=NONE
 hi         Directory         ctermfg=131   cterm=NONE       ctermbg=NONE
 hi         Cursor            ctermfg=16    cterm=NONE       ctermbg=187
-hi         CursorLineNR      ctermfg=102   cterm=reverse    ctermbg=NONE
+hi         CursorLineNr      ctermfg=102   cterm=reverse    ctermbg=NONE
+hi         CursorLine        ctermfg=NONE  cterm=NONE       ctermbg=233
+hi         CursorColumn      ctermfg=NONE  cterm=NONE       ctermbg=233
+hi         LineNr            ctermfg=238   cterm=NONE       ctermbg=233
 hi         WildMenu          ctermfg=187   cterm=NONE       ctermbg=95
 hi         ModeMsg           ctermfg=187   cterm=NONE       ctermbg=NONE
 hi         Macro             ctermfg=180   cterm=NONE       ctermbg=NONE
@@ -94,12 +97,9 @@ hi         PmenuThumb        ctermfg=235   cterm=NONE       ctermbg=235
 hi         TabLine           ctermfg=White   cterm=NONE       ctermbg=Black
 hi         TabLineSel        ctermfg=Black   cterm=NONE       ctermbg=White
 hi         TabLineFill       ctermfg=242   cterm=NONE       ctermbg=235
-hi         CursorLine        ctermfg=NONE  cterm=NONE       ctermbg=233
-hi         CursorColumn      ctermfg=NONE  cterm=NONE       ctermbg=233
 hi         ColorColumn       ctermfg=NONE  cterm=NONE       ctermbg=235
 hi         Folded            ctermfg=238   cterm=NONE       ctermbg=233
 hi         VertSplit         ctermfg=238   cterm=NONE       ctermbg=234
-hi         LineNr            ctermfg=238   cterm=NONE       ctermbg=233
 hi         FoldColumn        ctermfg=109   cterm=NONE       ctermbg=234
 hi         SignColumn        ctermfg=101   cterm=NONE       ctermbg=233
 hi         NonText           ctermfg=236   cterm=NONE       ctermbg=NONE

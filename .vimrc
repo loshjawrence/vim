@@ -31,20 +31,28 @@ set enc=utf-8 fenc=utf-8 termencoding=utf-8
 " Show current line number, relative line number above/below current line (current line shows file line number), redraw only when needed
 " relativenumber makes it a little slower than normal, need to set cursorline
 " to get the color highlight in the number column on the current line
-set number lazyredraw cursorline " relativenumber
+set number lazyredraw
 
 " Highlights the  line that's being edited when in insert mode (in some way,depends on color scheme I think)
 " To make it more obvious which mode we are in given that we can't edit the
 " cursor type for terminal vim
-autocmd InsertEnter * set cul
-autocmd InsertLeave * set nocul
+" This is good for tracking the cursor but makes it a little slower
+" set cursorline
+" hi CursorLine ctermbg=NONE " init to none
+" autocmd InsertEnter * hi CursorLine ctermbg=233
+" autocmd InsertLeave * hi CursorLine ctermbg=NONE
+" This doens't do cursorline in normal mode to make scrolling smoother
+autocmd InsertEnter * set cursorline
+autocmd InsertLeave * set nocursorline
+
+" Toggle between header and source for c/cpp files (just like visual studio)
+nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
 " <c-a> and <c-x> commands for inc dec numbers wont interpret any number as octal (ex: c-a on 007 would go up to 010)
 set nrformats-=octal
 
 " turn on incremental smartcase search highlighting (don't silently wrap, use gg and G to manually continue search)
 set incsearch hlsearch nowrapscan smartcase ignorecase
-" hi Search guifg=Black guibg=Green
 
 " turn off highlights (turn off search matches)
 nnoremap <cr> :noh<cr>
@@ -130,8 +138,8 @@ noremap <leader>1 :tabfirst<cr>
 noremap <leader>0 :tablast<cr>
 
 " In terminal vi, the alt+a and alt+d keys are actually ^[a and ^[d
-" You can see this by typing the key sequence in a command line after doing
-" cat follow by enter or sed -n l followed by enter
+" You can see this by typing the key sequence in a command line after doing a
+" cat followed by enter or sed -n l followed by enter
 " If you type alt-a after that the output will be something like ^[a which is <escape> a
 " alt-a will go to next left tab
 noremap <Esc>a gT
@@ -156,6 +164,14 @@ augroup END
 nnoremap <leader>ss :mks!<cr>
 nnoremap <leader>so :source Session.vim<cr>
 
+" smooth scroll plugin
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 5)<cr>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 5)<cr>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 6)<cr>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 6)<cr>
+noremap <silent> <c-y> :call smooth_scroll#up(15, 0, 3)<cr>15j
+noremap <silent> <c-e> :call smooth_scroll#down(15, 0, 3)<cr>15k
+
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so $MYVIMRC<CR>
 nmap <silent> <leader>ve :tabnew $MYVIMRC<CR>
@@ -167,11 +183,6 @@ nmap <silent> <leader>ve :tabnew $MYVIMRC<CR>
 set undodir=~/.vim//
 set backupdir=~/.vim//
 set directory=~/.vim//
-
-" Type :help fo-table to see what the different letters are for formatoptions
-" turn off auto fomatting for auto-wrapping comments, automattically inserting the current comment leader when hitting enter in insert mode,
-" automatically inserting current comment leader when hitting 'o' or 'O' from normal mode (opens new line below or above current line)
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 nnoremap <leader>m :Marks<cr>
@@ -199,6 +210,9 @@ nnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 nnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
+" Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
+set formatoptions=rqj
+set formatoptions-=o
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
@@ -236,6 +250,7 @@ onoremap s :normal vs<cr>
 " nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
 "NOTES:
+" Re-flow comments by visually selecting it and hit gq
 " :qa! quits all without saving
 " :wqa! write and quits all
 "  with tcomment_vim installed you can comment lines with gc when they are visually selected
@@ -280,12 +295,8 @@ onoremap s :normal vs<cr>
 " % will jump to (), [], [] on a line
 " INSERT MODE MOVEMENT:
 " CTRL-W    Delete word to the left of cursor
-" CTRL-J    Insert newline (easier than reaching for the return key)
 " CTRL-U    Delete everything to the left of cursor
-" CTRL-T    Indent current line
-" CTRL-D    Un-indent current line
 " CTRL-O    Goes to normal mode to execute 1 normal mode command
-" CTRL-H    Backspace
 " COMMAND MODE:
 " ctrl-n, p next previous command in history
 
