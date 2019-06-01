@@ -42,6 +42,7 @@ set number lazyredraw
 " autocmd InsertEnter * hi CursorLine ctermbg=233
 " autocmd InsertLeave * hi CursorLine ctermbg=NONE
 " This doens't do cursorline in normal mode to make scrolling smoother
+set nocursorline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
 
