@@ -29,7 +29,9 @@ call plug#end()
 set enc=utf-8 fenc=utf-8 termencoding=utf-8
 
 " Show current line number, relative line number above/below current line (current line shows file line number), redraw only when needed
-set number " lazyredraw " relativenumber
+" relativenumber makes it a little slower than normal, need to set cursorline
+" to get the color highlight in the number column on the current line
+set number lazyredraw cursorline " relativenumber
 
 " Highlights the  line that's being edited when in insert mode (in some way,depends on color scheme I think)
 " To make it more obvious which mode we are in given that we can't edit the
