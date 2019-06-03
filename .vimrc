@@ -17,13 +17,17 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/bundle') " Arg specifies plugin install dir
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'tomtom/tcomment_vim' " comment lines with gc
-Plug 'wellle/targets.vim' " cin( cil' cina, etc
-Plug 'godlygeek/tabular'
-Plug 'terryma/vim-smooth-scroll'
-Plug 'AlessandroYorba/Alduin'
+Plug 'junegunn/fzf.vim' " <space>f to search for tracked files in git repo. Lots of other powerful stuff see git repo for details.
+Plug 'tomtom/tcomment_vim' " comment selected lines with gc
+Plug 'wellle/targets.vim' " cin( cina, etc
+Plug 'godlygeek/tabular' " aligning selected text on some char or regex
+Plug 'terryma/vim-smooth-scroll' "ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
+Plug 'AlessandroYorba/Alduin' "colorscheme
+Plug 'majutsushi/tagbar' "toggle f8 to see codebase symbols
+Plug 'vim-scripts/star-search' " * search no longer jumps to next thing immediately. Can search visual selections
 call plug#end()
+
+nmap <F8> :TagbarToggle<CR>
 
 " set UTF-8 encoding
 set enc=utf-8 fenc=utf-8 termencoding=utf-8
@@ -36,7 +40,7 @@ set number lazyredraw
 " Highlights the  line that's being edited when in insert mode (in some way,depends on color scheme I think)
 " To make it more obvious which mode we are in given that we can't edit the
 " cursor type for terminal vim
-" This is good for tracking the cursor but makes it a little slower
+" This is good for tracking the cursor but makes it a little slower(all depends on terminal window redraw speed)
 " set cursorline
 " hi CursorLine ctermbg=NONE " init to none
 " autocmd InsertEnter * hi CursorLine ctermbg=233
@@ -55,13 +59,19 @@ set nrformats-=octal
 " turn on incremental smartcase search highlighting (don't silently wrap, use gg and G to manually continue search)
 set incsearch hlsearch nowrapscan smartcase ignorecase
 
-" turn off highlights (turn off search matches)
-nnoremap <cr> :noh<cr>
+" Press Enter to turn off search highlights and flash the location of the cursor
+function! Flash()
+  set cursorline cursorcolumn
+  redraw
+  sleep 35m
+  set nocursorline nocursorcolumn
+endfunction
+nnoremap <cr> :noh<cr>:call Flash()<cr>
 
 "allow backspace to work normally
 set backspace=indent,eol,start
 
-" remap <leader> to spacebar (default \)
+" remap <leader> to spacebar (default '\')
 noremap <space> <nop>
 let mapleader= "\<space>"
 
@@ -73,6 +83,7 @@ set expandtab     "don't use actual tab character (ctrl-v)
 
 "show line num file name leave space for command line
 set nocompatible ruler laststatus=2 showcmd showmode showmatch nowrap wildmenu
+" set statusline+=%{FugitiveStatusline()}
 set nomodeline " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
 set visualbell t_vb=    " turn off error beep/flash
 set novisualbell " turn off visual bell
@@ -103,7 +114,7 @@ nnoremap Y y$
 " Preformatted comment block (The ' key is used for "go to last pos" but that is taken care of with c-o and c-i)
 nnoremap ' O<esc>i/*<esc>50a*<esc>o<esc>50i*<esc>a*/<esc>Vk=o<tab>
 
-" Only hit < or > once to tab indent, can be vis selected and repeated
+" Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
 nnoremap > >>
 
@@ -125,8 +136,8 @@ vnoremap Q :norm @q<cr>
 " " Trigger autoread when cursor stops moving
 " " Trigger autoread when changing buffers inside vim
 set autoread
-au CursorHold,CursorHoldI * checktime
-au FocusGained,BufEnter * checktime
+au FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
+" au FocusGained,BufEnter * :checktime
 
 " highlight trailing whitespace in normal mode
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -143,6 +154,7 @@ noremap <leader>0 :tablast<cr>
 " cat followed by enter or sed -n l followed by enter
 " If you type alt-a after that the output will be something like ^[a which is <escape> a
 " alt-a will go to next left tab
+" if not terminal winodw this would just be noremap <a-a> gT
 noremap <Esc>a gT
 " alt-d will go to next right tab
 noremap <Esc>d gt
@@ -165,7 +177,7 @@ augroup END
 nnoremap <leader>ss :mks!<cr>
 nnoremap <leader>so :source Session.vim<cr>
 
-" smooth scroll plugin
+" smooth scroll plugin, increase the last arg for faster scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 5)<cr>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 5)<cr>
 noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 6)<cr>
@@ -193,27 +205,20 @@ nnoremap <leader>F :Files<cr>
 " nnoremap <leader>h/ :History/<cr>
 " nnoremap <leader>h: :History:<cr>
 nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>r :Rg<cr> " need to install ripgrep or compile it in rust
+nnoremap <leader>r :Rg<cr> " need to install ripgrep or compile it in rust, not available on ubuntu 18.04
 
 " Tabularize plugin, to align this I highlighted then :Tabularize /:Tabularize
 " Should definitely checkout
 " https://www.vim.org/scripts/script.php?script_id=294
 vnoremap  <leader>tt      :Tabularize  /
-nnoremap  <leader>tt      :Tabularize  /
 vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
-nnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 vnoremap  <leader>t=      :Tabularize  /^[^=]*\zs=<cr>
-nnoremap  <leader>t=      :Tabularize  /^[^=]*\zs=<cr>
 vnoremap  <leader>t,      :Tabularize  /,<cr>
-nnoremap  <leader>t,      :Tabularize  /,<cr>
 vnoremap  <leader>ts      :Tabularize  /\S\+<cr>
-nnoremap  <leader>ts      :Tabularize  /\S\+<cr>
 vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
-nnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
-set formatoptions-=o
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
