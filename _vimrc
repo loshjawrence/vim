@@ -1,165 +1,88 @@
-" TODO:
-" https://dougblack.io/words/a-good-vimrc.html
-" https://dockyard.com/blog/2018/06/01/simple-vim-session-management-part-1
-" Figure out how to compile and jump to errors (:cl :cn :cp (i.e. list, next, prev))
-" Better syntax highlighitng for c/cpp? Or just work on a good colorscheme
-" remap to something useful: - goes to first nonwhite prev line TODO: other default mappings that aren't used at all remapped to something I need?
-" perform normal mode movement while in insert mode? Just get better at staying in normal mode. TODO: learn insert mode stuff
-
-" skip loading microsoft windows key editing commands
-let skip_loading_mswin=1
-
-execute pathogen#infect()
+﻿" turn on keyword color differentiation
+set t_Co=256
 
 syntax on
 syntax enable
-set background=dark
-colorscheme alduin
-" colorscheme alduin2
-" colorscheme jellybeans
-" colorscheme magicka
-" colorscheme magicka2 " get alduin2 in shape then modify its colors into magicka (colors consistent make sense, matching char colorization like js)
-" colorscheme hybrid
-" colorscheme sourcerer
-" colorscheme Spink
-if has('termguicolors')
-    set termguicolors " 24-bit terminal
-endif
+" Note: on unix-like OS's you must put the .vim color scheme files (in this case alduin2.vim) in
+" /usr/share/vim/vim80/colors
 
-" Doesnt work. gvim's tab-bar has no highlighting, so add it. cterm is for consoles, gui is for gvim gui
-" hi TabLineSel ctermfg=red ctermbg=yellow guifg=red guibg=yellow
-" hi TabLineFill ctermfg=lightgreen ctermbg=darkgreen guifg=lightgreen guibg=darkgreen
-" hi TabLine ctermfg=blue ctermbg=yellow guifg=blue guibg=yellow
-" hi Title ctermfg=lightblue ctermbg=magenta guifg=lightblue guibg=magenta
+colorscheme alduin2
+
+" Plugins. Execute :PlugInstall for any new ones you add
+" Auto install the vim-plug pluggin manager if its not there
+if empty(glob('$HOME/vimfiles/autoload/plug.vim'))
+  silent !curl -fLo $HOME/vimfiles/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+call plug#begin('~/.vim/bundle') " Arg specifies plugin install dir
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim' " <space>f to search for tracked files in git repo. Lots of other powerful stuff see git repo for details.
+Plug 'tomtom/tcomment_vim' " comment selected lines with gc
+Plug 'wellle/targets.vim' " cin( cina, etc
+Plug 'godlygeek/tabular' " aligning selected text on some char or regex
+Plug 'terryma/vim-smooth-scroll' "ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
+Plug 'AlessandroYorba/Alduin' "colorscheme
+Plug 'majutsushi/tagbar' "toggle f8 to see codebase symbols
+Plug 'vim-scripts/star-search' " * search no longer jumps to next thing immediately. Can search visual selections
+call plug#end()
+
+nmap <F8> :TagbarToggle<CR>
 
 " set UTF-8 encoding
 set enc=utf-8 fenc=utf-8 termencoding=utf-8
 
-" Show current line number, rel num above below, redraw only when needed,
-" enable folds
-set number relativenumber lazyredraw foldenable
+" Show current line number, relative line number above/below current line (current line shows file line number), redraw only when needed
+" relativenumber makes it a little slower than normal, need to set cursorline
+" to get the color highlight in the number column on the current line
+set number lazyredraw
 
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" Highlights the  line that's being edited when in insert mode (in some way,depends on color scheme I think)
+" To make it more obvious which mode we are in given that we can't edit the
+" cursor type for terminal vim
+" This is good for tracking the cursor but makes it a little slower(all depends on terminal window redraw speed)
+" set cursorline
+" hi CursorLine ctermbg=NONE " init to none
+" autocmd InsertEnter * hi CursorLine ctermbg=233
+" autocmd InsertLeave * hi CursorLine ctermbg=NONE
+" This doens't do cursorline in normal mode to make scrolling smoother
+set nocursorline
+autocmd InsertEnter * set cursorline
+autocmd InsertLeave * set nocursorline
 
-" Use fuzzy file finder fzf
-" (If installed using git: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; ~/.fzf/install)
-set rtp+=~/.fzf
-
-" let g:rg_command = '
-"   \ rg --files --no-heading --fixed-strings
-"   \ -g "{src,Source,Specs}*.{js,json,md,html,config,cpp,c,hpp,h,conf,rs,txt}"
-"   \ -g "!{.git,node_modules,vendor,ThirdParty}/*" '
-"
-" command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
-" let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-" Toggle between header and source
+" Toggle between header and source for c/cpp files (just like visual studio)
 nnoremap <c-k><c-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
-
-" allow saving of marks for a session (save-->:mks!   savenew-->:mks ~/vimfiles/session/mysession.vim   load--> :source path-to-mysession.vim)
-" must use captial and 0-9 marks
-" see also http://vimdoc.sourceforge.net/htmldoc/motion.html#E20
-" http://vimdoc.sourceforge.net/htmldoc/usr_21.html#21.3
-" set viminfo='1000,f1
 
 " <c-a> and <c-x> commands for inc dec numbers wont interpret any number as octal (ex: c-a on 007 would go up to 010)
 set nrformats-=octal
 
-" should remove load prompts on external change (ex: git pull)
-" Trigger autoread when cursor stops moving
-" Trigger autoread when changing buffers inside vim
-set autoread
-au CursorHold,CursorHoldI * checktime
-au FocusGained,BufEnter * :checktime
-
-" dont scan included files during c-n c-p completion
-"set complete-=i
-
-" set tabpagemax=50
-" set viminfo^=!
-set sessionoptions-=options
-
-" Get vimrc to load across a session when vimrc written
-" :so ~/_vimrc will source the vimrc so you don't have to reload
- function! UpdateVimRC()
-     for server in split(serverlist())
-         call remote_send(server, '<Esc>:source $HOME/_vimrc<CR>')
-     endfor
- endfunction
- augroup myvimrchooks
- au!
-    autocmd bufwritepost _vimrc call UpdateVimRC()
- augroup END
-
-" Triger `autoread` when files changes on disk
-" https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
-" https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
-" autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
-" autocmd FileChangedShellPost *
-"   \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
-
-" tell ctags to look in current then up one until it finds it
-" set tags=./tags,tags;
-
-" just cd to project base dir and :!ctags -R to generate tags file
-" set path=$PWD/**
-
-" DOESN"T WORK
-" Always add the current file's directory to the path and tags list if not
-" already there. Add it to the beginning to speed up searches.
-" let s:default_path = escape(&path, '\ ') " store default value of 'path'
-" autocmd BufRead *
-"       \ let s:tempPath=escape(escape(expand("%:p:h"), ' '), '\ ') |
-"       \ exec "set path-=".s:tempPath |
-"       \ exec "set path-=".s:default_path |
-"       \ exec "set path^=".s:tempPath |
-"       \ exec "set path^=".s:default_path
-
-" make warnings more obvious (search wrap, etc)
-hi WarningMsg ctermfg=white ctermbg=red guifg=White guibg=Red gui=None
-
-" turn on keyword color differentiation
-set t_Co=256
-
 " turn on incremental smartcase search highlighting (don't silently wrap, use gg and G to manually continue search)
-set incsearch ignorecase hlsearch nowrapscan smartcase
+set incsearch hlsearch nowrapscan smartcase ignorecase
 
-" turn off highlights (turn off search matches)
-nnoremap <cr> :noh<cr>
+" Press Enter to turn off search highlights and flash the location of the cursor
+function! Flash()
+  set cursorline cursorcolumn
+  redraw
+  sleep 35m
+  set nocursorline nocursorcolumn
+endfunction
+nnoremap <cr> :noh<cr>:call Flash()<cr>
 
-" hi Search guifg=Black guibg=Green
 "allow backspace to work normally
 set backspace=indent,eol,start
-" force min window width
-set winwidth=100
-"set text to consolas, size
-set guifont=Consolas:h9
-" set lines=70 columns=150 " This will force resizing of sessions when you update the vimrc
-set tabstop=4     "tabs are at proper location
-set expandtab     "don't use actual tab character (ctrl-v)
-set shiftwidth=4  "indenting is 4 spaces
-set pastetoggle=<f5>
 
-" wrap lines at 120 chars. 80 is some what antiquated with nowadays displays.
-" force wrapping after 80 chars on line
-" set textwidth=80
-" vertical bar of color indicating where the line break is
-set colorcolumn=80
-" let &colorcolumn=join(range(80,300),",")
-
-" minify the amount of highlighting done
-" set synmaxcol=128
-" syntax sync minlines=256
-
-" Open tag in tab, open tag in vsplit
-map <c-T> :tab split<cr>:exec("tag ".expand("<cword>"))<cr>
-map <a-v> :vsp <cr>:exec("tag ".expand("<cword>"))<cr>
-
-" remap <leader> to spacebar (default \)
+" remap <leader> to spacebar (default '\')
 noremap <space> <nop>
 let mapleader= "\<space>"
 
+" set text to consolas, size
+set guifont=Consolas:h9
+set tabstop=4     "tabs are at proper location
+set shiftwidth=4  "indenting is 4 spaces
+set expandtab     "don't use actual tab character (ctrl-v)
+
 "show line num file name leave space for command line
-set nocompatible ruler laststatus=2 showcmd showmode number showmatch nowrap wildmenu
+set nocompatible ruler laststatus=2 showcmd showmode showmatch nowrap wildmenu
 set nomodeline " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
 set visualbell t_vb=    " turn off error beep/flash
 set novisualbell " turn off visual bell
@@ -169,119 +92,16 @@ set autoindent    "turns it on
 set smartindent   "does the right thing (mostly) in programs
 set cindent       "stricter rules for C programs
 
-" use the bash shell for shell commands example :!grep
-" Could no longer do :History
-" set shell=/usr/bin/env\ bash
-
-set history=1000
-
-" Show tags for the current buffer and switches to it
-nmap <F8> :TagbarToggle<cr><c-w><c-w>
-
-" highlight trailing whitespace in normal mode
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-
 " vim treats a sequences of [A-Za-z0-9_] as a `word` (WORD just goes to next whitespace)
 " You can re-define what word mean to vim, this removes the _ char from the set
 " of contiguous chars that defined a `word`
 set iskeyword-=_
-
-" " example function for tidy up
-" function TidyUp()
-"     " save position of cursor
-"     let origPos = getpos(".")
-"     " remove trailing whitespace on save
-"     :%s/\s\+$//e
-"     " insert a space after every comma, \1 refs stuff inside \(\)
-"     :%s/,\(\S\)/, \1/g
-"     " collapse multiple blank lines with one
-"     :%s#\(\n\n\)\n\+#\1#e
-"     " replace trailing empty lines
-"     :%s#\($\n\s*\)\+\%$##e
-"     "previous command moves cursor, restore its original pos
-"     call setpos(".", origPos)
-"     :w
-" endfunction
-
-" vsvim for visual studio doesn't support some autocmd's, so remap save to tidyUp then save
-" vsvim doesn't support functions :(
-" nmap :w<cr> :call TidyUp()<cr>
-" use e at the end of s/// to ignore error
-" remove traliing whitespace, collapse multi new lines with one,
-" remove trailing empty lines, return to old cursor pos, write
-" vsvim doesn't support end of line match
-nnoremap <c-z> <esc>ma:%s#\s\+$##e<cr>:%s#\(\n\n\)\n\+#\1#e<cr>:%s#\(\n\s*\)\+\%$##e<cr>`a:w<cr>
-" an attempt to do get it to work in visual studio
-"nmap <c-z> <esc>xu:%s/\s\+$//e<cr>G?\S<cr>:.,$s#\n*##
-
-" call func before write buffer
-" leave as examples
-"autocmd BufWritePre * exec TidyUp()
-"autocmd BufWritePre * :%s/\s\+$//e
-
-" Autoindent for func args will on (
-" set cino+=(0
-
-" auto  {} on {
-inoremap { {}<esc>i
-" inoremap ( ()<esc>i
-" inoremap ' ''<esc>i
-" inoremap " ""<esc>i
-" inoremap < <><esc>i
-" inoremap [ []<esc>i
-
-" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg
-nnoremap <leader>m :Marks<cr>
-nnoremap <leader>f :GFiles<cr>
-nnoremap <leader>F :Files<cr>
-nnoremap <leader>hh :History<cr>
-nnoremap <leader>h/ :History/<cr>
-nnoremap <leader>h: :History:<cr>
-nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>r :Rg<cr>
-
-" TagHighlight
-nnoremap <leader>u :UpdateTypesFile<cr>
-
-" Session: save vim session to ./Session.vim, load Session.vim
-nnoremap <leader>ss :mks!<cr>
-nnoremap <leader>so :source Session.vim<cr>
 
 " Search replace
 " replace in entire file
 nnoremap <leader>sr :%s//g<left><left>
 " replace on selected lines
 vnoremap <leader>sr :s//g<left><left>
-
-" Go to tab by number
-noremap <leader>1 1gt
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <a-a> gT
-noremap <a-d> gt
-noremap <leader>0 :tablast<cr>
-
-" Tabularize plugin, to align this I highlighted then :Tabularize /:Tabularize
-" Should definitely checkout https://www.vim.org/scripts/script.php?script_id=294
-vnoremap  <leader>tt      :Tabularize  /
-nnoremap  <leader>tt      :Tabularize  /
-vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
-nnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
-vnoremap  <leader>t=      :Tabularize  /^[^=]*\zs=<cr>
-nnoremap  <leader>t=      :Tabularize  /^[^=]*\zs=<cr>
-vnoremap  <leader>t,      :Tabularize  /,<cr>
-nnoremap  <leader>t,      :Tabularize  /,<cr>
-vnoremap  <leader>ts      :Tabularize  /\S\+<cr>
-nnoremap  <leader>ts      :Tabularize  /\S\+<cr>
-vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
-nnoremap  <leader>t/      :Tabularize  /\/\/<cr>
-
-" Default vim behavior is to copy the deleted or changed text into the default register and prevents spam pasting
-" xnoremap p "_dP
 
 " navigate by display lines
 nnoremap j gj
@@ -290,49 +110,16 @@ nnoremap k gk
 " yank to end of line
 nnoremap Y y$
 
-
-" Preformatted comment block (The ' key is used for last pos but that is taken care of with c-o and c-i)
+" Preformatted comment block (The ' key is used for "go to last pos" but that is taken care of with c-o and c-i)
 nnoremap ' O<esc>i/*<esc>50a*<esc>o<esc>50i*<esc>a*/<esc>Vk=o<tab>
 
-" Only hit < or > once to tab indent, can be vis selected and repeated
+" Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
 nnoremap > >>
+
 " Indent whole file, turns out to be too painful even for medium files, just do current scope instead
 " nnoremap == gg=G<c-o>
 nnoremap == =i{<c-o>
-
-" map redo to U, <c-r> is used in Visual Studio for good refactoring shortcuts
-" nnoremap U <c-r>
-
-" Now Ctrl-u and Ctrl-w will work as before, but they first use Ctrl-g u to start a new change,
-" as far as undo is concerned. For example, in insert mode, you might type several lines then accidentally press Ctrl-u which deletes the last line. 
-" If you have used the above mapping, you can press Esc to return to normal mode, then u to undo, which will recover the last line.
-" inoremap <c-u> <c-g>u<c-u>
-" inoremap <c-w> <c-g>u<c-w>
-
-" like J, but reverse (for comma sep list), pick a better letter H is used as a part of the broad page jump trio(H, M, L)
-nnoremap K T,i<cr><esc>k$T,
-
-" smooth scroll plugin
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 3)<cr>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 3)<cr>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<cr>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<cr>
-noremap <silent> <c-y> :call smooth_scroll#up(10, 0, 2)<cr>10j
-noremap <silent> <c-e> :call smooth_scroll#down(10, 0, 2)<cr>10k
-
-" Source the vimrc so we don't have to refresh, edit the vimrc in new tab
-nmap <silent> <leader>vs :so $MYVIMRC<CR>
-nmap <silent> <leader>ve :tabnew $MYVIMRC<CR>
-
-" Less annoying backups (no more swp file in the directory you're working on)
-" the "//" at the end of each directory means that file names will be built from the complete path to the file with all path separators substituted to percent "%" sign. This will ensure file name uniqueness in the preserve director
-set undodir=~/vimfiles//
-set backupdir=~/vimfiles//
-set directory=~/vimfiles//
-" Alternately can disable them
-" set nobackup
-" set noswapfile
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
@@ -344,22 +131,93 @@ nnoremap Q @q
 " apply macro across visual selection, VG to select until end of file
 vnoremap Q :norm @q<cr>
 
-" block comment (+) uncomment (_)
-" norm runs normoal mode commands in specified range, when in V mode
-" it gets fed the lines you selected
-" NOTE: you can't map to c-/
-" vmap <c-/> :norm ^i// <cr>
-" vmap <c-?> :norm ^xxx<cr>
-" tcommentary.vim (visual mode gc or <c-_><c-_>)
+" should remove load prompts on external change (ex: git pull)
+" " Trigger autoread when cursor stops moving
+" " Trigger autoread when changing buffers inside vim
+set autoread
+au FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
+" au FocusGained,BufEnter * :checktime
 
-" open file under cursor in vsplit
-" nnoremap <c-w><c-f> <c-w>vgf
+" highlight trailing whitespace in normal mode
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 
-" forward autocomplete(ctrl-p) mapped to tab
-" hit c-p and c-n to navigate list
-" doesnt really work right with IDE's like visual studio as they also use tab
-" for tab completion
-" inoremap <Tab> <c-p>
+" Go to tab by number
+noremap <leader>1 :tabfirst<cr>
+noremap <leader>0 :tablast<cr>
+
+" In terminal vi, the alt+a and alt+d keys are actually ^[a and ^[d
+" You can see this by typing the key sequence in a command line after doing a
+" cat followed by enter or sed -n l followed by enter
+" If you type alt-a after that the output will be something like ^[a which is <escape> a
+" alt-a will go to next left tab
+" if not terminal winodw this would just be noremap <a-a> gT
+noremap <Esc>a gT
+" alt-d will go to next right tab
+noremap <Esc>d gt
+
+" Get vimrc to load across a session when vimrc written
+" " :so ~/_vimrc will source the vimrc so you don't have to reload
+function! UpdateVimRC()
+  for server in split(serverlist())
+    call remote_send(server, '<Esc>:source ~/.vimrc<CR>')
+  endfor
+endfunction
+augroup myvimrchooks
+  au!
+  autocmd bufwritepost .vimrc call UpdateVimRC()
+augroup END
+
+" Session: save vim session to ./Session.vim, load Session.vim
+" Usually just open any text file in root of a repo and type <leader>ss to create Session.vim file in the root of repo.
+" Then when I need to load up the seesion again I open the Session.vim file in the root of the repo and type <leader>so to restore my session.
+nnoremap <leader>ss :mks!<cr>
+nnoremap <leader>so :source Session.vim<cr>
+
+" smooth scroll plugin, increase the last arg for faster scroll
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 5)<cr>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 5)<cr>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 6)<cr>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 6)<cr>
+noremap <silent> <c-y> :call smooth_scroll#up(15, 0, 3)<cr>15j
+noremap <silent> <c-e> :call smooth_scroll#down(15, 0, 3)<cr>15k
+
+" Source the vimrc so we don't have to refresh, edit the vimrc in new tab
+nmap <silent> <leader>vs :so $MYVIMRC<CR>
+nmap <silent> <leader>ve :tabnew $MYVIMRC<CR>
+
+" Less annoying backups (no more swp file in the directory you're working on)
+" the "//" at the end of each directory means that file names will be built
+" from the complete path to the file with all path separators substituted to
+" percent "%" sign. This will ensure file name uniqueness in the preserve directory
+set undodir=~/.vim//
+set backupdir=~/.vim//
+set directory=~/.vim//
+
+" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
+nnoremap <leader>m :Marks<cr>
+nnoremap <leader>f :GFiles<cr>
+nnoremap <leader>F :Files<cr>
+" nnoremap <leader>hh :History<cr>
+" nnoremap <leader>h/ :History/<cr>
+" nnoremap <leader>h: :History:<cr>
+nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>r :Rg<cr> " need to install ripgrep or compile it in rust, not available on ubuntu 18.04
+
+" Tabularize plugin, to align this I highlighted then :Tabularize /:Tabularize
+" Should definitely checkout
+" https://www.vim.org/scripts/script.php?script_id=294
+vnoremap  <leader>tt      :Tabularize  /
+vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
+vnoremap  <leader>t=      :Tabularize  /^[^=]*\zs=<cr>
+vnoremap  <leader>t,      :Tabularize  /,<cr>
+vnoremap  <leader>ts      :Tabularize  /\S\+<cr>
+vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
+
+" Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
+set formatoptions=rqj
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
@@ -396,6 +254,11 @@ onoremap s :normal vs<cr>
 " nnoremap cin" /".*\S\+.*"<cr>:noh<cr>iasdf
 " nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
+"NOTES:
+" Re-flow comments by visually selecting it and hit gq
+" :qa! quits all without saving
+" :wqa! write and quits all
+"  with tcomment_vim installed you can comment lines with gc when they are visually selected
 " possibly useful nomral mode keys:
 " :%!python -m json.tool // Prettify Json files (choco install python)
 " <c-w>gf to open file under cursor in a new tab, gf will open file in this tab
@@ -437,12 +300,8 @@ onoremap s :normal vs<cr>
 " % will jump to (), [], [] on a line
 " INSERT MODE MOVEMENT:
 " CTRL-W    Delete word to the left of cursor
-" CTRL-J    Insert newline (easier than reaching for the return key)
 " CTRL-U    Delete everything to the left of cursor
-" CTRL-T    Indent current line
-" CTRL-D    Un-indent current line
 " CTRL-O    Goes to normal mode to execute 1 normal mode command
-" CTRL-H    Backspace
 " COMMAND MODE:
 " ctrl-n, p next previous command in history
 
