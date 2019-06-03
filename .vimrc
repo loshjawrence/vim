@@ -83,7 +83,6 @@ set expandtab     "don't use actual tab character (ctrl-v)
 
 "show line num file name leave space for command line
 set nocompatible ruler laststatus=2 showcmd showmode showmatch nowrap wildmenu
-" set statusline+=%{FugitiveStatusline()}
 set nomodeline " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
 set visualbell t_vb=    " turn off error beep/flash
 set novisualbell " turn off visual bell
