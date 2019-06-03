@@ -154,9 +154,9 @@ noremap <leader>0 :tablast<cr>
 " If you type alt-a after that the output will be something like ^[a which is <escape> a
 " alt-a will go to next left tab
 " if not terminal winodw this would just be noremap <a-a> gT
-noremap <Esc>a gT
+noremap <a-a> gT
 " alt-d will go to next right tab
-noremap <Esc>d gt
+noremap <a-d> gt
 
 " Get vimrc to load across a session when vimrc written
 " " :so ~/_vimrc will source the vimrc so you don't have to reload
