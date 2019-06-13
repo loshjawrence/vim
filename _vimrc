@@ -3,9 +3,9 @@ set t_Co=256
 
 syntax on
 syntax enable
+
 " Note: on unix-like OS's you must put the .vim color scheme files (in this case alduin2.vim) in
 " /usr/share/vim/vim80/colors
-
 colorscheme alduin2
 
 " Plugins. Execute :PlugInstall for any new ones you add
@@ -15,16 +15,21 @@ if empty(glob('$HOME/vimfiles/autoload/plug.vim'))
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-call plug#begin('~/.vim/bundle') " Arg specifies plugin install dir
+call plug#begin('$HOME/vimfiles/bundle') " Arg specifies plugin install dir
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim' " <space>f to search for tracked files in git repo. Lots of other powerful stuff see git repo for details.
+Plug 'junegunn/fzf.vim' " <space>f to search for tracked files in git repo. Lots of other powerful stuff see git repo for details. install ripgrep and do <space>r for a grep search (git aware)
 Plug 'tomtom/tcomment_vim' " comment selected lines with gc
-Plug 'wellle/targets.vim' " cin( cina, etc
+Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object: din( cila vin[ etc.
 Plug 'godlygeek/tabular' " aligning selected text on some char or regex
 Plug 'terryma/vim-smooth-scroll' "ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
-Plug 'AlessandroYorba/Alduin' "colorscheme
-Plug 'majutsushi/tagbar' "toggle f8 to see codebase symbols
+"
+"colorschemes
+Plug 'AlessandroYorba/Alduin'
+Plug 'flrnprz/candid.vim'
+
+Plug 'majutsushi/tagbar' "toggle f8 to see code symbols for file
 Plug 'vim-scripts/star-search' " * search no longer jumps to next thing immediately. Can search visual selections
+
 call plug#end()
 
 nmap <F8> :TagbarToggle<CR>
@@ -192,9 +197,9 @@ nmap <silent> <leader>ve :tabnew $MYVIMRC<CR>
 " the "//" at the end of each directory means that file names will be built
 " from the complete path to the file with all path separators substituted to
 " percent "%" sign. This will ensure file name uniqueness in the preserve directory
-set undodir=~/.vim//
-set backupdir=~/.vim//
-set directory=~/.vim//
+set undodir=~/vimfiles//
+set backupdir=~/vimfiles//
+set directory=~/vimfiles//
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 nnoremap <leader>m :Marks<cr>
@@ -255,6 +260,7 @@ onoremap s :normal vs<cr>
 " nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
 "NOTES:
+" :%!xxd views a file in hex while :%!xxd -r turns off the hex view
 " Re-flow comments by visually selecting it and hit gq
 " :qa! quits all without saving
 " :wqa! write and quits all
