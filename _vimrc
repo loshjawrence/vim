@@ -16,23 +16,39 @@ if empty(glob('$HOME/vimfiles/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('$HOME/vimfiles/bundle') " Arg specifies plugin install dir
+" Bread and butter file searcher.
+" <space>f to search for tracked files in git repo.
+" Lots of other powerful stuff see git repo for details. Install ripgrep (choco install ripgrep) and do <space>r for a grep search (git aware).
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim' " <space>f to search for tracked files in git repo. Lots of other powerful stuff see git repo for details. install ripgrep and do <space>r for a grep search (git aware)
-Plug 'tomtom/tcomment_vim' " comment selected lines with gc
+Plug 'junegunn/fzf.vim' 
+
+Plug 'tomtom/tcomment_vim' " Comment selected lines with gc
 Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object: din( cila vin[ etc.
-Plug 'godlygeek/tabular' " aligning selected text on some char or regex
-Plug 'terryma/vim-smooth-scroll' "ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
-"
-"colorschemes
+Plug 'godlygeek/tabular' " Aligning selected text on some char or regex
+Plug 'terryma/vim-smooth-scroll' " ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
+Plug 'rust-lang/rust.vim' " ctrl-d,u,e,y (If terminal window speed is slow, this will suck)
+Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+
+" Syntax error checking
+Plug 'vim-syntastic/syntastic'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
+Plug 'majutsushi/tagbar' 
+nmap <F8> :TagbarToggle<CR>
+
+" Colorschemes
 Plug 'AlessandroYorba/Alduin'
 Plug 'flrnprz/candid.vim'
 
-Plug 'majutsushi/tagbar' "toggle f8 to see code symbols for file
-Plug 'vim-scripts/star-search' " * search no longer jumps to next thing immediately. Can search visual selections
-
 call plug#end()
 
-nmap <F8> :TagbarToggle<CR>
 
 " set UTF-8 encoding
 set enc=utf-8 fenc=utf-8 termencoding=utf-8
@@ -64,7 +80,9 @@ set nrformats-=octal
 " turn on incremental smartcase search highlighting (don't silently wrap, use gg and G to manually continue search)
 set incsearch hlsearch nowrapscan smartcase ignorecase
 
-" Press Enter to turn off search highlights and flash the location of the cursor
+" Press Enter to turn off search highlights and flash the location of the cursor.
+" This was needed for terminal only access to Vim where terminal doesn't allow
+" Changes to cursor style or color so its hard to track where the cursor is
 function! Flash()
   set cursorline cursorcolumn
   redraw
