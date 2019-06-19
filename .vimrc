@@ -5,6 +5,7 @@ syntax on
 syntax enable
 " Note: on unix-like OS's you must put the .vim color scheme files (in this case alduin2.vim) in
 " /usr/share/vim/vim80/colors
+" ~/.vim/colors
 
 colorscheme alduin3
 
@@ -21,10 +22,23 @@ Plug 'junegunn/fzf.vim' " <space>f to search for tracked files in git repo. Lots
 Plug 'tomtom/tcomment_vim' " comment selected lines with gc
 Plug 'wellle/targets.vim' " cin( cina, etc
 Plug 'godlygeek/tabular' " aligning selected text on some char or regex
-Plug 'terryma/vim-smooth-scroll' "ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
 Plug 'AlessandroYorba/Alduin' "colorscheme
 Plug 'majutsushi/tagbar' "toggle f8 to see codebase symbols
 Plug 'vim-scripts/star-search' " * search no longer jumps to next thing immediately. Can search visual selections
+
+" Plug 'terryma/vim-smooth-scroll' "ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
+Plug 'yuttie/comfortable-motion.vim'
+" scroll is proportional to window height
+let g:comfortable_motion_no_default_key_mappings = 1
+let g:comfortable_motion_impulse_multiplier = 10  " Feel free to increase/decrease this value.
+let g:comfortable_motion_friction = 10000.0
+let g:comfortable_motion_air_drag = 0.0
+nnoremap <silent> <C-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 0.7)<CR>
+nnoremap <silent> <C-y> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -0.7)<CR>
+nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
+nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
+nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1.5)<CR>
+nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<CR>
 call plug#end()
 
 nmap <F8> :TagbarToggle<CR>
@@ -97,12 +111,6 @@ set cindent       "stricter rules for C programs
 " of contiguous chars that defined a `word`
 set iskeyword-=_
 
-" Search replace
-" replace in entire file
-nnoremap <leader>sr :%s//g<left><left>
-" replace on selected lines
-vnoremap <leader>sr :s//g<left><left>
-
 " navigate by display lines
 nnoremap j gj
 nnoremap k gk
@@ -152,11 +160,15 @@ noremap <leader>0 :tablast<cr>
 " You can see this by typing the key sequence in a command line after doing a
 " cat followed by enter or sed -n l followed by enter
 " If you type alt-a after that the output will be something like ^[a which is <escape> a
-" alt-a will go to next left tab
 " if not terminal winodw this would just be noremap <a-a> gT
+" alt-a will go to next left tab
 noremap <Esc>a gT
 " alt-d will go to next right tab
 noremap <Esc>d gt
+" alt-A will move the current tab to the left
+noremap <Esc>A :tabm -1<cr>
+" alt-D will go to next right tab
+noremap <Esc>D :tabm +1<cr>
 
 " Get vimrc to load across a session when vimrc written
 " " :so ~/_vimrc will source the vimrc so you don't have to reload
@@ -174,15 +186,21 @@ augroup END
 " Usually just open any text file in root of a repo and type <leader>ss to create Session.vim file in the root of repo.
 " Then when I need to load up the seesion again I open the Session.vim file in the root of the repo and type <leader>so to restore my session.
 nnoremap <leader>ss :mks!<cr>
-nnoremap <leader>so :source Session.vim<cr>
+nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
+
+" Search replace
+" replace in entire file
+nnoremap <leader>sr :%s//g<left><left>
+" replace on selected lines
+vnoremap <leader>sr :s//g<left><left>
 
 " smooth scroll plugin, increase the last arg for faster scroll
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 5)<cr>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 5)<cr>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 6)<cr>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 6)<cr>
-noremap <silent> <c-y> :call smooth_scroll#up(15, 0, 3)<cr>15j
-noremap <silent> <c-e> :call smooth_scroll#down(15, 0, 3)<cr>15k
+" noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 5)<cr>
+" noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 5)<cr>
+" noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 6)<cr>
+" noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 6)<cr>
+" noremap <silent> <c-y> :call smooth_scroll#up(15, 0, 3)<cr>15j
+" noremap <silent> <c-e> :call smooth_scroll#down(15, 0, 3)<cr>15k
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so $MYVIMRC<CR>
