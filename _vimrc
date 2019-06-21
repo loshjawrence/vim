@@ -6,7 +6,7 @@ syntax enable
 
 " Note: on unix-like OS's you must put the .vim color scheme files (in this case alduin2.vim) in
 " /usr/share/vim/vim80/colors
-colorscheme alduin2
+colorscheme alduin
 
 " Plugins. Execute :PlugInstall for any new ones you add
 " Auto install the vim-plug pluggin manager if its not there
@@ -20,13 +20,13 @@ call plug#begin('$HOME/vimfiles/bundle') " Arg specifies plugin install dir
 " <space>f to search for tracked files in git repo.
 " Lots of other powerful stuff see git repo for details. Install ripgrep (choco install ripgrep) and do <space>r for a grep search (git aware).
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim' 
+Plug 'junegunn/fzf.vim'
 
 Plug 'tomtom/tcomment_vim' " Comment selected lines with gc
 Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object: din( cila vin[ etc.
 Plug 'godlygeek/tabular' " Aligning selected text on some char or regex
-Plug 'terryma/vim-smooth-scroll' " ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
-Plug 'rust-lang/rust.vim' " ctrl-d,u,e,y (If terminal window speed is slow, this will suck)
+
+Plug 'rust-lang/rust.vim'
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
 
 " Syntax error checking
@@ -40,8 +40,21 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
-Plug 'majutsushi/tagbar' 
+Plug 'majutsushi/tagbar'
 nmap <F8> :TagbarToggle<CR>
+
+" Smooth scrolling
+Plug 'yuttie/comfortable-motion.vim'
+let g:comfortable_motion_no_default_key_mappings = 1
+let g:comfortable_motion_impulse_multiplier = 10  " Feel free to increase/decrease this value.
+let g:comfortable_motion_friction = 10000.0
+let g:comfortable_motion_air_drag = 0.0
+nnoremap <silent> <C-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 0.7)<CR>
+nnoremap <silent> <C-y> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -0.7)<CR>
+nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
+nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
+nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1.5)<CR>
+nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<CR>
 
 " Colorschemes
 Plug 'AlessandroYorba/Alduin'
@@ -197,15 +210,7 @@ augroup END
 " Usually just open any text file in root of a repo and type <leader>ss to create Session.vim file in the root of repo.
 " Then when I need to load up the seesion again I open the Session.vim file in the root of the repo and type <leader>so to restore my session.
 nnoremap <leader>ss :mks!<cr>
-nnoremap <leader>so :source Session.vim<cr>
-
-" smooth scroll plugin, increase the last arg for faster scroll
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 5)<cr>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 5)<cr>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 6)<cr>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 6)<cr>
-noremap <silent> <c-y> :call smooth_scroll#up(15, 0, 3)<cr>15j
-noremap <silent> <c-e> :call smooth_scroll#down(15, 0, 3)<cr>15k
+nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so $MYVIMRC<CR>

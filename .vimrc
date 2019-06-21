@@ -17,17 +17,34 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.vim/bundle') " Arg specifies plugin install dir
+" Bread and butter file searcher.
+" <space>f to search for tracked files in git repo.
+" Lots of other powerful stuff see git repo for details. Install ripgrep (choco install ripgrep) and do <space>r for a grep search (git aware).
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim' " <space>f to search for tracked files in git repo. Lots of other powerful stuff see git repo for details.
-Plug 'tomtom/tcomment_vim' " comment selected lines with gc
-Plug 'wellle/targets.vim' " cin( cina, etc
-Plug 'godlygeek/tabular' " aligning selected text on some char or regex
-Plug 'AlessandroYorba/Alduin' "colorscheme
-Plug 'vim-scripts/star-search' " * search no longer jumps to next thing immediately. Can search visual selections
+Plug 'junegunn/fzf.vim'
 
-Plug 'majutsushi/tagbar' "toggle f8 to see codebase symbols
+Plug 'tomtom/tcomment_vim' " Comment selected lines with gc
+Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object: din( cila vin[ etc.
+Plug 'godlygeek/tabular' " Aligning selected text on some char or regex
+
+Plug 'rust-lang/rust.vim'
+Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+
+" Syntax error checking
+Plug 'vim-syntastic/syntastic'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
+Plug 'majutsushi/tagbar'
 nmap <F8> :TagbarToggle<CR>
 
+" Smooth scrolling
 Plug 'yuttie/comfortable-motion.vim'
 let g:comfortable_motion_no_default_key_mappings = 1
 let g:comfortable_motion_impulse_multiplier = 10  " Feel free to increase/decrease this value.
@@ -39,6 +56,10 @@ nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impu
 nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
 nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1.5)<CR>
 nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<CR>
+
+" Colorschemes
+Plug 'AlessandroYorba/Alduin'
+Plug 'flrnprz/candid.vim'
 
 call plug#end()
 
