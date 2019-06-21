@@ -23,12 +23,12 @@ Plug 'tomtom/tcomment_vim' " comment selected lines with gc
 Plug 'wellle/targets.vim' " cin( cina, etc
 Plug 'godlygeek/tabular' " aligning selected text on some char or regex
 Plug 'AlessandroYorba/Alduin' "colorscheme
-Plug 'majutsushi/tagbar' "toggle f8 to see codebase symbols
 Plug 'vim-scripts/star-search' " * search no longer jumps to next thing immediately. Can search visual selections
 
-" Plug 'terryma/vim-smooth-scroll' "ctrl-d,u,e,y (if terminal window speed is slow, this will suck)
+Plug 'majutsushi/tagbar' "toggle f8 to see codebase symbols
+nmap <F8> :TagbarToggle<CR>
+
 Plug 'yuttie/comfortable-motion.vim'
-" scroll is proportional to window height
 let g:comfortable_motion_no_default_key_mappings = 1
 let g:comfortable_motion_impulse_multiplier = 10  " Feel free to increase/decrease this value.
 let g:comfortable_motion_friction = 10000.0
@@ -39,9 +39,8 @@ nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impu
 nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
 nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1.5)<CR>
 nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<CR>
-call plug#end()
 
-nmap <F8> :TagbarToggle<CR>
+call plug#end()
 
 " set UTF-8 encoding
 set enc=utf-8 fenc=utf-8 termencoding=utf-8
@@ -236,6 +235,7 @@ vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
+set formatoptions-=o
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
@@ -273,6 +273,9 @@ onoremap s :normal vs<cr>
 " nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
 "NOTES:
+" highlighing lines then doing a :w TEST will write those lines to TEST
+" :r TEST will put lines from test at the cursor
+" :r !ls will put the result of ls at the cursor
 " Re-flow comments by visually selecting it and hit gq
 " :qa! quits all without saving
 " :wqa! write and quits all
