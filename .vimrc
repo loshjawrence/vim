@@ -6,8 +6,8 @@ syntax enable
 " Note: on unix-like OS's you must put the .vim color scheme files (in this case alduin2.vim) in
 " /usr/share/vim/vim80/colors
 " ~/.vim/colors
-
-colorscheme alduin3
+set background=dark
+colorscheme alduin3 " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim
 
 " Plugins. Execute :PlugInstall for any new ones you add
 " Auto install the vim-plug pluggin manager if its not there
@@ -24,6 +24,21 @@ Plug 'wellle/targets.vim' " cin( cina, etc
 Plug 'godlygeek/tabular' " aligning selected text on some char or regex
 Plug 'AlessandroYorba/Alduin' "colorscheme
 Plug 'vim-scripts/star-search' " * search no longer jumps to next thing immediately. Can search visual selections
+Plug 'rust-lang/rust.vim'
+Plug 'octol/vim-cpp-enhanced-highlight' " possibly better version than the one below?
+" let g:cpp_class_scope_highlight = 1
+" let g:cpp_member_variable_highlight = 1
+" let g:cpp_class_decl_highlight = 1
+
+" Syntax error checking
+" Plug 'vim-syntastic/syntastic'
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
 
 Plug 'majutsushi/tagbar' "toggle f8 to see codebase symbols
 nmap <F8> :TagbarToggle<CR>
@@ -49,6 +64,11 @@ set enc=utf-8 fenc=utf-8 termencoding=utf-8
 " relativenumber makes it a little slower than normal, need to set cursorline
 " to get the color highlight in the number column on the current line
 set number lazyredraw
+
+" Terminal has some timeout thing. This gets rid of it, See https://www.reddit.com/r/vim/comments/2391u5/delay_while_using_esc_to_exit_insert_mode/
+set ttimeout
+set timeoutlen=100
+set ttimeoutlen=0
 
 " Highlights the  line that's being edited when in insert mode (in some way,depends on color scheme I think)
 " To make it more obvious which mode we are in given that we can't edit the
@@ -89,7 +109,7 @@ noremap <space> <nop>
 let mapleader= "\<space>"
 
 " set text to consolas, size
-set guifont=Consolas:h9
+set guifont=Courier\ 11
 set tabstop=2     "tabs are at proper location
 set shiftwidth=2  "indenting is 4 spaces
 set expandtab     "don't use actual tab character (ctrl-v)
@@ -133,6 +153,7 @@ nnoremap == =i{<c-o>
 inoremap <c-[> <Esc>:w<cr>
 nnoremap <c-[> <Esc>:w<cr>
 
+
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
 " apply macro across visual selection, VG to select until end of file
@@ -150,6 +171,9 @@ highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+
+" Pretty Json
+noremap <leader>p :%!python -m json.tool<cr>
 
 " Go to tab by number
 noremap <leader>1 :tabfirst<cr>
@@ -169,11 +193,28 @@ noremap <Esc>A :tabm -1<cr>
 " alt-D will go to next right tab
 noremap <Esc>D :tabm +1<cr>
 
+if has("gui_running")
+    " inoremap == 'ignore any other mappings'
+    noremap <M-a> gT
+    noremap <M-d> gt
+    noremap <M-A> :tabm -1<cr>
+    noremap <M-D> :tabm +1<cr>
+
+    " uncomment to disable Alt+[menukey] menu keys (i.e. Alt+h for help)
+    set winaltkeys=no " same as `:set wak=no`
+
+    " uncomment to disable menubar
+    set guioptions -=m
+
+    " uncomment to disable icon menubar
+    set guioptions -=T
+endif
+
+" :so ~/_vimrc will source the vimrc so you don't have to reload
 " Get vimrc to load across a session when vimrc written
-" " :so ~/_vimrc will source the vimrc so you don't have to reload
 function! UpdateVimRC()
   for server in split(serverlist())
-    call remote_send(server, '<Esc>:source ~/.vimrc<CR>')
+    call remote_send(server, '<Esc>:so ~/.vimrc<CR>')
   endfor
 endfunction
 augroup myvimrchooks
@@ -235,7 +276,7 @@ vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
-set formatoptions-=o
+" set formatoptions-=o
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
