@@ -70,6 +70,7 @@ set enc=utf-8 fenc=utf-8 termencoding=utf-8
 " relativenumber makes it a little slower than normal, need to set cursorline
 " to get the color highlight in the number column on the current line
 set number lazyredraw
+vnoremap <Esc> <C-c> " Get rid of the visual mode delay on esc
 
 " Highlights the  line that's being edited when in insert mode (in some way,depends on color scheme I think)
 " To make it more obvious which mode we are in given that we can't edit the
@@ -151,8 +152,8 @@ nnoremap == =i{<c-o>
 
 " make getting out of insert mode easier
 " <c-[> is Windows mapping for esc
-inoremap <c-[> <Esc>:w<cr>
-nnoremap <c-[> <Esc>:w<cr>
+inoremap <c-[> <c-[>:w<cr>
+nnoremap <c-[> <c-[>:w<cr>
 
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
@@ -185,20 +186,23 @@ noremap <leader>0 :tablast<cr>
 " If you type alt-a after that the output will be something like ^[a which is <escape> a
 " if not terminal winodw this would just be noremap <a-a> gT
 " alt-a will go to next left tab
-noremap <Esc>a gT
-" alt-d will go to next right tab
-noremap <Esc>d gt
-" alt-A will move the current tab to the left
-noremap <Esc>A :tabm -1<cr>
-" alt-D will go to next right tab
-noremap <Esc>D :tabm +1<cr>
+" Bad to have Esc mappings avoid Alt key since terminal commonly maps Alt to Esc
+" noremap <Esc>a gT
+" " alt-d will go to next right tab
+" noremap <Esc>d gt
+" " alt-A will move the current tab to the left
+" noremap <Esc>A :tabm -1<cr>
+" " alt-D will go to next right tab
+" noremap <Esc>D :tabm +1<cr>
+noremap <c-h> gT
+noremap <c-l> gt
 
 if has("gui_running")
     " inoremap == 'ignore any other mappings'
-    noremap <M-a> gT
-    noremap <M-d> gt
-    noremap <M-A> :tabm -1<cr>
-    noremap <M-D> :tabm +1<cr>
+    " noremap <M-a> gT
+    " noremap <M-d> gt
+    " noremap <M-A> :tabm -1<cr>
+    " noremap <M-D> :tabm +1<cr>
 
     " uncomment to disable Alt+[menukey] menu keys (i.e. Alt+h for help)
     set winaltkeys=no " same as `:set wak=no`
