@@ -47,8 +47,8 @@ nmap <F8> :TagbarToggle<CR>
 " Smooth scrolling
 Plug 'yuttie/comfortable-motion.vim'
 let g:comfortable_motion_no_default_key_mappings = 1
-let g:comfortable_motion_impulse_multiplier = 10  " Feel free to increase/decrease this value.
-let g:comfortable_motion_friction = 10000.0
+let g:comfortable_motion_impulse_multiplier = 8  " Feel free to increase/decrease this value.
+let g:comfortable_motion_friction = 5000.0
 let g:comfortable_motion_air_drag = 0.0
 nnoremap <silent> <C-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 0.7)<CR>
 nnoremap <silent> <C-y> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -0.7)<CR>
