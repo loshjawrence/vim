@@ -9,7 +9,6 @@ let &runtimepath.=',~/.vim/bundle/neoterm'
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
 let mapleader="\<SPACE>" " Map the leader key to SPACE
-" set t_BE= " disable bracketed paste
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
 set guifont=Consolas:h9    " set text to consolas, size
@@ -21,11 +20,9 @@ set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
 set laststatus=2        " Always display the status line
 set autowrite           " Automatically :write before running commands
-set ignorecase          " ignore case in searches
-set smartcase           " use case sensitive if capital letter present or \C
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set magic               " Use 'magic' patterns (extended regular expressions).
-" set guioptions=         " remove scrollbars on macvim
+set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
 set showcmd             " show any commands
 set foldmethod=manual   " set folds by syntax of current language
@@ -33,13 +30,13 @@ set mouse=a             " enable mouse (selection, resizing windows)
 set iskeyword+=-        " treat dash separated words as a word text object
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
 
-set tabstop=4           " Softtabs or die! use 2 spaces for tabs.
+set tabstop=4           " Use 4 spaces for tabs.
 set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " insert tab with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
 set termguicolors       " enable true colors
 set hidden              " enable hidden unsaved buffers
-silent! helptags ALL    " Generate help doc for all
+silent! helptags ALL    " Generate help doc for all plugins
 
 set ttyfast           " should make scrolling faster
 set lazyredraw        " should make scrolling faster
@@ -66,7 +63,6 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$\|\t/
 
 " Numbers
 set number " Show line numbers
-set numberwidth=1 " set the width of the line number column
 
 " set where swap file and undo/backup files are saved
 set backupdir=~/.vim//
@@ -141,7 +137,7 @@ Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object: din( cil
 
 " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
 Plug 'majutsushi/tagbar'
-nmap <F8> :TagbarToggle<CR>
+nmap <F8> :TagbarToggle<cr>
 
 " Smooth scrolling
 Plug 'yuttie/comfortable-motion.vim'
@@ -149,75 +145,63 @@ let g:comfortable_motion_no_default_key_mappings = 1
 let g:comfortable_motion_impulse_multiplier = 8
 let g:comfortable_motion_friction = 3000.0
 let g:comfortable_motion_air_drag = 0.0
-nnoremap <silent> <C-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 0.7)<CR>
-nnoremap <silent> <C-y> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -0.7)<CR>
-nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
-nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
-nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1.5)<CR>
-nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<CR>
+nnoremap <silent> <c-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 0.7)<cr>
+nnoremap <silent> <c-y> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -0.7)<cr>
+nnoremap <silent> <c-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<cr>
+nnoremap <silent> <c-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<cr>
+nnoremap <silent> <c-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1.5)<cr>
+nnoremap <silent> <c-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<cr>
 " Colorschemes
 Plug 'AlessandroYorba/Alduin'
 colorscheme alduin2 " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
 call plug#end()
 
-
-" REMAPPING
+" SEARCH
+" set ignorecase " ignore case in searches. ic is shorthand. set noic will turn off and set !ic will toggle it
+" set smartcase  " use case sensitive if capital letter present or \C
+" * and # search does not use smartcase
 " replace word under cursor in entire file
-nnoremap <leader>sr :%s/\<<C-r><C-w>\>//<Left>
+" This is sensitive to smartcase ignorecase settings: test the operation on these words below
+" test
+" Test
+nnoremap <leader>sr :%s/<c-r><c-w>//<Left>
 " search replace on selected lines
 vnoremap <leader>sr :s//<left>
-set inccommand=split " needed to see interactive edit adds a split in the gutter to see other parts of tile that are changing
+" set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 
 " TERMINAL
+" Go to insert mode when switching to a terminal
+au BufEnter * if &buftype == 'terminal' | startinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
-" Make ctrl-h/l move between windows and auto-insert in terminals
-func! s:mapMoveToWindowInDirection(dir)
-    func! s:maybeInsertMode(dir)
-        stopinsert
-        execute "wincmd" a:dir
-
-        if &buftype == 'terminal'
-            startinsert!
-        endif
-    endfunc
-
-    execute "tnoremap" "<silent>" "<C-" . a:dir . ">"
-                \ "<C-\\><C-n>"
-                \ ":call <SID>maybeInsertMode(\"" . a:dir . "\")<CR>"
-    execute "inoremap" "<silent>" "<C-" . a:dir . ">"
-                \ "<C-\\><C-n>"
-                \ ":call <SID>maybeInsertMode(\"" . a:dir . "\")<CR>"
-    execute "nnoremap" "<silent>" "<C-" . a:dir . ">"
-                \ ":call <SID>maybeInsertMode(\"" . a:dir . "\")<CR>"
-endfunc
-for dir in ["h", "l"]
-    call s:mapMoveToWindowInDirection(dir)
-endfor
- " Esc takes you back to normal mode when in the terminal
-tnoremap <C-[> <C-\><C-n>
-" To simulate i_CTRL-R in terminal-mode
-tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
-" quickly toggle term
+tnoremap <silent> <c-h> <c-\><c-n><c-w>h
+tnoremap <silent> <c-l> <c-\><c-n><c-w>l
+inoremap <silent> <c-h> <Esc><c-w>h
+inoremap <silent> <c-l> <Esc><c-w>l
+nnoremap <silent> <c-h> <c-w>h
+nnoremap <silent> <c-l> <c-w>l
+" No idea why this repmap works the first time then breaks there after. It manually works
+" nnoremap <silent> <leader><leader> :vertical botright Ttoggle<cr><c-w>l
+" quickly toggle term with space space
 func! s:toggleTerminal()
     func! s:toggleCheckInsert()
-        stopinsert
         execute "vertical" "botright" "Ttoggle"
         execute "wincmd" "l"
-        if &buftype == 'terminal'
-            startinsert!
-        endif
     endfunc
 
     execute "nnoremap" "<silent>" "<leader><leader>"
-                \ ":call <SID>toggleCheckInsert()<CR>"
+                \ ":call <SID>toggleCheckInsert()<cr>"
 endfunc
 call s:toggleTerminal()
+ " Esc takes you back to normal mode when in the terminal
+tnoremap <esc> <c-\><c-n>
+" To simulate i_CTRL-R in terminal-mode
+tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
 " Toggle between header and source for c/cpp files
 nnoremap <c-t> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
-" Press Enter to turn off search highlights and flash the location of the cursor
+" Press Enter to turn off search highlights, and flash the location of the cursor
 function! Flash()
   set cursorline cursorcolumn
   redraw
@@ -292,8 +276,8 @@ if has("gui_running")
 endif
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
-nmap <silent> <leader>vs :so $MYVIMRC<CR>
-nmap <silent> <leader>ve :tabnew ~/.vimrc<CR>
+nmap <silent> <leader>vs :so $MYVIMRC<cr>
+nmap <silent> <leader>ve :tabnew ~/.vimrc<cr>
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 nnoremap <leader>m :Marks<cr>
@@ -307,8 +291,8 @@ nnoremap <leader>r :Rg<cr> " need to install ripgrep or compile it in rust, not 
 
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
-vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<cr><cr>
-            \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
+vnoremap <silent> s //e<c-r>=&selection=='exclusive'?'+1':''<cr><cr>
+            \:<c-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
 onoremap s :normal vs<cr>
 
 " Pretty Json, can be called like other commands with :
