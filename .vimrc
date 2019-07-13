@@ -1,16 +1,25 @@
+﻿let baseDataFolder="~/.vim"
+if has("win32")
+    if has("nvim")
+        let baseDataFolder="~/AppData/Local/nvim"
+    else
+        let baseDataFolder="~/vimfiles"
+    endif
+endif
+let &runtimepath.=',' . baseDataFolder
+let &runtimepath.=',' . baseDataFolder . "/after"
+let &packpath = &runtimepath
+
 set nocompatible " vim, not vi
 syntax on        " syntax highlighting
 syntax enable    " syntax highlighting
 
-" neoterm said to do this
-filetype off
-let &runtimepath.=',~/.vim/bundle/neoterm'
-
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
-let mapleader="\<SPACE>" " Map the leader key to SPACE
+let mapleader="\<space>" " Map the leader key to SPACE
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
+" set guifont=Consolas:h9    " set text to consolas, size
 set guifont=Consolas:h9    " set text to consolas, size
 set background=dark     " tell vim what the background color looks like
 set backspace=2         " Backspace deletes like most programs in insert mode
@@ -65,12 +74,10 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$\|\t/
 set number " Show line numbers
 
 " set where swap file and undo/backup files are saved
-set noswapfile 
-set backupdir=~/.vim//
-set directory=~/.vim//
-" persistent undo between file reloads
-set undofile
-set undodir=~/.vim//
+set nowritebackup
+set noswapfile
+let &backupdir=baseDataFolder
+let &directory=baseDataFolder
 
 " Open new split panes to right and bottom, which feels more natural
 set splitbelow
@@ -111,12 +118,14 @@ set enc=utf-8 fenc=utf-8 termencoding=utf-8
 
 " Plugins. Execute :PlugInstall for any new ones you add
 " Auto install the vim-plug pluggin manager if its not there
-" if empty(glob('~/.vim/autoload/plug.vim'))
-"   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+let plugDotVimLocation=baseDataFolder . "/autoload/plug.vim"
+" if empty(glob(plugDotVimLocation))
+" need to do execute with quotes and stuff probably
+"   silent !curl -fLo plugDotVimLocation --create-dirs
 "         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"   autocmd VimEnter * PlugInstall --sync | source ~/.vimrc
+"   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 " endif
-call plug#begin('~/.vim/bundle') " Arg specifies plugin install dir
+call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 " Bread and butter file searcher.
 " <space>f to search for tracked files in git repo.
 " Lots of other powerful stuff see git repo for details. Install ripgrep (choco install ripgrep) and do <space>r for a grep search (git aware).
@@ -133,6 +142,47 @@ Plug 'junegunn/fzf.vim'
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+
+" neovim seems to work with both, gvim works with niether
+Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
+let guifontpp_size_increment=1 
+let guifontpp_smaller_font_map="<c-=>" 
+let guifontpp_larger_font_map="<c-->" 
+
+" " NON PLUGIN VERSION??
+" if has("unix")
+"     function! FontSizePlus ()
+"       let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
+"       let l:gf_size_whole = l:gf_size_whole + 1
+"       let l:new_font_size = ' '.l:gf_size_whole
+"       let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
+"     endfunction
+"
+"     function! FontSizeMinus ()
+"       let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
+"       let l:gf_size_whole = l:gf_size_whole - 1
+"       let l:new_font_size = ' '.l:gf_size_whole
+"       let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
+"     endfunction
+" else
+"     function! FontSizePlus ()
+"       let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
+"       let l:gf_size_whole = l:gf_size_whole + 1
+"       let l:new_font_size = ':h'.l:gf_size_whole
+"       let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
+"     endfunction
+"
+"     function! FontSizeMinus ()
+"       let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
+"       let l:gf_size_whole = l:gf_size_whole - 1
+"       let l:new_font_size = ':h'.l:gf_size_whole
+"       let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
+"     endfunction
+" endif
+" if has("gui_running")
+"     nmap <c--> :call FontSizeMinus()<CR>
+"     nmap <c-=> :call FontSizePlus()<CR>
+" endif
 
 Plug 'kassio/neoterm'
 Plug 'tomtom/tcomment_vim' " Comment selected lines with gc
@@ -156,34 +206,34 @@ nnoremap <silent> <c-f> :call comfortable_motion#flick(g:comfortable_motion_impu
 nnoremap <silent> <c-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<cr>
 " Colorschemes
 Plug 'AlessandroYorba/Alduin'
-colorscheme alduin2 " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
+colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
 call plug#end()
 
 " SEARCH
-" set ignorecase " ignore case in searches. ic is shorthand. set noic will turn off and set !ic will toggle it
-" set smartcase  " use case sensitive if capital letter present or \C
 " * and # search does not use smartcase
 " replace word under cursor in entire file
 " This is sensitive to smartcase ignorecase settings: test the operation on these words below
 " test
 " Test
+" set ignorecase " ignore case in searches. ic is shorthand. set noic will turn off and set !ic will toggle it
+" set smartcase  " use case sensitive if capital letter present or \C
 nnoremap <leader>sr :%s/<c-r><c-w>//<Left>
 " search replace on selected lines
 vnoremap <leader>sr :s//<left>
-if has("inccomand")
+if has("nvim")
     set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
 
-inoremap <c-h> <Esc><c-w>h
-inoremap <c-l> <Esc><c-w>l
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-
-" " TERMINAL
+" TERMINAL
 " Go to insert mode when switching to a terminal
 au BufEnter * if &buftype == 'terminal' | startinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
+" Vert split navigaton
+inoremap <c-h> <Esc><c-w>h
+inoremap <c-l> <Esc><c-w>l
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
 tnoremap <c-h> <c-\><c-n><c-w>h
 tnoremap <c-l> <c-\><c-n><c-w>l
 " No idea why this repmap works the first time then breaks there after. It manually works
@@ -263,20 +313,29 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 noremap <c-j> gT
 noremap <c-k> gt
 
+" " does not work on gvim windows, works on nvim windows
+" " increase decrease font size 
+" nnoremap <C-=> :silent! let &guifont = substitute(
+"             \ &guifont,
+"             \ ':h\zs\d\+',
+"             \ '\=eval(submatch(0)+1)',
+"             \ '')<CR>
+" nnoremap <C--> :silent! let &guifont = substitute(
+"             \ &guifont,
+"             \ ':h\zs\d\+',
+"             \ '\=eval(submatch(0)-1)',
+"             \ '')<CR>
+
 if has("gui_running")
-    " inoremap == 'ignore any other mappings'
     " noremap <A-a> gT
     " noremap <A-d> gt
     " Move the tab left and right in the tab bar
     " noremap <A-A> :tabm -1<cr>
     " noremap <A-D> :tabm +1<cr>
-
     " comment to enable Alt+[menukey] menu keys (i.e. Alt+h for help)
     set winaltkeys=no " same as `:set wak=no`
-
     " comment to enable menubar
     set guioptions -=m
-
     " comment to enable icon menubar
     set guioptions -=T
 endif
