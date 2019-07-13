@@ -24,7 +24,6 @@ set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set magic               " Use 'magic' patterns (extended regular expressions).
 set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
-set foldmethod=manual   " set folds by syntax of current language
 set mouse=a             " enable mouse (selection, resizing windows)
 set iskeyword+=-        " treat dash separated words as a word text object
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
@@ -49,7 +48,7 @@ set wildmode=list:longest,list:full " configure wildmenu
 
 " text appearance
 set textwidth=80
-set nowrap                          " nowrap by default
+set nowrap                          " Don't word wrap
 
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
@@ -119,7 +118,7 @@ call plug#begin('~/.vim/bundle') " Arg specifies plugin install dir
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-" Plug 'w0rp/ale' " 
+" Plug 'w0rp/ale'
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'vim-airline/vim-airline'
 " let g:airline#extensions#ale#enabled = 1
@@ -166,19 +165,21 @@ call plug#end()
 nnoremap <leader>sr :%s/<c-r><c-w>//<Left>
 " search replace on selected lines
 vnoremap <leader>sr :s//<left>
-set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
+if has("inccomand")
+    set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
+endif
 
 " TERMINAL
 " Go to insert mode when switching to a terminal
 au BufEnter * if &buftype == 'terminal' | startinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
-tnoremap <silent> <c-h> <c-\><c-n><c-w>h
-tnoremap <silent> <c-l> <c-\><c-n><c-w>l
 inoremap <silent> <c-h> <Esc><c-w>h
 inoremap <silent> <c-l> <Esc><c-w>l
 nnoremap <silent> <c-h> <c-w>h
 nnoremap <silent> <c-l> <c-w>l
+tnoremap <silent> <c-h> <c-\><c-n><c-w>h
+tnoremap <silent> <c-l> <c-\><c-n><c-w>l
 " No idea why this repmap works the first time then breaks there after. It manually works
 " nnoremap <silent> <leader><leader> :vertical botright Ttoggle<cr><c-w>l
 " quickly toggle term with space space
@@ -192,7 +193,7 @@ func! s:toggleTerminal()
                 \ ":call <SID>toggleCheckInsert()<cr>"
 endfunc
 call s:toggleTerminal()
- " Esc takes you back to normal mode when in the terminal
+" Esc takes you back to normal mode when in the terminal
 tnoremap <esc> <c-\><c-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
