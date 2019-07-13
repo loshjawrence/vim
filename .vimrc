@@ -24,7 +24,6 @@ set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set magic               " Use 'magic' patterns (extended regular expressions).
 set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
-set showcmd             " show any commands
 set foldmethod=manual   " set folds by syntax of current language
 set mouse=a             " enable mouse (selection, resizing windows)
 set iskeyword+=-        " treat dash separated words as a word text object
@@ -100,7 +99,7 @@ autocmd VimResized * :wincmd =
 autocmd FileType json syntax match Comment +\/\/.\+$+
 
 " notify if file changed outside of vim to avoid multiple versions
-autocmd FocusGained * checktime
+au FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
 set nocursorline
 autocmd InsertEnter * set cursorline
@@ -167,7 +166,7 @@ call plug#end()
 nnoremap <leader>sr :%s/<c-r><c-w>//<Left>
 " search replace on selected lines
 vnoremap <leader>sr :s//<left>
-" set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
+set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 
 " TERMINAL
 " Go to insert mode when switching to a terminal
