@@ -5,6 +5,10 @@ if has("win32")
     else
         let baseDataFolder="~/vimfiles"
     endif
+else
+    " if has("nvim")
+    "     let baseDataFolder="~/.config/nvim"
+    " endif
 endif
 let &runtimepath.=',' . baseDataFolder
 let &runtimepath.=',' . baseDataFolder . "/after"
@@ -19,8 +23,7 @@ noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to SPACE
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
-" set guifont=Consolas:h9    " set text to consolas, size
-set guifont=Consolas:h9    " set text to consolas, size
+" set guifont=Consolas\ h9    " set text to consolas, size
 set background=dark     " tell vim what the background color looks like
 set backspace=2         " Backspace deletes like most programs in insert mode
 set history=100         " how many : commands to save in history
@@ -148,41 +151,6 @@ Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
 let guifontpp_size_increment=1 
 let guifontpp_smaller_font_map="<c-=>" 
 let guifontpp_larger_font_map="<c-->" 
-
-" " NON PLUGIN VERSION??
-" if has("unix")
-"     function! FontSizePlus ()
-"       let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
-"       let l:gf_size_whole = l:gf_size_whole + 1
-"       let l:new_font_size = ' '.l:gf_size_whole
-"       let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
-"     endfunction
-"
-"     function! FontSizeMinus ()
-"       let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
-"       let l:gf_size_whole = l:gf_size_whole - 1
-"       let l:new_font_size = ' '.l:gf_size_whole
-"       let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
-"     endfunction
-" else
-"     function! FontSizePlus ()
-"       let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
-"       let l:gf_size_whole = l:gf_size_whole + 1
-"       let l:new_font_size = ':h'.l:gf_size_whole
-"       let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
-"     endfunction
-"
-"     function! FontSizeMinus ()
-"       let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
-"       let l:gf_size_whole = l:gf_size_whole - 1
-"       let l:new_font_size = ':h'.l:gf_size_whole
-"       let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
-"     endfunction
-" endif
-" if has("gui_running")
-"     nmap <c--> :call FontSizeMinus()<CR>
-"     nmap <c-=> :call FontSizePlus()<CR>
-" endif
 
 Plug 'kassio/neoterm'
 Plug 'tomtom/tcomment_vim' " Comment selected lines with gc
