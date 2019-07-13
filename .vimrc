@@ -18,6 +18,8 @@ set history=100         " how many : commands to save in history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
+set hlsearch            " search highlight
+set nowrapscan          " Don't autowrap to top of tile on searches
 set laststatus=2        " Always display the status line
 set autowrite           " Automatically :write before running commands
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
@@ -63,14 +65,12 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$\|\t/
 set number " Show line numbers
 
 " set where swap file and undo/backup files are saved
+set noswapfile 
 set backupdir=~/.vim//
 set directory=~/.vim//
-
-" " persistent undo between file reloads
-if has('persistent_undo')
-  set undofile
-  set undodir=~/.vim//
-endif
+" persistent undo between file reloads
+set undofile
+set undodir=~/.vim//
 
 " Open new split panes to right and bottom, which feels more natural
 set splitbelow
@@ -78,7 +78,9 @@ set splitright
 
 " To ALWAYS use the clipboard for ALL operations
 " instead of interacting with the '+' and/or '*' registers explicitly
-set clipboard+=unnamedplus
+if has("nvim") " didn't work in gvim
+    set clipboard+=unnamedplus
+endif
 
 " Always use vertical diffs
 set diffopt+=vertical
@@ -104,13 +106,16 @@ set nocursorline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
 
+" set UTF-8 encoding
+set enc=utf-8 fenc=utf-8 termencoding=utf-8
+
 " Plugins. Execute :PlugInstall for any new ones you add
 " Auto install the vim-plug pluggin manager if its not there
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
+" if empty(glob('~/.vim/autoload/plug.vim'))
+"   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+"         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"   autocmd VimEnter * PlugInstall --sync | source ~/.vimrc
+" endif
 call plug#begin('~/.vim/bundle') " Arg specifies plugin install dir
 " Bread and butter file searcher.
 " <space>f to search for tracked files in git repo.
@@ -169,17 +174,18 @@ if has("inccomand")
     set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
 
-" TERMINAL
+inoremap <c-h> <Esc><c-w>h
+inoremap <c-l> <Esc><c-w>l
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+
+" " TERMINAL
 " Go to insert mode when switching to a terminal
 au BufEnter * if &buftype == 'terminal' | startinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
-inoremap <silent> <c-h> <Esc><c-w>h
-inoremap <silent> <c-l> <Esc><c-w>l
-nnoremap <silent> <c-h> <c-w>h
-nnoremap <silent> <c-l> <c-w>l
-tnoremap <silent> <c-h> <c-\><c-n><c-w>h
-tnoremap <silent> <c-l> <c-\><c-n><c-w>l
+tnoremap <c-h> <c-\><c-n><c-w>h
+tnoremap <c-l> <c-\><c-n><c-w>l
 " No idea why this repmap works the first time then breaks there after. It manually works
 " nnoremap <silent> <leader><leader> :vertical botright Ttoggle<cr><c-w>l
 " quickly toggle term with space space
