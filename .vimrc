@@ -69,13 +69,13 @@ set number " Show line numbers
 set numberwidth=1 " set the width of the line number column
 
 " set where swap file and undo/backup files are saved
-set backupdir=~/.vim/tmp,.
-set directory=~/.vim/tmp,.
+set backupdir=~/.vim//
+set directory=~/.vim//
 
-" persistent undo between file reloads
+" " persistent undo between file reloads
 if has('persistent_undo')
   set undofile
-  set undodir=~/.vim/tmp,.
+  set undodir=~/.vim//
 endif
 
 " Open new split panes to right and bottom, which feels more natural
@@ -96,9 +96,8 @@ autocmd FileType markdown setlocal spell
 " Autocomplete with dictionary words when spell check is on
 set complete+=kspell
 
-" Vim/tmux layout rebalancing
 " automatically rebalance windows on vim resize
-" autocmd VimResized * :wincmd =
+autocmd VimResized * :wincmd =
 
 " add support for comments in json (jsonc format used as configuration for
 " many utilities)
@@ -170,28 +169,50 @@ vnoremap <leader>sr :s//<left>
 set inccommand=split " needed to see interactive edit adds a split in the gutter to see other parts of tile that are changing
 
 " TERMINAL
-" " https://github.com/neovim/neovim/issues/5576
-" " To use `ALT+{h,j,k,l}` to navigate windows from any mode
-" tnoremap <C-j> <C-\><C-N><C-w>j
-" tnoremap <C-k> <C-\><C-N><C-w>k
-" inoremap <C-j> <C-\><C-N><C-w>j
-" inoremap <C-k> <C-\><C-N><C-w>k
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-tnoremap <C-h> <C-\><C-N><C-w>h
-tnoremap <C-l> <C-\><C-N><C-w>l
-inoremap <C-h> <C-\><C-N><C-w>h
-inoremap <C-l> <C-\><C-N><C-w>l
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
+" Distinguish terminal by making cursor red
+highlight TermCursor ctermfg=red guifg=red
+" Make ctrl-h/l move between windows and auto-insert in terminals
+func! s:mapMoveToWindowInDirection(dir)
+    func! s:maybeInsertMode(dir)
+        stopinsert
+        execute "wincmd" a:dir
+
+        if &buftype == 'terminal'
+            startinsert!
+        endif
+    endfunc
+
+    execute "tnoremap" "<silent>" "<C-" . a:dir . ">"
+                \ "<C-\\><C-n>"
+                \ ":call <SID>maybeInsertMode(\"" . a:dir . "\")<CR>"
+    execute "inoremap" "<silent>" "<C-" . a:dir . ">"
+                \ "<C-\\><C-n>"
+                \ ":call <SID>maybeInsertMode(\"" . a:dir . "\")<CR>"
+    execute "nnoremap" "<silent>" "<C-" . a:dir . ">"
+                \ ":call <SID>maybeInsertMode(\"" . a:dir . "\")<CR>"
+endfunc
+for dir in ["h", "l"]
+    call s:mapMoveToWindowInDirection(dir)
+endfor
  " Esc takes you back to normal mode when in the terminal
 tnoremap <C-[> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
 " quickly toggle term
-" nnoremap <silent> <leader>o :vertical botright Ttoggle<cr><C-w>l
-" nnoremap <silent> <leader>O :botright Ttoggle<cr><C-w>j
-nnoremap <silent> <leader><space> :vertical botright Ttoggle<cr><C-w>l
+func! s:toggleTerminal()
+    func! s:toggleCheckInsert()
+        stopinsert
+        execute "vertical" "botright" "Ttoggle"
+        execute "wincmd" "l"
+        if &buftype == 'terminal'
+            startinsert!
+        endif
+    endfunc
+
+    execute "nnoremap" "<silent>" "<leader><leader>"
+                \ ":call <SID>toggleCheckInsert()<CR>"
+endfunc
+call s:toggleTerminal()
 
 " Toggle between header and source for c/cpp files
 nnoremap <c-t> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
@@ -254,11 +275,11 @@ noremap <c-k> gt
 
 if has("gui_running")
     " inoremap == 'ignore any other mappings'
-    " noremap <M-a> gT
-    " noremap <M-d> gt
+    " noremap <A-a> gT
+    " noremap <A-d> gt
     " Move the tab left and right in the tab bar
-    " noremap <M-A> :tabm -1<cr>
-    " noremap <M-D> :tabm +1<cr>
+    " noremap <A-A> :tabm -1<cr>
+    " noremap <A-D> :tabm +1<cr>
 
     " comment to enable Alt+[menukey] menu keys (i.e. Alt+h for help)
     set winaltkeys=no " same as `:set wak=no`
@@ -290,8 +311,8 @@ vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<cr><cr>
             \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
 onoremap s :normal vs<cr>
 
-" Pretty Json
-command! PrettyPrintJSON %!python -m json.tool
+" Pretty Json, can be called like other commands with :
+command! JSONPRETTY %!python -m json.tool
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
