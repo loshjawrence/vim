@@ -24,6 +24,8 @@ autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
+" Highlight from 81 on in a different color
+" let &colorcolumn=join(range(81,999),",")
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
@@ -64,9 +66,9 @@ set lazyredraw        " should make scrolling faster
 set visualbell
 
 " jump to tag. / will do fuzzy match
-nnoremap <leader>j :tjump /
+" nnoremap <leader>j :tjump /
 " list the buffers and prepare open buffer command
-nnoremap gb :ls<CR>:b<space>
+" nnoremap gb :ls<CR>:b<space>
 set wildignorecase
 set wildmenu                        " enable wildmenu
 set wildmode=list:longest,list:full " configure wildmenu
@@ -141,6 +143,11 @@ call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+" Tag file management, should use Exhuberant Ctags
+Plug 'ludovicchabant/vim-gutentags'
+set statusline+=%{gutentags#statusline()}
+" Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
+
 " Plug 'w0rp/ale'
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'vim-airline/vim-airline'
@@ -151,6 +158,13 @@ Plug 'junegunn/fzf.vim'
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
+" Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
+Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
+map <F8> :TagbarToggle<cr>
+Plug 'scrooloose/nerdtree' " good for seeing the files you care about, i.e. some subfolder in the project
+map <F7> :NERDTreeToggle<CR>
+
 
 " neovim seems to work with both, gvim works with niether
 " theres a neovim gtk version that works for linux and windows
@@ -159,15 +173,8 @@ let guifontpp_size_increment=1
 let guifontpp_smaller_font_map="<c-->" 
 let guifontpp_larger_font_map="<c-=>" 
 
-Plug 'kassio/neoterm'
-Plug 'tomtom/tcomment_vim' " Comment selected lines with gc
-Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object: din( cila vin[ etc.
-
-" Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
-Plug 'majutsushi/tagbar'
-map <F8> :TagbarToggle<cr>
-Plug 'scrooloose/nerdtree'
-map <F7> :NERDTreeToggle<CR>
+Plug 'tomtom/tcomment_vim' " Comment selected lines with gc, current line with gcc, scope with gcip{, text block with gcip, and so on.
+Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [ thing 1 ] [thing  2]
 
 " Smooth scrolling
 Plug 'yuttie/comfortable-motion.vim'
@@ -226,8 +233,14 @@ func! s:toggleTerminal()
                 \ ":call <SID>toggleCheckInsert()<cr>"
 endfunc
 call s:toggleTerminal()
-" Esc takes you back to normal mode when in the terminal
-tnoremap <esc> <c-\><c-n>
+" Esc quits the termial
+if has("nvim")
+    tnoremap <Esc> <C-\><C-n>:q<CR>
+    " Breaks on second try
+    " tnoremap <Esc> <C-\><C-n>:q!<CR>
+else
+    tnoremap <ESC> <C-w>:q<CR>
+endif
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
@@ -236,8 +249,16 @@ nnoremap <c-t> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
 " CURSORLINE (can be slower)
 let g:useCursorline = 1
+" purple4 royalblue4
+" hi CursorLine  cterm=NONE ctermbg=royalblue4 ctermfg=NONE
+hi CursorLine  gui=NONE guibg=purple4 guifg=NONE
+	" You can also specify a color by its RGB (red, green, blue) values.
+	" The format is "#rrggbb", where
+    " :highlight Comment guifg=#11f0c3 guibg=#ff00ff
 if g:useCursorline == 1
     set cursorline
+    autocmd BufEnter * set cursorline
+    autocmd BufLeave * set nocursorline
 else
     set nocursorline
     autocmd InsertEnter * set cursorline
@@ -336,7 +357,14 @@ nmap <silent> <leader>vs :so $MYVIMRC<cr>
 nmap <silent> <leader>ve :tabnew ~/.vimrc<cr>
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
-nnoremap <leader>m :Marks<cr>
+" down / up / left / right
+let g:fzf_layout = { 'down': '~50%' }
+
+" In Neovim, you can set up fzf window using a Vim command
+nnoremap <leader>l :BLines<cr>
+nnoremap <leader>L :Lines<cr>
+nnoremap <leader>t :BTags<cr>
+nnoremap <leader>T :Tags<cr>
 nnoremap <leader>f :GFiles<cr>
 nnoremap <leader>F :Files<cr>
 " nnoremap <leader>hh :History<cr>
