@@ -56,7 +56,6 @@ set lazyredraw        " should make scrolling faster
 " visual bell for errors
 set visualbell
 
-" wildmenu
 set wildmenu                        " enable wildmenu
 set wildmode=list:longest,list:full " configure wildmenu
 
@@ -149,8 +148,8 @@ Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immed
 " neovim seems to work with both, gvim works with niether
 Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
 let guifontpp_size_increment=1 
-let guifontpp_smaller_font_map="<c-=>" 
-let guifontpp_larger_font_map="<c-->" 
+let guifontpp_smaller_font_map="<c-->" 
+let guifontpp_larger_font_map="<c-=>" 
 
 Plug 'kassio/neoterm'
 Plug 'tomtom/tcomment_vim' " Comment selected lines with gc
