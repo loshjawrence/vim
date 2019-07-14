@@ -18,6 +18,12 @@ set nocompatible " vim, not vi
 syntax on        " syntax highlighting
 syntax enable    " syntax highlighting
 
+" Associate filetypes with other filetypes
+autocmd BufRead,BufNewFile *.shader set filetype=c
+autocmd BufRead,BufNewFile *.vert   set filetype=c
+autocmd BufRead,BufNewFile *.frag   set filetype=c
+autocmd BufRead,BufNewFile *.md     set filetype=markdown
+
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to SPACE
@@ -56,6 +62,11 @@ set lazyredraw        " should make scrolling faster
 " visual bell for errors
 set visualbell
 
+" jump to tag. / will do fuzzy match
+nnoremap <leader>j :tjump /
+" list the buffers and prepare open buffer command
+nnoremap gb :ls<CR>:b<space>
+set wildignorecase
 set wildmenu                        " enable wildmenu
 set wildmode=list:longest,list:full " configure wildmenu
 
@@ -74,6 +85,7 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$\|\t/
 
 " Numbers
 set number " Show line numbers
+
 
 " set where swap file and undo/backup files are saved
 set nowritebackup
@@ -94,8 +106,6 @@ endif
 " Always use vertical diffs
 set diffopt+=vertical
 
-" Set syntax highlighting for specific file types
-autocmd BufRead,BufNewFile *.md set filetype=markdown
 " Enable spellchecking for Markdown
 autocmd FileType markdown setlocal spell
 " Autocomplete with dictionary words when spell check is on
@@ -110,10 +120,6 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 
 " notify if file changed outside of vim to avoid multiple versions
 au FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
-
-set nocursorline
-autocmd InsertEnter * set cursorline
-autocmd InsertLeave * set nocursorline
 
 " set UTF-8 encoding
 set enc=utf-8 fenc=utf-8 termencoding=utf-8
@@ -146,6 +152,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
 
 " neovim seems to work with both, gvim works with niether
+" theres a neovim gtk version that works for linux and windows
 Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
 let guifontpp_size_increment=1 
 let guifontpp_smaller_font_map="<c-->" 
@@ -157,7 +164,9 @@ Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object: din( cil
 
 " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
 Plug 'majutsushi/tagbar'
-nmap <F8> :TagbarToggle<cr>
+map <F8> :TagbarToggle<cr>
+Plug 'scrooloose/nerdtree'
+map <F7> :NERDTreeToggle<CR>
 
 " Smooth scrolling
 Plug 'yuttie/comfortable-motion.vim'
@@ -224,12 +233,26 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " Toggle between header and source for c/cpp files
 nnoremap <c-t> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
+" CURSORLINE (can be slower)
+let g:useCursorline = 1
+if g:useCursorline == 1
+    set cursorline
+else
+    set nocursorline
+    autocmd InsertEnter * set cursorline
+    autocmd InsertLeave * set nocursorline
+endif
+
 " Press Enter to turn off search highlights, and flash the location of the cursor
 function! Flash()
-  set cursorline cursorcolumn
-  redraw
-  sleep 35m
-  set nocursorline nocursorcolumn
+    set cursorline cursorcolumn
+    redraw
+    sleep 100m
+
+    set nocursorcolumn
+    if g:useCursorline == 0
+        set nocursorline
+    endif
 endfunction
 nnoremap <cr> :noh<cr>:call Flash()<cr>
 
@@ -300,11 +323,11 @@ if has("gui_running")
     " noremap <A-A> :tabm -1<cr>
     " noremap <A-D> :tabm +1<cr>
     " comment to enable Alt+[menukey] menu keys (i.e. Alt+h for help)
-    set winaltkeys=no " same as `:set wak=no`
-    " comment to enable menubar
-    set guioptions -=m
-    " comment to enable icon menubar
-    set guioptions -=T
+    " set winaltkeys=no " same as `:set wak=no`
+    " " comment to enable menubar
+    " set guioptions -=m
+    " " comment to enable icon menubar
+    " set guioptions -=T
 endif
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
