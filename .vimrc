@@ -24,6 +24,7 @@ autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
+
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to SPACE
