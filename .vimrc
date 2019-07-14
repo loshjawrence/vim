@@ -23,7 +23,7 @@ noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to SPACE
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
-" set guifont=Consolas\ h9    " set text to consolas, size
+set guifont=Consolas:h9    " set text to consolas, size
 set background=dark     " tell vim what the background color looks like
 set backspace=2         " Backspace deletes like most programs in insert mode
 set history=100         " how many : commands to save in history
