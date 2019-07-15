@@ -52,7 +52,6 @@ set magic               " Use 'magic' patterns (extended regular expressions).
 set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
 set mouse=a             " enable mouse (selection, resizing windows)
-set iskeyword+=-        " treat dash separated words as a word text object
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
 
 set tabstop=4           " Use 4 spaces for tabs.
@@ -210,18 +209,57 @@ if has("nvim")
     set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
 
+" NAVIGATION WINDOW RESIZE
+" set in ginit.vim (at least works in gvim)
+" Only seems to work for gvim
+if !has("nvim") && has("gui_running")
+    set lines=999
+    set columns=255
+    " Resie window
+    " grow window horizontally
+    nnoremap <c-left> :set columns-=2<cr>
+    nnoremap <c-right> :set columns+=2<cr>
+    " grow window vertically
+    nnoremap <c-down> :set lines-=2<cr>
+    nnoremap <c-up> :set lines+=2<cr>
+endif
+" grow splits horizontally
+nnoremap <s-left> :vertical resize -2<cr> 
+nnoremap <s-right> :vertical resize +2<cr>
+" grow splits vertically
+nnoremap <s-down> :res -2<cr>
+nnoremap <s-up> :res +2<cr>
+
+" If you set the winheight option to 999, the current split occupies as much of the screen as possible(vertically)
+" and all other windows occupy only one line (I have seen this called "Rolodex mode"):
+" set winheight=999
+" sideways version:
+" set winwidth=999
+" To increase a split to its maximum height, use Ctrl-w _.
+" To increase a split to its maximum width, use Ctrl-w |. 
+"
+" cycle through tabs, left and right
+noremap <c-a> gT
+noremap <c-s> gt
+
+" Vert split navigaton
+inoremap <c-h> <Esc><c-w>h
+inoremap <c-j> <Esc><c-w>j
+inoremap <c-k> <Esc><c-w>k
+inoremap <c-l> <Esc><c-w>l
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+tnoremap <c-h> <c-\><c-n><c-w>h
+tnoremap <c-j> <c-\><c-n><c-w>j
+tnoremap <c-k> <c-\><c-n><c-w>k
+tnoremap <c-l> <c-\><c-n><c-w>l
 " TERMINAL
 " Go to insert mode when switching to a terminal
 au BufEnter * if &buftype == 'terminal' | startinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
-" Vert split navigaton
-inoremap <c-h> <Esc><c-w>h
-inoremap <c-l> <Esc><c-w>l
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-tnoremap <c-h> <c-\><c-n><c-w>h
-tnoremap <c-l> <c-\><c-n><c-w>l
 " No idea why this repmap works the first time then breaks there after. It manually works
 " nnoremap <silent> <leader><leader> :vertical botright Ttoggle<cr><c-w>l
 " quickly toggle term with space space
@@ -328,10 +366,6 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 " noremap <Esc>A :tabm -1<cr>
 " " alt-D will go to next right tab
 " noremap <Esc>D :tabm +1<cr>
-" noremap <c-j> gT
-" noremap <c-k> gt
-noremap <c-j> gT
-noremap <c-k> gt
 
 " " does not work on gvim windows, works on nvim windows
 " " increase decrease font size 
