@@ -211,8 +211,8 @@ endif
 
 " NAVIGATION WINDOW RESIZE
 " set in ginit.vim (at least works in gvim)
-" Only seems to work for gvim
-if !has("nvim") && has("gui_running")
+" Only seems to work for gvim on windows
+if has("win32") && has("gui_running")
     set lines=999
     set columns=255
     " Resie window
