@@ -6,9 +6,9 @@ if has("win32")
         let baseDataFolder="~/vimfiles"
     endif
 else
-    " if has("nvim")
-    "     let baseDataFolder="~/.config/nvim"
-    " endif
+    if has("nvim")
+        let baseDataFolder="~/.config/nvim"
+    endif
 endif
 let &runtimepath.=',' . baseDataFolder
 let &runtimepath.=',' . baseDataFolder . "/after"
@@ -18,12 +18,12 @@ set nocompatible " vim, not vi
 syntax on        " syntax highlighting
 syntax enable    " syntax highlighting
 
+" FILETYPE
 " Associate filetypes with other filetypes
 autocmd BufRead,BufNewFile *.shader set filetype=c
 autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
-
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
@@ -38,8 +38,8 @@ endif
 
 set nrformats-=octal
 set background=dark     " tell vim what the background color looks like
-set backspace=2         " Backspace deletes like most programs in insert mode
-set history=100         " how many : commands to save in history
+set backspace=indent,eol,start " allow backspace to work normally
+set history=200         " how many : commands to save in history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
