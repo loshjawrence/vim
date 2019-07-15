@@ -24,15 +24,19 @@ autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
-" Highlight from 81 on in a different color
-" let &colorcolumn=join(range(81,999),",")
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to SPACE
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
-set guifont=Consolas:h9    " set text to consolas, size
+if has("win32")
+    set guifont=Consolas:h9    " set text to consolas, size
+else
+    set guifont=Ubuntu:h9    " set text to consolas, size
+endif
+
+set nrformats-=octal
 set background=dark     " tell vim what the background color looks like
 set backspace=2         " Backspace deletes like most programs in insert mode
 set history=100         " how many : commands to save in history
@@ -114,9 +118,6 @@ autocmd FileType markdown setlocal spell
 " Autocomplete with dictionary words when spell check is on
 set complete+=kspell
 
-" automatically rebalance windows on vim resize
-autocmd VimResized * :wincmd =
-
 " add support for comments in json (jsonc format used as configuration for
 " many utilities)
 autocmd FileType json syntax match Comment +\/\/.\+$+
@@ -163,7 +164,8 @@ Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do th
 Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
 map <F8> :TagbarToggle<cr>
 Plug 'scrooloose/nerdtree' " good for seeing the files you care about, i.e. some subfolder in the project
-map <F7> :NERDTreeToggle<CR>
+map <F7> :NERDTreeToggle<CR><c-w><c-l>
+autocmd VimLeave * NERDTreeClose
 
 
 " neovim seems to work with both, gvim works with niether
@@ -236,8 +238,6 @@ call s:toggleTerminal()
 " Esc quits the termial
 if has("nvim")
     tnoremap <Esc> <C-\><C-n>:q<CR>
-    " Breaks on second try
-    " tnoremap <Esc> <C-\><C-n>:q!<CR>
 else
     tnoremap <ESC> <C-w>:q<CR>
 endif
@@ -247,11 +247,17 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " Toggle between header and source for c/cpp files
 nnoremap <c-t> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
+
+" COLORCOLUMN
+" Highlight from 81 on in a different color
+" let &colorcolumn=join(range(81,999),",")
+
 " CURSORLINE (can be slower)
 let g:useCursorline = 1
 " purple4 royalblue4
 " hi CursorLine  cterm=NONE ctermbg=royalblue4 ctermfg=NONE
-hi CursorLine  gui=NONE guibg=purple4 guifg=NONE
+hi cursorline  gui=NONE guibg=purple4 guifg=NONE
+hi cursorcolumn  gui=NONE guibg=purple4 guifg=NONE
 	" You can also specify a color by its RGB (red, green, blue) values.
 	" The format is "#rrggbb", where
     " :highlight Comment guifg=#11f0c3 guibg=#ff00ff
@@ -322,6 +328,8 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 " noremap <Esc>A :tabm -1<cr>
 " " alt-D will go to next right tab
 " noremap <Esc>D :tabm +1<cr>
+" noremap <c-j> gT
+" noremap <c-k> gt
 noremap <c-j> gT
 noremap <c-k> gt
 
@@ -338,18 +346,17 @@ noremap <c-k> gt
 "             \ '\=eval(submatch(0)-1)',
 "             \ '')<CR>
 
+" comment to enable Alt+[menukey] menu keys (i.e. Alt+h for help)
+set winaltkeys=no " same as `:set wak=no`
+" comment to enable menubar
+set guioptions-=m
+" comment to enable icon menubar
+set guioptions-=T
+
 if has("gui_running")
-    " noremap <A-a> gT
-    " noremap <A-d> gt
     " Move the tab left and right in the tab bar
-    " noremap <A-A> :tabm -1<cr>
-    " noremap <A-D> :tabm +1<cr>
-    " comment to enable Alt+[menukey] menu keys (i.e. Alt+h for help)
-    " set winaltkeys=no " same as `:set wak=no`
-    " " comment to enable menubar
-    " set guioptions -=m
-    " " comment to enable icon menubar
-    " set guioptions -=T
+    noremap <A-A> :tabm -1<cr>
+    noremap <A-D> :tabm +1<cr>
 endif
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
