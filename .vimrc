@@ -7,7 +7,7 @@ if has("win32")
     endif
 else
     if has("nvim")
-        let baseDataFolder="~/.config/nvim"
+        let baseDataFolder="~/.local/share/nvim"
     endif
 endif
 let &runtimepath.=',' . baseDataFolder
@@ -32,8 +32,6 @@ let mapleader="\<space>" " Map the leader key to SPACE
 set formatoptions=rqj
 if has("win32")
     set guifont=Consolas:h9    " set text to consolas, size
-else
-    set guifont=Ubuntu:h9    " set text to consolas, size
 endif
 
 set nrformats-=octal
@@ -129,7 +127,10 @@ set enc=utf-8 fenc=utf-8 termencoding=utf-8
 
 " Plugins. Execute :PlugInstall for any new ones you add
 " Auto install the vim-plug pluggin manager if its not there
-let plugDotVimLocation=baseDataFolder . "/autoload/plug.vim"
+let plugDotVimLocation=baseDataFolder . "autoload/plug.vim"
+if has("nvim")
+    let plugDotVimLocation=baseDataFolder . "site/autoload/plug.vim"
+endif
 " if empty(glob(plugDotVimLocation))
 " need to do execute with quotes and stuff probably
 "   silent !curl -fLo plugDotVimLocation --create-dirs
@@ -167,12 +168,45 @@ map <F7> :NERDTreeToggle<CR><c-w><c-l>
 autocmd VimLeave * NERDTreeClose
 
 
+" FONT SIZE FONT ZOOM
 " neovim seems to work with both, gvim works with niether
 " theres a neovim gtk version that works for linux and windows
 Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
 let guifontpp_size_increment=1 
 let guifontpp_smaller_font_map="<c-->" 
 let guifontpp_larger_font_map="<c-=>" 
+
+" if has("win32")
+"     function! FontSizePlus ()
+"       let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
+"       let l:gf_size_whole = l:gf_size_whole + 1
+"       let l:new_font_size = ':h'.l:gf_size_whole
+"       let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
+"     endfunction
+"
+"     function! FontSizeMinus ()
+"       let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
+"       let l:gf_size_whole = l:gf_size_whole - 1
+"       let l:new_font_size = ':h'.l:gf_size_whole
+"       let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
+"     endfunction
+" else
+"     function! FontSizePlus ()
+"       let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
+"       let l:gf_size_whole = l:gf_size_whole + 1
+"       let l:new_font_size = ' '.l:gf_size_whole
+"       let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
+"     endfunction
+"
+"     function! FontSizeMinus ()
+"       let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
+"       let l:gf_size_whole = l:gf_size_whole - 1
+"       let l:new_font_size = ' '.l:gf_size_whole
+"       let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
+"     endfunction
+" endif
+" nmap <c--> :call FontSizeMinus()<CR>
+" nmap <c-=> :call FontSizePlus()<CR>
 
 Plug 'tomtom/tcomment_vim' " Comment selected lines with gc, current line with gcc, scope with gcip{, text block with gcip, and so on.
 Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [ thing 1 ] [thing  2]
@@ -191,7 +225,11 @@ nnoremap <silent> <c-f> :call comfortable_motion#flick(g:comfortable_motion_impu
 nnoremap <silent> <c-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<cr>
 " Colorschemes
 Plug 'AlessandroYorba/Alduin'
-colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
+if has("nvim") || has("gui_running")
+    colorscheme alduin2 " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
+else 
+    colorscheme alduin  " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
+endif
 call plug#end()
 
 " SEARCH
@@ -210,12 +248,11 @@ if has("nvim")
 endif
 
 " NAVIGATION WINDOW RESIZE
-" set in ginit.vim (at least works in gvim)
 " Only seems to work for gvim on windows
 if has("win32") && has("gui_running")
     set lines=999
     set columns=255
-    " Resie window
+    " Resize window
     " grow window horizontally
     nnoremap <c-left> :set columns-=2<cr>
     nnoremap <c-right> :set columns+=2<cr>
@@ -223,6 +260,7 @@ if has("win32") && has("gui_running")
     nnoremap <c-down> :set lines-=2<cr>
     nnoremap <c-up> :set lines+=2<cr>
 endif
+" nvim_win_config
 " grow splits horizontally
 nnoremap <s-left> :vertical resize -2<cr> 
 nnoremap <s-right> :vertical resize +2<cr>
