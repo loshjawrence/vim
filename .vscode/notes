@@ -1,0 +1,3 @@
+// I go in the "workspace folder" for the vscode session i.e. the path that was targeted from which to launch vscode. Ex:
+// > code ./Tools/ImageConverter
+// So for the above command line execution I would sit in ./Tools/ImageConverter/.vscode

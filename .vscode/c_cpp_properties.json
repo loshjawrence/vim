@@ -1,3 +1,6 @@
+// I got in the "workspace folder" for vscode i.e. the path that was targeted to
+// launch vscode from. Ex:
+// code ./Tools/ImageConverter
 {
   "configurations": [
     {
