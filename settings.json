@@ -26,19 +26,23 @@
 
     "vim.leader": "<space>",
 
-    /* "vim.visualModeKeyBindingsNonRecursive": [ */
-    /*     { */
-    /*         "before": ["Q"], */
-    /*         "commands": [":norm @q"] */
-    /*     } */
-    /* ], */
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            // Doesn't work, :norm is supported but maybe @q isnt?
+            "before": ["Q"],
+            "after": [":", "n", "o", "r", "m" "@", "q", "<cr>"] // Could probably just do "commands": [":'<,'>norm @q"]
+        },
+
+        {   // Assumes you copied the word. Doesn't work. "pattern not found"
+            "before": ["<leader>", "s", "r"],
+            "after": [":", "s", "/", "ctrl+v", "/", "/", "left"]
+        }, 
+    ],
+
     "vim.insertModeKeyBindings": [
        {
            "before": ["<C-[>"],
-            "commands": [
-                { "command": "workbench.action.files.save" },
-                { "command": "extension.vim_escape" }
-            ]
+            "commands": [ "workbench.action.files.save", "extension.vim_escape" ]
        }
     ],
 
@@ -47,37 +51,50 @@
             "before": ["<"],
             "after": ["<", "<"]
         },
+
         {
             "before": [">"],
             "after": [">", ">"]
         },
+
         {
             "before": ["Q"],
             "after": ["@", "q"]
         },
+
         {
             "before": ["Y"],
             "after": ["y", "$"]
         },
+
         {
             "before": ["<C-a>"],
             "after": ["g", "T"]
         },
+
         {
             "before": ["<C-x>"],
             "after": ["g", "t"]
         },
-        {
-            "before": ["<C-x>"],
-            "after": ["g", "t"]
-        },
+
         {
             "before": ["<C-[>"],
             "commands": [":w"]
         },
+
         {
+            "before": ["Z", "Z"],
+            "commands": [":wq!"]
+        },
+
+        {
+            "before": ["Z", "Q"],
+            "commands": [":q!"]
+        },
+
+        {   // Search/replace in current file for word under cursor. Type the replacement and hit enter. Default g modifier is on.
             "before": ["<leader>", "s", "r"],
-            "commands": [":w"]
+            "after": ["y", "i", "w", ":", "%", "s", "/", "ctrl+v", "/", "/", "left"]
         },
     ],
 }
