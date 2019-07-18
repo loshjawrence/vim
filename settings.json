@@ -1,0 +1,83 @@
+// My Linux Path: ~/.config/Code/User/
+{
+
+    "window.zoomLevel": -1,
+    "C_Cpp.updateChannel": "Insiders",
+
+    // VIM
+    // see https://github.com/VSCodeVim/Vim#viminsertmodekeybindingsvimothermodeskeybindings
+    "vim.easymotion": true,
+    "vim.sneak": true,
+
+    "vim.useSystemClipboard": true,
+    "vim.substituteGlobalFlag": true,
+    "vim.hlsearch": true,
+    "vim.incsearch": true,
+    "vim.visualstar": true,
+    "vim.useCtrlKeys": true,
+    "vim.handleKeys": {
+        "<C-f>": false,
+        "<C-s>": true, // Even with true, still actually use this
+        "<C-z>": true, // Even with true, still actually use this
+    },
+
+    "vim.enableNeovim": true,
+    "vim.neovimPath": "/usr/bin/nvim",
+
+    "vim.leader": "<space>",
+
+    /* "vim.visualModeKeyBindingsNonRecursive": [ */
+    /*     { */
+    /*         "before": ["Q"], */
+    /*         "commands": [":norm @q"] */
+    /*     } */
+    /* ], */
+    "vim.insertModeKeyBindings": [
+       {
+           "before": ["<C-[>"],
+            "commands": [
+                { "command": "workbench.action.files.save" },
+                { "command": "extension.vim_escape" }
+            ]
+       }
+    ],
+
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<"],
+            "after": ["<", "<"]
+        },
+        {
+            "before": [">"],
+            "after": [">", ">"]
+        },
+        {
+            "before": ["Q"],
+            "after": ["@", "q"]
+        },
+        {
+            "before": ["Y"],
+            "after": ["y", "$"]
+        },
+        {
+            "before": ["<C-a>"],
+            "after": ["g", "T"]
+        },
+        {
+            "before": ["<C-x>"],
+            "after": ["g", "t"]
+        },
+        {
+            "before": ["<C-x>"],
+            "after": ["g", "t"]
+        },
+        {
+            "before": ["<C-[>"],
+            "commands": [":w"]
+        },
+        {
+            "before": ["<leader>", "s", "r"],
+            "commands": [":w"]
+        },
+    ],
+}

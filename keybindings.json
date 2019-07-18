@@ -1,0 +1,23 @@
+// My Linux Path: ~/.config/Code/User/
+// Place your key bindings in this file to override the defaults
+// see https://code.visualstudio.com/docs/getstarted/keybindings
+[
+    // Global pane selection
+    {
+        "key": "ctrl+h",
+        "command": "workbench.action.navigateLeft"
+    },
+    {
+        "key": "ctrl+l",
+        "command": "workbench.action.navigateRight",
+    },
+    {
+        "key": "ctrl+k",
+        "command": "workbench.action.navigateUp"
+    },
+
+    {
+        "key": "ctrl+j",
+        "command": "workbench.action.navigateDown"
+    },
+]

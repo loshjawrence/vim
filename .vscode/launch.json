@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../../build_debug/bin/tilesetimageconverter",
+            "args": [
+                "--input", "${workspaceFolder}/../../../agi-ion-asset-server/dataDirectory/tilesets/canaanWebp",
+                "--output", "${workspaceFolder}/../../../agi-ion-asset-server/dataDirectory/tilesets/CONVERTED",
+                "--verbose=true"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "tell GDB where to look for source files",
+                    "text": "set substitute-path /var/app/ ../",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "Enable pretty-printing for gdb, included by default when the config is added",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}

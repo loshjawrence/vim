@@ -1,0 +1,20 @@
+{
+  "configurations": [
+    {
+      "name": "linux",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/../../Common/**",
+        "${workspaceFolder}/../../Common/Core/",
+        "${workspaceFolder}/../../ThirdParty/glm/**",
+        "${workspaceFolder}/../../ThirdParty/boost/**",
+        "${workspaceFolder}/../../ThirdParty/googletest/googletest/**",
+        "${workspaceFolder}/../../ThirdParty/nlohmann-json/include/nlohmann/",
+        "${workspaceFolder}/../../ThirdParty/nlohmann-json/include/",
+        "${workspaceFolder}/../../ThirdParty/zlib/",
+        "${workspaceFolder}/../../ThirdParty/sqlite-amalgamation/"
+      ]
+    }
+  ],
+  "version": 4
+}

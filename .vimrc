@@ -1,4 +1,5 @@
-﻿let baseDataFolder="~/.vim"
+﻿" vim is a no-batteries-included giant POS.
+let baseDataFolder="~/.vim"
 if has("win32")
     if has("nvim")
         let baseDataFolder="~/AppData/Local/nvim"
@@ -23,16 +24,19 @@ syntax enable    " syntax highlighting
 autocmd BufRead,BufNewFile *.shader set filetype=c
 autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
+autocmd BufRead,BufNewFile *.json   set filetype=c
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to SPACE
-" Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
+" Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptionsKKKKK
 set formatoptions=rqj
 if has("win32")
     set guifont=Consolas:h9    " set text to consolas, size
 endif
+
+" The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
 
 set nrformats-=octal
 set background=dark     " tell vim what the background color looks like
@@ -147,15 +151,28 @@ Plug 'junegunn/fzf.vim'
 " Tag file management, should use Exhuberant Ctags
 Plug 'ludovicchabant/vim-gutentags'
 set statusline+=%{gutentags#statusline()}
-" Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
+" " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
 
 " Plug 'w0rp/ale'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Plug 'vim-airline/vim-airline'
-" let g:airline#extensions#ale#enabled = 1
-" Plug 'autozimu/LanguageClient-neovim'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+Plug 'vim-airline/vim-airline'
+let g:airline#extensions#ale#enabled = 1
+"
+" MAKE SURE TO :UpdateRemotePlugins if seeing 'no notification handler' message for LanguageClinet
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
 " Plug 'rust-lang/rust.vim'
-" Plug 'godlygeek/tabular' " Aligning selected text on some char or regex
+" Plug 'godlygeek/tabular' " Aligning selected text on some char or regexK
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
@@ -163,18 +180,67 @@ Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do th
 " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
 Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
 map <F8> :TagbarToggle<cr>
-Plug 'scrooloose/nerdtree' " good for seeing the files you care about, i.e. some subfolder in the project
-map <F7> :NERDTreeToggle<CR><c-w><c-l>
-autocmd VimLeave * NERDTreeClose
+" netwr is possibly than nerdtree
+map <F7> :20Lex<CR><c-w><c-l>
+        " How to start in vert line mode
+        " Hitting enter on the f1 help line will cycle the commands that it displays on that line
+        " <cr>	Netrw will enter the directory or read the file      |netrw-cr|
+        "   t	Enter the file/directory under the cursor in a new tab|netrw-t|
+        "   v	Enter the file/directory under the cursor in a new   |netrw-v|
+        "    	browser window.  A vertical split is used.
+        "   o	Enter the file/directory under the cursor in a new   |netrw-o|
+        "    	browser window.  A horizontal split is used.
+        "        Useful if you want another netwr window below the current one for differnt parts of the repo
+        " <c-h>	Edit file hiding list                                |netrw-ctrl-h|
+        " <c-l>	Causes Netrw to refresh the directory listing        |netrw-ctrl-l|
+        "   d	Make a directory                                     |netrw-d|
+        "   D	Attempt to remove the file(s)/directory(ies)         |netrw-D|
+        "   R	Rename the designated file(s)/directory(ies)         |netrw-R|
+        "   %	Open a new file in netrw's current directory         |netrw-%|
+        "   s	Select sorting style: by name, time, or file size    |netrw-s|
+        "   S	Specify suffix priority for name-sorting             |netrw-S|
+        "   gb	Go to previous bookmarked directory                  |netrw-gb|
+        "   gh	Quick hide/unhide of dot-files                       |netrw-gh|
+        "   i	Cycle between thin, long, wide, and tree listings    |netrw-i|
+        "   mb	Bookmark current directory                           |netrw-mb|
+        "   mc	Copy marked files to marked-file target directory    |netrw-mc|
+        "   md	Apply diff to marked files (up to 3)                 |netrw-md|
+        "   me	Place marked files on arg list and edit them         |netrw-me| " decides to open them in the fucking netwr window. vim is terrible
+        "   mf	Mark a file                                          |netrw-mf| " must do one at a time. vim is terrible.
+        "   mF	Unmark files                                         |netrw-mF|
+        "   mh	Toggle marked file suffices' presence on hiding list |netrw-mh|
+        "   mm	Move marked files to marked-file target directory    |netrw-mm|
+        "   mp	Print marked files                                   |netrw-mp|
+        "   mr	Mark files using a shell-style |regexp|                |netrw-mr|
+        "   mg	Apply vimgrep to marked files                        |netrw-mg|
+        "   mu	Unmark all marked files                              |netrw-mu|
+        "   p	Preview the file                                     |netrw-p|
+        "   P	Browse in the previously used window                 |netrw-P|
+        "   qb	List bookmarked directories and history              |netrw-qb|
+        "   qF	Mark files using a quickfix list                     |netrw-qF|
+        "   qL	Mark files using a |location-list|                     |netrw-qL|
+        "   r	Reverse sorting order                                |netrw-r|
 
 
 " FONT SIZE FONT ZOOM
 " neovim seems to work with both, gvim works with niether
 " theres a neovim gtk version that works for linux and windows
-Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
-let guifontpp_size_increment=1 
-let guifontpp_smaller_font_map="<c-->" 
-let guifontpp_larger_font_map="<c-=>" 
+" Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
+" let guifontpp_size_increment=1 
+" let guifontpp_smaller_font_map="<c-->" 
+" let guifontpp_larger_font_map="<c-=>" 
+" " does not work on gvim windows, works on nvim windows
+" " increase decrease font size 
+" nnoremap <C-=> :silent! let &guifont = substitute(
+"             \ &guifont,
+"             \ ':h\zs\d\+',
+"             \ '\=eval(submatch(0)+1)',
+"             \ '')<CR>
+" nnoremap <C--> :silent! let &guifont = substitute(
+"             \ &guifont,
+"             \ ':h\zs\d\+',
+"             \ '\=eval(submatch(0)-1)',
+"             \ '')<CR>
 
 " if has("win32")
 "     function! FontSizePlus ()
@@ -208,7 +274,7 @@ let guifontpp_larger_font_map="<c-=>"
 " nmap <c--> :call FontSizeMinus()<CR>
 " nmap <c-=> :call FontSizePlus()<CR>
 
-Plug 'tomtom/tcomment_vim' " Comment selected lines with gc, current line with gcc, scope with gcip{, text block with gcip, and so on.
+Plug 'tomtom/tcomment_vim' " Comment selected lines with gc, current line with gcc, scope with gcip{, text block with gcip, and so on.K
 Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [ thing 1 ] [thing  2]
 
 " Smooth scrolling
@@ -231,7 +297,7 @@ else
     colorscheme alduin  " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
 endif
 call plug#end()
-
+"
 " SEARCH
 " * and # search does not use smartcase
 " replace word under cursor in entire file
@@ -240,6 +306,7 @@ call plug#end()
 " Test
 " set ignorecase " ignore case in searches. ic is shorthand. set noic will turn off and set !ic will toggle it
 " set smartcase  " use case sensitive if capital letter present or \C
+" TODO: how do I add an event for :s to do <c-o> to go back 
 nnoremap <leader>sr :%s/<c-r><c-w>//<Left>
 " search replace on selected lines
 vnoremap <leader>sr :s//<left>
@@ -277,8 +344,8 @@ nnoremap <s-up> :res +2<cr>
 " To increase a split to its maximum width, use Ctrl-w |. 
 "
 " cycle through tabs, left and right
-noremap <c-a> gT
-noremap <c-s> gt
+noremap <c-q> gT
+noremap <c-a> gt
 
 " Vert split navigaton
 inoremap <c-h> <Esc><c-w>h
@@ -321,7 +388,7 @@ endif
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
 " Toggle between header and source for c/cpp files
-nnoremap <c-t> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+nnoremap <c-z> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
 
 " COLORCOLUMN
@@ -368,20 +435,22 @@ nnoremap > >>
 " nnoremap == gg=G<c-o>
 nnoremap == =i{<c-o>
 
-" make getting out of insert mode easier
-" <c-[> is Windows mapping for esc
-inoremap <c-[> <c-[>:w<cr>
-nnoremap <c-[> <c-[>:w<cr>
-
+" " make getting out of insert mode easier
+" " <c-[> is Windows mapping for esc
+inoremap <c-[> <Esc>:w<cr>
+ " This decided to break. vim is terrible.
+" nnoremap <c-[> <Esc>:w<cr>
+"
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
 " apply macro across visual selection, VG to select until end of file
 vnoremap Q :norm @q<cr>
+
 " navigate by display lines
 nnoremap j gj
 nnoremap k gk
 
-" yank to end of line
+" yank to end of line to follow the C and D convention. vim is terrible
 nnoremap Y y$
 
 " Session: save vim session to ./Session.vim, load Session.vim
@@ -405,18 +474,6 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 " " alt-D will go to next right tab
 " noremap <Esc>D :tabm +1<cr>
 
-" " does not work on gvim windows, works on nvim windows
-" " increase decrease font size 
-" nnoremap <C-=> :silent! let &guifont = substitute(
-"             \ &guifont,
-"             \ ':h\zs\d\+',
-"             \ '\=eval(submatch(0)+1)',
-"             \ '')<CR>
-" nnoremap <C--> :silent! let &guifont = substitute(
-"             \ &guifont,
-"             \ ':h\zs\d\+',
-"             \ '\=eval(submatch(0)-1)',
-"             \ '')<CR>
 
 " comment to enable Alt+[menukey] menu keys (i.e. Alt+h for help)
 set winaltkeys=no " same as `:set wak=no`
@@ -425,15 +482,15 @@ set guioptions-=m
 " comment to enable icon menubar
 set guioptions-=T
 
-if has("gui_running")
-    " Move the tab left and right in the tab bar
-    noremap <A-A> :tabm -1<cr>
-    noremap <A-D> :tabm +1<cr>
-endif
+" if has("gui_running")
+"     " Move the tab left and right in the tab bar
+"     noremap <A-A> :tabm -1<cr>
+"     noremap <A-D> :tabm +1<cr>
+" endif
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so $MYVIMRC<cr>
-nmap <silent> <leader>ve :tabnew ~/.vimrc<cr>
+nmap <silent> <leader>ve :e ~/.vimrc<cr>
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 " down / up / left / right
