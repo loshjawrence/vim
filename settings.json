@@ -9,6 +9,7 @@
     "vim.easymotion": true,
     "vim.sneak": true,
 
+    "vim.highlightedyank.enable": true,
     "vim.useSystemClipboard": true,
     "vim.substituteGlobalFlag": true,
     "vim.hlsearch": true,
@@ -96,6 +97,17 @@
         {   // Search/replace in current file for word under cursor. Type the replacement and hit enter. Default g modifier is on.
             "before": ["<leader>", "s", "r"],
             "after": ["y", "i", "w", ":", "%", "s", "/", "ctrl+v", "/", "/", "left"]
+        },
+
+        {
+            // Quickly get at easy-motions search char on screen
+            "before": ["s"],
+            "after": ["<leader>", "<leader>", "s"]
+        },
+
+        {
+            "before": ["<cr>"],
+            "commands": [":noh"]
         },
     ],
 }
