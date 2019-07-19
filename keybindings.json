@@ -20,4 +20,9 @@
         "key": "ctrl+j",
         "command": "workbench.action.navigateDown"
     },
+    {
+        "key": "ctrl+\\", 
+        "command": "workbench.action.terminal.focus",
+        "when": "!terminalFocus"
+    },
 ]

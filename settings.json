@@ -1,7 +1,7 @@
 // My Linux Path: ~/.config/Code/User/
 {
 
-    "window.zoomLevel": -1,
+    "window.zoomLevel": 0,
     "C_Cpp.updateChannel": "Insiders",
 
     // VIM
@@ -17,8 +17,8 @@
     "vim.useCtrlKeys": true,
     "vim.handleKeys": {
         "<C-f>": false,
-        "<C-s>": true, // Even with true, still actually use this
-        "<C-z>": true, // Even with true, still actually use this
+        "<C-s>": true, // Even with true, still can't actually use this
+        "<C-z>": true, // Even with true, still can't actually use this
     },
 
     "vim.enableNeovim": true,
@@ -30,7 +30,8 @@
         {
             // Doesn't work, :norm is supported but maybe @q isnt?
             "before": ["Q"],
-            "after": [":", "n", "o", "r", "m" "@", "q", "<cr>"] // Could probably just do "commands": [":'<,'>norm @q"]
+            "after": [":", "n", "o", "r", "m", "@", "q", "<cr>"]
+            /* "commands": [":'<,'>norm @q"] */ // Same thing
         },
 
         {   // Assumes you copied the word. Doesn't work. "pattern not found"
@@ -42,8 +43,8 @@
     "vim.insertModeKeyBindings": [
        {
            "before": ["<C-[>"],
-            "commands": [ "workbench.action.files.save", "extension.vim_escape" ]
-       }
+            "commands": ["workbench.action.files.save", "extension.vim_escape"]
+       },
     ],
 
     "vim.normalModeKeyBindingsNonRecursive": [
