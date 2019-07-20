@@ -1,17 +1,19 @@
 // My Linux Path: ~/.config/Code/User/
 {
 
-    "window.zoomLevel": 0,
+    "window.zoomLevel": 2,
     "C_Cpp.updateChannel": "Insiders",
+    "editor.renderIndentGuides": false,
 
     // VIM
     // see https://github.com/VSCodeVim/Vim#viminsertmodekeybindingsvimothermodeskeybindings
     "vim.easymotion": true,
-    "vim.sneak": true,
-
-    "vim.highlightedyank.enable": true,
+    "vim.easymotionKeys": "FJDKSLA;GHEIRUWOQPTYNVMCBZX",
+    "vim.easymotionMarkerHeight": "20",
+    "vim.easymotionMarkerWidthPerChar": "13",
+    "vim.easymotionMarkerYOffset": "0",
+    "vim.easymotionMarkerFontSize": "18",
     "vim.useSystemClipboard": true,
-    "vim.substituteGlobalFlag": true,
     "vim.hlsearch": true,
     "vim.incsearch": true,
     "vim.visualstar": true,
@@ -35,10 +37,10 @@
             /* "commands": [":'<,'>norm @q"] */ // Same thing
         },
 
-        {   // Assumes you copied the word. Doesn't work. "pattern not found"
+        {   // Search/replace in current file for word under cursor. Type the replacement and hit enter. Default g modifier is on.
             "before": ["<leader>", "s", "r"],
-            "after": [":", "s", "/", "ctrl+v", "/", "/", "left"]
-        }, 
+            "after": ["y", ":", "%", "s", "/", "\\", "V", "ctrl+v", "/", "/", "g", "I", "left", "left", "left"]
+        },
     ],
 
     "vim.insertModeKeyBindings": [
@@ -96,7 +98,7 @@
 
         {   // Search/replace in current file for word under cursor. Type the replacement and hit enter. Default g modifier is on.
             "before": ["<leader>", "s", "r"],
-            "after": ["y", "i", "w", ":", "%", "s", "/", "ctrl+v", "/", "/", "left"]
+            "after": ["y", "i", "w", ":", "%", "s", "/", "\\", "V",  "ctrl+v", "/", "/", "g", "I", "left", "left", "left"]
         },
 
         {
