@@ -28,6 +28,12 @@ autocmd BufRead,BufNewFile *.frag   set filetype=c
 autocmd BufRead,BufNewFile *.json   set filetype=json
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
+" TODO: LSP for code completion options:
+" https://github.com/MaskRay/ccls
+" https://github.com/neoclide/coc.nvim
+" https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
+" https://vim.fandom.com/wiki/Omni_completion
+
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to SPACE
@@ -151,35 +157,38 @@ call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+" Not reliable (like all ctags trash)
 " Tag file management, should use Exhuberant Ctags
-Plug 'ludovicchabant/vim-gutentags'
-set statusline+=%{gutentags#statusline()}
-" " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
+" Plug 'ludovicchabant/vim-gutentags'
+" set statusline+=%{gutentags#statusline()}
+" " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
 
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-let g:deoplete#enable_at_startup = 1
+" if has('nvim')
+"   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+"   Plug 'Shougo/deoplete.nvim'
+"   Plug 'roxma/nvim-yarp'
+"   Plug 'roxma/vim-hug-neovim-rpc'
+" endif
+" let g:deoplete#enable_at_startup = 1
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    \ 'python': ['/usr/local/bin/pyls'],
-    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-    \ }
+" " " MAKE SURE TO :UpdateRemotePlugins if seeing 'no notification handler' message for LanguageClinet
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ }
+"
+" let g:LanguageClient_serverCommands = {
+"     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+"     \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+"     \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+"     \ 'python': ['/usr/local/bin/pyls'],
+"     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+"     \ }
 
-nnoremap <F6> :call LanguageClient_contextMenu()<CR>
+" nnoremap <F6> :call LanguageClient_contextMenu()<CR>
 " Or map each action separately
 " nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 " nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
@@ -197,21 +206,24 @@ Plug 'tpope/vim-repeat'
 " Type s and a char of interesst then the colored letters at the char to jump to it.
 Plug 'easymotion/vim-easymotion'
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
-let g:EasyMotion_smartcase = 1 
-let g:EasyMotion_use_smartsign_us = 1 " Smartsign (type `3` and match `3`&`#`)
+let g:EasyMotion_use_upper = 1
+let g:EasyMotion_keys =   'FJDKSLA;GHEIRUWOQPTYNVMCBZX' " should sort from easy to hard (left to right)
+let g:EasyMotion_smartcase = 1
 " Jump to anywhere you want with minimal keystrokes, with just one key binding. `s{char}{label}`
 " overwin can jump across panes. f2 is 2 char search
-nmap s <Plug>(easymotion-overwin-f)
-" nmap s <Plug>(easymotion-overwin-f2)
+" This will search before and after cursor over panes
+" nmap s <Plug>(easymotion-overwin-f)
+" extend the native t,T,f,F commands to all visible lines, not just current line
+" nmap f <Plug>(easymotion-f)
+" nmap F <Plug>(easymotion-F)
+" nmap t <Plug>(easymotion-t)
+" nmap T <Plug>(easymotion-T)
+" This will search before and after cursor in current pane
+nmap s <Plug>(easymotion-s)
 
-" " " MAKE SURE TO :UpdateRemotePlugins if seeing 'no notification handler' message for LanguageClinet
-" " Plug 'autozimu/LanguageClient-neovim', {
-" "     \ 'branch': 'next',
-" "     \ 'do': 'bash install.sh',
-" "     \ }
+" Syntax highlighting for a ton of languages
+Plug 'sheerun/vim-polyglot'
 
-
-" Plug 'rust-lang/rust.vim'
 " Plug 'godlygeek/tabular' " Aligning selected text on some char or regexK
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
