@@ -29,6 +29,7 @@ autocmd BufRead,BufNewFile *.json   set filetype=json
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
 " TODO: LSP for code completion options:
+" ccls/LanguageClient-neovim/nvim-gdb/ncm2/tagbar/nerdtree
 " https://github.com/MaskRay/ccls
 " https://github.com/neoclide/coc.nvim
 " https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one

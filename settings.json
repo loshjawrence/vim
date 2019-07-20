@@ -8,7 +8,7 @@
     // VIM
     // see https://github.com/VSCodeVim/Vim#viminsertmodekeybindingsvimothermodeskeybindings
     "vim.easymotion": true,
-    "vim.easymotionKeys": "FJDKSLA;GHEIRUWOQPTYNVMCBZX",
+    "vim.easymotionKeys": "fjdksla;gheiruwoqptynvmcbzx",
     "vim.easymotionMarkerHeight": 20,
     "vim.easymotionMarkerWidthPerChar": 13,
     "vim.easymotionMarkerYOffset": 0,
