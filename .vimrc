@@ -24,29 +24,34 @@ syntax enable    " syntax highlighting
 autocmd BufRead,BufNewFile *.shader set filetype=c
 autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
-autocmd BufRead,BufNewFile *.json   set filetype=c
+autocmd BufRead,BufNewFile *.json   set filetype=json
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to SPACE
-" Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptionsKKKKK
+" Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
 if has("win32")
     set guifont=Consolas:h9    " set text to consolas, size
+else
+    set guifont=Ubuntu:h10    " set text to consolas, size
 endif
 
 " The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
 
 set nrformats-=octal
+set number              " Show line numbers
 set background=dark     " tell vim what the background color looks like
 set backspace=indent,eol,start " allow backspace to work normally
 set history=200         " how many : commands to save in history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
-set hlsearch            " search highlight
+" set hlsearch            " search highlight
 set nowrapscan          " Don't autowrap to top of tile on searches
+set ignorecase
+set smartcase
 set laststatus=2        " Always display the status line
 set autowrite           " Automatically :write before running commands
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
@@ -72,8 +77,10 @@ set visualbell
 
 " jump to tag. / will do fuzzy match
 " nnoremap <leader>j :tjump /
+
 " list the buffers and prepare open buffer command
 " nnoremap gb :ls<CR>:b<space>
+
 set wildignorecase
 set wildmenu                        " enable wildmenu
 set wildmode=list:longest,list:full " configure wildmenu
@@ -90,10 +97,6 @@ highlight ExtraWhitespace ctermbg=darkred guibg=darkred
 match ExtraWhitespace /\s\+$\|\t/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$\|\t/
-
-" Numbers
-set number " Show line numbers
-
 
 " set where swap file and undo/backup files are saved
 set nowritebackup
@@ -153,7 +156,8 @@ Plug 'ludovicchabant/vim-gutentags'
 set statusline+=%{gutentags#statusline()}
 " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
 
-" Plug 'w0rp/ale'
+Plug 'w0rp/ale'
+
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -162,14 +166,50 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 let g:deoplete#enable_at_startup = 1
-Plug 'vim-airline/vim-airline'
-let g:airline#extensions#ale#enabled = 1
-"
-" MAKE SURE TO :UpdateRemotePlugins if seeing 'no notification handler' message for LanguageClinet
+
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ }
+
+nnoremap <F6> :call LanguageClient_contextMenu()<CR>
+" Or map each action separately
+" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+" WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
+" linux search keyboard set to 200ms delay, 40c/s
+Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#ale#enabled = 1
+
+" Enable repeat for supported plugins
+Plug 'tpope/vim-repeat'
+
+" Type s and a char of interesst then the colored letters at the char to jump to it.
+Plug 'easymotion/vim-easymotion'
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+let g:EasyMotion_smartcase = 1 
+let g:EasyMotion_use_smartsign_us = 1 " Smartsign (type `3` and match `3`&`#`)
+" Jump to anywhere you want with minimal keystrokes, with just one key binding. `s{char}{label}`
+" overwin can jump across panes. f2 is 2 char search
+nmap s <Plug>(easymotion-overwin-f)
+" nmap s <Plug>(easymotion-overwin-f2)
+
+" " " MAKE SURE TO :UpdateRemotePlugins if seeing 'no notification handler' message for LanguageClinet
+" " Plug 'autozimu/LanguageClient-neovim', {
+" "     \ 'branch': 'next',
+" "     \ 'do': 'bash install.sh',
+" "     \ }
+
 
 " Plug 'rust-lang/rust.vim'
 " Plug 'godlygeek/tabular' " Aligning selected text on some char or regexK
@@ -205,13 +245,13 @@ map <F7> :20Lex<CR><c-w><c-l>
         "   mb	Bookmark current directory                           |netrw-mb|
         "   mc	Copy marked files to marked-file target directory    |netrw-mc|
         "   md	Apply diff to marked files (up to 3)                 |netrw-md|
-        "   me	Place marked files on arg list and edit them         |netrw-me| " decides to open them in the fucking netwr window. vim is terrible
-        "   mf	Mark a file                                          |netrw-mf| " must do one at a time. vim is terrible.
+        "   me	Place marked files on arg list and edit them         |netrw-me| " Decides to open them in the fucking netwr window. vim is terrible
+        "   mf	Mark a file                                          |netrw-mf| " Must do one at a time. cant leverage visual select? vim is terrible.
         "   mF	Unmark files                                         |netrw-mF|
         "   mh	Toggle marked file suffices' presence on hiding list |netrw-mh|
         "   mm	Move marked files to marked-file target directory    |netrw-mm|
         "   mp	Print marked files                                   |netrw-mp|
-        "   mr	Mark files using a shell-style |regexp|                |netrw-mr|
+        "   mr	Mark files using a shell-style |regexp|              |netrw-mr|
         "   mg	Apply vimgrep to marked files                        |netrw-mg|
         "   mu	Unmark all marked files                              |netrw-mu|
         "   p	Preview the file                                     |netrw-p|
@@ -302,17 +342,22 @@ call plug#end()
 " * and # search does not use smartcase
 " replace word under cursor in entire file
 " This is sensitive to smartcase ignorecase settings: test the operation on these words below
+" see s_flags and substitute
 " test
 " Test
 " set ignorecase " ignore case in searches. ic is shorthand. set noic will turn off and set !ic will toggle it
 " set smartcase  " use case sensitive if capital letter present or \C
 " TODO: how do I add an event for :s to do <c-o> to go back 
-nnoremap <leader>sr :%s/<c-r><c-w>//<Left>
-" search replace on selected lines
-vnoremap <leader>sr :s//<left>
+nnoremap <leader>sr :%s/<c-r><c-w>//I<left><left> 
+" search replace on selected lines, don't ignore case
+vnoremap <leader>sr :s//I<left><left>
 if has("nvim")
     set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
+
+" see :h pattern for 'very no magic'. Only \ has meaning
+nnoremap / /\V
+vnoremap / /\V
 
 " NAVIGATION WINDOW RESIZE
 " Only seems to work for gvim on windows
@@ -344,7 +389,7 @@ nnoremap <s-up> :res +2<cr>
 " To increase a split to its maximum width, use Ctrl-w |. 
 "
 " cycle through tabs, left and right
-noremap <c-q> gT
+noremap <c-x> gT
 noremap <c-a> gt
 
 " Vert split navigaton
@@ -489,8 +534,8 @@ set guioptions-=T
 " endif
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
-nmap <silent> <leader>vs :so $MYVIMRC<cr>
-nmap <silent> <leader>ve :e ~/.vimrc<cr>
+nmap <silent> <leader>vs :so ~/.vimrc<cr>
+nmap <silent> <leader>ve :vs ~/.vimrc<cr>
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 " down / up / left / right
@@ -554,6 +599,8 @@ command! JSONPRETTY %!python -m json.tool
 " nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
 "NOTES:
+" wow: https://vim.fandom.com/wiki/Power_of_g
+" In the "power of g" how do I do the display context of search across all files in project/pwd to do what sublime does?
 " highlighing lines then doing a :w TEST will write those lines to TEST
 " :r TEST will put lines from test at the cursor
 " :r !ls will put the result of ls at the cursor
