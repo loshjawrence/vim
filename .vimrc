@@ -1,4 +1,5 @@
-﻿" vim is a no-batteries-included giant POS.
+﻿" vim is not great for code base naviation and language aware autocomplete.
+" It's the skyrim of text editors. Unusable without certain mods.
 let baseDataFolder="~/.vim"
 if has("win32")
     if has("nvim")
@@ -39,6 +40,7 @@ else
 endif
 
 " The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
+" autocmd-events for executing : commands (full explanations: autocmd-events-abc)
 
 set nrformats-=octal
 set number              " Show line numbers
@@ -48,13 +50,11 @@ set history=200         " how many : commands to save in history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set incsearch           " do incremental searching
-" set hlsearch            " search highlight
 set nowrapscan          " Don't autowrap to top of tile on searches
 set ignorecase
 set smartcase
 set laststatus=2        " Always display the status line
 set autowrite           " Automatically :write before running commands
-set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set magic               " Use 'magic' patterns (extended regular expressions).
 set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
@@ -341,21 +341,26 @@ call plug#end()
 " SEARCH
 " * and # search does not use smartcase
 " replace word under cursor in entire file
-" This is sensitive to smartcase ignorecase settings: test the operation on these words below
-" see s_flags and substitute
+" test this thing
+" test
+" test this thing
+" test
+" test THIS thing
 " test
 " Test
-" set ignorecase " ignore case in searches. ic is shorthand. set noic will turn off and set !ic will toggle it
-" set smartcase  " use case sensitive if capital letter present or \C
-" TODO: how do I add an event for :s to do <c-o> to go back 
-nnoremap <leader>sr :%s/<c-r><c-w>//I<left><left> 
-" search replace on selected lines, don't ignore case
-vnoremap <leader>sr :s//I<left><left>
+" see s_flags and substitute. /I forces case-sensitive matching
+" Visually selected text, don't ignore case
+" yank first, % for current file, \V for not having to escape symbols,
+" <c-r>" to paste from yank buffer, /I forces case-sensitive matching
+" you can prepare a series of commands separated by |. Buy you must escape it
+" norm or normal means execute the following key sequence in normal mode.
+nnoremap <leader>sr :%s/\V<c-r><c-w>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
+vnoremap <leader>sr y:%s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 if has("nvim")
     set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
 
-" see :h pattern for 'very no magic'. Only \ has meaning
+" see pattern for 'very no magic'. Only \ has meaning
 nnoremap / /\V
 vnoremap / /\V
 
