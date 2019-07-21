@@ -1,20 +1,28 @@
-﻿" vim is not great for code base naviation and language aware autocomplete.
-" It's the skyrim of text editors. Unusable without certain mods.
+﻿" To jump to vim docs put word over cursor or highlight it with combo viW and press K
+" or :h theKeywordOfIntereset
+
+if v:progname == 'vi'
+  set noloadplugins
+endif
+
+noremap <space> <nop>
+let mapleader="\<space>" " Map the leader key to space bar
+
+" Prevent tcomment from making a zillion mappings (we just want the operator).
+let g:tcomment_mapleader1=''
+let g:tcomment_mapleader2=''
+let g:tcomment_mapleader_comment_anyway=''
+let g:tcomment_textobject_inlinecomment=''
+
+" TODO: fix this bullshit. I think nvim-intro has a help for what to put
 let baseDataFolder="~/.vim"
 if has("win32")
-    if has("nvim")
-        let baseDataFolder="~/AppData/Local/nvim"
-    else
+    " if has("nvim")
+    "     let baseDataFolder="~/AppData/Local/nvim"
+    " else
         let baseDataFolder="~/vimfiles"
     endif
-else
-    if has("nvim")
-        let baseDataFolder="~/.local/share/nvim"
-    endif
 endif
-let &runtimepath.=',' . baseDataFolder
-let &runtimepath.=',' . baseDataFolder . "/after"
-let &packpath = &runtimepath
 
 set nocompatible " vim, not vi
 syntax on        " syntax highlighting
@@ -25,19 +33,10 @@ syntax enable    " syntax highlighting
 autocmd BufRead,BufNewFile *.shader set filetype=c
 autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
-autocmd BufRead,BufNewFile *.json   set filetype=json
+autocmd BufRead,BufNewFile *.json   set filetype=jsonc
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
-" TODO: LSP for code completion options:
-" ccls/LanguageClient-neovim/nvim-gdb/ncm2/tagbar/nerdtree
-" https://github.com/MaskRay/ccls
-" https://github.com/neoclide/coc.nvim
-" https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
-" https://vim.fandom.com/wiki/Omni_completion
-
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
-noremap <space> <nop>
-let mapleader="\<space>" " Map the leader key to SPACE
 " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions=rqj
 if has("win32")
@@ -49,6 +48,8 @@ endif
 " The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
 " autocmd-events for executing : commands (full explanations: autocmd-events-abc)
 
+" Always draw the signcolumn so errors don't move the window left and right
+set signcolumn=yes
 set nrformats-=octal
 set number              " Show line numbers
 set background=dark     " tell vim what the background color looks like
@@ -75,18 +76,13 @@ set shiftround          " Round indent to multiple of 'shiftwidth'
 set termguicolors       " enable true colors
 set hidden              " enable hidden unsaved buffers
 silent! helptags ALL    " Generate help doc for all plugins
+set iskeyword+=-        " as-asdf-asdf-asdf-a-fd
 
 set ttyfast           " should make scrolling faster
 set lazyredraw        " should make scrolling faster
 
 " visual bell for errors
 set visualbell
-
-" jump to tag. / will do fuzzy match
-" nnoremap <leader>j :tjump /
-
-" list the buffers and prepare open buffer command
-" nnoremap gb :ls<CR>:b<space>
 
 set wildignorecase
 set wildmenu                        " enable wildmenu
@@ -100,16 +96,15 @@ set nowrap                          " Don't word wrap
 " Also highlight all tabs and trailing whitespace characters.
 " set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
 " set list                            " Show problematic characters.
-highlight ExtraWhitespace ctermbg=darkred guibg=darkred
-match ExtraWhitespace /\s\+$\|\t/
+highlight ExtraWhitespace ctermbg=white guibg=white
+match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$\|\t/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/        
 
 " set where swap file and undo/backup files are saved
+set nobackup
 set nowritebackup
 set noswapfile
-let &backupdir=baseDataFolder
-let &directory=baseDataFolder
 
 " Open new split panes to right and bottom, which feels more natural
 set splitbelow
@@ -142,9 +137,6 @@ set enc=utf-8 fenc=utf-8 termencoding=utf-8
 " Plugins. Execute :PlugInstall for any new ones you add
 " Auto install the vim-plug pluggin manager if its not there
 let plugDotVimLocation=baseDataFolder . "autoload/plug.vim"
-if has("nvim")
-    let plugDotVimLocation=baseDataFolder . "site/autoload/plug.vim"
-endif
 " if empty(glob(plugDotVimLocation))
 " need to do execute with quotes and stuff probably
 "   silent !curl -fLo plugDotVimLocation --create-dirs
@@ -164,42 +156,101 @@ Plug 'junegunn/fzf.vim'
 " set statusline+=%{gutentags#statusline()}
 " " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
 
-" Plug 'w0rp/ale'
-
-" if has('nvim')
-"   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" else
-"   Plug 'Shougo/deoplete.nvim'
-"   Plug 'roxma/nvim-yarp'
-"   Plug 'roxma/vim-hug-neovim-rpc'
-" endif
-" let g:deoplete#enable_at_startup = 1
-
+" TODO: LSP for code completion options:
+" Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
+" # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
+" set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
+" This will spit out a compile_commands.json in the /build dir.
+" Would need to copy this file to the root dir
+" LSP for cpp. Just follow this:
+" https://clang.llvm.org/extra/clangd/Installation.html
+" https://github.com/autozimu/LanguageClient-neovim/wiki/Recommended-Settings
+" another lang server for c: https://github.com/MaskRay/ccls
+" worth looking at?: nvim-gdb
+" https://github.com/neoclide/coc.nvim
+" https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
+" https://vim.fandom.com/wiki/Omni_completion
+" Follow clang-tools install steps here: https://clang.llvm.org/extra/clangd/Installation.html
+" SEE REC SETTINGS: https://github.com/autozimu/LanguageClient-neovim/wiki/Recommended-Settings
 " " " MAKE SURE TO :UpdateRemotePlugins if seeing 'no notification handler' message for LanguageClinet
-" Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ }
-"
-" let g:LanguageClient_serverCommands = {
-"     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-"     \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-"     \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-"     \ 'python': ['/usr/local/bin/pyls'],
-"     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-"     \ }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
-" nnoremap <F6> :call LanguageClient_contextMenu()<CR>
-" Or map each action separately
-" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+" https://clang.llvm.org/extra/clangd/Installation.html
+" npm install -g javascript-typescript-langserver
+let g:LanguageClient_serverCommands = {
+    \ 'cpp': ['clangd', '-background-index'],
+    \ 'javascript': ['javascript-typscript-stdio']
+    \ }
+
+let g:LanguageClient_diagnosticsList='Location'
+let g:LanguageClient_diagnosticsDisplay = {
+      \   1: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+      \   2: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+      \   3: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+      \   4: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
+      \ }
+
+function! SetLSPShortcuts()
+    " nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
+    " nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+    " nnoremap <leader>lr :call LanguageClient#textDocument_references()<CR>
+    " nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
+    " nnoremap <leader>ls :call LanguageClient#textDocument_rename()<CR>
+    " nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
+    " nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
+    " nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
+    " nnoremap <leader>ll :call LanguageClient_textDocument_documentSymbol()<CR>
+    " nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+endfunction()
+augroup LSP
+  autocmd!
+  " Add filetypes here
+  autocmd FileType cpp,c,js call SetLSPShortcuts()
+augroup END
+
+" Recommended by LanguageClient-neovim
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+
+" handle the function signatures displaying
+Plug 'Shougo/echodoc.vim'
+set cmdheight=2
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#type = 'signature'
+
+" Use release branch
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" :CocConfig will edit the config file where you put languageservers
+":CocInstall coc-json to install json stuff for coc
+" usually lives here ~/.config/nvim/coc-settings.json
+" example body:
+" {
+"     "languageserver": {
+"         "clangd": {
+"             "command": "clangd",
+"             "args": ["--background-index"],
+"             "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+"             "filetypes": ["c", "cpp", "objc", "objcpp"]
+"         }
+"     },
+"
+"     "suggest.autoTrigger": "always", // always is default but can also use "trigger" to trigger manuualy will the usual vim c-n
+" }
 
 " WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
 " linux search keyboard set to 200ms delay, 40c/s
 Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#ale#enabled = 1
+" let g:airline#extensions#coc#enabled = 1
 
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
@@ -228,13 +279,24 @@ Plug 'sheerun/vim-polyglot'
 " Plug 'godlygeek/tabular' " Aligning selected text on some char or regexK
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
+"
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
-" Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
+
 Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
+" Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
 map <F8> :TagbarToggle<cr>
-" netwr is possibly than nerdtree
+
+" Plug 'scrooloose/nerdtree'
+" map <F7> :NERDTreeToggle<CR>
+" let g:NERDTreeDirArrowExpandable = '▸'
+" let g:NERDTreeDirArrowCollapsible = '▾'
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" m is menu
+
 map <F7> :20Lex<CR><c-w><c-l>
+        " netwr is possibly than nerdtree
         " How to start in vert line mode
         " Hitting enter on the f1 help line will cycle the commands that it displays on that line
         " <cr>	Netrw will enter the directory or read the file      |netrw-cr|
@@ -264,7 +326,7 @@ map <F7> :20Lex<CR><c-w><c-l>
         "   mh	Toggle marked file suffices' presence on hiding list |netrw-mh|
         "   mm	Move marked files to marked-file target directory    |netrw-mm|
         "   mp	Print marked files                                   |netrw-mp|
-        "   mr	Mark files using a shell-style |regexp|              |netrw-mr|
+        "   mr	Mark iles using a shell-style |regexp|              |netrw-mr|
         "   mg	Apply vimgrep to marked files                        |netrw-mg|
         "   mu	Unmark all marked files                              |netrw-mu|
         "   p	Preview the file                                     |netrw-p|
@@ -273,7 +335,6 @@ map <F7> :20Lex<CR><c-w><c-l>
         "   qF	Mark files using a quickfix list                     |netrw-qF|
         "   qL	Mark files using a |location-list|                     |netrw-qL|
         "   r	Reverse sorting order                                |netrw-r|
-
 
 " FONT SIZE FONT ZOOM
 " neovim seems to work with both, gvim works with niether
@@ -479,6 +540,7 @@ endif
 
 " Press Enter to turn off search highlights, and flash the location of the cursor
 function! Flash()
+    set nohlsearch
     set cursorline cursorcolumn
     redraw
     sleep 100m
@@ -488,7 +550,7 @@ function! Flash()
         set nocursorline
     endif
 endfunction
-nnoremap <cr> :noh<cr>:call Flash()<cr>
+nnoremap <cr> :call Flash()<cr>
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
@@ -554,6 +616,7 @@ set guioptions-=T
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
 nmap <silent> <leader>ve :vs ~/.vimrc<cr>
+nnoremap <leader>qq :w!<cr>:qa!<cr>
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 " down / up / left / right
@@ -572,6 +635,7 @@ nnoremap <leader>F :Files<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr> " need to install ripgrep or compile it in rust, not available on ubuntu 18.04
 
+" Useful but better to use the visual select search and repace
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
 vnoremap <silent> s //e<c-r>=&selection=='exclusive'?'+1':''<cr><cr>
@@ -705,6 +769,13 @@ command! JSONPRETTY %!python -m json.tool
 " INSERT MODE
 " c-w deletes word
 " c-u deletes line
+
+" jump to tag. / will do fuzzy match
+" nnoremap <leader>j :tjump /
+"
+" list the buffers and prepare open buffer command
+" nnoremap gb :ls<CR>:b<space>
+
 
 " Bad but might have nugget of good idea
 " Bind p in visual mode to paste without overriding the current register
