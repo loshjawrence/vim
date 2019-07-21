@@ -1,19 +1,6 @@
 ﻿" To jump to vim docs put word over cursor or highlight it with combo viW and press K
 " or :h theKeywordOfIntereset
 
-if v:progname == 'vi'
-  set noloadplugins
-endif
-
-noremap <space> <nop>
-let mapleader="\<space>" " Map the leader key to space bar
-
-" Prevent tcomment from making a zillion mappings (we just want the operator).
-let g:tcomment_mapleader1=''
-let g:tcomment_mapleader2=''
-let g:tcomment_mapleader_comment_anyway=''
-let g:tcomment_textobject_inlinecomment=''
-
 " TODO: fix this bullshit. I think nvim-intro has a help for what to put
 let baseDataFolder="~/.vim"
 if has("win32")
@@ -21,35 +8,30 @@ if has("win32")
     "     let baseDataFolder="~/AppData/Local/nvim"
     " else
         let baseDataFolder="~/vimfiles"
-    endif
+    " endif
 endif
 
-set nocompatible " vim, not vi
-syntax on        " syntax highlighting
-syntax enable    " syntax highlighting
+noremap <space> <nop>
+let mapleader="\<space>" " Map the leader key to space bar
 
-" FILETYPE
-" Associate filetypes with other filetypes
-autocmd BufRead,BufNewFile *.shader set filetype=c
-autocmd BufRead,BufNewFile *.vert   set filetype=c
-autocmd BufRead,BufNewFile *.frag   set filetype=c
-autocmd BufRead,BufNewFile *.json   set filetype=jsonc
-autocmd BufRead,BufNewFile *.md     set filetype=markdown
-
-filetype plugin indent on  " try to recognize filetypes and load rel' plugins
-" Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
-set formatoptions=rqj
 if has("win32")
-    set guifont=Consolas:h9    " set text to consolas, size
+    set guifont=Consolas:h9
 else
-    set guifont=Ubuntu:h10    " set text to consolas, size
+    set guifont=Ubuntu:h10
 endif
 
 " The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
 " autocmd-events for executing : commands (full explanations: autocmd-events-abc)
 
-" Always draw the signcolumn so errors don't move the window left and right
-set signcolumn=yes
+if v:progname == 'vi'
+  set noloadplugins
+endif
+filetype plugin indent on  " try to recognize filetypes and load rel' plugins
+set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
+set nocompatible " vim, not vi
+syntax on        " syntax highlighting
+syntax enable    " syntax highlighting
+set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set nrformats-=octal
 set number              " Show line numbers
 set background=dark     " tell vim what the background color looks like
@@ -68,7 +50,6 @@ set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
 set mouse=a             " enable mouse (selection, resizing windows)
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
-
 set tabstop=4           " Use 4 spaces for tabs.
 set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " insert tab with right amount of spacing
@@ -77,20 +58,25 @@ set termguicolors       " enable true colors
 set hidden              " enable hidden unsaved buffers
 silent! helptags ALL    " Generate help doc for all plugins
 set iskeyword+=-        " as-asdf-asdf-asdf-a-fd
-
+set enc=utf-8 fenc=utf-8 termencoding=utf-8 " set UTF-8 encoding
+set complete+=kspell " Autocomplete with dictionary words when spell check is on
+set nobackup
+set nowritebackup
+set noswapfile
+set splitbelow " :sp defaults down
+set splitright " :vs defaults right 
 set ttyfast           " should make scrolling faster
 set lazyredraw        " should make scrolling faster
-
-" visual bell for errors
-set visualbell
-
+set diffopt+=vertical " Always use vertical diffs
+set visualbell " visual bell for errors
 set wildignorecase
 set wildmenu                        " enable wildmenu
 set wildmode=list:longest,list:full " configure wildmenu
-
-" text appearance
 set textwidth=80
 set nowrap                          " Don't word wrap
+if has("nvim") " didn't work in gvim
+    set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+endif
 
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
@@ -101,48 +87,32 @@ match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/        
 
-" set where swap file and undo/backup files are saved
-set nobackup
-set nowritebackup
-set noswapfile
-
-" Open new split panes to right and bottom, which feels more natural
-set splitbelow
-set splitright
-
-" To ALWAYS use the clipboard for ALL operations
-" instead of interacting with the '+' and/or '*' registers explicitly
-if has("nvim") " didn't work in gvim
-    set clipboard+=unnamedplus
-endif
-
-" Always use vertical diffs
-set diffopt+=vertical
+" FILETYPE
+" Associate filetypes with other filetypes
+autocmd BufRead,BufNewFile *.shader set filetype=c
+autocmd BufRead,BufNewFile *.vert   set filetype=c
+autocmd BufRead,BufNewFile *.frag   set filetype=c
+autocmd BufRead,BufNewFile *.json   set filetype=jsonc
+autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
 " Enable spellchecking for Markdown
 autocmd FileType markdown setlocal spell
-" Autocomplete with dictionary words when spell check is on
-set complete+=kspell
-
-" add support for comments in json (jsonc format used as configuration for
-" many utilities)
+" add support for comments in json (jsonc format used as configuration for many utilities)
 autocmd FileType json syntax match Comment +\/\/.\+$+
 
 " notify if file changed outside of vim to avoid multiple versions
-au FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
-
-" set UTF-8 encoding
-set enc=utf-8 fenc=utf-8 termencoding=utf-8
+autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
 " Plugins. Execute :PlugInstall for any new ones you add
 " Auto install the vim-plug pluggin manager if its not there
-let plugDotVimLocation=baseDataFolder . "autoload/plug.vim"
+" let plugDotVimLocation=baseDataFolder . "autoload/plug.vim"
 " if empty(glob(plugDotVimLocation))
 " need to do execute with quotes and stuff probably
 "   silent !curl -fLo plugDotVimLocation --create-dirs
 "         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 " endif
+
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 " Bread and butter file searcher.
 " <space>f to search for tracked files in git repo.
@@ -155,6 +125,9 @@ Plug 'junegunn/fzf.vim'
 " Plug 'ludovicchabant/vim-gutentags'
 " set statusline+=%{gutentags#statusline()}
 " " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
+
+" Syntax highlighting for a ton of languages
+Plug 'sheerun/vim-polyglot'
 
 " TODO: LSP for code completion options:
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
@@ -227,30 +200,30 @@ set cmdheight=2
 let g:echodoc#enable_at_startup = 1
 let g:echodoc#type = 'signature'
 
-" Use release branch
+" " Use release branch
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" :CocConfig will edit the config file where you put languageservers
-":CocInstall coc-json to install json stuff for coc
-" usually lives here ~/.config/nvim/coc-settings.json
-" example body:
-" {
-"     "languageserver": {
-"         "clangd": {
-"             "command": "clangd",
-"             "args": ["--background-index"],
-"             "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-"             "filetypes": ["c", "cpp", "objc", "objcpp"]
-"         }
-"     },
-"
-"     "suggest.autoTrigger": "always", // always is default but can also use "trigger" to trigger manuualy will the usual vim c-n
-" }
+" " :CocConfig will edit the config file where you put languageservers
+" " :CocInstall coc-json to install json stuff for coc
+" " usually lives here ~/.config/nvim/coc-settings.json
+" " example body:
+" " {
+" "     "languageserver": {
+" "         "clangd": {
+" "             "command": "clangd",
+" "             "args": ["--background-index"],
+" "             "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+" "             "filetypes": ["c", "cpp", "objc", "objcpp"]
+" "         }
+" "     },
+" "
+" "     "suggest.autoTrigger": "always", // always is default but can also use "trigger" to trigger manuualy will the usual vim c-n
+" " }
 
+" THIS REMOVES THE START WINDOW FOR VIM
 " WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
 " linux search keyboard set to 200ms delay, 40c/s
 Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
 let g:airline_powerline_fonts = 1
-" let g:airline#extensions#coc#enabled = 1
 
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
@@ -273,13 +246,10 @@ let g:EasyMotion_smartcase = 1
 " This will search before and after cursor in current pane
 nmap s <Plug>(easymotion-s)
 
-" Syntax highlighting for a ton of languages
-Plug 'sheerun/vim-polyglot'
-
 " Plug 'godlygeek/tabular' " Aligning selected text on some char or regexK
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
-"
+
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
 
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
@@ -389,6 +359,12 @@ map <F7> :20Lex<CR><c-w><c-l>
 " nmap <c-=> :call FontSizePlus()<CR>
 
 Plug 'tomtom/tcomment_vim' " Comment selected lines with gc, current line with gcc, scope with gcip{, text block with gcip, and so on.K
+" Prevent tcomment from making a zillion mappings (we just want the operator).
+let g:tcomment_mapleader1=''
+let g:tcomment_mapleader2=''
+let g:tcomment_mapleader_comment_anyway=''
+let g:tcomment_textobject_inlinecomment=''
+
 Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [ thing 1 ] [thing  2]
 
 " Smooth scrolling
@@ -403,6 +379,7 @@ nnoremap <silent> <c-d> :call comfortable_motion#flick(g:comfortable_motion_impu
 nnoremap <silent> <c-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<cr>
 nnoremap <silent> <c-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1.5)<cr>
 nnoremap <silent> <c-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<cr>
+
 " Colorschemes
 Plug 'AlessandroYorba/Alduin'
 if has("nvim") || has("gui_running")
@@ -411,7 +388,7 @@ else
     colorscheme alduin  " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
 endif
 call plug#end()
-"
+
 " SEARCH
 " * and # search does not use smartcase
 " replace word under cursor in entire file
@@ -560,12 +537,12 @@ nnoremap > >>
 " nnoremap == gg=G<c-o>
 nnoremap == =i{<c-o>
 
-" " make getting out of insert mode easier
-" " <c-[> is Windows mapping for esc
+" make getting out of insert mode easier
+" <c-[> is Windows mapping for esc
 inoremap <c-[> <Esc>:w<cr>
  " This decided to break. vim is terrible.
-" nnoremap <c-[> <Esc>:w<cr>
-"
+nnoremap <c-[> <Esc>:w<cr>
+
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
 " apply macro across visual selection, VG to select until end of file
@@ -616,7 +593,7 @@ set guioptions-=T
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
 nmap <silent> <leader>ve :vs ~/.vimrc<cr>
-nnoremap <leader>qq :w!<cr>:qa!<cr>
+nnoremap <leader>qq :wa!<cr>:qa!<cr>
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 " down / up / left / right
