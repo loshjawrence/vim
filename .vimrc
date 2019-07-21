@@ -17,7 +17,7 @@ let mapleader="\<space>" " Map the leader key to space bar
 if has("win32")
     set guifont=Consolas:h9
 else
-    set guifont=Ubuntu:h10
+    " set guifont=Ubuntu:h10
 endif
 
 " The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
@@ -34,6 +34,7 @@ syntax enable    " syntax highlighting
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set nrformats-=octal
 set number              " Show line numbers
+" set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
 set background=dark     " tell vim what the background color looks like
 set backspace=indent,eol,start " allow backspace to work normally
 set history=200         " how many : commands to save in history
@@ -57,7 +58,7 @@ set shiftround          " Round indent to multiple of 'shiftwidth'
 set termguicolors       " enable true colors
 set hidden              " enable hidden unsaved buffers
 silent! helptags ALL    " Generate help doc for all plugins
-set iskeyword+=-        " as-asdf-asdf-asdf-a-fd
+" set iskeyword+=-        " as-asdf-asdf-asdf-a-fd
 set enc=utf-8 fenc=utf-8 termencoding=utf-8 " set UTF-8 encoding
 set complete+=kspell " Autocomplete with dictionary words when spell check is on
 set nobackup
@@ -77,15 +78,28 @@ set nowrap                          " Don't word wrap
 if has("nvim") " didn't work in gvim
     set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 endif
+if has('gui')
+  " Turn off scrollbars. (Default on macOS is "egmrL").
+  set winaltkeys=no
+  set guioptions-=L
+  set guioptions-=R
+  set guioptions-=b
+  set guioptions-=l
+  set guioptions-=r
+  set guioptions-=T
+  set guioptions-=m
+endif
 
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
 " set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
 " set list                            " Show problematic characters.
-highlight ExtraWhitespace ctermbg=white guibg=white
+highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/        
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
 
 " FILETYPE
 " Associate filetypes with other filetypes
@@ -159,12 +173,6 @@ let g:LanguageClient_serverCommands = {
     \ }
 
 let g:LanguageClient_diagnosticsList='Location'
-let g:LanguageClient_diagnosticsDisplay = {
-      \   1: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
-      \   2: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
-      \   3: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
-      \   4: {'signTexthl': 'LineNr', 'virtualTexthl': 'User8'},
-      \ }
 
 function! SetLSPShortcuts()
     " nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
@@ -365,28 +373,23 @@ let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
 
-Plug 'wellle/targets.vim' " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [ thing 1 ] [thing  2]
-
-" Smooth scrolling
-Plug 'yuttie/comfortable-motion.vim'
-let g:comfortable_motion_no_default_key_mappings = 1
-let g:comfortable_motion_impulse_multiplier = 8
-let g:comfortable_motion_friction = 3000.0
-let g:comfortable_motion_air_drag = 0.0
-nnoremap <silent> <c-e> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 0.7)<cr>
-nnoremap <silent> <c-y> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -0.7)<cr>
-nnoremap <silent> <c-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<cr>
-nnoremap <silent> <c-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<cr>
-nnoremap <silent> <c-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1.5)<cr>
-nnoremap <silent> <c-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1.5)<cr>
+ " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [ thing 1 ] [thing  2]
+Plug 'wellle/targets.vim'
 
 " Colorschemes
+" for a giant reppo of Colorschemes see flazz/vim-colorschemes
+set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-if has("nvim") || has("gui_running")
+let g:alduin_Shout_Dragon_Aspect = 1
+Plug 'ehartc/Spink'
+
+if !has("nvim") && has("gui_running")
     colorscheme alduin2 " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
 else 
     colorscheme alduin  " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
 endif
+" colorscheme Spink
+
 call plug#end()
 
 " SEARCH
@@ -406,7 +409,10 @@ call plug#end()
 " you can prepare a series of commands separated by |. Buy you must escape it
 " norm or normal means execute the following key sequence in normal mode.
 nnoremap <leader>sr :%s/\V<c-r><c-w>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
+" Replace the visually selected text in file
 vnoremap <leader>sr y:%s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
+" Replace the copied text over visually selected range
+vnoremap <leader>sR :s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 if has("nvim")
     set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
@@ -417,10 +423,13 @@ vnoremap / /\V
 
 " NAVIGATION WINDOW RESIZE
 " Only seems to work for gvim on windows
+" might work with neovim-gtk on windows
+" neovim-gtk on kubuntu is dead on arrival
+" This might work on neovim 0.4
 if has("win32") && has("gui_running")
+    " Resize window
     set lines=999
     set columns=255
-    " Resize window
     " grow window horizontally
     nnoremap <c-left> :set columns-=2<cr>
     nnoremap <c-right> :set columns+=2<cr>
@@ -447,6 +456,16 @@ nnoremap <s-up> :res +2<cr>
 " cycle through tabs, left and right
 noremap <c-x> gT
 noremap <c-a> gt
+
+" I don't wan't to think through vim's 6 different ways to scroll the screen
+" Bonus: frees up ctrl e, y, f, b
+" For this single sroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
+nnoremap <silent> <c-e> <nop>
+nnoremap <silent> <c-y> <nop>
+nnoremap <silent> <c-f> <nop>
+nnoremap <silent> <c-b> <nop>
+nnoremap <silent> <c-u> 7<c-y>
+nnoremap <silent> <c-d> 7<c-e>
 
 " Vert split navigaton
 inoremap <c-h> <Esc><c-w>h
@@ -496,15 +515,27 @@ nnoremap <c-z> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 " Highlight from 81 on in a different color
 " let &colorcolumn=join(range(81,999),",")
 
-" CURSORLINE (can be slower)
-let g:useCursorline = 1
-" purple4 royalblue4
+" CURSORLINE (can be slower in some terminals)
+
+" purple4 royalblue4 black
+" You can also specify a color by its RGB (red, green, blue) values.
+" The format is "#rrggbb", where
+" :highlight Comment guifg=#11f0c3 guibg=#ff00ff
 " hi CursorLine  cterm=NONE ctermbg=royalblue4 ctermfg=NONE
 hi cursorline  gui=NONE guibg=purple4 guifg=NONE
 hi cursorcolumn  gui=NONE guibg=purple4 guifg=NONE
-	" You can also specify a color by its RGB (red, green, blue) values.
-	" The format is "#rrggbb", where
-    " :highlight Comment guifg=#11f0c3 guibg=#ff00ff
+
+function! EnterInsertMode()
+    hi cursorline  gui=NONE guibg=black guifg=NONE
+endfunction
+function! LeaveInsertMode()
+    hi cursorline  gui=NONE guibg=purple4 guifg=NONE
+    write!
+endfunction
+autocmd InsertEnter * call EnterInsertMode()
+autocmd InsertLeave * call LeaveInsertMode()
+
+let g:useCursorline = 1
 if g:useCursorline == 1
     set cursorline
     autocmd BufEnter * set cursorline
@@ -515,7 +546,9 @@ else
     autocmd InsertLeave * set nocursorline
 endif
 
-" Press Enter to turn off search highlights, and flash the location of the cursor
+" Pressing enter flashes the cursoline and column and removes the search highlight
+" Was needed for terminals where the cursor was hard to find where linecoloring
+" was slow in normal mode so you had to turn it off
 function! Flash()
     set nohlsearch
     set cursorline cursorcolumn
@@ -529,6 +562,9 @@ function! Flash()
 endfunction
 nnoremap <cr> :call Flash()<cr>
 
+" make getting out of insert mode easier
+nnoremap <c-[> <Esc>:w<cr>
+
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
 nnoremap > >>
@@ -537,11 +573,6 @@ nnoremap > >>
 " nnoremap == gg=G<c-o>
 nnoremap == =i{<c-o>
 
-" make getting out of insert mode easier
-" <c-[> is Windows mapping for esc
-inoremap <c-[> <Esc>:w<cr>
- " This decided to break. vim is terrible.
-nnoremap <c-[> <Esc>:w<cr>
 
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
@@ -576,19 +607,6 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 " " alt-D will go to next right tab
 " noremap <Esc>D :tabm +1<cr>
 
-
-" comment to enable Alt+[menukey] menu keys (i.e. Alt+h for help)
-set winaltkeys=no " same as `:set wak=no`
-" comment to enable menubar
-set guioptions-=m
-" comment to enable icon menubar
-set guioptions-=T
-
-" if has("gui_running")
-"     " Move the tab left and right in the tab bar
-"     noremap <A-A> :tabm -1<cr>
-"     noremap <A-D> :tabm +1<cr>
-" endif
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
