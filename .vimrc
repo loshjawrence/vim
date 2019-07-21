@@ -1,15 +1,8 @@
 ﻿" To jump to vim docs put word over cursor or highlight it with combo viW and press K
 " or :h theKeywordOfIntereset
 
-" TODO: fix this bullshit. I think nvim-intro has a help for what to put
+" 
 let baseDataFolder="~/.vim"
-if has("win32")
-    " if has("nvim")
-    "     let baseDataFolder="~/AppData/Local/nvim"
-    " else
-        let baseDataFolder="~/vimfiles"
-    " endif
-endif
 
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
@@ -75,9 +68,7 @@ set wildmenu                        " enable wildmenu
 set wildmode=list:longest,list:full " configure wildmenu
 set textwidth=80
 set nowrap                          " Don't word wrap
-if has("nvim") " didn't work in gvim
-    set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
-endif
+set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
   set winaltkeys=no
@@ -151,6 +142,7 @@ Plug 'sheerun/vim-polyglot'
 " Would need to copy this file to the root dir
 " LSP for cpp. Just follow this:
 " https://clang.llvm.org/extra/clangd/Installation.html
+" Windows 10 : https://clang.llvm.org/get_started.html
 " https://github.com/autozimu/LanguageClient-neovim/wiki/Recommended-Settings
 " another lang server for c: https://github.com/MaskRay/ccls
 " worth looking at?: nvim-gdb
@@ -193,13 +185,7 @@ augroup LSP
 augroup END
 
 " Recommended by LanguageClient-neovim
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
 
 " handle the function signatures displaying
@@ -315,56 +301,12 @@ map <F7> :20Lex<CR><c-w><c-l>
         "   r	Reverse sorting order                                |netrw-r|
 
 " FONT SIZE FONT ZOOM
-" neovim seems to work with both, gvim works with niether
+" neovim seems to work with both
 " theres a neovim gtk version that works for linux and windows
-" Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
-" let guifontpp_size_increment=1 
-" let guifontpp_smaller_font_map="<c-->" 
-" let guifontpp_larger_font_map="<c-=>" 
-" " does not work on gvim windows, works on nvim windows
-" " increase decrease font size 
-" nnoremap <C-=> :silent! let &guifont = substitute(
-"             \ &guifont,
-"             \ ':h\zs\d\+',
-"             \ '\=eval(submatch(0)+1)',
-"             \ '')<CR>
-" nnoremap <C--> :silent! let &guifont = substitute(
-"             \ &guifont,
-"             \ ':h\zs\d\+',
-"             \ '\=eval(submatch(0)-1)',
-"             \ '')<CR>
-
-" if has("win32")
-"     function! FontSizePlus ()
-"       let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
-"       let l:gf_size_whole = l:gf_size_whole + 1
-"       let l:new_font_size = ':h'.l:gf_size_whole
-"       let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
-"     endfunction
-"
-"     function! FontSizeMinus ()
-"       let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
-"       let l:gf_size_whole = l:gf_size_whole - 1
-"       let l:new_font_size = ':h'.l:gf_size_whole
-"       let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
-"     endfunction
-" else
-"     function! FontSizePlus ()
-"       let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
-"       let l:gf_size_whole = l:gf_size_whole + 1
-"       let l:new_font_size = ' '.l:gf_size_whole
-"       let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
-"     endfunction
-"
-"     function! FontSizeMinus ()
-"       let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
-"       let l:gf_size_whole = l:gf_size_whole - 1
-"       let l:new_font_size = ' '.l:gf_size_whole
-"       let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
-"     endfunction
-" endif
-" nmap <c--> :call FontSizeMinus()<CR>
-" nmap <c-=> :call FontSizePlus()<CR>
+Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
+let guifontpp_size_increment=1 
+let guifontpp_smaller_font_map="<c-->" 
+let guifontpp_larger_font_map="<c-=>" 
 
 Plug 'tomtom/tcomment_vim' " Comment selected lines with gc, current line with gcc, scope with gcip{, text block with gcip, and so on.K
 " Prevent tcomment from making a zillion mappings (we just want the operator).
@@ -383,11 +325,12 @@ Plug 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Dragon_Aspect = 1
 Plug 'ehartc/Spink'
 
-if !has("nvim") && has("gui_running")
-    colorscheme alduin2 " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
+if has("gui_running")
 else 
-    colorscheme alduin  " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
 endif
+
+colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
+" colorscheme alduin2
 " colorscheme Spink
 
 call plug#end()
@@ -413,9 +356,7 @@ nnoremap <leader>sr :%s/\V<c-r><c-w>//gI \| normal <c-o><c-left><c-left><c-left>
 vnoremap <leader>sr y:%s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 " Replace the copied text over visually selected range
 vnoremap <leader>sR :s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
-if has("nvim")
-    set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
-endif
+set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 
 " see pattern for 'very no magic'. Only \ has meaning
 nnoremap / /\V
@@ -499,11 +440,7 @@ func! s:toggleTerminal()
 endfunc
 call s:toggleTerminal()
 " Esc quits the termial
-if has("nvim")
-    tnoremap <Esc> <C-\><C-n>:q<CR>
-else
-    tnoremap <ESC> <C-w>:q<CR>
-endif
+tnoremap <Esc> <C-\><C-n>:q<CR>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
