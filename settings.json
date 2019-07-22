@@ -1,7 +1,7 @@
 // My Linux Path: ~/.config/Code/User/
 {
 
-    "window.zoomLevel": 2,
+    "window.zoomLevel": 0,
     "C_Cpp.updateChannel": "Insiders",
     "editor.renderIndentGuides": false,
 
@@ -34,12 +34,17 @@
             // Doesn't work, :norm is supported but maybe @q isnt?
             "before": ["Q"],
             "after": [":", "n", "o", "r", "m", "@", "q", "<cr>"]
-            /* "commands": [":'<,'>norm @q"] */ // Same thing
+            // "commands": [":'<,'>norm @q"] // same thing
         },
 
-        {   // Search/replace in current file for word under cursor. Type the replacement and hit enter. Default g modifier is on.
+        {   // Search/replace in current file for word under cursor. Type the replacement and hit enter.
             "before": ["<leader>", "s", "r"],
             "after": ["y", ":", "%", "s", "/", "\\", "V", "ctrl+v", "/", "/", "g", "I", "left", "left", "left"]
+        },
+
+        {   // Search/replace on selected lines for prev yanked selection. Type the replacement and hit enter.
+            "before": ["<leader>", "s", "R"],
+            "after": [":", "s", "/", "\\", "V", "ctrl+v", "/", "/", "g", "I", "left", "left", "left"]
         },
     ],
 
@@ -96,7 +101,7 @@
             "commands": [":q!"]
         },
 
-        {   // Search/replace in current file for word under cursor. Type the replacement and hit enter. Default g modifier is on.
+        {   // Search/replace in current file for word under cursor. Type the replacement and hit enter.
             "before": ["<leader>", "s", "r"],
             "after": ["y", "i", "w", ":", "%", "s", "/", "\\", "V",  "ctrl+v", "/", "/", "g", "I", "left", "left", "left"]
         },

@@ -1,7 +1,6 @@
 ﻿" To jump to vim docs put word over cursor or highlight it with combo viW and press K
 " or :h theKeywordOfIntereset
 
-" 
 let baseDataFolder="~/.vim"
 
 noremap <space> <nop>
@@ -97,7 +96,6 @@ autocmd BufWinLeave * call clearmatches()
 autocmd BufRead,BufNewFile *.shader set filetype=c
 autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
-autocmd BufRead,BufNewFile *.json   set filetype=jsonc
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
 " Enable spellchecking for Markdown
@@ -247,6 +245,9 @@ nmap s <Plug>(easymotion-s)
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
 
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
+let g:neoterm_autojump = 1
+let g:neoterm_autoinsert = 1
+let g:neoterm_size = 15
 
 Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
 " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
@@ -345,7 +346,7 @@ call plug#end()
 " test THIS thing
 " test
 " Test
-" see s_flags and substitute. /I forces case-sensitive matching
+" see s_flags pattern and substitute. /I forces case-sensitive matching
 " Visually selected text, don't ignore case
 " yank first, % for current file, \V for not having to escape symbols,
 " <c-r>" to paste from yank buffer, /I forces case-sensitive matching
@@ -353,6 +354,7 @@ call plug#end()
 " norm or normal means execute the following key sequence in normal mode.
 nnoremap <leader>sr :%s/\V<c-r><c-w>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 " Replace the visually selected text in file
+" TODO: \V isn't enough for / and \ as they both must be escaped with \
 vnoremap <leader>sr y:%s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 " Replace the copied text over visually selected range
 vnoremap <leader>sR :s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
@@ -426,26 +428,16 @@ tnoremap <c-l> <c-\><c-n><c-w>l
 au BufEnter * if &buftype == 'terminal' | startinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
-" No idea why this repmap works the first time then breaks there after. It manually works
-" nnoremap <silent> <leader><leader> :vertical botright Ttoggle<cr><c-w>l
-" quickly toggle term with space space
-func! s:toggleTerminal()
-    func! s:toggleCheckInsert()
-        execute "vertical" "botright" "Ttoggle"
-        execute "wincmd" "l"
-    endfunc
-
-    execute "nnoremap" "<silent>" "<leader><leader>"
-                \ ":call <SID>toggleCheckInsert()<cr>"
-endfunc
-call s:toggleTerminal()
+nnoremap <silent> <c-\> :botright Ttoggle<cr>
 " Esc quits the termial
+" NOTE: This is needed to make fzf and other termal based things not annoying
 tnoremap <Esc> <C-\><C-n>:q<CR>
+tnoremap <C-\> <C-\><C-n>:q<CR>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
 " Toggle between header and source for c/cpp files
-nnoremap <c-z> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 
 
 " COLORCOLUMN
