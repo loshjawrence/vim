@@ -132,7 +132,8 @@ Plug 'junegunn/fzf.vim'
 " Syntax highlighting for a ton of languages
 Plug 'sheerun/vim-polyglot'
 
-" TODO: LSP for code completion options:
+" LSP for code completion options:
+" TODO:Make the completion more like modern editors where tab and enter behave as they do
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
 " # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
 " set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -183,10 +184,11 @@ augroup LSP
 augroup END
 
 " Recommended by LanguageClient-neovim
+" This causes alot of flickering sometimes try coc again
+" see also
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
-
-" handle the function signatures displaying
+" Handle the function signatures displaying
 Plug 'Shougo/echodoc.vim'
 set cmdheight=2
 let g:echodoc#enable_at_startup = 1
@@ -243,11 +245,16 @@ nmap s <Plug>(easymotion-s)
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+" c-r= means paste in the result of escape
+" vnoremap * y/\V<c-r>=escape(@", '\')<cr><cr>
+" vnoremap # y/\V<c-r>=escape(@", '\')<cr><cr>
+
+" Plug 'wincent/scalpel' " leader e for editing word under cursor with comfirms
 
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
 let g:neoterm_autojump = 1
 let g:neoterm_autoinsert = 1
-let g:neoterm_size = 15
+let g:neoterm_size = 10
 
 Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
 " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
@@ -352,15 +359,27 @@ call plug#end()
 " <c-r>" to paste from yank buffer, /I forces case-sensitive matching
 " you can prepare a series of commands separated by |. Buy you must escape it
 " norm or normal means execute the following key sequence in normal mode.
-nnoremap <leader>sr :%s/\V<c-r><c-w>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
-" Replace the visually selected text in file
-" TODO: \V isn't enough for / and \ as they both must be escaped with \
-vnoremap <leader>sr y:%s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
-" Replace the copied text over visually selected range
-vnoremap <leader>sR :s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
+" E means edit confirm, e is no confirm. w is word y is yank.
+" edit word in whole file
+nnoremap <leader>ew :%s/\V<c-r><c-w>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
+" Edit confirm word in whole file
+nnoremap <leader>Ew :,$s/\V<c-r><c-w>//gIc \|1,''-&&<c-left><left><left><left><left><left>
+" edit word under cursor within the visual lines
+" gv goes to last vis selection (line, block or select)
+vnoremap <leader>ew <Esc>yiwgv:s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
+" Visually selected text in file
+" If visual line mode edit the prev yank acros the vis lines
+" " If you want / or \ in the replacement you still need to manually escape them with \ See :help escape()
+vnoremap <expr> <leader>ey mode() ==# "V" ? ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+            \ : "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
 
-" see pattern for 'very no magic'. Only \ has meaning
+" see "h <expr> and :help mode()
+" Make A and I work in vis line mode. They already  work in the block bounds so leave that be.
+xnoremap <expr> A mode() ==# "V" ? "<c-v>$A" : "A"
+xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
+
+" see hey for 'very no magic'. Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
 vnoremap / /\V
 
@@ -432,7 +451,7 @@ nnoremap <silent> <c-\> :botright Ttoggle<cr>
 " Esc quits the termial
 " NOTE: This is needed to make fzf and other termal based things not annoying
 tnoremap <Esc> <C-\><C-n>:q<CR>
-tnoremap <C-\> <C-\><C-n>:q<CR>
+tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
@@ -480,6 +499,7 @@ endif
 " was slow in normal mode so you had to turn it off
 function! Flash()
     set nohlsearch
+    write!
     set cursorline cursorcolumn
     redraw
     sleep 100m
@@ -489,10 +509,7 @@ function! Flash()
         set nocursorline
     endif
 endfunction
-nnoremap <cr> :call Flash()<cr>
-
-" make getting out of insert mode easier
-nnoremap <c-[> <Esc>:w<cr>
+nnoremap <c-[> :call Flash()<cr>
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
