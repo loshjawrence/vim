@@ -15,9 +15,11 @@ endif
 " The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
 " autocmd-events for executing : commands (full explanations: autocmd-events-abc)
 
+" So git bash or whatever doesn't throw up errors everywhere when it needs you to edit a commit message
 if v:progname == 'vi'
   set noloadplugins
 endif
+
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set nocompatible " vim, not vi
@@ -32,6 +34,7 @@ set backspace=indent,eol,start " allow backspace to work normally
 set history=200         " how many : commands to save in history
 set ruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
+set hlsearch           " do incremental searching
 set incsearch           " do incremental searching
 set nowrapscan          " Don't autowrap to top of tile on searches
 set ignorecase
@@ -43,9 +46,10 @@ set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
 set mouse=a             " enable mouse (selection, resizing windows)
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
-set tabstop=4           " Use 4 spaces for tabs.
-set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
-set expandtab           " insert tab with right amount of spacing
+" let tabspaces=4
+" set tabstop=$tabspaces           " Use 4 spaces for tabs.
+" set shiftwidth=$tabspaces        " Number of spaces to use for each step of (auto)indent.
+" set expandtab           " insert tab with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
 set termguicolors       " enable true colors
 set hidden              " enable hidden unsaved buffers
@@ -68,6 +72,7 @@ set wildmode=list:longest,list:full " configure wildmenu
 set textwidth=80
 set nowrap                          " Don't word wrap
 set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
   set winaltkeys=no
@@ -90,6 +95,10 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+
+" sort of worked but enter has issues for re-highl old searches
+" autocmd CmdlineEnter * set nohlsearch
+" autocmd CmdlineLeave * set hlsearch
 
 " FILETYPE
 " Associate filetypes with other filetypes
@@ -123,6 +132,10 @@ call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+" Auto detect tab width
+Plug 'tpope/vim-sleuth'
+
+
 " Not reliable (like all ctags trash)
 " Tag file management, should use Exhuberant Ctags
 " Plug 'ludovicchabant/vim-gutentags'
@@ -151,53 +164,65 @@ Plug 'sheerun/vim-polyglot'
 " Follow clang-tools install steps here: https://clang.llvm.org/extra/clangd/Installation.html
 " SEE REC SETTINGS: https://github.com/autozimu/LanguageClient-neovim/wiki/Recommended-Settings
 " " " MAKE SURE TO :UpdateRemotePlugins if seeing 'no notification handler' message for LanguageClinet
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ }
 
 " https://clang.llvm.org/extra/clangd/Installation.html
 " npm install -g javascript-typescript-langserver
-let g:LanguageClient_serverCommands = {
-    \ 'cpp': ['clangd', '-background-index'],
-    \ 'javascript': ['javascript-typscript-stdio']
-    \ }
+" let g:LanguageClient_serverCommands = {
+"     \ 'cpp': ['clangd', '-background-index'],
+"     \ 'javascript': ['javascript-typscript-stdio']
+"     \ }
 
-let g:LanguageClient_diagnosticsList='Location'
+" let g:LanguageClient_diagnosticsList='Location'
 
-function! SetLSPShortcuts()
-    " nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-    " nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-    " nnoremap <leader>lr :call LanguageClient#textDocument_references()<CR>
-    " nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-    " nnoremap <leader>ls :call LanguageClient#textDocument_rename()<CR>
-    " nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-    " nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-    " nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-    " nnoremap <leader>ll :call LanguageClient_textDocument_documentSymbol()<CR>
-    " nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-endfunction()
-augroup LSP
-  autocmd!
-  " Add filetypes here
-  autocmd FileType cpp,c,js call SetLSPShortcuts()
-augroup END
+" function! SetLSPShortcuts()
+"     " nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
+"     " nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+"     " nnoremap <leader>lr :call LanguageClient#textDocument_references()<CR>
+"     " nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
+"     " nnoremap <leader>ls :call LanguageClient#textDocument_rename()<CR>
+"     " nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
+"     " nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
+"     " nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
+"     " nnoremap <leader>ll :call LanguageClient_textDocument_documentSymbol()<CR>
+"     " nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+" endfunction()
+" augroup LSP
+"   autocmd!
+"   " Add filetypes here
+"   autocmd FileType cpp,c,js call SetLSPShortcuts()
+" augroup END
 
 " Recommended by LanguageClient-neovim
 " This causes alot of flickering sometimes try coc again
 " see also
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-let g:deoplete#enable_at_startup = 1
-" Handle the function signatures displaying
-Plug 'Shougo/echodoc.vim'
-set cmdheight=2
-let g:echodoc#enable_at_startup = 1
-let g:echodoc#type = 'signature'
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" let g:deoplete#enable_at_startup = 1
+" " Handle the function signatures displaying
+" Plug 'Shougo/echodoc.vim'
+" set cmdheight=2
+" let g:echodoc#enable_at_startup = 1
+" let g:echodoc#type = 'signature'
 
+
+" https://github.com/neoclide/coc.nvim/wiki/Install-coc.nvim
+"https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
 " " Use release branch
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" :checkhealth to see if running
+" :CoCInfo
+" "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-ccls coc-sh coc-rls
+"
+" :CocUninstall coc-css
+" :CocList extensions will list your extensions
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+set statusline+=%{coc#status()}
 " " :CocConfig will edit the config file where you put languageservers
 " " :CocInstall coc-json to install json stuff for coc
+" "CocList  commands
+" "CocCommand <tab> 
 " " usually lives here ~/.config/nvim/coc-settings.json
 " " example body:
 " " {
@@ -220,6 +245,7 @@ Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'su
 let g:airline_powerline_fonts = 1
 
 " Enable repeat for supported plugins
+" Not sure I acutally make use of this
 Plug 'tpope/vim-repeat'
 
 " Type s and a char of interesst then the colored letters at the char to jump to it.
@@ -245,7 +271,7 @@ nmap s <Plug>(easymotion-s)
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
-" c-r= means paste in the result of escape
+" c-r=escape() means paste in the result of escape
 " vnoremap * y/\V<c-r>=escape(@", '\')<cr><cr>
 " vnoremap # y/\V<c-r>=escape(@", '\')<cr><cr>
 
@@ -331,17 +357,13 @@ Plug 'wellle/targets.vim'
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Dragon_Aspect = 1
-Plug 'ehartc/Spink'
-
-if has("gui_running")
-else 
-endif
-
-colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
-" colorscheme alduin2
-" colorscheme Spink
 
 call plug#end()
+
+" " aludin doesn't allow the whitespace red coloring???
+colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
+" " colorscheme alduin2  
+" " colorscheme alduin3  
 
 " SEARCH
 " * and # search does not use smartcase
@@ -359,7 +381,10 @@ call plug#end()
 " <c-r>" to paste from yank buffer, /I forces case-sensitive matching
 " you can prepare a series of commands separated by |. Buy you must escape it
 " norm or normal means execute the following key sequence in normal mode.
-set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
+
+if has("nvim")
+  set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
+endif
 " E means edit confirm, e is no confirm. w is word y is yank.
 " edit word in whole file
 nnoremap <leader>ew :%s/\V<c-r><c-w>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
@@ -399,13 +424,7 @@ if has("win32") && has("gui_running")
     nnoremap <c-down> :set lines-=2<cr>
     nnoremap <c-up> :set lines+=2<cr>
 endif
-" nvim_win_config
-" grow splits horizontally
-nnoremap <s-left> :vertical resize -2<cr> 
-nnoremap <s-right> :vertical resize +2<cr>
-" grow splits vertically
-nnoremap <s-down> :res -2<cr>
-nnoremap <s-up> :res +2<cr>
+
 
 " If you set the winheight option to 999, the current split occupies as much of the screen as possible(vertically)
 " and all other windows occupy only one line (I have seen this called "Rolodex mode"):
@@ -416,8 +435,8 @@ nnoremap <s-up> :res +2<cr>
 " To increase a split to its maximum width, use Ctrl-w |. 
 "
 " cycle through tabs, left and right
-noremap <c-x> gT
-noremap <c-a> gt
+noremap <c-a> gT
+noremap <c-x> gt
 
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
@@ -553,6 +572,16 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 " " alt-D will go to next right tab
 " noremap <Esc>D :tabm +1<cr>
 
+" nvim_win_config
+" grow splits horizontally
+" Shift left/right doesn't work in terminals?
+" use ctrl l,r,u,d for term split resize
+" use shft l,r,u,d for gui window resize
+nnoremap <c-left> :vert res -2<cr> 
+nnoremap <c-right> :vert res +2<cr>
+" grow splits vertically
+nnoremap <c-down> :res -2<cr>
+nnoremap <c-up> :res +2<cr>
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
@@ -561,7 +590,7 @@ nnoremap <leader>qq :wa!<cr>:qa!<cr>
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 " down / up / left / right
-let g:fzf_layout = { 'down': '~50%' }
+" let g:fzf_layout = { 'down': '~50%' }
 
 " In Neovim, you can set up fzf window using a Vim command
 nnoremap <leader>l :BLines<cr>
@@ -574,7 +603,8 @@ nnoremap <leader>F :Files<cr>
 " nnoremap <leader>h/ :History/<cr>
 " nnoremap <leader>h: :History:<cr>
 nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>r :Rg<cr> " need to install ripgrep or compile it in rust, not available on ubuntu 18.04
+" need to install ripgrep or compile it in rust, not available on ubuntu 18.04
+nnoremap <leader>r :Rg<cr> 
 
 " Useful but better to use the visual select search and repace
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
@@ -584,15 +614,17 @@ vnoremap <silent> s //e<c-r>=&selection=='exclusive'?'+1':''<cr><cr>
 onoremap s :normal vs<cr>
 
 " Pretty Json, can be called like other commands with :
-command! JSONPRETTY %!python -m json.tool
+nnoremap <leader>p :%!python -m json.tool
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" NOTES 
+"" NOTES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+" ctrl-z will take you back to terminal. fg in terminal will take you back to vim (fg is for foreground)
+" gn and gN visually select the current search selction
+" gv will go to the last vis selction and select it
 " Auto generate remappings, targets.vim does this nicely
 " Example: noremap ci, T,ct,
 " Add other text objects to perform ci and ca with
