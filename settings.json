@@ -1,7 +1,6 @@
 // My Linux Path: ~/.config/Code/User/
 {
-
-    "window.zoomLevel": 0,
+    "window.zoomLevel": -1,
     "C_Cpp.updateChannel": "Insiders",
     "editor.renderIndentGuides": false,
 
@@ -115,6 +114,16 @@
         {
             "before": ["<cr>"],
             "commands": [":noh"]
+        },
+
+        {
+            "before": ["<C-d>"],
+            "after": ["7", "<C-e>"]
+        },
+
+        {
+            "before": ["<C-u>"],
+            "after": ["7", "<C-y>"]
         },
     ],
 }

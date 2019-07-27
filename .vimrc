@@ -135,10 +135,12 @@ Plug 'junegunn/fzf.vim'
 " Auto detect tab width
 Plug 'tpope/vim-sleuth'
 
+" Check the repo for whats required to be installed(some python stuff)
+Plug 'Shougo/denite.nvim'
 
 " Not reliable (like all ctags trash)
 " Tag file management, should use Exhuberant Ctags
-" Plug 'ludovicchabant/vim-gutentags'
+Plug 'ludovicchabant/vim-gutentags'
 " set statusline+=%{gutentags#statusline()}
 " " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
 
@@ -146,7 +148,6 @@ Plug 'tpope/vim-sleuth'
 Plug 'sheerun/vim-polyglot'
 
 " LSP for code completion options:
-" TODO:Make the completion more like modern editors where tab and enter behave as they do
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
 " # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
 " set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -162,63 +163,41 @@ Plug 'sheerun/vim-polyglot'
 " https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
 " https://vim.fandom.com/wiki/Omni_completion
 " Follow clang-tools install steps here: https://clang.llvm.org/extra/clangd/Installation.html
-" SEE REC SETTINGS: https://github.com/autozimu/LanguageClient-neovim/wiki/Recommended-Settings
-" " " MAKE SURE TO :UpdateRemotePlugins if seeing 'no notification handler' message for LanguageClinet
-" Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ }
 
-" https://clang.llvm.org/extra/clangd/Installation.html
-" npm install -g javascript-typescript-langserver
-" let g:LanguageClient_serverCommands = {
-"     \ 'cpp': ['clangd', '-background-index'],
-"     \ 'javascript': ['javascript-typscript-stdio']
-"     \ }
-
-" let g:LanguageClient_diagnosticsList='Location'
-
-" function! SetLSPShortcuts()
-"     " nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-"     " nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-"     " nnoremap <leader>lr :call LanguageClient#textDocument_references()<CR>
-"     " nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-"     " nnoremap <leader>ls :call LanguageClient#textDocument_rename()<CR>
-"     " nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-"     " nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-"     " nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-"     " nnoremap <leader>ll :call LanguageClient_textDocument_documentSymbol()<CR>
-"     " nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-" endfunction()
-" augroup LSP
-"   autocmd!
-"   " Add filetypes here
-"   autocmd FileType cpp,c,js call SetLSPShortcuts()
-" augroup END
-
-" Recommended by LanguageClient-neovim
-" This causes alot of flickering sometimes try coc again
-" see also
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" let g:deoplete#enable_at_startup = 1
-" " Handle the function signatures displaying
-" Plug 'Shougo/echodoc.vim'
-" set cmdheight=2
-" let g:echodoc#enable_at_startup = 1
-" let g:echodoc#type = 'signature'
-
-
+""" COC
 " https://github.com/neoclide/coc.nvim/wiki/Install-coc.nvim
-"https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
+" https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
+" https://github.com/MaskRay/ccls/wiki/coc.nvim
 " " Use release branch
 " :checkhealth to see if running
 " :CoCInfo
-" "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-ccls coc-sh coc-rls
+" coc-ccls doesn't just work, use clangd
+" "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-rls
 "
 " :CocUninstall coc-css
 " :CocList extensions will list your extensions
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 set statusline+=%{coc#status()}
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+nmap <silent> <leader>cd <Plug>(coc-definition)
+nmap <silent> <leader>cr <Plug>(coc-references)
+nmap <silent> <leader>ci <Plug>(coc-implementation)
+" Use <cr> to confirm completion
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" To make <cr> select the first completion item and confirm the completion when no item has been selected: 
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+" To make coc.nvim format your code on <cr>, use keymap:
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 " " :CocConfig will edit the config file where you put languageservers
 " " :CocInstall coc-json to install json stuff for coc
 " "CocList  commands
@@ -226,14 +205,14 @@ set statusline+=%{coc#status()}
 " " usually lives here ~/.config/nvim/coc-settings.json
 " " example body:
 " " {
-" "     "languageserver": {
-" "         "clangd": {
-" "             "command": "clangd",
-" "             "args": ["--background-index"],
-" "             "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-" "             "filetypes": ["c", "cpp", "objc", "objcpp"]
-" "         }
-" "     },
+"     "languageserver": {
+"         "clangd": {
+"             "command": "clangd",
+"             "args": ["--background-index"],
+"             "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+"             "filetypes": ["c", "cpp", "objc", "objcpp"]
+"         }
+"     },
 " "
 " "     "suggest.autoTrigger": "always", // always is default but can also use "trigger" to trigger manuualy will the usual vim c-n
 " " }
@@ -243,6 +222,7 @@ set statusline+=%{coc#status()}
 " linux search keyboard set to 200ms delay, 40c/s
 Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#coc#enabled = 1
 
 " Enable repeat for supported plugins
 " Not sure I acutally make use of this
@@ -425,7 +405,6 @@ if has("win32") && has("gui_running")
     nnoremap <c-up> :set lines+=2<cr>
 endif
 
-
 " If you set the winheight option to 999, the current split occupies as much of the screen as possible(vertically)
 " and all other windows occupy only one line (I have seen this called "Rolodex mode"):
 " set winheight=999
@@ -433,10 +412,6 @@ endif
 " set winwidth=999
 " To increase a split to its maximum height, use Ctrl-w _.
 " To increase a split to its maximum width, use Ctrl-w |. 
-"
-" cycle through tabs, left and right
-noremap <c-a> gT
-noremap <c-x> gt
 
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
@@ -474,8 +449,38 @@ tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
+" Cycle tabs in tab bar
+nnoremap <c-a> gT
+nnoremap <c-x> gt
+
 " Toggle between header and source for c/cpp files
-nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+if has("gui_running") || has("nvim")
+  nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+  " nnoremap <A-a> gT
+  " " alt-d will go to next right tab
+  " nnoremap <A-d> gt
+  " " alt-A will move the current tab to the left
+  " nnoremap <A-A> :tabm -1<cr>
+  " " alt-D will go to next right tab
+  " nnoremap <A-D> :tabm +1<cr>
+else
+  " NOTE: Escape mappings will cause delay in vim terminal
+  " In terminal vi, the alt+a and alt+d keys are actually ^[a and ^[d
+  " You can see this by typing the key sequence in a command line after doing a
+  " cat followed by enter or sed -n l followed by enter
+  " If you type alt-a after that the output will be something like ^[a which is <escape> a
+  " if not terminal winodw this would just be noremap <a-a> gT
+  " alt-a will go to next left tab
+  " Bad to have Esc mappings avoid Alt key since terminal commonly maps Alt to Esc
+  " nnoremap <Esc>a gT
+  " " alt-d will go to next right tab
+  " nnoremap <Esc>d gt
+  " " alt-A will move the current tab to the left
+  " nnoremap <Esc>A :tabm -1<cr>
+  " " alt-D will go to next right tab
+  " nnoremap <Esc>D :tabm +1<cr>
+  " nnoremap <Esc>o :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+endif
 
 
 " COLORCOLUMN
@@ -517,7 +522,6 @@ endif
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
-    set nohlsearch
     write!
     set cursorline cursorcolumn
     redraw
@@ -528,7 +532,7 @@ function! Flash()
         set nocursorline
     endif
 endfunction
-nnoremap <c-[> :call Flash()<cr>
+nnoremap <c-[> :call Flash()<cr>:noh<cr>
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
@@ -556,21 +560,6 @@ nnoremap Y y$
 " Then when I need to load up the seesion again I open the Session.vim file in the root of the repo and type <leader>so to restore my session.
 nnoremap <leader>ss :mks!<cr>
 nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
-
-" In terminal vi, the alt+a and alt+d keys are actually ^[a and ^[d
-" You can see this by typing the key sequence in a command line after doing a
-" cat followed by enter or sed -n l followed by enter
-" If you type alt-a after that the output will be something like ^[a which is <escape> a
-" if not terminal winodw this would just be noremap <a-a> gT
-" alt-a will go to next left tab
-" Bad to have Esc mappings avoid Alt key since terminal commonly maps Alt to Esc
-" noremap <Esc>a gT
-" " alt-d will go to next right tab
-" noremap <Esc>d gt
-" " alt-A will move the current tab to the left
-" noremap <Esc>A :tabm -1<cr>
-" " alt-D will go to next right tab
-" noremap <Esc>D :tabm +1<cr>
 
 " nvim_win_config
 " grow splits horizontally
