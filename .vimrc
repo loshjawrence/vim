@@ -1,13 +1,14 @@
 ﻿" To jump to vim docs put word over cursor or highlight it with combo viW and press K
 " or :h theKeywordOfIntereset
 
+
 let baseDataFolder="~/.vim"
 
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
 
 if has("win32")
-    set guifont=Consolas:h9
+    set guifont=Consolas:h10
 else
     " set guifont=Ubuntu:h10
 endif
@@ -72,6 +73,9 @@ set wildmode=list:longest,list:full " configure wildmenu
 set textwidth=80
 set nowrap                          " Don't word wrap
 set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+set cmdheight=2 " Better display for messages
+set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
+set shortmess+=c " don't give |ins-completion-menu| messages.
 
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
@@ -136,7 +140,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-sleuth'
 
 " Check the repo for whats required to be installed(some python stuff)
-Plug 'Shougo/denite.nvim'
+" Plug 'Shougo/denite.nvim'
 
 " Not reliable (like all ctags trash)
 " Tag file management, should use Exhuberant Ctags
@@ -172,9 +176,11 @@ Plug 'sheerun/vim-polyglot'
 " :checkhealth to see if running
 " :CoCInfo
 " coc-ccls doesn't just work, use clangd
-" "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-rls
-"
+" "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-rls coc-syntax coc-tag
 " :CocUninstall coc-css
+" "CocList  commands
+" "CocCommand <tab> 
+" " :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
 " :CocList extensions will list your extensions
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 set statusline+=%{coc#status()}
@@ -198,31 +204,17 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 " To make coc.nvim format your code on <cr>, use keymap:
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-" " :CocConfig will edit the config file where you put languageservers
-" " :CocInstall coc-json to install json stuff for coc
-" "CocList  commands
-" "CocCommand <tab> 
-" " usually lives here ~/.config/nvim/coc-settings.json
-" " example body:
-" " {
-"     "languageserver": {
-"         "clangd": {
-"             "command": "clangd",
-"             "args": ["--background-index"],
-"             "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-"             "filetypes": ["c", "cpp", "objc", "objcpp"]
-"         }
-"     },
-" "
-" "     "suggest.autoTrigger": "always", // always is default but can also use "trigger" to trigger manuualy will the usual vim c-n
-" " }
 
 " THIS REMOVES THE START WINDOW FOR VIM
 " WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
 " linux search keyboard set to 200ms delay, 40c/s
 Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
-let g:airline_powerline_fonts = 1
+" let g:airline_powerline_fonts = 1
+" This is what makes airline amazing:
 let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t' " Just display filename
+let g:airline#extensions#branch#enabled=1
 
 " Enable repeat for supported plugins
 " Not sure I acutally make use of this
@@ -257,6 +249,9 @@ Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immed
 
 " Plug 'wincent/scalpel' " leader e for editing word under cursor with comfirms
 
+" :TermainlVSplit bash (needs python3)
+" Plug 'tc50cal/vim-terminal' 
+" Only use this for Ttoggle (term toggle) any way to do this myself?
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
 let g:neoterm_autojump = 1
 let g:neoterm_autoinsert = 1
@@ -329,7 +324,7 @@ let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
 
- " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [ thing 1 ] [thing  2]
+ " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
 Plug 'wellle/targets.vim'
 
 " Colorschemes
@@ -350,6 +345,10 @@ colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvi
 " replace word under cursor in entire file
 " test this thing
 " test
+" testAnother
+" testThis
+" testSomeVarOther
+" testSomeVar
 " test this thing
 " test
 " test THIS thing
@@ -365,26 +364,34 @@ colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvi
 if has("nvim")
   set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
-" E means edit confirm, e is no confirm. w is word y is yank.
+" E means edit with confirms, e is no confirm. 
+" Second letter is source: w is word under cursor, y is yanked text.
+" Even with very no magic (\V) modifier, still need to escape / and \ with \
+" The \< and \> means don't do a raw string replace but a word replace
+" so if you want to replace someVar, it won't touch vars name someVarOther
 " edit word in whole file
-nnoremap <leader>ew :%s/\V<c-r><c-w>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
+nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
 " Edit confirm word in whole file
-nnoremap <leader>Ew :,$s/\V<c-r><c-w>//gIc \|1,''-&&<c-left><left><left><left><left><left>
+nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
 " edit word under cursor within the visual lines
-" gv goes to last vis selection (line, block or select)
-vnoremap <leader>ew <Esc>yiwgv:s/\V<c-r>"//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
+" gv selects the last vis selection (line, block or select)
+vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 " Visually selected text in file
-" If visual line mode edit the prev yank acros the vis lines
-" " If you want / or \ in the replacement you still need to manually escape them with \ See :help escape()
-vnoremap <expr> <leader>ey mode() ==# "V" ? ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
-            \ : "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+" If mode is visual line mode, edit the prev yank acros the vis lines, else across the whole file
+" see :help escape()
+vnoremap <expr> <leader>ey mode() ==# "V" ? 
+      \ ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+      \: "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+
+nnoremap <leader>ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
+nnoremap <leader>Ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
 
 " see "h <expr> and :help mode()
 " Make A and I work in vis line mode. They already  work in the block bounds so leave that be.
 xnoremap <expr> A mode() ==# "V" ? "<c-v>$A" : "A"
 xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
 
-" see hey for 'very no magic'. Only \ and / have meaning and must be escaped with \
+" \v search prefix modifier is very magic, \V prefix modifier very no magic. Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
 vnoremap / /\V
 
@@ -398,11 +405,11 @@ if has("win32") && has("gui_running")
     set lines=999
     set columns=255
     " grow window horizontally
-    nnoremap <c-left> :set columns-=2<cr>
-    nnoremap <c-right> :set columns+=2<cr>
+    nnoremap <s-left> :set columns-=2<cr>
+    nnoremap <s-right> :set columns+=2<cr>
     " grow window vertically
-    nnoremap <c-down> :set lines-=2<cr>
-    nnoremap <c-up> :set lines+=2<cr>
+    nnoremap <s-down> :set lines-=2<cr>
+    nnoremap <s-up> :set lines+=2<cr>
 endif
 
 " If you set the winheight option to 999, the current split occupies as much of the screen as possible(vertically)
@@ -438,20 +445,36 @@ tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
 " TERMINAL
 " Go to insert mode when switching to a terminal
-au BufEnter * if &buftype == 'terminal' | startinsert | endif
+au BufEnter * if &buftype == 'terminal' | startinsert | else | stopinsert | endif
+autocmd TermOpen * setlocal bufhidden=hide
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
 nnoremap <silent> <c-\> :botright Ttoggle<cr>
 " Esc quits the termial
 " NOTE: This is needed to make fzf and other termal based things not annoying
-tnoremap <Esc> <C-\><C-n>:q<CR>
+tnoremap <Esc> <C-\><C-n>:q<cr>
 tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
+
+function! PrevBufferTab()
+  bprev
+  if &buftype == 'terminal'
+    bprev
+  endif
+endfunction
+function! NextBufferTab()
+  bnext
+  if &buftype == 'terminal'
+    bnext
+  endif
+endfunction
 " Cycle tabs in tab bar
-nnoremap <c-a> gT
-nnoremap <c-x> gt
+nnoremap <c-a> :call PrevBufferTab()<cr>
+nnoremap <c-x> :call NextBufferTab()<cr>
+" kill tab
+nnoremap <c-q> :bp <bar> bd #<cr>
 
 " Toggle between header and source for c/cpp files
 if has("gui_running") || has("nvim")
@@ -532,7 +555,7 @@ function! Flash()
         set nocursorline
     endif
 endfunction
-nnoremap <c-[> :call Flash()<cr>:noh<cr>
+nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
@@ -566,11 +589,11 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 " Shift left/right doesn't work in terminals?
 " use ctrl l,r,u,d for term split resize
 " use shft l,r,u,d for gui window resize
-nnoremap <c-left> :vert res -2<cr> 
+nnoremap <c-left>  :vert res -2<cr> 
 nnoremap <c-right> :vert res +2<cr>
 " grow splits vertically
 nnoremap <c-down> :res -2<cr>
-nnoremap <c-up> :res +2<cr>
+nnoremap <c-up>   :res +2<cr>
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
@@ -611,6 +634,7 @@ nnoremap <leader>p :%!python -m json.tool
 "" NOTES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" look up cfdo, quickfix list, location-list, vimgrep lvimgrep
 " ctrl-z will take you back to terminal. fg in terminal will take you back to vim (fg is for foreground)
 " gn and gN visually select the current search selction
 " gv will go to the last vis selction and select it
