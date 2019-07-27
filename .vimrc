@@ -1,7 +1,6 @@
 ﻿" To jump to vim docs put word over cursor or highlight it with combo viW and press K
 " or :h theKeywordOfIntereset
 
-
 let baseDataFolder="~/.vim"
 
 noremap <space> <nop>
@@ -136,8 +135,42 @@ call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+" Not bad actually
+Plug 'jiangmiao/auto-pairs'
+
+Plug 'tpope/vim-surround'
+" see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
+" can use with vim-repeat, 
+" d s <existing char>	Delete existing surround
+" c s <existing char> <desiredChar>	Change surround existing to desired
+" y s <motion><desiredChar> (as in you-surround) Surround in the motion(ex: iw)
+" y ss <desiredChar> Surround the line
+" y S <motion><desiredChar>  Surround in the motion , putting the surround chars on lines above and below and indenting text
+" y SS <desiredChar>  Surround the line, puttuing the surround chars on lines above and below
+" S <desiredChar> Surround when in visual modes (surrounds full selection) with char
+
 " Auto detect tab width
 Plug 'tpope/vim-sleuth'
+
+Plug 'tpope/vim-eunuch'
+" :Delete: Delete a buffer and the file on disk simultaneously.
+" :Unlink: Like :Delete, but keeps the now empty buffer.
+" :Move: Rename a buffer and the file on disk simultaneously.
+" :Rename: Like :Move, but relative to the current file's containing directory.
+" :Chmod: Change the permissions of the current file.
+" :Mkdir: Create a directory, defaulting to the parent of the current file.
+" :Cfind: Run find and load the results into the quickfix list.
+" :Clocate: Run locate and load the results into the quickfix list.
+" :Lfind/:Llocate: Like above, but use the location list.
+" :Wall: Write every open window. Handy for kicking off tools like guard.
+" :SudoWrite: Write a privileged file with sudo.
+" :SudoEdit: Edit a privileged file with sudo.
+
+" jump between version control hunks with [c and ]c. You can preview, stage, and undo hunks with <leader>hp, <leader>hs, and <leader>hu respectively.
+" can use with vim repeat
+Plug 'airblade/vim-gitgutter'
+nnoremap ]h <Plug>GitGutterNextHunk
+nnoremap [h <Plug>GitGutterPrevHunk
 
 " Check the repo for whats required to be installed(some python stuff)
 " Plug 'Shougo/denite.nvim'
@@ -211,14 +244,50 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR
 Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
 " let g:airline_powerline_fonts = 1
 " This is what makes airline amazing:
+  let g:airline#extensions#gutentags#enabled = 1
 let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#branch#empty_message = ''
+let g:airline#extensions#branch#displayed_head_limit = 10
+let g:airline#extensions#branch#format = 2
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t' " Just display filename
 let g:airline#extensions#branch#enabled=1
-
+let g:airline#extensions#tabline#ignore_bufadd_pat = 'gundo|undotree|vimfiler|tagbar|nerd_tree|startify|!|term'
+  " let g:airline_section_x       (tagbar, filetype, virtualenv)
+  " let g:airline_section_y       (fileencoding, fileformat)
+  " let g:airline_section_z       (percentage, line number, column number)
+let g:airline_section_a = '' " mode.
+let g:airline_section_c = '' " filename is already in the airline tabline
+let g:airline_section_x = '' " filetype.
+let g:airline_section_y = '' " encoding/format.
+let g:airline_section_z = '' " positon info.
+Plug 'vim-airline/vim-airline-themes'
+let g:airline_theme='ayu_dark'
 " Enable repeat for supported plugins
 " Not sure I acutally make use of this
 Plug 'tpope/vim-repeat'
+
+" Run git commands from inside vim
+Plug 'tpope/vim-fugitive'
+
+" NOTE: has some bugs and seems slow, Multiple cursors
+" I have better mappings below with <leader>ew ey Ew Ey
+" To make a basic selection, use the Ctrl+N keystroke in normal mode, followed by a motion:
+"     c – change text.
+"     I – insert at start of range.
+"     A – insert at end of range.
+" Plug 'terryma/vim-multiple-cursors'
+" let g:multi_cursor_use_default_mapping=0
+" " Default mappings except change c-x c-m
+" let g:multi_cursor_start_word_key      = '<C-n>'
+" let g:multi_cursor_select_all_word_key = '<A-n>'
+" let g:multi_cursor_start_key           = 'g<C-n>'
+" let g:multi_cursor_select_all_key      = 'g<A-n>'
+" let g:multi_cursor_next_key            = '<C-n>'
+" let g:multi_cursor_prev_key            = '<C-p>'
+" " let g:multi_cursor_skip_key            = '<C-x>'
+" let g:multi_cursor_skip_key            = '<C-m>'
+" let g:multi_cursor_quit_key            = '<Esc>'
 
 " Type s and a char of interesst then the colored letters at the char to jump to it.
 Plug 'easymotion/vim-easymotion'
@@ -446,7 +515,6 @@ tnoremap <c-l> <c-\><c-n><c-w>l
 " TERMINAL
 " Go to insert mode when switching to a terminal
 au BufEnter * if &buftype == 'terminal' | startinsert | else | stopinsert | endif
-autocmd TermOpen * setlocal bufhidden=hide
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
 nnoremap <silent> <c-\> :botright Ttoggle<cr>
@@ -457,24 +525,24 @@ tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
-
-function! PrevBufferTab()
+" the airline removes term from tabline but must still skip it
+function! BufferPrev()
   bprev
-  if &buftype == 'terminal'
+  if &buftype == 'terminal' 
     bprev
   endif
 endfunction
-function! NextBufferTab()
+function! BufferNext()
   bnext
-  if &buftype == 'terminal'
+  if &buftype == 'terminal' 
     bnext
   endif
 endfunction
 " Cycle tabs in tab bar
-nnoremap <c-a> :call PrevBufferTab()<cr>
-nnoremap <c-x> :call NextBufferTab()<cr>
-" kill tab
-nnoremap <c-q> :bp <bar> bd #<cr>
+nnoremap <silent> <c-a> :call BufferPrev()<cr>
+nnoremap <silent> <c-x> :call BufferNext()<cr>
+" kill buffer tab
+nnoremap <silent> <c-q> :bp <bar> bd #<cr>
 
 " Toggle between header and source for c/cpp files
 if has("gui_running") || has("nvim")
@@ -618,12 +686,12 @@ nnoremap <leader>b :Buffers<cr>
 " need to install ripgrep or compile it in rust, not available on ubuntu 18.04
 nnoremap <leader>r :Rg<cr> 
 
-" Useful but better to use the visual select search and repace
+" Useful but better to use the visual select search and repace mappings that I setup (<leader> ey Ey ew Ew)
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
 " http://vim.wikia.com/wiki/Copy_or_change_search_hit
-vnoremap <silent> s //e<c-r>=&selection=='exclusive'?'+1':''<cr><cr>
-            \:<c-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
-onoremap s :normal vs<cr>
+" vnoremap <silent> s //e<c-r>=&selection=='exclusive'?'+1':''<cr><cr>
+"             \:<c-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
+" onoremap s :normal vs<cr>
 
 " Pretty Json, can be called like other commands with :
 nnoremap <leader>p :%!python -m json.tool
@@ -761,7 +829,6 @@ nnoremap <leader>p :%!python -m json.tool
 "
 " list the buffers and prepare open buffer command
 " nnoremap gb :ls<CR>:b<space>
-
 
 " Bad but might have nugget of good idea
 " Bind p in visual mode to paste without overriding the current register
