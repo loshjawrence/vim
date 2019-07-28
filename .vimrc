@@ -61,7 +61,7 @@ set nobackup
 set nowritebackup
 set noswapfile
 set splitbelow " :sp defaults down
-set splitright " :vs defaults right 
+set splitright " :vs defaults right
 set ttyfast           " should make scrolling faster
 set lazyredraw        " should make scrolling faster
 set diffopt+=vertical " Always use vertical diffs
@@ -88,16 +88,6 @@ if has('gui')
   set guioptions-=m
 endif
 
-" trailing whitespace, and end-of-lines. VERY useful!
-" Also highlight all tabs and trailing whitespace characters.
-" set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
-" set list                            " Show problematic characters.
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
 
 " sort of worked but enter has issues for re-highl old searches
 " autocmd CmdlineEnter * set nohlsearch
@@ -140,7 +130,7 @@ Plug 'jiangmiao/auto-pairs'
 
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
-" can use with vim-repeat, 
+" can use with vim-repeat,
 " d s <existing char>	Delete existing surround
 " c s <existing char> <desiredChar>	Change surround existing to desired
 " y s <motion><desiredChar> (as in you-surround) Surround in the motion(ex: iw)
@@ -212,7 +202,7 @@ Plug 'sheerun/vim-polyglot'
 " "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-rls coc-syntax coc-tag
 " :CocUninstall coc-css
 " "CocList  commands
-" "CocCommand <tab> 
+" "CocCommand <tab>
 " " :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
 " :CocList extensions will list your extensions
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -233,7 +223,7 @@ nmap <silent> <leader>cr <Plug>(coc-references)
 nmap <silent> <leader>ci <Plug>(coc-implementation)
 " Use <cr> to confirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" To make <cr> select the first completion item and confirm the completion when no item has been selected: 
+" To make <cr> select the first completion item and confirm the completion when no item has been selected:
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 " To make coc.nvim format your code on <cr>, use keymap:
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
@@ -312,14 +302,11 @@ nmap s <Plug>(easymotion-s)
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
-" c-r=escape() means paste in the result of escape
-" vnoremap * y/\V<c-r>=escape(@", '\')<cr><cr>
-" vnoremap # y/\V<c-r>=escape(@", '\')<cr><cr>
 
 " Plug 'wincent/scalpel' " leader e for editing word under cursor with comfirms
 
 " :TermainlVSplit bash (needs python3)
-" Plug 'tc50cal/vim-terminal' 
+" Plug 'tc50cal/vim-terminal'
 " Only use this for Ttoggle (term toggle) any way to do this myself?
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
 let g:neoterm_autojump = 1
@@ -382,9 +369,9 @@ map <F7> :20Lex<CR><c-w><c-l>
 " neovim seems to work with both
 " theres a neovim gtk version that works for linux and windows
 Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
-let guifontpp_size_increment=1 
-let guifontpp_smaller_font_map="<c-->" 
-let guifontpp_larger_font_map="<c-=>" 
+let guifontpp_size_increment=1
+let guifontpp_smaller_font_map="<c-->"
+let guifontpp_larger_font_map="<c-=>"
 
 Plug 'tomtom/tcomment_vim' " Comment selected lines with gc, current line with gcc, scope with gcip{, text block with gcip, and so on.K
 " Prevent tcomment from making a zillion mappings (we just want the operator).
@@ -404,10 +391,20 @@ let g:alduin_Shout_Dragon_Aspect = 1
 
 call plug#end()
 
+" COLORSCHEME must come before whitespace highlighting and other color alterations
 " " aludin doesn't allow the whitespace red coloring???
 colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
-" " colorscheme alduin2  
-" " colorscheme alduin3  
+
+" trailing whitespace, and end-of-lines. VERY useful!
+" Also highlight all tabs and trailing whitespace characters.
+" set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
+" set list                            " Show problematic characters.
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
 
 " SEARCH
 " * and # search does not use smartcase
@@ -433,7 +430,7 @@ colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvi
 if has("nvim")
   set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
-" E means edit with confirms, e is no confirm. 
+" E means edit with confirms, e is no confirm.
 " Second letter is source: w is word under cursor, y is yanked text.
 " Even with very no magic (\V) modifier, still need to escape / and \ with \
 " The \< and \> means don't do a raw string replace but a word replace
@@ -448,7 +445,8 @@ vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-o><c-left><c-left
 " Visually selected text in file
 " If mode is visual line mode, edit the prev yank acros the vis lines, else across the whole file
 " see :help escape()
-vnoremap <expr> <leader>ey mode() ==# "V" ? 
+" c-r=escape() means paste in the result of escape
+vnoremap <expr> <leader>ey mode() ==# "V" ?
       \ ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
       \: "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
 
@@ -487,7 +485,7 @@ endif
 " sideways version:
 " set winwidth=999
 " To increase a split to its maximum height, use Ctrl-w _.
-" To increase a split to its maximum width, use Ctrl-w |. 
+" To increase a split to its maximum width, use Ctrl-w |.
 
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
@@ -528,13 +526,13 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " the airline removes term from tabline but must still skip it
 function! BufferPrev()
   bprev
-  if &buftype == 'terminal' 
+  if &buftype == 'terminal'
     bprev
   endif
 endfunction
 function! BufferNext()
   bnext
-  if &buftype == 'terminal' 
+  if &buftype == 'terminal'
     bnext
   endif
 endfunction
@@ -657,7 +655,7 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 " Shift left/right doesn't work in terminals?
 " use ctrl l,r,u,d for term split resize
 " use shft l,r,u,d for gui window resize
-nnoremap <c-left>  :vert res -2<cr> 
+nnoremap <c-left>  :vert res -2<cr>
 nnoremap <c-right> :vert res +2<cr>
 " grow splits vertically
 nnoremap <c-down> :res -2<cr>
@@ -684,7 +682,7 @@ nnoremap <leader>F :Files<cr>
 " nnoremap <leader>h: :History:<cr>
 nnoremap <leader>b :Buffers<cr>
 " need to install ripgrep or compile it in rust, not available on ubuntu 18.04
-nnoremap <leader>r :Rg<cr> 
+nnoremap <leader>r :Rg<cr>
 
 " Useful but better to use the visual select search and repace mappings that I setup (<leader> ey Ey ew Ew)
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
@@ -806,7 +804,7 @@ nnoremap <leader>p :%!python -m json.tool
 " REGISTERS
 " :reg to list whats in all the registers
 " @: uses this register to execute the command again
-" Editing macros since they are stored in registers: For example, if you forgot to add a semicolon in the end of that w macro, just do something like :let @W='i;'. Noticed the upcased W? 
+" Editing macros since they are stored in registers: For example, if you forgot to add a semicolon in the end of that w macro, just do something like :let @W='i;'. Noticed the upcased W?
 " That’s just how we append a value to a register, using its upcased name, so here we are just appending the command i; to the register, to enter insert mode (i) and add a semicolon.
 " If you need to edit something in the middle of the register, just do :let @w='<Ctrl-r w>, change what you want, and close the quotes in the end. Done, no more recording a macro 10 times before you get it right.
 " "" is the unamed register (d,x,s,c) will go there
