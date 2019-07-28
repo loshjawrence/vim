@@ -387,10 +387,17 @@ Plug 'kana/vim-altr'
 " also consider vim-scripts/a.vim
 function! ToggleAndKillOldBuffer()
   let b = bufnr("%")
+  update!
   call altr#forward()
   execute "bdelete " . b
 endfunction
 nnoremap <A-o> :call ToggleAndKillOldBuffer()<CR>
+" see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
+" There was a comment about making sure .viminfo is read/write
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
 
  " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
 Plug 'wellle/targets.vim'
@@ -608,7 +615,7 @@ function! EnterInsertMode()
 endfunction
 function! LeaveInsertMode()
     hi cursorline  gui=NONE guibg=purple4 guifg=NONE
-    write!
+    update!
 endfunction
 autocmd InsertEnter * call EnterInsertMode()
 autocmd InsertLeave * call LeaveInsertMode()
@@ -628,7 +635,7 @@ endif
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
-    write!
+    update!
     set cursorline cursorcolumn
     redraw
     sleep 100m
