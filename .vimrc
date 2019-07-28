@@ -242,7 +242,7 @@ let g:airline#extensions#branch#format = 2
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t' " Just display filename
 let g:airline#extensions#branch#enabled=1
-let g:airline#extensions#tabline#ignore_bufadd_pat = 'gundo|undotree|vimfiler|tagbar|nerd_tree|startify|!|term'
+let g:airline#extensions#tabline#ignore_bufadd_pat = 'gundo|undotree|vimfiler|tagbar|nerd_tree|startify|!|term\:'
   " let g:airline_section_x       (tagbar, filetype, virtualenv)
   " let g:airline_section_y       (fileencoding, fileformat)
   " let g:airline_section_z       (percentage, line number, column number)
@@ -379,6 +379,18 @@ let g:tcomment_mapleader1=''
 let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
+
+Plug 'kana/vim-altr'
+" Use this to toggle .h/cpp buffers without polluting the buffer list
+" see https://vi.stackexchange.com/questions/11087/switch-between-header-and-source-files-in-one-buffer
+" https://github.com/kana/vim-altr/blob/master/doc/altr.txt
+" also consider vim-scripts/a.vim
+function! ToggleAndKillOldBuffer()
+  let b = bufnr("%")
+  call altr#forward()
+  execute "bdelete " . b
+endfunction
+nnoremap <A-o> :call ToggleAndKillOldBuffer()<CR>
 
  " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
 Plug 'wellle/targets.vim'
@@ -544,7 +556,12 @@ nnoremap <silent> <c-q> :bp <bar> bd #<cr>
 
 " Toggle between header and source for c/cpp files
 if has("gui_running") || has("nvim")
-  nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+  " :e file:p is full path of file. the :s are a chain of substitutes the , are the sub delimiters
+  " the X123X is just for putting an X123X extension on it.
+  " this only works if in the same directory
+  " TODO: need a way to save and kill the old buffer if we found a corresponding file
+  " See kana/vim-altr
+  " nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
   " nnoremap <A-a> gT
   " " alt-d will go to next right tab
   " nnoremap <A-d> gt
