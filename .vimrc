@@ -1,4 +1,6 @@
-﻿" To jump to vim docs put word over cursor or highlight it with combo viW and press K
+﻿
+
+" To jump to vim docs put word over cursor or highlight it with combo viW and press K
 " or :h theKeywordOfIntereset
 
 let baseDataFolder="~/.vim"
@@ -22,6 +24,7 @@ endif
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
+set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set nocompatible " vim, not vi
 syntax on        " syntax highlighting
 syntax enable    " syntax highlighting
@@ -131,8 +134,8 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
 " can use with vim-repeat,
-" d s <existing char>	Delete existing surround
-" c s <existing char> <desiredChar>	Change surround existing to desired
+" d s <existing char>    Delete existing surround
+" c s <existing char> <desiredChar>    Change surround existing to desired
 " y s <motion><desiredChar> (as in you-surround) Surround in the motion(ex: iw)
 " y ss <desiredChar> Surround the line
 " y S <motion><desiredChar>  Surround in the motion , putting the surround chars on lines above and below and indenting text
@@ -328,42 +331,42 @@ map <F7> :20Lex<CR><c-w><c-l>
         " netwr is possibly than nerdtree
         " How to start in vert line mode
         " Hitting enter on the f1 help line will cycle the commands that it displays on that line
-        " <cr>	Netrw will enter the directory or read the file      |netrw-cr|
-        "   t	Enter the file/directory under the cursor in a new tab|netrw-t|
-        "   v	Enter the file/directory under the cursor in a new   |netrw-v|
-        "    	browser window.  A vertical split is used.
-        "   o	Enter the file/directory under the cursor in a new   |netrw-o|
-        "    	browser window.  A horizontal split is used.
+        " <cr>    Netrw will enter the directory or read the file      |netrw-cr|
+        "   t    Enter the file/directory under the cursor in a new tab|netrw-t|
+        "   v    Enter the file/directory under the cursor in a new   |netrw-v|
+        "        browser window.  A vertical split is used.
+        "   o    Enter the file/directory under the cursor in a new   |netrw-o|
+        "        browser window.  A horizontal split is used.
         "        Useful if you want another netwr window below the current one for differnt parts of the repo
-        " <c-h>	Edit file hiding list                                |netrw-ctrl-h|
-        " <c-l>	Causes Netrw to refresh the directory listing        |netrw-ctrl-l|
-        "   d	Make a directory                                     |netrw-d|
-        "   D	Attempt to remove the file(s)/directory(ies)         |netrw-D|
-        "   R	Rename the designated file(s)/directory(ies)         |netrw-R|
-        "   %	Open a new file in netrw's current directory         |netrw-%|
-        "   s	Select sorting style: by name, time, or file size    |netrw-s|
-        "   S	Specify suffix priority for name-sorting             |netrw-S|
-        "   gb	Go to previous bookmarked directory                  |netrw-gb|
-        "   gh	Quick hide/unhide of dot-files                       |netrw-gh|
-        "   i	Cycle between thin, long, wide, and tree listings    |netrw-i|
-        "   mb	Bookmark current directory                           |netrw-mb|
-        "   mc	Copy marked files to marked-file target directory    |netrw-mc|
-        "   md	Apply diff to marked files (up to 3)                 |netrw-md|
-        "   me	Place marked files on arg list and edit them         |netrw-me| " Decides to open them in the fucking netwr window. vim is terrible
-        "   mf	Mark a file                                          |netrw-mf| " Must do one at a time. cant leverage visual select? vim is terrible.
-        "   mF	Unmark files                                         |netrw-mF|
-        "   mh	Toggle marked file suffices' presence on hiding list |netrw-mh|
-        "   mm	Move marked files to marked-file target directory    |netrw-mm|
-        "   mp	Print marked files                                   |netrw-mp|
-        "   mr	Mark iles using a shell-style |regexp|              |netrw-mr|
-        "   mg	Apply vimgrep to marked files                        |netrw-mg|
-        "   mu	Unmark all marked files                              |netrw-mu|
-        "   p	Preview the file                                     |netrw-p|
-        "   P	Browse in the previously used window                 |netrw-P|
-        "   qb	List bookmarked directories and history              |netrw-qb|
-        "   qF	Mark files using a quickfix list                     |netrw-qF|
-        "   qL	Mark files using a |location-list|                     |netrw-qL|
-        "   r	Reverse sorting order                                |netrw-r|
+        " <c-h>    Edit file hiding list                                |netrw-ctrl-h|
+        " <c-l>    Causes Netrw to refresh the directory listing        |netrw-ctrl-l|
+        "   d    Make a directory                                     |netrw-d|
+        "   D    Attempt to remove the file(s)/directory(ies)         |netrw-D|
+        "   R    Rename the designated file(s)/directory(ies)         |netrw-R|
+        "   %    Open a new file in netrw's current directory         |netrw-%|
+        "   s    Select sorting style: by name, time, or file size    |netrw-s|
+        "   S    Specify suffix priority for name-sorting             |netrw-S|
+        "   gb    Go to previous bookmarked directory                  |netrw-gb|
+        "   gh    Quick hide/unhide of dot-files                       |netrw-gh|
+        "   i    Cycle between thin, long, wide, and tree listings    |netrw-i|
+        "   mb    Bookmark current directory                           |netrw-mb|
+        "   mc    Copy marked files to marked-file target directory    |netrw-mc|
+        "   md    Apply diff to marked files (up to 3)                 |netrw-md|
+        "   me    Place marked files on arg list and edit them         |netrw-me| " Decides to open them in the fucking netwr window. vim is terrible
+        "   mf    Mark a file                                          |netrw-mf| " Must do one at a time. cant leverage visual select? vim is terrible.
+        "   mF    Unmark files                                         |netrw-mF|
+        "   mh    Toggle marked file suffices' presence on hiding list |netrw-mh|
+        "   mm    Move marked files to marked-file target directory    |netrw-mm|
+        "   mp    Print marked files                                   |netrw-mp|
+        "   mr    Mark iles using a shell-style |regexp|              |netrw-mr|
+        "   mg    Apply vimgrep to marked files                        |netrw-mg|
+        "   mu    Unmark all marked files                              |netrw-mu|
+        "   p    Preview the file                                     |netrw-p|
+        "   P    Browse in the previously used window                 |netrw-P|
+        "   qb    List bookmarked directories and history              |netrw-qb|
+        "   qF    Mark files using a quickfix list                     |netrw-qF|
+        "   qL    Mark files using a |location-list|                     |netrw-qL|
+        "   r    Reverse sorting order                                |netrw-r|
 
 " FONT SIZE FONT ZOOM
 " neovim seems to work with both
@@ -424,6 +427,12 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+
+" " works but back space is broken
+" set shell=powershell
+" set shellcmdflag=-c
+" set shellquote=\"
+" set shellxquote=
 
 " SEARCH
 " * and # search does not use smartcase
@@ -647,6 +656,10 @@ function! Flash()
 endfunction
 nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
 
+" Remove whitespace replace tabs with spaces
+nnoremap <leader>w mw:%s/\s\+$//e <bar> %s/\t/    /ge<cr>`w`w
+" autocmd BufWritePre * %s/\s\+$//e
+
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
 nnoremap > >>
@@ -838,7 +851,7 @@ nnoremap <leader>p :%!python -m json.tool
 " ": most recent command. Ex: if you saved with :w then w will be in this reg
 " "+ is the system clipboard for copying into and out of vim
 " "# is the name of the last edited file (what vim uses for c-6)
-" "= is the expression regiser: This is easier to understand with an example. If, in insert mode, you type Ctrl-r =, you will see a “=” sign in the command line. Then if you type 2+2 <enter>, 4 will be printed. 
+" "= is the expression regiser: This is easier to understand with an example. If, in insert mode, you type Ctrl-r =, you will see a “=” sign in the command line. Then if you type 2+2 <enter>, 4 will be printed.
 " This can be used to execute all sort of expressions, even calling external commands. To give another example, if you type Ctrl-r = and then, in the command line, system('ls') <enter>, the output of the ls command will be pasted in your buffer
 " "/ is the search register, the last thing searched for
 
@@ -856,3 +869,5 @@ nnoremap <leader>p :%!python -m json.tool
 " Bind p in visual mode to paste without overriding the current register
 " bad: this will put you back to your previous visual selection which is annoying, need to figure out how to go back to where you pasted
 " nnoremap p pgvy
+
+
