@@ -390,7 +390,7 @@ Plug 'kana/vim-altr'
 " also consider vim-scripts/a.vim
 function! ToggleAndKillOldBuffer()
   let b = bufnr("%")
-  update!
+  silent! update!
   call altr#forward()
   execute "bdelete " . b
 endfunction
@@ -427,12 +427,6 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
-
-" " works but back space is broken
-" set shell=powershell
-" set shellcmdflag=-c
-" set shellquote=\"
-" set shellxquote=
 
 " SEARCH
 " * and # search does not use smartcase
@@ -543,6 +537,7 @@ tnoremap <c-l> <c-\><c-n><c-w>l
 au BufEnter * if &buftype == 'terminal' | startinsert | else | stopinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
+" Ttoggle will start to always fail if that first terminal gets killed
 nnoremap <silent> <c-\> :botright Ttoggle<cr>
 " Esc quits the termial
 " NOTE: This is needed to make fzf and other termal based things not annoying
@@ -568,7 +563,7 @@ endfunction
 nnoremap <silent> <c-a> :call BufferPrev()<cr>
 nnoremap <silent> <c-x> :call BufferNext()<cr>
 " kill buffer tab
-nnoremap <silent> <c-q> :bp <bar> bd #<cr>
+nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
 
 " Toggle between header and source for c/cpp files
 if has("gui_running") || has("nvim")
@@ -624,7 +619,7 @@ function! EnterInsertMode()
 endfunction
 function! LeaveInsertMode()
     hi cursorline  gui=NONE guibg=purple4 guifg=NONE
-    update!
+    silent! update!
 endfunction
 autocmd InsertEnter * call EnterInsertMode()
 autocmd InsertLeave * call LeaveInsertMode()
@@ -644,7 +639,7 @@ endif
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
-    update!
+    silent! update!
     set cursorline cursorcolumn
     redraw
     sleep 100m
