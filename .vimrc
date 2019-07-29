@@ -376,12 +376,13 @@ let guifontpp_size_increment=1
 let guifontpp_smaller_font_map="<c-->"
 let guifontpp_larger_font_map="<c-=>"
 
-Plug 'tomtom/tcomment_vim' " Comment selected lines with gc, current line with gcc, scope with gcip{, text block with gcip, and so on.K
-" Prevent tcomment from making a zillion mappings (we just want the operator).
-let g:tcomment_mapleader1=''
-let g:tcomment_mapleader2=''
-let g:tcomment_mapleader_comment_anyway=''
-let g:tcomment_textobject_inlinecomment=''
+" " continuously updated Session.vim
+" Plug 'tpope/vim-obession'
+Plug 'tpope/vim-commentary'
+autocmd FileType c,cpp,javascript,json setlocal commentstring=//\ %s
+" dgc will delete comment block, ygc yanks
+" gcgc and gcu will uncomment a set of comments
+" gcip gci{ will comment those motions
 
 Plug 'kana/vim-altr'
 " Use this to toggle .h/cpp buffers without polluting the buffer list
@@ -395,6 +396,7 @@ function! ToggleAndKillOldBuffer()
   execute "bdelete " . b
 endfunction
 nnoremap <A-o> :call ToggleAndKillOldBuffer()<CR>
+
 " see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
 " There was a comment about making sure .viminfo is read/write
 autocmd BufReadPost *
