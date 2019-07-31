@@ -1,4 +1,6 @@
 if exists('g:GuiLoaded')
+    call GuiWindowMaximized(1)
+
     if has("win32")
         Guifont! Consolas:h11:l
     else

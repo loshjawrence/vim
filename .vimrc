@@ -236,24 +236,38 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR
 " linux search keyboard set to 200ms delay, 40c/s
 Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
 " let g:airline_powerline_fonts = 1
-" This is what makes airline amazing:
-  let g:airline#extensions#gutentags#enabled = 1
+let g:airline#extensions#gutentags#enabled = 1
 let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#branch#enabled=1
 let g:airline#extensions#branch#empty_message = ''
 let g:airline#extensions#branch#displayed_head_limit = 10
 let g:airline#extensions#branch#format = 2
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t' " Just display filename
-let g:airline#extensions#branch#enabled=1
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_tabs = 1
+let g:airline#extensions#tabline#show_tab_nr = 0
+let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_tab_count = 0
 let g:airline#extensions#tabline#ignore_bufadd_pat = 'gundo|undotree|vimfiler|tagbar|nerd_tree|startify|!|term\:'
-  " let g:airline_section_x       (tagbar, filetype, virtualenv)
-  " let g:airline_section_y       (fileencoding, fileformat)
-  " let g:airline_section_z       (percentage, line number, column number)
+nnoremap <leader>1 :tabfirst<cr>
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>0 :tablast<cr>
+" when using alt keys make sure you can diasable the corresponding alt-menu key
+" in any other IDE's you may use
+" vscode has a way to turn off the menu and msvc has a way to turn off certain
+" menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
+nnoremap <a-l> gt
+nnoremap <a-h> gT
 let g:airline_section_a = '' " mode.
 let g:airline_section_c = '' " filename is already in the airline tabline
-let g:airline_section_x = '' " filetype.
-let g:airline_section_y = '' " encoding/format.
-let g:airline_section_z = '' " positon info.
+let g:airline_section_x = '' " (tagbar, filetype, virtualenv).
+let g:airline_section_y = '' " (fileencoding, fileformat)
+let g:airline_section_z = '' " (percentage, line number, column number)
 Plug 'vim-airline/vim-airline-themes'
 let g:airline_theme='ayu_dark'
 " Enable repeat for supported plugins
@@ -263,7 +277,7 @@ Plug 'tpope/vim-repeat'
 " Run git commands from inside vim
 Plug 'tpope/vim-fugitive'
 
-" NOTE: has some bugs and seems slow, Multiple cursors
+" NOTE: Has some undo bugs or odd undo behvior/bugs. Very slow on many lines, Multiple cursors
 " I have better mappings below with <leader>ew ey Ew Ey
 " To make a basic selection, use the Ctrl+N keystroke in normal mode, followed by a motion:
 "     c – change text.
@@ -278,7 +292,6 @@ Plug 'tpope/vim-fugitive'
 " let g:multi_cursor_select_all_key      = 'g<A-n>'
 " let g:multi_cursor_next_key            = '<C-n>'
 " let g:multi_cursor_prev_key            = '<C-p>'
-" " let g:multi_cursor_skip_key            = '<C-x>'
 " let g:multi_cursor_skip_key            = '<C-m>'
 " let g:multi_cursor_quit_key            = '<Esc>'
 
@@ -395,7 +408,7 @@ function! ToggleAndKillOldBuffer()
   call altr#forward()
   execute "bdelete " . b
 endfunction
-nnoremap <A-o> :call ToggleAndKillOldBuffer()<CR>
+nnoremap <a-o> :call ToggleAndKillOldBuffer()<CR>
 
 " see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
 " There was a comment about making sure .viminfo is read/write
@@ -514,12 +527,24 @@ endif
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
 " For this single sroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
-nnoremap <silent> <c-e> <nop>
-nnoremap <silent> <c-y> <nop>
-nnoremap <silent> <c-f> <nop>
-nnoremap <silent> <c-b> <nop>
-nnoremap <silent> <c-u> 7<c-y>
-nnoremap <silent> <c-d> 7<c-e>
+noremap <silent> <c-e> <nop>
+noremap <silent> <c-y> <nop>
+noremap <silent> <c-f> <nop>
+noremap <silent> <c-b> <nop>
+noremap <silent> <c-u> 7<c-y>
+noremap <silent> <c-d> 7<c-e>
+
+" EXPERIMENTAL
+noremap J }
+noremap K {
+noremap { J
+noremap } K
+noremap H ^
+noremap L $
+noremap $ <nop>
+noremap ^ <nop>
+noremap <a-j> L
+noremap <a-k> H
 
 " Vert split navigaton
 inoremap <c-h> <Esc><c-w>h
@@ -548,23 +573,25 @@ tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
-" the airline removes term from tabline but must still skip it
-function! BufferPrev()
-  bprev
-  if &buftype == 'terminal'
-    bprev
-  endif
-endfunction
-function! BufferNext()
-  bnext
-  if &buftype == 'terminal'
-    bnext
-  endif
-endfunction
-" Cycle tabs in tab bar
-nnoremap <silent> <c-a> :call BufferPrev()<cr>
-nnoremap <silent> <c-x> :call BufferNext()<cr>
-" kill buffer tab
+" " the airline removes term from tabline but must still skip it
+" function! BufferPrev()
+"   bprev
+"   if &buftype == 'terminal'
+"     bprev
+"   endif
+" endfunction
+" function! BufferNext()
+"   bnext
+"   if &buftype == 'terminal'
+"     bnext
+"   endif
+" endfunction
+" " Cycle tabs in tab bar
+" nnoremap <silent> <c-a> :call BufferPrev()<cr>
+" nnoremap <silent> <c-x> :call BufferNext()<cr>
+" nnoremap <silent> <a-l> gt
+" nnoremap <silent> <a-h> gT
+" " kill buffer tab
 nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
 
 " Toggle between header and source for c/cpp files
