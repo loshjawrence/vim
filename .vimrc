@@ -49,10 +49,9 @@ set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
 set mouse=a             " enable mouse (selection, resizing windows)
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
-" let tabspaces=4
-" set tabstop=$tabspaces           " Use 4 spaces for tabs.
-" set shiftwidth=$tabspaces        " Number of spaces to use for each step of (auto)indent.
-" set expandtab           " insert tab with right amount of spacing
+set tabstop=4           " Use 4 spaces for tabs.
+set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
+set expandtab           " insert tab with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
 set termguicolors       " enable true colors
 set hidden              " enable hidden unsaved buffers
@@ -142,8 +141,8 @@ Plug 'tpope/vim-surround'
 " y SS <desiredChar>  Surround the line, puttuing the surround chars on lines above and below
 " S <desiredChar> Surround when in visual modes (surrounds full selection) with char
 
-" Auto detect tab width
-Plug 'tpope/vim-sleuth'
+" Auto detect tab width, doesn't work
+" Plug 'tpope/vim-sleuth'
 
 Plug 'tpope/vim-eunuch'
 " :Delete: Delete a buffer and the file on disk simultaneously.
@@ -327,20 +326,20 @@ Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immed
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
 let g:neoterm_autojump = 1
 let g:neoterm_autoinsert = 1
-let g:neoterm_size = 10
+let g:neoterm_size = 40
 
 Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
 " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
 map <F8> :TagbarToggle<cr>
 
-" Plug 'scrooloose/nerdtree'
-" map <F7> :NERDTreeToggle<CR>
-" let g:NERDTreeDirArrowExpandable = '▸'
-" let g:NERDTreeDirArrowCollapsible = '▾'
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+Plug 'scrooloose/nerdtree'
+map <F7> :NERDTreeToggle<CR>
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " m is menu
 
-map <F7> :20Lex<CR><c-w><c-l>
+" map <F7> :20Lex<CR><c-w><c-l>
         " netwr is possibly than nerdtree
         " How to start in vert line mode
         " Hitting enter on the f1 help line will cycle the commands that it displays on that line
@@ -391,11 +390,17 @@ let guifontpp_larger_font_map="<c-=>"
 
 " " continuously updated Session.vim
 " Plug 'tpope/vim-obession'
-Plug 'tpope/vim-commentary'
-autocmd FileType c,cpp,javascript,json setlocal commentstring=//\ %s
+" Plug 'tpope/vim-commentary'
+" autocmd FileType c,cpp,javascript,json setlocal commentstring=//\ %s
 " dgc will delete comment block, ygc yanks
 " gcgc and gcu will uncomment a set of comments
 " gcip gci{ will comment those motions
+Plug 'tomtom/tcomment_vim'
+" Prevent tcomment from making a zillion mappings (we just want the operator).
+let g:tcomment_mapleader1=''
+let g:tcomment_mapleader2=''
+let g:tcomment_mapleader_comment_anyway=''
+let g:tcomment_textobject_inlinecomment=''
 
 Plug 'kana/vim-altr'
 " Use this to toggle .h/cpp buffers without polluting the buffer list
@@ -467,6 +472,9 @@ autocmd BufWinLeave * call clearmatches()
 if has("nvim")
   set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
+
+" NOTE: vim has a gn text object(next search item), star-search plugin combined with cgn and . covers alot of cases
+" Problem is it follows smartcase settings
 " E means edit with confirms, e is no confirm.
 " Second letter is source: w is word under cursor, y is yanked text.
 " Even with very no magic (\V) modifier, still need to escape / and \ with \
@@ -545,6 +553,7 @@ noremap $ <nop>
 noremap ^ <nop>
 noremap <a-j> L
 noremap <a-k> H
+noremap <a-m> M
 
 " Vert split navigaton
 inoremap <c-h> <Esc><c-w>h
