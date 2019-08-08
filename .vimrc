@@ -22,7 +22,6 @@ if v:progname == 'vi'
   set noloadplugins
 endif
 
-filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set nocompatible " vim, not vi
@@ -49,8 +48,10 @@ set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
 set mouse=a             " enable mouse (selection, resizing windows)
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
-set tabstop=4           " Use 4 spaces for tabs.
-set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
+set autoindent
+filetype plugin indent on  " try to recognize filetypes and load rel' plugins
+set tabstop=2           " Use 4 spaces for tabs.
+set shiftwidth=2        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " insert tab with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
 set termguicolors       " enable true colors
@@ -762,7 +763,7 @@ nnoremap <leader>r :Rg<cr>
 " onoremap s :normal vs<cr>
 
 " Pretty Json, can be called like other commands with :
-nnoremap <leader>p :%!python -m json.tool
+nnoremap <leader>p :%!python -m json.tool<cr>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
