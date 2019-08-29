@@ -129,43 +129,44 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'jiangmiao/auto-pairs'
 
-Plug 'wincent/ferret'
-" Instead of <leader>a ...
-nmap <leader>aa <Plug>(FerretAck)
-" Instead of <leader>s ...
-nmap <leader>aw <Plug>(FerretAckWord)
-" Instead of <leader>r ...
-nmap <leader>as <Plug>(FerretAcks)
- " fix the error
-let g:FerretJob=0
+" Plug 'wincent/ferret'
+" " Instead of <leader>a ...
+" nmap <leader>aa <Plug>(FerretAck)
+" " Instead of <leader>s ...
+" nmap <leader>aw <Plug>(FerretAckWord)
+" " Instead of <leader>r ...
+" nmap <leader>as <Plug>(FerretAcks)
+" " fix the error
+" " let g:FerretNvim=0
+" let g:FerretJob=0
 
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
 " can use with vim-repeat,
+" --> S <desiredChar> Surround when in visual modes (surrounds full selection) with char
 " d s <existing char>    Delete existing surround
 " c s <existing char> <desiredChar>    Change surround existing to desired
 " y s <motion><desiredChar> (as in you-surround) Surround in the motion(ex: iw)
 " y ss <desiredChar> Surround the line
 " y S <motion><desiredChar>  Surround in the motion , putting the surround chars on lines above and below and indenting text
 " y SS <desiredChar>  Surround the line, puttuing the surround chars on lines above and below
-" S <desiredChar> Surround when in visual modes (surrounds full selection) with char
 
 " Auto detect tab width, doesn't work
 " Plug 'tpope/vim-sleuth'
 
-Plug 'tpope/vim-eunuch'
-" :Delete: Delete a buffer and the file on disk simultaneously.
-" :Unlink: Like :Delete, but keeps the now empty buffer.
-" :Move: Rename a buffer and the file on disk simultaneously.
-" :Rename: Like :Move, but relative to the current file's containing directory.
-" :Chmod: Change the permissions of the current file.
-" :Mkdir: Create a directory, defaulting to the parent of the current file.
-" :Cfind: Run find and load the results into the quickfix list.
-" :Clocate: Run locate and load the results into the quickfix list.
-" :Lfind/:Llocate: Like above, but use the location list.
-" :Wall: Write every open window. Handy for kicking off tools like guard.
-" :SudoWrite: Write a privileged file with sudo.
-" :SudoEdit: Edit a privileged file with sudo.
+" Plug 'tpope/vim-eunuch'
+" " :Delete: Delete a buffer and the file on disk simultaneously.
+" " :Unlink: Like :Delete, but keeps the now empty buffer.
+" " :Move: Rename a buffer and the file on disk simultaneously.
+" " :Rename: Like :Move, but relative to the current file's containing directory.
+" " :Chmod: Change the permissions of the current file.
+" " :Mkdir: Create a directory, defaulting to the parent of the current file.
+" " :Cfind: Run find and load the results into the quickfix list.
+" " :Clocate: Run locate and load the results into the quickfix list.
+" " :Lfind/:Llocate: Like above, but use the location list.
+" " :Wall: Write every open window. Handy for kicking off tools like guard.
+" " :SudoWrite: Write a privileged file with sudo.
+" " :SudoEdit: Edit a privileged file with sudo.
 
 " jump between version control hunks with [c and ]c. You can preview, stage, and undo hunks with <leader>hp, <leader>hs, and <leader>hu respectively.
 " can use with vim repeat
@@ -278,12 +279,12 @@ let g:airline_section_y = '' " (fileencoding, fileformat)
 let g:airline_section_z = '' " (percentage, line number, column number)
 Plug 'vim-airline/vim-airline-themes'
 let g:airline_theme='ayu_dark'
+
 " Enable repeat for supported plugins
-" Not sure I acutally make use of this
 Plug 'tpope/vim-repeat'
 
-" Run git commands from inside vim
-Plug 'tpope/vim-fugitive'
+" " Only want for airline branch name
+" Plug 'tpope/vim-fugitive'
 
 " NOTE: Has some undo bugs or odd undo behvior/bugs. Very slow on many lines, Multiple cursors
 " I have better mappings below with <leader>ew ey Ew Ey
@@ -328,8 +329,6 @@ nmap s <Plug>(easymotion-s)
 
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
 
-" Plug 'wincent/scalpel' " leader e for editing word under cursor with comfirms
-
 " :TermainlVSplit bash (needs python3)
 " Plug 'tc50cal/vim-terminal'
 " Only use this for Ttoggle (term toggle) any way to do this myself?
@@ -338,16 +337,16 @@ let g:neoterm_autojump = 1
 let g:neoterm_autoinsert = 1
 let g:neoterm_size = 40
 
-Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
-" Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
-map <F8> :TagbarToggle<cr>
+" Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
+" " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
+" map <F8> :TagbarToggle<cr>
 
-Plug 'scrooloose/nerdtree'
-map <F7> :NERDTreeToggle<CR>
-let g:NERDTreeDirArrowExpandable = '▸'
-let g:NERDTreeDirArrowCollapsible = '▾'
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" m is menu
+" Plug 'scrooloose/nerdtree'
+" map <F7> :NERDTreeToggle<CR>
+" let g:NERDTreeDirArrowExpandable = '▸'
+" let g:NERDTreeDirArrowCollapsible = '▾'
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" " m is menu
 
 " map <F7> :20Lex<CR><c-w><c-l>
         " netwr is possibly than nerdtree
@@ -390,13 +389,13 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
         "   qL    Mark files using a |location-list|                     |netrw-qL|
         "   r    Reverse sorting order                                |netrw-r|
 
-" FONT SIZE FONT ZOOM
-" neovim seems to work with both
-" theres a neovim gtk version that works for linux and windows
-Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
-let guifontpp_size_increment=1
-let guifontpp_smaller_font_map="<c-->"
-let guifontpp_larger_font_map="<c-=>"
+" " FONT SIZE FONT ZOOM
+" " neovim seems to work with both
+" " theres a neovim gtk version that works for linux and windows
+" Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
+" let guifontpp_size_increment=1
+" let guifontpp_smaller_font_map="<c-->"
+" let guifontpp_larger_font_map="<c-=>"
 
 " " continuously updated Session.vim
 " Plug 'tpope/vim-obession'
@@ -527,11 +526,11 @@ if has("win32") && has("gui_running")
     set lines=999
     set columns=255
     " grow window horizontally
-    nnoremap <s-left> :set columns-=2<cr>
-    nnoremap <s-right> :set columns+=2<cr>
+    nnoremap <s-left> :set columns-=8<cr>
+    nnoremap <s-right> :set columns+=8<cr>
     " grow window vertically
-    nnoremap <s-down> :set lines-=2<cr>
-    nnoremap <s-up> :set lines+=2<cr>
+    nnoremap <s-down> :set lines-=8<cr>
+    nnoremap <s-up> :set lines+=8<cr>
 endif
 
 " If you set the winheight option to 999, the current split occupies as much of the screen as possible(vertically)
@@ -735,11 +734,11 @@ nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 " Shift left/right doesn't work in terminals?
 " use ctrl l,r,u,d for term split resize
 " use shft l,r,u,d for gui window resize
-nnoremap <c-left>  :vert res -2<cr>
-nnoremap <c-right> :vert res +2<cr>
+nnoremap <c-left>  :vert res -8<cr>
+nnoremap <c-right> :vert res +8<cr>
 " grow splits vertically
-nnoremap <c-down> :res -2<cr>
-nnoremap <c-up>   :res +2<cr>
+nnoremap <c-down> :res -8<cr>
+nnoremap <c-up>   :res +8<cr>
 
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
