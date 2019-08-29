@@ -22,6 +22,7 @@ if v:progname == 'vi'
   set noloadplugins
 endif
 
+filetype plugin indent on  " try to recognize filetypes and load rel' plugins
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set nocompatible " vim, not vi
@@ -48,10 +49,8 @@ set guioptions=         " remove scrollbars on macvim
 set noshowmode          " don't show mode as airline already does
 set mouse=a             " enable mouse (selection, resizing windows)
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
-set autoindent
-filetype plugin indent on  " try to recognize filetypes and load rel' plugins
-set tabstop=2           " Use 4 spaces for tabs.
-set shiftwidth=2        " Number of spaces to use for each step of (auto)indent.
+set tabstop=4           " Use 4 spaces for tabs.
+set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " insert tab with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
 set termguicolors       " enable true colors
@@ -128,8 +127,17 @@ call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-" Not bad actually
 Plug 'jiangmiao/auto-pairs'
+
+Plug 'wincent/ferret'
+" Instead of <leader>a ...
+nmap <leader>aa <Plug>(FerretAck)
+" Instead of <leader>s ...
+nmap <leader>aw <Plug>(FerretAckWord)
+" Instead of <leader>r ...
+nmap <leader>as <Plug>(FerretAcks)
+ " fix the error
+let g:FerretJob=0
 
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
@@ -161,16 +169,16 @@ Plug 'tpope/vim-eunuch'
 
 " jump between version control hunks with [c and ]c. You can preview, stage, and undo hunks with <leader>hp, <leader>hs, and <leader>hu respectively.
 " can use with vim repeat
-Plug 'airblade/vim-gitgutter'
-nnoremap ]h <Plug>GitGutterNextHunk
-nnoremap [h <Plug>GitGutterPrevHunk
+" Plug 'airblade/vim-gitgutter'
+" nnoremap ]h <Plug>GitGutterNextHunk
+" nnoremap [h <Plug>GitGutterPrevHunk
 
 " Check the repo for whats required to be installed(some python stuff)
 " Plug 'Shougo/denite.nvim'
 
 " Not reliable (like all ctags trash)
 " Tag file management, should use Exhuberant Ctags
-Plug 'ludovicchabant/vim-gutentags'
+" Plug 'ludovicchabant/vim-gutentags'
 " set statusline+=%{gutentags#statusline()}
 " " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
 
@@ -312,6 +320,7 @@ let g:EasyMotion_smartcase = 1
 " nmap T <Plug>(easymotion-T)
 " This will search before and after cursor in current pane
 nmap s <Plug>(easymotion-s)
+" map S <nop>
 
 " Plug 'godlygeek/tabular' " Aligning selected text on some char or regexK
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
@@ -903,5 +912,10 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 " Bind p in visual mode to paste without overriding the current register
 " bad: this will put you back to your previous visual selection which is annoying, need to figure out how to go back to where you pasted
 " nnoremap p pgvy
-
-
+"
+" quickfix list
+" :copen " Open the quickfix window
+" :ccl   " Close it
+" :cw    " Open it if there are "errors", close it otherwise (some people prefer this)
+" :cn    " Go to the next error in the window
+" :cnf   " Go to the first error in the next file
