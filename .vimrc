@@ -129,16 +129,19 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'jiangmiao/auto-pairs'
 
-" Plug 'wincent/ferret'
-" " Instead of <leader>a ...
-" nmap <leader>aa <Plug>(FerretAck)
-" " Instead of <leader>s ...
-" nmap <leader>aw <Plug>(FerretAckWord)
-" " Instead of <leader>r ...
-" nmap <leader>as <Plug>(FerretAcks)
-" " fix the error
-" " let g:FerretNvim=0
-" let g:FerretJob=0
+Plug 'wincent/ferret'
+" Instead of <leader>a ...
+nmap <leader>aa <Plug>(FerretAck)
+" Instead of <leader>s ...
+nmap <leader>aw <Plug>(FerretAckWord)
+" Instead of <leader>r ...
+nmap <leader>as <Plug>(FerretAcks)
+" fix the error
+" let g:FerretNvim=0
+let g:FerretJob=0
+" Prefer `ag` over `rg`.
+" let g:FerretExecutable='ag,rg'
+" TODO: how to put right below and not botright?
 
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
@@ -154,7 +157,7 @@ Plug 'tpope/vim-surround'
 " Auto detect tab width, doesn't work
 " Plug 'tpope/vim-sleuth'
 
-" Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-eunuch'
 " " :Delete: Delete a buffer and the file on disk simultaneously.
 " " :Unlink: Like :Delete, but keeps the now empty buffer.
 " " :Move: Rename a buffer and the file on disk simultaneously.
@@ -327,7 +330,14 @@ nmap s <Plug>(easymotion-s)
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
-Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+" Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+Plug 'junegunn/vim-slash'
+" noremap <plug>(slash-after) zz
+if has('timers')
+  " Blink 2 times with 50ms interval
+  " noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 50)
+  noremap <expr> <plug>(slash-after) slash#blink(2, 50)
+endif
 
 " :TermainlVSplit bash (needs python3)
 " Plug 'tc50cal/vim-terminal'
@@ -431,7 +441,9 @@ autocmd BufReadPost *
      \   exe "normal! g`\"" |
      \ endif
 
- " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a. Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
+ " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a.
+ " Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
+" d2ina skips an arg and deletes the next one
 Plug 'wellle/targets.vim'
 
 " Colorschemes
@@ -482,12 +494,12 @@ if has("nvim")
   set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
 
-" NOTE: vim has a gn text object(next search item), star-search plugin combined with cgn and . covers alot of cases
+" NOTE: vim has a gn text object(next search item), star-search plugin (or vim-slash) combined with cgn and . covers alot of cases
 " Problem is it follows smartcase settings
 " E means edit with confirms, e is no confirm.
 " Second letter is source: w is word under cursor, y is yanked text.
 " Even with very no magic (\V) modifier, still need to escape / and \ with \
-" The \< and \> means don't do a raw string replace but a word replace
+" The \< and \> means don't do a raw string replace but a word replace (only operate on that string if its a stand-alone word)
 " so if you want to replace someVar, it won't touch vars name someVarOther
 " edit word in whole file
 nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
@@ -498,14 +510,22 @@ nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><lef
 vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 " Visually selected text in file
 " If mode is visual line mode, edit the prev yank acros the vis lines, else across the whole file
-" see :help escape()
+" see :h escape() (escape the chars in teh second arg with backslash)
 " c-r=escape() means paste in the result of escape
 vnoremap <expr> <leader>ey mode() ==# "V" ?
       \ ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
       \: "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
-
+" Whole file edit yank (E version being with confim)
 nnoremap <leader>ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
 nnoremap <leader>Ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
+" Visual lines or visual select edit-last-search, 4 backslashes since we are in a "" and to insert a \ into "" you need \\
+" and to get the \\ in a '' from a "" you need 4.
+vnoremap <expr> <leader>es mode() ==# "V" ?
+      \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+      \: ""
+" Whole file edit last search(E version being with confim). Get rid of teh extre \V then get rid of any ending \n
+nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
+nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
 
 " see "h <expr> and :help mode()
 " Make A and I work in vis line mode. They already  work in the block bounds so leave that be.
