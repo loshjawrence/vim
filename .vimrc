@@ -129,19 +129,58 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'jiangmiao/auto-pairs'
 
-Plug 'wincent/ferret'
-" Instead of <leader>a ...
-nmap <leader>aa <Plug>(FerretAck)
-" Instead of <leader>s ...
-nmap <leader>aw <Plug>(FerretAckWord)
-" Instead of <leader>r ...
-nmap <leader>as <Plug>(FerretAcks)
-" fix the error
-" let g:FerretNvim=0
-let g:FerretJob=0
-" Prefer `ag` over `rg`.
-" let g:FerretExecutable='ag,rg'
-" TODO: how to put right below and not botright?
+if has("win32")
+    " tell vim to use ripgrep for the its external grep program
+    set grepprg=rg\ --vimgrep
+    " Allow quickfix list to be modifiable? have to do :set ma when in the window
+    " cdo
+    " https://stackoverflow.com/questions/4804405/search-and-replace-in-vim-across-all-the-project-files?noredirect=1
+    " 1. :grep <search term>
+    " 2. :cdo %s/<search term>/<replace term>/gc
+    " 3. (If you want to save the changes in all files) :cdo update
+    command! -nargs=+ NewGrep execute 'silent grep! <args>' | copen 20
+    nmap <leader>aa :NewGrep ""<left>
+    nmap <leader>aw :NewGrep "<c-r><c-w>"<cr>
+    nmap <leader>ay :NewGrep "<c-r>""<cr>
+
+    "
+    " test Delete
+    " asdf2
+    " asdf3
+    " asdf4
+    " asdf5
+    " asdf
+    " asdf
+    " asdf
+    "
+    " asdf
+    "
+
+    " function! Delete()
+    "     if &buftype == 'quickfix'
+    "         call setqflist(filter(getqflist(), {idx -> idx != line('.') - 1}), 'r')
+    "     else
+    "         deletel
+    "     endif
+    " endfunction
+    " nnoremap <silent> dd :call Delete()<cr>
+    " vnoremap <silent> d :call Delete()<cr>
+
+    " nnoremap <silent> <c-x> :call BufferNext()<cr>
+    " nmap <leader>aa :silent grep "" \| copen 20<c-left><c-left><c-left><left><left>
+    " nnoremap <buffer> <silent> dd :call setqflist(filter(getqflist(), {idx -> idx != line('.') - 1}), 'r') <Bar> cc<CR>
+else
+    Plug 'wincent/ferret'
+    " Instead of <leader>a ...
+    nmap <leader>aa <Plug>(FerretAck)
+    " Instead of <leader>s ...
+    nmap <leader>aw <Plug>(FerretAckWord)
+    " Instead of <leader>r ...
+    nmap <leader>as <Plug>(FerretAcks)
+    " fix the error
+    let g:FerretJob=0
+    " TODO: how to put right below and not botright?
+endif
 
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
@@ -938,3 +977,8 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 " :cw    " Open it if there are "errors", close it otherwise (some people prefer this)
 " :cn    " Go to the next error in the window
 " :cnf   " Go to the first error in the next file
+
+" arg example
+" argadd file1 file2 file3
+" argdo s/old/new/g
+
