@@ -138,10 +138,17 @@ if has("win32")
     " 1. :grep <search term>
     " 2. :cdo %s/<search term>/<replace term>/gc
     " 3. (If you want to save the changes in all files) :cdo update
-    command! -nargs=+ NewGrep execute 'silent grep! <args>' | copen 20
-    nmap <leader>aa :NewGrep ""<left>
-    nmap <leader>aw :NewGrep "<c-r><c-w>"<cr>
-    nmap <leader>ay :NewGrep "<c-r>""<cr>
+    command! -nargs=+ MyGrep execute 'silent grep! <args>' | copen 20
+    command! -nargs=+ MyCdo execute 'silent cdo! <args>' | update
+    nmap <leader>aa :MyGrep ""<left>
+    nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
+    nmap <leader>ay :MyGrep "<c-r>""<cr>
+    nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g')<cr>"<cr>
+
+    nmap <leader>rr :MyCdo %s//gIe<left><left><left><left><left>
+    nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
+    nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+    nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
     "
     " test Delete
@@ -166,9 +173,6 @@ if has("win32")
     " nnoremap <silent> dd :call Delete()<cr>
     " vnoremap <silent> d :call Delete()<cr>
 
-    " nnoremap <silent> <c-x> :call BufferNext()<cr>
-    " nmap <leader>aa :silent grep "" \| copen 20<c-left><c-left><c-left><left><left>
-    " nnoremap <buffer> <silent> dd :call setqflist(filter(getqflist(), {idx -> idx != line('.') - 1}), 'r') <Bar> cc<CR>
 else
     Plug 'wincent/ferret'
     " Instead of <leader>a ...
@@ -176,7 +180,7 @@ else
     " Instead of <leader>s ...
     nmap <leader>aw <Plug>(FerretAckWord)
     " Instead of <leader>r ...
-    nmap <leader>as <Plug>(FerretAcks)
+    nmap <leader>rr <Plug>(FerretAcks)
     " fix the error
     let g:FerretJob=0
     " TODO: how to put right below and not botright?
@@ -820,7 +824,8 @@ nnoremap <leader>F :Files<cr>
 " nnoremap <leader>h: :History:<cr>
 nnoremap <leader>b :Buffers<cr>
 " need to install ripgrep or compile it in rust, not available on ubuntu 18.04
-nnoremap <leader>r :Rg<cr>
+" see <leader>aa
+" nnoremap <leader>r :Rg<cr>
 
 " Useful but better to use the visual select search and repace mappings that I setup (<leader> ey Ey ew Ew)
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
