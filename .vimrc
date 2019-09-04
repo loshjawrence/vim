@@ -139,7 +139,7 @@ if has("win32")
     " 2. :cdo %s/<search term>/<replace term>/gc
     " 3. (If you want to save the changes in all files) :cdo update
     command! -nargs=+ MyGrep execute 'silent grep! <args>' | copen 20
-    command! -nargs=+ MyCdo execute 'silent cdo! <args>' | update
+    command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update
     nmap <leader>aa :MyGrep ""<left>
     nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
     nmap <leader>ay :MyGrep "<c-r>""<cr>
