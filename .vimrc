@@ -373,14 +373,14 @@ nmap s <Plug>(easymotion-s)
 " vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
 " vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
 
-" Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
-Plug 'junegunn/vim-slash'
-" noremap <plug>(slash-after) zz
-if has('timers')
-  " Blink 2 times with 50ms interval
-  " noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 50)
-  noremap <expr> <plug>(slash-after) slash#blink(2, 50)
-endif
+Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+" Plug 'junegunn/vim-slash'
+" " noremap <plug>(slash-after) zz
+" if has('timers')
+"   " Blink 2 times with 50ms interval
+"   " noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 50)
+"   noremap <expr> <plug>(slash-after) slash#blink(2, 50)
+" endif
 
 " :TermainlVSplit bash (needs python3)
 " Plug 'tc50cal/vim-terminal'
