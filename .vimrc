@@ -31,7 +31,7 @@ syntax enable    " syntax highlighting
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set nrformats-=octal
 set number              " Show line numbers
-" set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
+set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
 set background=dark     " tell vim what the background color looks like
 set backspace=indent,eol,start " allow backspace to work normally
 set history=200         " how many : commands to save in history
@@ -91,6 +91,9 @@ if has('gui')
 endif
 
 
+" tell :find to recursively search
+set path+=**
+
 " sort of worked but enter has issues for re-highl old searches
 " autocmd CmdlineEnter * set nohlsearch
 " autocmd CmdlineLeave * set hlsearch
@@ -126,12 +129,19 @@ call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 " Lots of other powerful stuff see git repo for details. Install ripgrep (choco install ripgrep) and do <space>r for a grep search (git aware).
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+" [[B]Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+" to make all fzf lists go top-down, put something like
+"export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+"in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
 
 Plug 'jiangmiao/auto-pairs'
 
+set grepprg=rg\ --vimgrep
 if has("win32")
     " tell vim to use ripgrep for the its external grep program
-    set grepprg=rg\ --vimgrep
     " Allow quickfix list to be modifiable? have to do :set ma when in the window
     " cdo
     " https://stackoverflow.com/questions/4804405/search-and-replace-in-vim-across-all-the-project-files?noredirect=1
@@ -197,9 +207,6 @@ Plug 'tpope/vim-surround'
 " y S <motion><desiredChar>  Surround in the motion , putting the surround chars on lines above and below and indenting text
 " y SS <desiredChar>  Surround the line, puttuing the surround chars on lines above and below
 
-" Auto detect tab width, doesn't work
-" Plug 'tpope/vim-sleuth'
-
 Plug 'tpope/vim-eunuch'
 " " :Delete: Delete a buffer and the file on disk simultaneously.
 " " :Unlink: Like :Delete, but keeps the now empty buffer.
@@ -214,20 +221,20 @@ Plug 'tpope/vim-eunuch'
 " " :SudoWrite: Write a privileged file with sudo.
 " " :SudoEdit: Edit a privileged file with sudo.
 
-" jump between version control hunks with [c and ]c. You can preview, stage, and undo hunks with <leader>hp, <leader>hs, and <leader>hu respectively.
-" can use with vim repeat
-" Plug 'airblade/vim-gitgutter'
-" nnoremap ]h <Plug>GitGutterNextHunk
-" nnoremap [h <Plug>GitGutterPrevHunk
 
 " Check the repo for whats required to be installed(some python stuff)
 " Plug 'Shougo/denite.nvim'
 
+
 " Not reliable (like all ctags trash)
 " Tag file management, should use Exhuberant Ctags
-" Plug 'ludovicchabant/vim-gutentags'
-" set statusline+=%{gutentags#statusline()}
-" " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche
+Plug 'ludovicchabant/vim-gutentags'
+set statusline+=%{gutentags#statusline()}
+" " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche?
+" Can help to :cd to the dir you actually care about generating tags for
+" For example cesium/Source
+command! Ct !ctags -R .
+nnoremap <leader>ct :Ct<cr>
 
 " Syntax highlighting for a ton of languages
 Plug 'sheerun/vim-polyglot'
@@ -263,32 +270,33 @@ Plug 'sheerun/vim-polyglot'
 " "CocCommand <tab>
 " " :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
 " :CocList extensions will list your extensions
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-set statusline+=%{coc#status()}
-" use <tab> for trigger completion and navigate to the next complete item
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
 
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" set statusline+=%{coc#status()}
+" " use <tab> for trigger completion and navigate to the next complete item
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~ '\s'
+" endfunction
+"
+" inoremap <silent><expr> <Tab>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<Tab>" :
+"       \ coc#refresh()
+"
+" nmap <silent> <leader>cd <Plug>(coc-definition)
+" nmap <silent> <leader>cr <Plug>(coc-references)
+" nmap <silent> <leader>ci <Plug>(coc-implementation)
+" " Use <cr> to confirm completion
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" " To make <cr> select the first completion item and confirm the completion when no item has been selected:
+" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+" " To make coc.nvim format your code on <cr>, use keymap:
+" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-nmap <silent> <leader>cd <Plug>(coc-definition)
-nmap <silent> <leader>cr <Plug>(coc-references)
-nmap <silent> <leader>ci <Plug>(coc-implementation)
-" Use <cr> to confirm completion
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" To make <cr> select the first completion item and confirm the completion when no item has been selected:
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
-" To make coc.nvim format your code on <cr>, use keymap:
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" THIS REMOVES THE START WINDOW FOR VIM
-" WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
-" linux search keyboard set to 200ms delay, 40c/s
+" " TODO: not sure I need/want this anymore
+" " WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
+" " linux search keyboard set to 200ms delay, 40c/s
 Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
 " let g:airline_powerline_fonts = 1
 let g:airline#extensions#gutentags#enabled = 1
@@ -306,18 +314,6 @@ let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#show_splits = 0
 let g:airline#extensions#tabline#show_tab_count = 0
 let g:airline#extensions#tabline#ignore_bufadd_pat = 'gundo|undotree|vimfiler|tagbar|nerd_tree|startify|!|term\:'
-nnoremap <leader>1 :tabfirst<cr>
-nnoremap <leader>2 2gt
-nnoremap <leader>3 3gt
-nnoremap <leader>4 4gt
-nnoremap <leader>5 5gt
-nnoremap <leader>0 :tablast<cr>
-" when using alt keys make sure you can diasable the corresponding alt-menu key
-" in any other IDE's you may use
-" vscode has a way to turn off the menu and msvc has a way to turn off certain
-" menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
-nnoremap <a-l> gt
-nnoremap <a-h> gT
 let g:airline_section_a = '' " mode.
 let g:airline_section_c = '' " filename is already in the airline tabline
 let g:airline_section_x = '' " (tagbar, filetype, virtualenv).
@@ -326,29 +322,21 @@ let g:airline_section_z = '' " (percentage, line number, column number)
 Plug 'vim-airline/vim-airline-themes'
 let g:airline_theme='ayu_dark'
 
+" when using alt keys make sure you can diasable the corresponding alt-menu key
+" in any other IDE's you may use
+" vscode has a way to turn off the menu and msvc has a way to turn off certain
+" menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
+nnoremap <a-l> gt
+nnoremap <a-h> gT
+nnoremap <leader>1 :tabfirst<cr>
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>0 :tablast<cr>
+
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
-
-" " Only want for airline branch name
-" Plug 'tpope/vim-fugitive'
-
-" NOTE: Has some undo bugs or odd undo behvior/bugs. Very slow on many lines, Multiple cursors
-" I have better mappings below with <leader>ew ey Ew Ey
-" To make a basic selection, use the Ctrl+N keystroke in normal mode, followed by a motion:
-"     c – change text.
-"     I – insert at start of range.
-"     A – insert at end of range.
-" Plug 'terryma/vim-multiple-cursors'
-" let g:multi_cursor_use_default_mapping=0
-" " Default mappings except change c-x c-m
-" let g:multi_cursor_start_word_key      = '<C-n>'
-" let g:multi_cursor_select_all_word_key = '<A-n>'
-" let g:multi_cursor_start_key           = 'g<C-n>'
-" let g:multi_cursor_select_all_key      = 'g<A-n>'
-" let g:multi_cursor_next_key            = '<C-n>'
-" let g:multi_cursor_prev_key            = '<C-p>'
-" let g:multi_cursor_skip_key            = '<C-m>'
-" let g:multi_cursor_quit_key            = '<Esc>'
 
 " Type s and a char of interesst then the colored letters at the char to jump to it.
 Plug 'easymotion/vim-easymotion'
@@ -369,37 +357,17 @@ let g:EasyMotion_smartcase = 1
 nmap s <Plug>(easymotion-s)
 " map S <nop>
 
-" Plug 'godlygeek/tabular' " Aligning selected text on some char or regexK
-" vnoremap  <leader>t<bar>  :Tabularize  /\|<cr>
-" vnoremap  <leader>t/      :Tabularize  /\/\/<cr>
-
 Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
-" Plug 'junegunn/vim-slash'
-" " noremap <plug>(slash-after) zz
-" if has('timers')
-"   " Blink 2 times with 50ms interval
-"   " noremap <expr> <plug>(slash-after) 'zz'.slash#blink(2, 50)
-"   noremap <expr> <plug>(slash-after) slash#blink(2, 50)
-" endif
 
-" :TermainlVSplit bash (needs python3)
-" Plug 'tc50cal/vim-terminal'
 " Only use this for Ttoggle (term toggle) any way to do this myself?
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
 let g:neoterm_autojump = 1
 let g:neoterm_autoinsert = 1
 let g:neoterm_size = 40
 
-" Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
 " " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
+" Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
 " map <F8> :TagbarToggle<cr>
-
-" Plug 'scrooloose/nerdtree'
-" map <F7> :NERDTreeToggle<CR>
-" let g:NERDTreeDirArrowExpandable = '▸'
-" let g:NERDTreeDirArrowCollapsible = '▾'
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" " m is menu
 
 " map <F7> :20Lex<CR><c-w><c-l>
         " netwr is possibly than nerdtree
@@ -493,7 +461,7 @@ Plug 'wellle/targets.vim'
 " for a giant reppo of Colorschemes see flazz/vim-colorschemes
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-let g:alduin_Shout_Dragon_Aspect = 1
+" let g:alduin_Shout_Dragon_Aspect = 1
 
 call plug#end()
 
@@ -611,10 +579,9 @@ noremap <silent> <c-e> <nop>
 noremap <silent> <c-y> <nop>
 noremap <silent> <c-f> <nop>
 noremap <silent> <c-b> <nop>
-noremap <silent> <c-u> 7<c-y>
-noremap <silent> <c-d> 7<c-e>
+noremap <silent> <c-u> 9<c-y>
+noremap <silent> <c-d> 9<c-e>
 
-" EXPERIMENTAL
 noremap J }
 noremap K {
 noremap { J
@@ -654,7 +621,7 @@ tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
-" " the airline removes term from tabline but must still skip it
+" " airline removes term from tabline but must still skip it
 " function! BufferPrev()
 "   bprev
 "   if &buftype == 'terminal'
@@ -675,45 +642,41 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " " kill buffer tab
 nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
 
-" Toggle between header and source for c/cpp files
-if has("gui_running") || has("nvim")
-  " :e file:p is full path of file. the :s are a chain of substitutes the , are the sub delimiters
-  " the X123X is just for putting an X123X extension on it.
-  " this only works if in the same directory
-  " TODO: need a way to save and kill the old buffer if we found a corresponding file
-  " See kana/vim-altr
-  " nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
-  " nnoremap <A-a> gT
-  " " alt-d will go to next right tab
-  " nnoremap <A-d> gt
-  " " alt-A will move the current tab to the left
-  " nnoremap <A-A> :tabm -1<cr>
-  " " alt-D will go to next right tab
-  " nnoremap <A-D> :tabm +1<cr>
-else
-  " NOTE: Escape mappings will cause delay in vim terminal
-  " In terminal vi, the alt+a and alt+d keys are actually ^[a and ^[d
-  " You can see this by typing the key sequence in a command line after doing a
-  " cat followed by enter or sed -n l followed by enter
-  " If you type alt-a after that the output will be something like ^[a which is <escape> a
-  " if not terminal winodw this would just be noremap <a-a> gT
-  " alt-a will go to next left tab
-  " Bad to have Esc mappings avoid Alt key since terminal commonly maps Alt to Esc
-  " nnoremap <Esc>a gT
-  " " alt-d will go to next right tab
-  " nnoremap <Esc>d gt
-  " " alt-A will move the current tab to the left
-  " nnoremap <Esc>A :tabm -1<cr>
-  " " alt-D will go to next right tab
-  " nnoremap <Esc>D :tabm +1<cr>
-  " nnoremap <Esc>o :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
-endif
-
+" " Toggle between header and source for c/cpp files
+" if has("gui_running") || has("nvim")
+"   " :e file:p is full path of file. the :s are a chain of substitutes the , are the sub delimiters
+"   " the X123X is just for putting an X123X extension on it.
+"   " this only works if in the same directory
+"   " TODO: need a way to save and kill the old buffer if we found a corresponding file
+"   " See kana/vim-altr
+"   " nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+"   " nnoremap <A-a> gT
+"   " " alt-d will go to next right tab
+"   " nnoremap <A-d> gt
+"   " " alt-A will move the current tab to the left
+"   " nnoremap <A-A> :tabm -1<cr>
+"   " " alt-D will go to next right tab
+"   " nnoremap <A-D> :tabm +1<cr>
+" else
+"   " NOTE: Escape mappings will cause delay in vim terminal
+"   " In terminal vi, the alt+a and alt+d keys are actually ^[a and ^[d
+"   " You can see this by typing the key sequence in a command line after doing a
+"   " cat followed by enter or sed -n l followed by enter
+"   " If you type alt-a after that the output will be something like ^[a which is <escape> a
+"   " if not terminal winodw this would just be noremap <a-a> gT
+"   " alt-a will go to next left tab
+"   " Bad to have Esc mappings avoid Alt key since terminal commonly maps Alt to Esc
+"   " nnoremap <Esc>a gT
+"   " " alt-d will go to next right tab
+"   " nnoremap <Esc>d gt
+"   " " alt-A will move the current tab to the left
+"   " nnoremap <Esc>A :tabm -1<cr>
+"   " " alt-D will go to next right tab
+"   " nnoremap <Esc>D :tabm +1<cr>
+"   " nnoremap <Esc>o :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+" endif
 
 " COLORCOLUMN
-" Highlight from 81 on in a different color
-" let &colorcolumn=join(range(81,999),",")
-
 " CURSORLINE (can be slower in some terminals)
 
 " purple4 royalblue4 black
@@ -724,26 +687,25 @@ endif
 hi cursorline  gui=NONE guibg=purple4 guifg=NONE
 hi cursorcolumn  gui=NONE guibg=purple4 guifg=NONE
 
-function! EnterInsertMode()
-    hi cursorline  gui=NONE guibg=black guifg=NONE
-endfunction
-function! LeaveInsertMode()
-    hi cursorline  gui=NONE guibg=purple4 guifg=NONE
-    silent! update!
-endfunction
-autocmd InsertEnter * call EnterInsertMode()
-autocmd InsertLeave * call LeaveInsertMode()
-
+" TODO: lookup wincents way of highlighting current window
 let g:useCursorline = 1
 if g:useCursorline == 1
     set cursorline
-    autocmd BufEnter * set cursorline
-    autocmd BufLeave * set nocursorline
+    autocmd InsertEnter,WinLeave * setlocal nocursorline
+    autocmd InsertLeave,VimEnter,WinEnter * setlocal cursorline | silent! update!
 else
     set nocursorline
-    autocmd InsertEnter * set cursorline
-    autocmd InsertLeave * set nocursorline
+    autocmd InsertEnter * setlocal cursorline
+    autocmd InsertLeave * setlocal nocursorline | silent! update!
 endif
+
+" " make background different
+" " Highlight from 81 on in a different color
+" " let &colorcolumn=join(range(81,999),",")
+" autocmd BufEnter,FocusGained,VimEnter,WinEnter * let &l:colorcolumn=join(range(0,999), ',')
+" " does the split coloring
+" " autocmd BufEnter,FocusGained,VimEnter,WinEnter * let &l:colorcolumn='+' . join(range(0,254), ',+')
+" autocmd FocusLost,WinLeave * let &l:colorcolumn=join(range(1,255), ',')
 
 " Pressing enter flashes the cursoline and column and removes the search highlight
 " Was needed for terminals where the cursor was hard to find where linecoloring
@@ -752,7 +714,7 @@ function! Flash()
     silent! update!
     set cursorline cursorcolumn
     redraw
-    sleep 100m
+    sleep 30m
 
     set nocursorcolumn
     if g:useCursorline == 0
@@ -786,11 +748,11 @@ nnoremap k gk
 " yank to end of line to follow the C and D convention. vim is terrible
 nnoremap Y y$
 
-" Session: save vim session to ./Session.vim, load Session.vim
-" Usually just open any text file in root of a repo and type <leader>ss to create Session.vim file in the root of repo.
-" Then when I need to load up the seesion again I open the Session.vim file in the root of the repo and type <leader>so to restore my session.
-nnoremap <leader>ss :mks!<cr>
-nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
+" " Session: save vim session to ./Session.vim, load Session.vim
+" " Usually just open any text file in root of a repo and type <leader>ss to create Session.vim file in the root of repo.
+" " Then when I need to load up the seesion again I open the Session.vim file in the root of the repo and type <leader>so to restore my session.
+" nnoremap <leader>ss :mks!<cr>
+" nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 
 " nvim_win_config
 " grow splits horizontally
@@ -806,7 +768,7 @@ nnoremap <c-up>   :res +8<cr>
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
 nmap <silent> <leader>ve :vs ~/.vimrc<cr>
-nnoremap <leader>qq :wa!<cr>:qa!<cr>
+nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
 " down / up / left / right
@@ -825,7 +787,7 @@ nnoremap <leader>F :Files<cr>
 nnoremap <leader>b :Buffers<cr>
 " need to install ripgrep or compile it in rust, not available on ubuntu 18.04
 " see <leader>aa
-" nnoremap <leader>r :Rg<cr>
+nnoremap <leader>R :Rg<cr>
 
 " Useful but better to use the visual select search and repace mappings that I setup (<leader> ey Ey ew Ew)
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
@@ -834,17 +796,30 @@ nnoremap <leader>b :Buffers<cr>
 "             \:<c-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
 " onoremap s :normal vs<cr>
 
-" Pretty Json, can be called like other commands with :
+" Pretty Json
 nnoremap <leader>p :%!python -m json.tool<cr>
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" NOTES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" fzf works in the linux terminal:
+" cd **<tab> (or fzf's alt-c)
+" nvim **<tab> (or fzfs' nvim <c-t>)
+" <c-r> (linux reverse command search, fzf picks this up automatically)
+
+" tags <c-]>:
+" <c-t> will pop through the tag stack, g<c-]> will list ambiguous tag
+
+" vim's autocomplete:
+" good stuff documented in ins-completion
+" c-x c-n for just this buffer
+" c-x c-f for filenames (need to keep hitting the sequence after every slash)
+" c-x c-] for tags only
+"
 " look up cfdo, quickfix list, location-list, vimgrep lvimgrep
-" ctrl-z will take you back to terminal. fg in terminal will take you back to vim (fg is for foreground)
+" if vim is launched from terminal ctrl-z will take you back to terminal. fg in terminal will take you back to vim (fg is for foreground)
 " gn and gN visually select the current search selction
 " gv will go to the last vis selction and select it
 " Auto generate remappings, targets.vim does this nicely
