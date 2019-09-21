@@ -132,6 +132,8 @@ Plug 'junegunn/fzf.vim'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 " [[B]Tags] Command to generate tags file
+command! Tags !ctags -R --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
+nnoremap <leader>ct :Tags<cr>
 let g:fzf_tags_command = 'ctags -R'
 " to make all fzf lists go top-down, put something like
 "export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
@@ -221,21 +223,17 @@ Plug 'tpope/vim-eunuch'
 " " :SudoWrite: Write a privileged file with sudo.
 " " :SudoEdit: Edit a privileged file with sudo.
 
-
 " Check the repo for whats required to be installed(some python stuff)
 " Plug 'Shougo/denite.nvim'
 
-
 " Not reliable (like all ctags trash)
 " Tag file management, should use Exhuberant Ctags
-Plug 'ludovicchabant/vim-gutentags'
-set statusline+=%{gutentags#statusline()}
+" Plug 'ludovicchabant/vim-gutentags'
+" set statusline+=%{gutentags#statusline()}
 " " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche?
 " Can help to :cd to the dir you actually care about generating tags for
 " For example cesium/Source
-command! Ct !ctags -R .
-nnoremap <leader>ct :Ct<cr>
-
+"
 " Syntax highlighting for a ton of languages
 Plug 'sheerun/vim-polyglot'
 
