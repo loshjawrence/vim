@@ -63,7 +63,8 @@ set nobackup
 set nowritebackup
 set noswapfile
 set splitbelow " :sp defaults down
-set splitright " :vs defaults right
+" set splitright " :vs defaults right, quickfix edits cycles right split window so turn this off (TODO list usually in the :vs window)
+set switchbuf=useopen
 set ttyfast           " should make scrolling faster
 set lazyredraw        " should make scrolling faster
 set diffopt+=vertical " Always use vertical diffs
@@ -141,8 +142,17 @@ let g:fzf_tags_command = 'ctags -R'
 
 Plug 'jiangmiao/auto-pairs'
 
+" can dd, visual delete and other things like undo, :v/someText/d (delete lines not containing someText) or :g/someText/d (delete lines containing someText)
+Plug 'itchyny/vim-qfedit'
+
+" :Cfilter some-string to filter the quickfix list, :Cfilter will grab entries not matching some-string
+" :Cfilter[!] /{pat}/
+" :Lfilter[!] /{pat}/
+packadd cfilter
+
 set grepprg=rg\ --vimgrep
-if has("win32")
+
+" if has("win32")
     " tell vim to use ripgrep for the its external grep program
     " Allow quickfix list to be modifiable? have to do :set ma when in the window
     " cdo
@@ -150,53 +160,52 @@ if has("win32")
     " 1. :grep <search term>
     " 2. :cdo %s/<search term>/<replace term>/gc
     " 3. (If you want to save the changes in all files) :cdo update
-    command! -nargs=+ MyGrep execute 'silent grep! <args>' | copen 20
-    command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update
+    command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
+    command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
     nmap <leader>aa :MyGrep ""<left>
     nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
-    nmap <leader>ay :MyGrep "<c-r>""<cr>
-    nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g')<cr>"<cr>
+    nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
+    nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
 
-    nmap <leader>rr :MyCdo %s//gIe<left><left><left><left><left>
+    " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
+    nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
+    nmap <leader>rm :MyCdo %s/gIe<left><left><left>
     nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
     nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
     nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
-    "
-    " test Delete
-    " asdf2
-    " asdf3
-    " asdf4
-    " asdf5
-    " asdf
-    " asdf
-    " asdf
-    "
-    " asdf
-    "
-
-    " function! Delete()
-    "     if &buftype == 'quickfix'
-    "         call setqflist(filter(getqflist(), {idx -> idx != line('.') - 1}), 'r')
-    "     else
-    "         deletel
-    "     endif
+    " " using range-aware function
+    " function! QFdelete() range
+    "     " get current qflist
+    "     let l:qfl = getqflist()
+    "     " no need for filter() and such; just drop the items in range
+    "     call remove(l:qfl, a:firstline - 1, a:lastline - 1)
+    "     " replace items in the current list, do not make a new copy of it;
+    "     " this also preserves the list title
+    "     call setqflist([], 'r', {'items': l:qfl})
     " endfunction
-    " nnoremap <silent> dd :call Delete()<cr>
-    " vnoremap <silent> d :call Delete()<cr>
-
-else
-    Plug 'wincent/ferret'
-    " Instead of <leader>a ...
-    nmap <leader>aa <Plug>(FerretAck)
-    " Instead of <leader>s ...
-    nmap <leader>aw <Plug>(FerretAckWord)
-    " Instead of <leader>r ...
-    nmap <leader>rr <Plug>(FerretAcks)
-    " fix the error
-    let g:FerretJob=0
-    " TODO: how to put right below and not botright?
-endif
+    "
+    " " using buffer-local mappings
+    " " note: still have to check &bt value to filter out `:e quickfix` and such
+    " augroup QFList | au!
+    "     autocmd BufWinEnter quickfix if &bt ==# 'quickfix'
+    "     autocmd BufWinEnter quickfix    nnoremap <silent><buffer>dd :call QFdelete()<CR>
+    "     autocmd BufWinEnter quickfix    vnoremap <silent><buffer>d  :call QFdelete()<CR>
+    "     autocmd BufWinEnter quickfix endif
+    " augroup end
+"
+" else
+"     Plug 'wincent/ferret'
+"     " Instead of <leader>a ...
+"     nmap <leader>aa <Plug>(FerretAck)
+"     " Instead of <leader>s ...
+"     nmap <leader>aw <Plug>(FerretAckWord)
+"     " Instead of <leader>r ...
+"     nmap <leader>rr <Plug>(FerretAcks)
+"     " fix the error
+"     let g:FerretJob=0
+"     " TODO: how to put right below and not botright?
+" endif
 
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
