@@ -183,6 +183,7 @@ set grepprg=rg\ --vimgrep
     "     " replace items in the current list, do not make a new copy of it;
     "     " this also preserves the list title
     "     call setqflist([], 'r', {'items': l:qfl})
+    "     call cursor(a:firstline, 1)
     " endfunction
     "
     " " using buffer-local mappings
