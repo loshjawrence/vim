@@ -142,6 +142,7 @@ let g:fzf_tags_command = 'ctags -R'
 
 Plug 'jiangmiao/auto-pairs'
 
+" QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (delete lines not containing someText) or :g/someText/d (delete lines containing someText)
 Plug 'itchyny/vim-qfedit'
 
@@ -150,16 +151,10 @@ Plug 'itchyny/vim-qfedit'
 " :Lfilter[!] /{pat}/
 packadd cfilter
 
+" tell vim to use ripgrep for the its external grep program
 set grepprg=rg\ --vimgrep
 
 " if has("win32")
-    " tell vim to use ripgrep for the its external grep program
-    " Allow quickfix list to be modifiable? have to do :set ma when in the window
-    " cdo
-    " https://stackoverflow.com/questions/4804405/search-and-replace-in-vim-across-all-the-project-files?noredirect=1
-    " 1. :grep <search term>
-    " 2. :cdo %s/<search term>/<replace term>/gc
-    " 3. (If you want to save the changes in all files) :cdo update
     command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
     command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
     nmap <leader>aa :MyGrep ""<left>
@@ -183,9 +178,9 @@ set grepprg=rg\ --vimgrep
     "     " replace items in the current list, do not make a new copy of it;
     "     " this also preserves the list title
     "     call setqflist([], 'r', {'items': l:qfl})
-    "     call cursor(a:firstline, 1)
+    "    " restore current line
+    "    call cursor(a:firstline, 1)
     " endfunction
-    "
     " " using buffer-local mappings
     " " note: still have to check &bt value to filter out `:e quickfix` and such
     " augroup QFList | au!
@@ -194,6 +189,7 @@ set grepprg=rg\ --vimgrep
     "     autocmd BufWinEnter quickfix    vnoremap <silent><buffer>d  :call QFdelete()<CR>
     "     autocmd BufWinEnter quickfix endif
     " augroup end
+
 "
 " else
 "     Plug 'wincent/ferret'
