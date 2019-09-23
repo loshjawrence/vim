@@ -135,12 +135,27 @@ let g:fzf_buffers_jump = 1
 " [[B]Tags] Command to generate tags file
 command! Tags !ctags -R --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
 nnoremap <leader>ct :Tags<cr>
-let g:fzf_tags_command = 'ctags -R'
+" let g:fzf_tags_command = 'ctags -R'
 " to make all fzf lists go top-down, put something like
 "export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
 
 Plug 'jiangmiao/auto-pairs'
+
+" " See how this goes...
+" Plug 'vim-syntastic/syntastic'
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" " let g:syntastic_always_populate_loc_list = 1
+" " let g:syntastic_auto_loc_list = 1
+" " let g:syntastic_check_on_open = 1
+" " let g:syntastic_check_on_wq = 0
+
+" " deoplete requires a bunch of other stuff (pyton3 and some language sever thing)
+" Plug 'ervandew/supertab'
+" let g:SuperTabDefaultCompletionType = "<c-n>"
+" let g:SuperTabContextDefaultCompletionType = "<c-n>"
 
 " QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (delete lines not containing someText) or :g/someText/d (delete lines containing someText)
@@ -154,55 +169,43 @@ packadd cfilter
 " tell vim to use ripgrep for the its external grep program
 set grepprg=rg\ --vimgrep
 
-" if has("win32")
-    command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
-    command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
-    nmap <leader>aa :MyGrep ""<left>
-    nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
-    nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
-    nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
+" Doesn't work on Windows 10
+" Plug 'wincent/ferret'
 
-    " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
-    nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
-    nmap <leader>rm :MyCdo %s/gIe<left><left><left>
-    nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
-    nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
-    nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
+command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
+command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
+nmap <leader>aa :MyGrep ""<left>
+nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
+nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
+nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
 
-    " " using range-aware function
-    " function! QFdelete() range
-    "     " get current qflist
-    "     let l:qfl = getqflist()
-    "     " no need for filter() and such; just drop the items in range
-    "     call remove(l:qfl, a:firstline - 1, a:lastline - 1)
-    "     " replace items in the current list, do not make a new copy of it;
-    "     " this also preserves the list title
-    "     call setqflist([], 'r', {'items': l:qfl})
-    "    " restore current line
-    "    call cursor(a:firstline, 1)
-    " endfunction
-    " " using buffer-local mappings
-    " " note: still have to check &bt value to filter out `:e quickfix` and such
-    " augroup QFList | au!
-    "     autocmd BufWinEnter quickfix if &bt ==# 'quickfix'
-    "     autocmd BufWinEnter quickfix    nnoremap <silent><buffer>dd :call QFdelete()<CR>
-    "     autocmd BufWinEnter quickfix    vnoremap <silent><buffer>d  :call QFdelete()<CR>
-    "     autocmd BufWinEnter quickfix endif
-    " augroup end
+" nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
+nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
+nmap <leader>rm :MyCdo %s/gIe<left><left><left>
+nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
+nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
-"
-" else
-"     Plug 'wincent/ferret'
-"     " Instead of <leader>a ...
-"     nmap <leader>aa <Plug>(FerretAck)
-"     " Instead of <leader>s ...
-"     nmap <leader>aw <Plug>(FerretAckWord)
-"     " Instead of <leader>r ...
-"     nmap <leader>rr <Plug>(FerretAcks)
-"     " fix the error
-"     let g:FerretJob=0
-"     " TODO: how to put right below and not botright?
-" endif
+" " using range-aware function
+" function! QFdelete() range
+"     " get current qflist
+"     let l:qfl = getqflist()
+"     " no need for filter() and such; just drop the items in range
+"     call remove(l:qfl, a:firstline - 1, a:lastline - 1)
+"     " replace items in the current list, do not make a new copy of it;
+"     " this also preserves the list title
+"     call setqflist([], 'r', {'items': l:qfl})
+"    " restore current line
+"    call cursor(a:firstline, 1)
+" endfunction
+" " using buffer-local mappings
+" " note: still have to check &bt value to filter out `:e quickfix` and such
+" augroup QFList | au!
+"     autocmd BufWinEnter quickfix if &bt ==# 'quickfix'
+"     autocmd BufWinEnter quickfix    nnoremap <silent><buffer>dd :call QFdelete()<CR>
+"     autocmd BufWinEnter quickfix    vnoremap <silent><buffer>d  :call QFdelete()<CR>
+"     autocmd BufWinEnter quickfix endif
+" augroup end
 
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
@@ -215,7 +218,7 @@ Plug 'tpope/vim-surround'
 " y S <motion><desiredChar>  Surround in the motion , putting the surround chars on lines above and below and indenting text
 " y SS <desiredChar>  Surround the line, puttuing the surround chars on lines above and below
 
-Plug 'tpope/vim-eunuch'
+" Plug 'tpope/vim-eunuch'
 " " :Delete: Delete a buffer and the file on disk simultaneously.
 " " :Unlink: Like :Delete, but keeps the now empty buffer.
 " " :Move: Rename a buffer and the file on disk simultaneously.
@@ -330,14 +333,14 @@ let g:airline_theme='ayu_dark'
 " in any other IDE's you may use
 " vscode has a way to turn off the menu and msvc has a way to turn off certain
 " menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
-nnoremap <a-l> gt
-nnoremap <a-h> gT
-nnoremap <leader>1 :tabfirst<cr>
-nnoremap <leader>2 2gt
-nnoremap <leader>3 3gt
-nnoremap <leader>4 4gt
-nnoremap <leader>5 5gt
-nnoremap <leader>0 :tablast<cr>
+" nnoremap <a-l> gt
+" nnoremap <a-h> gT
+" nnoremap <leader>1 :tabfirst<cr>
+" nnoremap <leader>2 2gt
+" nnoremap <leader>3 3gt
+" nnoremap <leader>4 4gt
+" nnoremap <leader>5 5gt
+" nnoremap <leader>0 :tablast<cr>
 
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
