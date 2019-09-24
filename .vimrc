@@ -906,25 +906,38 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 " [{ ]} will jump to beginning and end of a {} scope
 " vip will highlight a block bound by blank lines
 " % will jump to (), [], [] on a line
-" INSERT MODE MOVEMENT:
-" CTRL-W    Delete word to the left of cursor
-" CTRL-U    Delete everything to the left of cursor
-" CTRL-O    Goes to normal mode to execute 1 normal mode command
+" INSERT MODE:
+" c-w   Delete word to the left of cursor
+" c-u   Delete everything to the left of cursor
+" c-o   Goes to normal mode to execute 1 normal mode command
+" c-a   Insert last inserted text
+" c-y   Hold down to start repeating text from the line above
+" c-r{register}   insert text from register (spit out macro register with <c-r>q, edit it and copy back into register after select with "qy)
 " COMMAND MODE:
 " ctrl-n, p next previous command in history
+"
+" COMPLETION:
+" c-x c-f filepath completion
+" c-x c-o "omni" completion, code aware completion
+" c-x c-l line completion
+" c-x c-d macro completion
+" c-x c-i current and included files
+" c-x c-] tags
+" c-x c-v vim command line (hitting delete will insert <Del>)
+" :iab ad advertisement (insert abbreviation: when I type ad<space> it puts advertisement)
 
 " [ COMMANDS (The ] key is the forward version of the [ key)
 " [ ctrl-i jump to first line in current and included files that contains the word under the cursor
-" [ ctrl-d jumpt to first #define found in current and included files matching the word under cursor
-" [/ cursor N times back to start of // comment
-" [( cursor N times back to unmatched (
-" [{ cursor N times back to unmatched {
-" [[ cursor N times back to unmatched [
+" [ ctrl-d jump to first #define found in current and included files matching the word under cursor
+" [/ cursor n times back to start of // comment
+" [( cursor n times back to unmatched (
+" [{ cursor n times back to unmatched {
+" [[ cursor n times back to unmatched [
 " [D list all defines found in current and lincluded files matching word under cursor
 " [I list all lines found in current and lincluded files matching word under cursor
-" [m cursor N times back to start of memeber function
-" gD go to def or word under cursor in current file
-" gd go to def or word under cursor in current function
+" [m cursor n times back to start of member function
+" gD go to def of word under cursor in current file
+" gd go to def of word under cursor in current function
 
 " REGISTERS
 " :reg to list whats in all the registers
@@ -961,11 +974,20 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 " quickfix list
 " :copen " Open the quickfix window
 " :ccl   " Close it
-" :cw    " Open it if there are "errors", close it otherwise (some people prefer this)
+" :cw    " Open it if there are errors, close it otherwise
 " :cn    " Go to the next error in the window
 " :cnf   " Go to the first error in the next file
+"
+" Vim script guide :h usr_41.txt
 
 " arg example
-" argadd file1 file2 file3
-" argdo s/old/new/g
+" :args *.c
+" :argadd file1 file2 file3
+" :argdo %s/\<x_cnt\>/x_counter/gIe | update
+" others: windo bufdo cdo cfdo ldo
+"
+" ctags (use Universal ctags)
+" use tagbar or c-] or :tag someTag or <leader>t
+" :ptag someTag will open a preview window for the tag and put the cursor back where it was so you can keep typing
+" use :pclose to close preview window
 
