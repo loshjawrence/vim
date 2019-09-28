@@ -23,6 +23,10 @@ if v:progname == 'vi'
 endif
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
+" set omnifunc=syntaxcomplete#Complete
+" set omnifunc=ccomplete#Complete
+inoremap <c-m> <c-x><c-o>
+
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set nocompatible " vim, not vi
@@ -94,6 +98,8 @@ endif
 
 " tell :find to recursively search
 set path+=**
+" cd to current file's dir (% is file name :p expands to full path :h takes the head)
+nnoremap <leader>cd :cd %:p:h<cr>
 
 " sort of worked but enter has issues for re-highl old searches
 " autocmd CmdlineEnter * set nohlsearch
@@ -132,10 +138,15 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
-" [[B]Tags] Command to generate tags file
-command! Tags !ctags -R --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
-nnoremap <leader>ct :Tags<cr>
-" let g:fzf_tags_command = 'ctags -R'
+" include inheritance info and signatures of functions
+command! CTags !ctags -R --fields=+iS --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
+nnoremap <F1> :CTags<cr>
+" automatically open and close the popup menu / preview window
+" au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+" set completeopt=menuone,menu,longest,preview
+
+" see this for tags advice and cpp omni completion: https://vim.fandom.com/wiki/C%2B%2B_code_completion
+
 " to make all fzf lists go top-down, put something like
 "export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
@@ -159,6 +170,7 @@ Plug 'jiangmiao/auto-pairs'
 
 " QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (delete lines not containing someText) or :g/someText/d (delete lines containing someText)
+" Nice to have but probably don't need it in practice
 Plug 'itchyny/vim-qfedit'
 
 " :Cfilter some-string to filter the quickfix list, :Cfilter will grab entries not matching some-string
@@ -232,10 +244,7 @@ Plug 'tpope/vim-surround'
 " " :SudoWrite: Write a privileged file with sudo.
 " " :SudoEdit: Edit a privileged file with sudo.
 
-" Check the repo for whats required to be installed(some python stuff)
-" Plug 'Shougo/denite.nvim'
-
-" Not reliable (like all ctags trash)
+" Just manuually run (F1) in the src dir when tag jump fails
 " Tag file management, should use Exhuberant Ctags
 " Plug 'ludovicchabant/vim-gutentags'
 " set statusline+=%{gutentags#statusline()}
@@ -993,3 +1002,8 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 " :ptag someTag will open a preview window for the tag and put the cursor back where it was so you can keep typing
 " use :pclose to close preview window
 "
+"If you want to complete system functions you can do something like this.  Use
+" ctags to generate a tags file for all the system header files:
+" 	% ctags -R -f ~/.vim/systags /usr/include /usr/local/include
+" In your vimrc file add this tags file to the 'tags' option:
+" 	set tags+=~/.vim/systags
