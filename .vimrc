@@ -420,10 +420,10 @@ let g:neoterm_size = 40
 " " FONT SIZE FONT ZOOM
 " " neovim seems to work with both
 " " theres a neovim gtk version that works for linux and windows
-" Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
-" let guifontpp_size_increment=1
-" let guifontpp_smaller_font_map="<c-->"
-" let guifontpp_larger_font_map="<c-=>"
+Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
+let guifontpp_size_increment=1
+let guifontpp_smaller_font_map="<c-->"
+let guifontpp_larger_font_map="<c-=>"
 
 " " continuously updated Session.vim
 " Plug 'tpope/vim-obession'
@@ -915,6 +915,8 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 " c-r{register}   insert text from register (spit out macro register with <c-r>q, edit it and copy back into register after select with "qy)
 " COMMAND MODE:
 " ctrl-n, p next previous command in history
+" c-f will pop up a buffer of previous command history, you can edit like a normal buffer and hit enter to execute
+" c-f will do the same thing for / searching
 "
 " COMPLETION:
 " c-x c-f filepath completion
@@ -990,4 +992,4 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 " use tagbar or c-] or :tag someTag or <leader>t
 " :ptag someTag will open a preview window for the tag and put the cursor back where it was so you can keep typing
 " use :pclose to close preview window
-
+"
