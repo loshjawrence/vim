@@ -1,11 +1,4 @@
-﻿
-
-" To jump to vim docs put word over cursor or highlight it with combo viW and press K
-" or :h theKeywordOfIntereset
-
-let baseDataFolder="~/.vim"
-
-noremap <space> <nop>
+﻿noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
 
 if has("win32")
@@ -23,26 +16,6 @@ if v:progname == 'vi'
 endif
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
-inoremap <c-m> <c-x><c-o>
-" au FileType c,cpp setl ofu=ccomplete#Complete
-
-" Need to unzip and dump the contents of the root dir (after/docs/autoload) into .vim folder
-" run :helptags on the docs folder then look at :h omnicppcomplete and look at installation
-" cpp omni completion: https://vim.fandom.com/wiki/C%2B%2B_code_completion
-au FileType c,cpp setl ofu=omni#cpp#complete#Main
-" OmniCppComplete
-let OmniCpp_NamespaceSearch = 1
-let OmniCpp_GlobalScopeSearch = 1
-let OmniCpp_ShowAccess = 1
-let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-let OmniCpp_MayCompleteDot = 1 " autocomplete after .
-let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
-let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
-" let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-" automatically open and close the popup menu / preview window
-au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-set completeopt=menuone,menu,longest,preview
-
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set nocompatible " vim, not vi
@@ -97,7 +70,7 @@ set nowrap                          " Don't word wrap
 set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 set cmdheight=2 " Better display for messages
 set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
-set shortmess+=c " don't give |ins-completion-menu| messages.
+set shortmess+=cS " don't give |ins-completion-menu| messages.
 
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
@@ -111,15 +84,15 @@ if has('gui')
   set guioptions-=m
 endif
 
-
 " tell :find to recursively search
 set path+=**
 " cd to current file's dir (% is file name :p expands to full path :h takes the head)
 nnoremap <leader>cd :cd %:p:h<cr>
 
-" sort of worked but enter has issues for re-highl old searches
-" autocmd CmdlineEnter * set nohlsearch
-" autocmd CmdlineLeave * set hlsearch
+" include inheritance info and signatures of functions
+" it seems most of these flags are needed for :h omnicppcomplete
+command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
+nnoremap <F1> :cd %:p:h <bar> CTags<cr>
 
 " FILETYPE
 " Associate filetypes with other filetypes
@@ -136,74 +109,34 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
-" Plugins. Execute :PlugInstall for any new ones you add
-" Auto install the vim-plug pluggin manager if its not there
-" let plugDotVimLocation=baseDataFolder . "autoload/plug.vim"
-" if empty(glob(plugDotVimLocation))
-" need to do execute with quotes and stuff probably
-"   silent !curl -fLo plugDotVimLocation --create-dirs
-"         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-" endif
-
+let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
-" Bread and butter file searcher.
-" <space>f to search for tracked files in git repo.
-" Lots of other powerful stuff see git repo for details. Install ripgrep (choco install ripgrep) and do <space>r for a grep search (git aware).
+" choco install ripgrep
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
-" include inheritance info and signatures of functions
-" it seems most of these flags are needed for :h omnicppcomplete
-command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
-nnoremap <F1> :cd %:p:h <bar> CTags<cr>
-" automatically open and close the popup menu / preview window
-" au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-" set completeopt=menuone,menu,longest,preview
-
-
 " to make all fzf lists go top-down, put something like
 "export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
-"
-
-" shows function sig in preview window, doesn't work at all
-" Plug 'vim-scripts/autoproto.vim'
+nnoremap <leader>t :BTags<cr>
+nnoremap <leader>T :Tags<cr>
+nnoremap <leader>f :GFiles<cr>
+nnoremap <leader>F :Files<cr>
+nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>R :Rg<cr>
 
 Plug 'jiangmiao/auto-pairs'
-
-" " See how this goes...
-" Plug 'vim-syntastic/syntastic'
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-" " let g:syntastic_always_populate_loc_list = 1
-" " let g:syntastic_auto_loc_list = 1
-" " let g:syntastic_check_on_open = 1
-" " let g:syntastic_check_on_wq = 0
-
-" " deoplete requires a bunch of other stuff (pyton3 and some language sever thing)
-" Plug 'ervandew/supertab'
-" let g:SuperTabDefaultCompletionType = "<c-n>"
-" let g:SuperTabContextDefaultCompletionType = "<c-n>"
+" This allows surround.vim to not pad with spaces
+let g:AutoPairsMapSpace=0
 
 " QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (delete lines not containing someText) or :g/someText/d (delete lines containing someText)
 " Nice to have but probably don't need it in practice
 Plug 'itchyny/vim-qfedit'
 
-" :Cfilter some-string to filter the quickfix list, :Cfilter will grab entries not matching some-string
-" :Cfilter[!] /{pat}/
-" :Lfilter[!] /{pat}/
-packadd cfilter
-
 " tell vim to use ripgrep for the its external grep program
 set grepprg=rg\ --vimgrep
-
-" Doesn't work on Windows 10
-" Plug 'wincent/ferret'
-
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
 nmap <leader>aa :MyGrep ""<left>
@@ -242,7 +175,7 @@ nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><lef
 Plug 'tpope/vim-surround'
 " see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
 " can use with vim-repeat,
-" --> S <desiredChar> Surround when in visual modes (surrounds full selection) with char
+" S <desiredChar> Surround when in visual modes (surrounds full selection) with char
 " d s <existing char>    Delete existing surround
 " c s <existing char> <desiredChar>    Change surround existing to desired
 " y s <motion><desiredChar> (as in you-surround) Surround in the motion(ex: iw)
@@ -264,14 +197,6 @@ Plug 'tpope/vim-surround'
 " " :SudoWrite: Write a privileged file with sudo.
 " " :SudoEdit: Edit a privileged file with sudo.
 
-" Just manuually run (F1) in the src dir when tag jump fails
-" Tag file management, should use Exhuberant Ctags
-" Plug 'ludovicchabant/vim-gutentags'
-" set statusline+=%{gutentags#statusline()}
-" " " Plug 'skywind3000/gutentags_plus' " Need to explore this more, are its search cases common or niche?
-" Can help to :cd to the dir you actually care about generating tags for
-" For example cesium/Source
-"
 " Syntax highlighting for a ton of languages
 Plug 'sheerun/vim-polyglot'
 
@@ -290,43 +215,22 @@ Plug 'sheerun/vim-polyglot'
 " https://github.com/neoclide/coc.nvim
 " https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
 " https://vim.fandom.com/wiki/Omni_completion
-" Follow clang-tools install steps here: https://clang.llvm.org/extra/clangd/Installation.html
 
-""" COC
-" https://github.com/neoclide/coc.nvim/wiki/Install-coc.nvim
-" https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
-" https://github.com/MaskRay/ccls/wiki/coc.nvim
-" " Use release branch
 " :checkhealth to see if running
-" :CoCInfo
-" coc-ccls doesn't just work, use clangd
+" Useful commands CocConfig, CocInfo, CocInstall, CocUninstall, CocList, CocCommand
+" For c based langs, use clangd (choco install llvm then :CocConfig and paste the json settings from coc.nvim github wiki)
 " "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-rls coc-syntax coc-tag
-" :CocUninstall coc-css
-" "CocList  commands
 " "CocCommand <tab>
-" " :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
-" :CocList extensions will list your extensions
+" :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
 
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" set statusline+=%{coc#status()}
-" use <tab> for trigger completion and navigate to the next complete item
-" function! s:check_back_space() abort
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~ '\s'
-" endfunction
-" inoremap <silent><expr> <Tab>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<Tab>" :
-"       \ coc#refresh()
-" nmap <silent> <leader>c] <Plug>(coc-definition)
-" nmap <silent> <leader>cr <Plug>(coc-references)
-" nmap <silent> <leader>ci <Plug>(coc-implementation)
-" Use <cr> to confirm completion
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" " To make <cr> select the first completion item and confirm the completion when no item has been selected:
-" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
-" " To make coc.nvim format your code on <cr>, use keymap:
-" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" Install clang/clangd with: choco install llvm
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" NOTE: look here for example .vimrc: https://github.com/neoclide/coc.nvim#example-vim-configuration
+" <cr> confirm, need this for filling selecting  method signature from the list
+" Use c-j (back) and c-k (forward) to jump to args pulled method signature
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" use j and k to navigate list, use p to toggle preview window
+nmap <silent> <leader>lr <Plug>(coc-references)
 
 " " TODO: not sure I need/want this anymore
 " " WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
@@ -360,14 +264,14 @@ let g:airline_theme='ayu_dark'
 " in any other IDE's you may use
 " vscode has a way to turn off the menu and msvc has a way to turn off certain
 " menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
-" nnoremap <a-l> gt
-" nnoremap <a-h> gT
-" nnoremap <leader>1 :tabfirst<cr>
-" nnoremap <leader>2 2gt
-" nnoremap <leader>3 3gt
-" nnoremap <leader>4 4gt
-" nnoremap <leader>5 5gt
-" nnoremap <leader>0 :tablast<cr>
+nnoremap <a-l> gt
+nnoremap <a-h> gT
+nnoremap <leader>1 :tabfirst<cr>
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>0 :tablast<cr>
 
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
@@ -378,71 +282,18 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 let g:EasyMotion_use_upper = 1
 let g:EasyMotion_keys =   'FJDKSLA;GHEIRUWOQPTYNVMCBZX' " should sort from easy to hard (left to right)
 let g:EasyMotion_smartcase = 1
-" Jump to anywhere you want with minimal keystrokes, with just one key binding. `s{char}{label}`
-" overwin can jump across panes. f2 is 2 char search
-" This will search before and after cursor over panes
-" nmap s <Plug>(easymotion-overwin-f)
-" extend the native t,T,f,F commands to all visible lines, not just current line
-" nmap f <Plug>(easymotion-f)
-" nmap F <Plug>(easymotion-F)
-" nmap t <Plug>(easymotion-t)
-" nmap T <Plug>(easymotion-T)
 " This will search before and after cursor in current pane
 nmap s <Plug>(easymotion-s)
-" map S <nop>
+nnoremap S <nop>
 
-Plug 'vim-scripts/star-search' " star search no longer jumps to next thing immediately. Can search visual selections.
+" No forward jump, Can search visual selections.
+Plug 'vim-scripts/star-search'
 
 " Only use this for Ttoggle (term toggle) any way to do this myself?
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
 let g:neoterm_autojump = 1
-let g:neoterm_autoinsert = 1
+" let g:neoterm_autoinsert = 1
 let g:neoterm_size = 40
-
-" " Toggle f8 to see code symbols for file. Need to install Exuberant ctags / Universal ctags via choco(MS Windows))
-" Plug 'majutsushi/tagbar' " good for quickly seeing the symobls in the file so you have word list to search for
-" map <F8> :TagbarToggle<cr>
-
-" map <F7> :20Lex<CR><c-w><c-l>
-        " netwr is possibly than nerdtree
-        " How to start in vert line mode
-        " Hitting enter on the f1 help line will cycle the commands that it displays on that line
-        " <cr>    Netrw will enter the directory or read the file      |netrw-cr|
-        "   t    Enter the file/directory under the cursor in a new tab|netrw-t|
-        "   v    Enter the file/directory under the cursor in a new   |netrw-v|
-        "        browser window.  A vertical split is used.
-        "   o    Enter the file/directory under the cursor in a new   |netrw-o|
-        "        browser window.  A horizontal split is used.
-        "        Useful if you want another netwr window below the current one for differnt parts of the repo
-        " <c-h>    Edit file hiding list                                |netrw-ctrl-h|
-        " <c-l>    Causes Netrw to refresh the directory listing        |netrw-ctrl-l|
-        "   d    Make a directory                                     |netrw-d|
-        "   D    Attempt to remove the file(s)/directory(ies)         |netrw-D|
-        "   R    Rename the designated file(s)/directory(ies)         |netrw-R|
-        "   %    Open a new file in netrw's current directory         |netrw-%|
-        "   s    Select sorting style: by name, time, or file size    |netrw-s|
-        "   S    Specify suffix priority for name-sorting             |netrw-S|
-        "   gb    Go to previous bookmarked directory                  |netrw-gb|
-        "   gh    Quick hide/unhide of dot-files                       |netrw-gh|
-        "   i    Cycle between thin, long, wide, and tree listings    |netrw-i|
-        "   mb    Bookmark current directory                           |netrw-mb|
-        "   mc    Copy marked files to marked-file target directory    |netrw-mc|
-        "   md    Apply diff to marked files (up to 3)                 |netrw-md|
-        "   me    Place marked files on arg list and edit them         |netrw-me| " Decides to open them in the fucking netwr window. vim is terrible
-        "   mf    Mark a file                                          |netrw-mf| " Must do one at a time. cant leverage visual select? vim is terrible.
-        "   mF    Unmark files                                         |netrw-mF|
-        "   mh    Toggle marked file suffices' presence on hiding list |netrw-mh|
-        "   mm    Move marked files to marked-file target directory    |netrw-mm|
-        "   mp    Print marked files                                   |netrw-mp|
-        "   mr    Mark iles using a shell-style |regexp|              |netrw-mr|
-        "   mg    Apply vimgrep to marked files                        |netrw-mg|
-        "   mu    Unmark all marked files                              |netrw-mu|
-        "   p    Preview the file                                     |netrw-p|
-        "   P    Browse in the previously used window                 |netrw-P|
-        "   qb    List bookmarked directories and history              |netrw-qb|
-        "   qF    Mark files using a quickfix list                     |netrw-qF|
-        "   qL    Mark files using a |location-list|                     |netrw-qL|
-        "   r    Reverse sorting order                                |netrw-r|
 
 " " FONT SIZE FONT ZOOM
 " " neovim seems to work with both
@@ -452,8 +303,6 @@ let guifontpp_size_increment=1
 let guifontpp_smaller_font_map="<c-->"
 let guifontpp_larger_font_map="<c-=>"
 
-" " continuously updated Session.vim
-" Plug 'tpope/vim-obession'
 " Plug 'tpope/vim-commentary'
 " autocmd FileType c,cpp,javascript,json setlocal commentstring=//\ %s
 " dgc will delete comment block, ygc yanks
@@ -492,16 +341,16 @@ autocmd BufReadPost *
 Plug 'wellle/targets.vim'
 
 " Colorschemes
-" for a giant reppo of Colorschemes see flazz/vim-colorschemes
 set t_Co=256
+" giant repo of Colorschemes
+Plug 'flazz/vim-colorschemes'
 Plug 'AlessandroYorba/Alduin'
 " let g:alduin_Shout_Dragon_Aspect = 1
 
 call plug#end()
 
 " COLORSCHEME must come before whitespace highlighting and other color alterations
-" " aludin doesn't allow the whitespace red coloring???
-colorscheme alduin " alduin3 has the white tabs for terminal, doesnt work in gvim, alduin2 works in gvim and nvim
+colorscheme alduin
 
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
@@ -514,31 +363,13 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-" SEARCH
-" * and # search does not use smartcase
-" replace word under cursor in entire file
-" test this thing
-" test
-" testAnother
-" testThis
-" testSomeVarOther
-" testSomeVar
-" test this thing
-" test
-" test THIS thing
-" test
-" Test
-" see s_flags pattern and substitute. /I forces case-sensitive matching
-" Visually selected text, don't ignore case
-" yank first, % for current file, \V for not having to escape symbols,
-" <c-r>" to paste from yank buffer, /I forces case-sensitive matching
-" you can prepare a series of commands separated by |. Buy you must escape it
-" norm or normal means execute the following key sequence in normal mode.
-
 if has("nvim")
   set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
 
+" SEARCH
+" * and # search does not use smartcase
+" see s_flags pattern and substitute. /I forces case-sensitive matching
 " NOTE: vim has a gn text object(next search item), star-search plugin (or vim-slash) combined with cgn and . covers alot of cases
 " Problem is it follows smartcase settings
 " E means edit with confirms, e is no confirm.
@@ -628,7 +459,7 @@ noremap <a-j> L
 noremap <a-k> H
 noremap <a-m> M
 
-" Vert split navigaton
+" split nav
 inoremap <c-h> <Esc><c-w>h
 inoremap <c-j> <Esc><c-w>j
 inoremap <c-k> <Esc><c-w>k
@@ -641,16 +472,17 @@ tnoremap <c-h> <c-\><c-n><c-w>h
 tnoremap <c-j> <c-\><c-n><c-w>j
 tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
+
 " TERMINAL
 " Go to insert mode when switching to a terminal
 au BufEnter * if &buftype == 'terminal' | startinsert | else | stopinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
 " Ttoggle will start to always fail if that first terminal gets killed
-nnoremap <silent> <c-\> :botright Ttoggle<cr>
+nnoremap <silent> <c-\> :botright Ttoggle<cr><c-l>
 " Esc quits the termial
 " NOTE: This is needed to make fzf and other termal based things not annoying
-tnoremap <Esc> <C-\><C-n>:q<cr>
+tnoremap <Esc> <C-\><C-n>:q<cr><c-l>
 tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
@@ -678,15 +510,6 @@ nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
 
 " " Toggle between header and source for c/cpp files
 " if has("gui_running") || has("nvim")
-"   " :e file:p is full path of file. the :s are a chain of substitutes the , are the sub delimiters
-"   " the X123X is just for putting an X123X extension on it.
-"   " this only works if in the same directory
-"   " TODO: need a way to save and kill the old buffer if we found a corresponding file
-"   " See kana/vim-altr
-"   " nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
-"   " nnoremap <A-a> gT
-"   " " alt-d will go to next right tab
-"   " nnoremap <A-d> gt
 "   " " alt-A will move the current tab to the left
 "   " nnoremap <A-A> :tabm -1<cr>
 "   " " alt-D will go to next right tab
@@ -700,14 +523,6 @@ nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
 "   " if not terminal winodw this would just be noremap <a-a> gT
 "   " alt-a will go to next left tab
 "   " Bad to have Esc mappings avoid Alt key since terminal commonly maps Alt to Esc
-"   " nnoremap <Esc>a gT
-"   " " alt-d will go to next right tab
-"   " nnoremap <Esc>d gt
-"   " " alt-A will move the current tab to the left
-"   " nnoremap <Esc>A :tabm -1<cr>
-"   " " alt-D will go to next right tab
-"   " nnoremap <Esc>D :tabm +1<cr>
-"   " nnoremap <Esc>o :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
 " endif
 
 " COLORCOLUMN
@@ -733,14 +548,6 @@ else
     autocmd InsertLeave * setlocal nocursorline | silent! update!
 endif
 
-" " make background different
-" " Highlight from 81 on in a different color
-" " let &colorcolumn=join(range(81,999),",")
-" autocmd BufEnter,FocusGained,VimEnter,WinEnter * let &l:colorcolumn=join(range(0,999), ',')
-" " does the split coloring
-" " autocmd BufEnter,FocusGained,VimEnter,WinEnter * let &l:colorcolumn='+' . join(range(0,254), ',+')
-" autocmd FocusLost,WinLeave * let &l:colorcolumn=join(range(1,255), ',')
-
 " Pressing enter flashes the cursoline and column and removes the search highlight
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
@@ -759,16 +566,13 @@ nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
 
 " Remove whitespace replace tabs with spaces
 nnoremap <leader>w mw:%s/\s\+$//e <bar> %s/\t/    /ge<cr>`w`w
-" autocmd BufWritePre * %s/\s\+$//e
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
 nnoremap > >>
 
-" Indent whole file, turns out to be too painful even for medium files, just do current scope instead
-" nnoremap == gg=G<c-o>
+" indent scope
 nnoremap == =i{<c-o>
-
 
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
@@ -781,12 +585,6 @@ nnoremap k gk
 
 " yank to end of line to follow the C and D convention. vim is terrible
 nnoremap Y y$
-
-" " Session: save vim session to ./Session.vim, load Session.vim
-" " Usually just open any text file in root of a repo and type <leader>ss to create Session.vim file in the root of repo.
-" " Then when I need to load up the seesion again I open the Session.vim file in the root of the repo and type <leader>so to restore my session.
-" nnoremap <leader>ss :mks!<cr>
-" nnoremap <leader>so :so Session.vim<cr>:so $MYVIMRC<cr>
 
 " nvim_win_config
 " grow splits horizontally
@@ -803,25 +601,6 @@ nnoremap <c-up>   :res +8<cr>
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
 nmap <silent> <leader>ve :vs ~/.vimrc<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
-
-" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :GFiles :Rg
-" down / up / left / right
-" let g:fzf_layout = { 'down': '~50%' }
-
-" In Neovim, you can set up fzf window using a Vim command
-nnoremap <leader>l :BLines<cr>
-nnoremap <leader>L :Lines<cr>
-nnoremap <leader>t :BTags<cr>
-nnoremap <leader>T :Tags<cr>
-nnoremap <leader>f :GFiles<cr>
-nnoremap <leader>F :Files<cr>
-" nnoremap <leader>hh :History<cr>
-" nnoremap <leader>h/ :History/<cr>
-" nnoremap <leader>h: :History:<cr>
-nnoremap <leader>b :Buffers<cr>
-" need to install ripgrep or compile it in rust, not available on ubuntu 18.04
-" see <leader>aa
-nnoremap <leader>R :Rg<cr>
 
 " Useful but better to use the visual select search and repace mappings that I setup (<leader> ey Ey ew Ew)
 " Make a simple "search" text object, then cs to change search hit, n. to repeat
@@ -1025,3 +804,14 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 " 	% ctags -R -f ~/.vim/systags /usr/include /usr/local/include
 " In your vimrc file add this tags file to the 'tags' option:
 " 	set tags+=~/.vim/systags
+
+" :Cfilter some-string to filter the quickfix list, :Cfilter will grab entries not matching some-string
+" :Cfilter[!] /{pat}/
+" :Lfilter[!] /{pat}/
+" packadd cfilter
+
+" Toggle header and source
+" :e file:p is full path of file. the :s are a chain of substitutes the , are the sub delimiters
+" the X123X is just for putting an X123X extension on it.
+" this only works if in the same directory
+" nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>

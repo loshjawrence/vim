@@ -1,29 +1,18 @@
 {
-     "languageserver": {
-         "clangd": {
-             "command": "clangd",
-             "args": ["--background-index"],
-             "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-             "filetypes": ["c", "cpp", "objc", "objcpp"]
-         },
+    "languageserver": {
+        "clangd": {
+            "command": "clangd",
+            "args": ["--background-index"],
+            "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+            "filetypes": ["c", "cpp", "objc", "objcpp"]
+        }
+    },
 
-     //    "ccls": {
-     //        "command": "ccls",
-     //        "filetypes": ["c", "cpp", "objc", "objcpp"],
-     //        "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-     //        "initializationOptions": {
-     //            "cache": {
-     //            "directory": "/tmp/ccls"
-     //            }
-     //        }
-     //    }
-     },
     "suggest.echodocSupport": true,
-    // Don't show me a wall of completion suggestions
     "suggest.maxCompleteItemCount": 20,
-    // "coc.preferences.formatOnSaveFiletypes": ["javascript", "typescript", "typescriptreact", "json", "javascriptreact"],
     "eslint.filetypes": ["javascript", "javascriptreact"],
     "diagnostic.errorSign": "!",
     "diagnostic.warningSign": "•",
-    "diagnostic.infoSign": "•"
+    "diagnostic.infoSign": "•",
+    "suggest.autoTrigger": "always"
 }
