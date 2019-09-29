@@ -14,5 +14,5 @@ if exists('g:GuiLoaded')
     if has("win32")
         nnoremap <c-6> <c-^>
     endif
-    source ~/.vimrc
+    source $MYVIMRC
 endif
