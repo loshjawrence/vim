@@ -1,4 +1,6 @@
-﻿noremap <space> <nop>
+﻿" See repo for disable capslock reg file for windows 10, double click to merge it then restart
+
+noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
 
 if has("win32")
@@ -479,10 +481,10 @@ au BufEnter * if &buftype == 'terminal' | startinsert | else | stopinsert | endi
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
 " Ttoggle will start to always fail if that first terminal gets killed
-nnoremap <silent> <c-\> :botright Ttoggle<cr><c-l>
+nnoremap <silent> <c-\> :botright Ttoggle<cr>
 " Esc quits the termial
 " NOTE: This is needed to make fzf and other termal based things not annoying
-tnoremap <Esc> <C-\><C-n>:q<cr><c-l>
+tnoremap <Esc> <C-\><C-n>:q<cr>
 tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
