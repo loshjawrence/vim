@@ -343,7 +343,7 @@ Plug 'wellle/targets.vim'
 " Colorschemes
 set t_Co=256
 " giant repo of Colorschemes
-Plug 'flazz/vim-colorschemes'
+"Plug 'flazz/vim-colorschemes'
 Plug 'AlessandroYorba/Alduin'
 " let g:alduin_Shout_Dragon_Aspect = 1
 
@@ -444,8 +444,8 @@ noremap <silent> <c-e> <nop>
 noremap <silent> <c-y> <nop>
 noremap <silent> <c-f> <nop>
 noremap <silent> <c-b> <nop>
-noremap <silent> <c-u> 9<c-y>
-noremap <silent> <c-d> 9<c-e>
+noremap <silent> <c-u> 10<c-y>
+noremap <silent> <c-d> 10<c-e>
 
 noremap J }
 noremap K {
