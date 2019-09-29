@@ -23,9 +23,25 @@ if v:progname == 'vi'
 endif
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
-" set omnifunc=syntaxcomplete#Complete
-" set omnifunc=ccomplete#Complete
 inoremap <c-m> <c-x><c-o>
+" au FileType c,cpp setl ofu=ccomplete#Complete
+
+" Need to unzip and dump the contents of the root dir (after/docs/autoload) into .vim folder
+" run :helptags on the docs folder then look at :h omnicppcomplete and look at installation
+" cpp omni completion: https://vim.fandom.com/wiki/C%2B%2B_code_completion
+au FileType c,cpp setl ofu=omni#cpp#complete#Main
+" OmniCppComplete
+let OmniCpp_NamespaceSearch = 1
+let OmniCpp_GlobalScopeSearch = 1
+let OmniCpp_ShowAccess = 1
+let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
+let OmniCpp_MayCompleteDot = 1 " autocomplete after .
+let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
+let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
+" let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+" automatically open and close the popup menu / preview window
+au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+set completeopt=menuone,menu,longest,preview
 
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
@@ -139,17 +155,21 @@ Plug 'junegunn/fzf.vim'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 " include inheritance info and signatures of functions
-command! CTags !ctags -R --fields=+iS --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
-nnoremap <F1> :CTags<cr>
+" it seems most of these flags are needed for :h omnicppcomplete
+command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
+nnoremap <F1> :cd %:p:h <bar> CTags<cr>
 " automatically open and close the popup menu / preview window
 " au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 " set completeopt=menuone,menu,longest,preview
 
-" see this for tags advice and cpp omni completion: https://vim.fandom.com/wiki/C%2B%2B_code_completion
 
 " to make all fzf lists go top-down, put something like
 "export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
+"
+
+" shows function sig in preview window, doesn't work at all
+" Plug 'vim-scripts/autoproto.vim'
 
 Plug 'jiangmiao/auto-pairs'
 
@@ -289,21 +309,19 @@ Plug 'sheerun/vim-polyglot'
 
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " set statusline+=%{coc#status()}
-" " use <tab> for trigger completion and navigate to the next complete item
+" use <tab> for trigger completion and navigate to the next complete item
 " function! s:check_back_space() abort
 "   let col = col('.') - 1
 "   return !col || getline('.')[col - 1]  =~ '\s'
 " endfunction
-"
 " inoremap <silent><expr> <Tab>
 "       \ pumvisible() ? "\<C-n>" :
 "       \ <SID>check_back_space() ? "\<Tab>" :
 "       \ coc#refresh()
-"
-" nmap <silent> <leader>cd <Plug>(coc-definition)
+" nmap <silent> <leader>c] <Plug>(coc-definition)
 " nmap <silent> <leader>cr <Plug>(coc-references)
 " nmap <silent> <leader>ci <Plug>(coc-implementation)
-" " Use <cr> to confirm completion
+" Use <cr> to confirm completion
 " inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " " To make <cr> select the first completion item and confirm the completion when no item has been selected:
 " inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
