@@ -72,7 +72,7 @@ set nowrap                          " Don't word wrap
 set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 set cmdheight=2 " Better display for messages
 set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
-set shortmess+=cS " don't give |ins-completion-menu| messages.
+set shortmess+=c " don't give |ins-completion-menu| messages.
 
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
@@ -346,6 +346,7 @@ Plug 'wellle/targets.vim'
 set t_Co=256
 " giant repo of Colorschemes
 "Plug 'flazz/vim-colorschemes'
+" ayu gruvbox Monokai
 Plug 'AlessandroYorba/Alduin'
 " let g:alduin_Shout_Dragon_Aspect = 1
 
