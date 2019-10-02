@@ -199,30 +199,16 @@ nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><lef
 "     autocmd BufWinEnter quickfix endif
 " augroup end
 
-Plug 'tpope/vim-surround'
-" see http://www.futurile.net/2016/03/19/vim-surround-plugin-tutorial/
-" can use with vim-repeat,
-" S <desiredChar> Surround when in visual modes (surrounds full selection) with char
-" d s <existing char>    Delete existing surround
-" c s <existing char> <desiredChar>    Change surround existing to desired
-" y s <motion><desiredChar> (as in you-surround) Surround in the motion(ex: iw)
-" y ss <desiredChar> Surround the line
-" y S <motion><desiredChar>  Surround in the motion , putting the surround chars on lines above and below and indenting text
-" y SS <desiredChar>  Surround the line, puttuing the surround chars on lines above and below
-
-" Plug 'tpope/vim-eunuch'
-" " :Delete: Delete a buffer and the file on disk simultaneously.
-" " :Unlink: Like :Delete, but keeps the now empty buffer.
-" " :Move: Rename a buffer and the file on disk simultaneously.
-" " :Rename: Like :Move, but relative to the current file's containing directory.
-" " :Chmod: Change the permissions of the current file.
-" " :Mkdir: Create a directory, defaulting to the parent of the current file.
-" " :Cfind: Run find and load the results into the quickfix list.
-" " :Clocate: Run locate and load the results into the quickfix list.
-" " :Lfind/:Llocate: Like above, but use the location list.
-" " :Wall: Write every open window. Handy for kicking off tools like guard.
-" " :SudoWrite: Write a privileged file with sudo.
-" " :SudoEdit: Edit a privileged file with sudo.
+" Surrounding things
+vnoremap s" <Esc>`>a"<Esc>`<i"<Esc>
+vnoremap s' <Esc>`>a'<Esc>`<i'<Esc>
+vnoremap s( <Esc>`>a)<Esc>`<i(<Esc>
+vnoremap s[ <Esc>`>a]<Esc>`<i[<Esc>
+vnoremap s< <Esc>`>a><Esc>`<i<<Esc>
+vnoremap s` <Esc>`>a`<Esc>`<i`<Esc>
+" I think the <expr> means map to expr since we are running a ternary op to see which vis mode we ar in
+" see :h mode() or :h visualmode()
+vnoremap <expr> s{ visualmode() ==# "v" ? "<Esc>`>a}<Esc>`<i{<Esc>" : "<Esc>`>a<cr>}<Esc>`<O{<Esc>va{="
 
 " Syntax highlighting for a ton of languages
 Plug 'sheerun/vim-polyglot'
@@ -319,7 +305,7 @@ Plug 'vim-scripts/star-search'
 " Only use this for Ttoggle (term toggle) any way to do this myself?
 Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
 let g:neoterm_autojump = 1
-" let g:neoterm_autoinsert = 1
+let g:neoterm_autoinsert = 1
 let g:neoterm_size = 40
 
 " " FONT SIZE FONT ZOOM
