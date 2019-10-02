@@ -1,4 +1,5 @@
 ﻿" See repo for disable capslock reg file for windows 10, double click to merge it then restart
+" TODO: remove surround with a couple of mappings
 
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
@@ -306,8 +307,8 @@ Plug 'tpope/vim-repeat'
 Plug 'easymotion/vim-easymotion'
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 let g:EasyMotion_use_upper = 1
-let g:EasyMotion_keys =   'FJDKSLA;GHEIRUWOQPTYNVMCBZX' " should sort from easy to hard (left to right)
 let g:EasyMotion_smartcase = 1
+let g:EasyMotion_keys =   'ASDGHKLQWERTYUIOPZXCVBNMFJ;' " should sort from easy to hard (left to right)
 " This will search before and after cursor in current pane
 nmap s <Plug>(easymotion-s)
 nnoremap S <nop>
@@ -329,13 +330,11 @@ let guifontpp_size_increment=1
 let guifontpp_smaller_font_map="<c-->"
 let guifontpp_larger_font_map="<c-=>"
 
-" Plug 'tpope/vim-commentary'
-" autocmd FileType c,cpp,javascript,json setlocal commentstring=//\ %s
-" dgc will delete comment block, ygc yanks
-" gcgc and gcu will uncomment a set of comments
-" gcip gci{ will comment those motions
+" gcc toggles line
+" gc on selection to toggle
+" gcip gci{ will toggle within those motions
 Plug 'tomtom/tcomment_vim'
-" Prevent tcomment from making a zillion mappings (we just want the operator).
+" Prevent tcomment from making a zillion mappings (we just want the gc operator).
 let g:tcomment_mapleader1=''
 let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
