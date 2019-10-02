@@ -113,20 +113,45 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
+" fzf using skim
+" Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
+" Plug 'lotabout/skim.vim'
+" command! -bang -nargs=* Rg call fzf#vim#rg_interactive(<q-args>, fzf#vim#with_preview('right:50%:hidden', 'alt-h'))
 " choco install ripgrep
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
+" Better Colors command.
+command! -bang Colors call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 1%,0'}, <bang>0)
 " to make all fzf lists go top-down, put something like
-"export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+" export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
+
+" ripgrep
+set grepprg=rg\ --vimgrep
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+
+" Likewise, Files command with preview window
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+"TODO: what is the GFiles vesion of this?
+
 nnoremap <leader>t :BTags<cr>
 nnoremap <leader>T :Tags<cr>
 nnoremap <leader>f :GFiles<cr>
 nnoremap <leader>F :Files<cr>
 nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>R :Rg<cr>
+nnoremap <leader>gg :Rg!<cr>
+nnoremap <leader>gw :Rg! <c-r><c-w><cr>
+" TODO: need to escape some special chars for ripgrep like ( and { etc.
+nnoremap <leader>gs :Rg! <c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr><cr>
+nnoremap <leader>gy :Rg! <c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr><cr>
 
 Plug 'jiangmiao/auto-pairs'
 " This allows surround.vim to not pad with spaces
@@ -138,13 +163,12 @@ let g:AutoPairsMapSpace=0
 Plug 'itchyny/vim-qfedit'
 
 " tell vim to use ripgrep for the its external grep program
-set grepprg=rg\ --vimgrep
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
 nmap <leader>aa :MyGrep ""<left>
 nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
-nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
+nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
 
 " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
 nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
