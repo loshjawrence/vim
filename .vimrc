@@ -95,7 +95,7 @@ nnoremap <leader>cd :cd %:p:h<cr>
 " include inheritance info and signatures of functions
 " it seems most of these flags are needed for :h omnicppcomplete
 command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
-nnoremap <F1> :cd %:p:h <bar> CTags<cr>
+nnoremap <leader>ct :cd %:p:h <bar> CTags<cr>
 
 " FILETYPE
 " Associate filetypes with other filetypes
@@ -198,17 +198,6 @@ nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><lef
 "     autocmd BufWinEnter quickfix    vnoremap <silent><buffer>d  :call QFdelete()<CR>
 "     autocmd BufWinEnter quickfix endif
 " augroup end
-
-" Surrounding things
-vnoremap s" <Esc>`>a"<Esc>`<i"<Esc>
-vnoremap s' <Esc>`>a'<Esc>`<i'<Esc>
-vnoremap s( <Esc>`>a)<Esc>`<i(<Esc>
-vnoremap s[ <Esc>`>a]<Esc>`<i[<Esc>
-vnoremap s< <Esc>`>a><Esc>`<i<<Esc>
-vnoremap s` <Esc>`>a`<Esc>`<i`<Esc>
-" I think the <expr> means map to expr since we are running a ternary op to see which vis mode we ar in
-" see :h mode() or :h visualmode()
-vnoremap <expr> s{ visualmode() ==# "v" ? "<Esc>`>a}<Esc>`<i{<Esc>" : "<Esc>`>a<cr>}<Esc>`<O{<Esc>va{="
 
 " Syntax highlighting for a ton of languages
 Plug 'sheerun/vim-polyglot'
@@ -419,6 +408,36 @@ nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$
 " Make A and I work in vis line mode. They already  work in the block bounds so leave that be.
 xnoremap <expr> A mode() ==# "V" ? "<c-v>$A" : "A"
 xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
+
+" Surrounding things
+vnoremap s <nop>
+vnoremap s" <Esc>`>a"<Esc>`<i"<Esc>
+vnoremap s' <Esc>`>a'<Esc>`<i'<Esc>
+vnoremap s( <Esc>`>a)<Esc>`<i(<Esc>
+vnoremap s[ <Esc>`>a]<Esc>`<i[<Esc>
+vnoremap s< <Esc>`>a><Esc>`<i<<Esc>
+vnoremap s` <Esc>`>a`<Esc>`<i`<Esc>
+" I think the <expr> means map to expr since we are running a ternary op to see which vis mode we ar in
+" see :h mode() or :h visualmode()
+vnoremap <expr> s{ visualmode() ==# "v" ? "<Esc>`>a}<Esc>`<i{<Esc>" : "<Esc>`>a<cr>}<Esc>`<O{<Esc>va{="
+
+" Make a file and add it to git
+function! MakeAFileAndAddToGit(filename)
+    execute 'edit ' . a:filename
+    write
+    execute 'silent !git add ' . a:filename
+
+    " match .c then 0 or 2 p's then end of line
+    " see :h pattern-overview
+    let hfile=substitute(a:filename, '\.c[p]\{-,2}$', '.h', '')
+    if hfile =~ '\.h$'
+        execute 'edit ' . hfile
+        write
+        execute 'silent !git add ' . hfile
+    endif
+endfunction
+nnoremap <leader>mf :call MakeAFileAndAddToGit("")<left><left>
+
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
