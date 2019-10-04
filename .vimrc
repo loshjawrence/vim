@@ -307,7 +307,7 @@ let guifontpp_larger_font_map="<c-=>"
 
 " gcc toggles line
 " gc on selection to toggle
-" gcip gci{ will toggle within those motions
+" gcip gci{ etc. will toggle within those motions
 Plug 'tomtom/tcomment_vim'
 " Prevent tcomment from making a zillion mappings (we just want the gc operator).
 let g:tcomment_mapleader1=''
@@ -344,14 +344,14 @@ Plug 'wellle/targets.vim'
 set t_Co=256
 " giant repo of Colorschemes
 "Plug 'flazz/vim-colorschemes'
-" ayu gruvbox Monokai
+" gruvbox
 Plug 'AlessandroYorba/Alduin'
-" let g:alduin_Shout_Dragon_Aspect = 1
+let g:alduin_Shout_Dragon_Aspect = 1
+" COLORSCHEME must come before whitespace highlighting and other color alterations
+colorscheme alduin
 
 call plug#end()
 
-" COLORSCHEME must come before whitespace highlighting and other color alterations
-colorscheme alduin
 
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
@@ -411,15 +411,16 @@ xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
 
 " Surrounding things
 vnoremap s <nop>
-vnoremap s" <Esc>`>a"<Esc>`<i"<Esc>
-vnoremap s' <Esc>`>a'<Esc>`<i'<Esc>
-vnoremap s( <Esc>`>a)<Esc>`<i(<Esc>
-vnoremap s[ <Esc>`>a]<Esc>`<i[<Esc>
-vnoremap s< <Esc>`>a><Esc>`<i<<Esc>
-vnoremap s` <Esc>`>a`<Esc>`<i`<Esc>
+vnoremap S <nop>
+vnoremap S" <Esc>`>a"<Esc>`<i"<Esc>
+vnoremap S' <Esc>`>a'<Esc>`<i'<Esc>
+vnoremap S( <Esc>`>a)<Esc>`<i(<Esc>
+vnoremap S[ <Esc>`>a]<Esc>`<i[<Esc>
+vnoremap S< <Esc>`>a><Esc>`<i<<Esc>
+vnoremap S` <Esc>`>a`<Esc>`<i`<Esc>
 " I think the <expr> means map to expr since we are running a ternary op to see which vis mode we ar in
 " see :h mode() or :h visualmode()
-vnoremap <expr> s{ visualmode() ==# "v" ? "<Esc>`>a}<Esc>`<i{<Esc>" : "<Esc>`>a<cr>}<Esc>`<O{<Esc>va{="
+vnoremap <expr> S{ visualmode() ==# "v" ? "<Esc>`>a}<Esc>`<i{<Esc>" : "<Esc>`>a<cr>}<Esc>`<O{<Esc>va{="
 
 " Make a file and add it to git
 function! MakeAFileAndAddToGit(filename)
