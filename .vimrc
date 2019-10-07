@@ -95,7 +95,8 @@ nnoremap <leader>cd :cd %:p:h<cr>
 " include inheritance info and signatures of functions
 " it seems most of these flags are needed for :h omnicppcomplete
 command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
-nnoremap <leader>ct :cd %:p:h <bar> CTags<cr>
+" nnoremap <leader>ct :cd %:p:h <bar> CTags<cr>
+nnoremap <leader>ct :CTags<cr>
 
 " FILETYPE
 " Associate filetypes with other filetypes
@@ -239,7 +240,7 @@ nmap <silent> <leader>lr <Plug>(coc-references)
 " " linux search keyboard set to 200ms delay, 40c/s
 Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
 " let g:airline_powerline_fonts = 1
-let g:airline#extensions#gutentags#enabled = 1
+" let g:airline#extensions#gutentags#enabled = 1
 let g:airline#extensions#coc#enabled = 1
 let g:airline#extensions#branch#enabled=1
 let g:airline#extensions#branch#empty_message = ''
@@ -247,8 +248,8 @@ let g:airline#extensions#branch#displayed_head_limit = 10
 let g:airline#extensions#branch#format = 2
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t' " Just display filename
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#show_tabs = 1
+let g:airline#extensions#tabline#show_buffers = 1
+let g:airline#extensions#tabline#show_tabs = 0
 let g:airline#extensions#tabline#show_tab_nr = 0
 let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#show_splits = 0
@@ -266,8 +267,10 @@ let g:airline_theme='ayu_dark'
 " in any other IDE's you may use
 " vscode has a way to turn off the menu and msvc has a way to turn off certain
 " menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
-nnoremap <a-l> gt
-nnoremap <a-h> gT
+" nnoremap <a-l> gt
+" nnoremap <a-h> gT
+nnoremap <a-l> :bn<cr>
+nnoremap <a-h> :bp<cr>
 nnoremap <leader>1 :tabfirst<cr>
 nnoremap <leader>2 2gt
 nnoremap <leader>3 3gt
@@ -346,7 +349,7 @@ set t_Co=256
 "Plug 'flazz/vim-colorschemes'
 " gruvbox
 Plug 'AlessandroYorba/Alduin'
-let g:alduin_Shout_Dragon_Aspect = 1
+" let g:alduin_Shout_Dragon_Aspect = 1
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 colorscheme alduin
 
@@ -412,15 +415,51 @@ xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
 " Surrounding things
 vnoremap s <nop>
 vnoremap S <nop>
-vnoremap S" <Esc>`>a"<Esc>`<i"<Esc>
-vnoremap S' <Esc>`>a'<Esc>`<i'<Esc>
-vnoremap S( <Esc>`>a)<Esc>`<i(<Esc>
-vnoremap S[ <Esc>`>a]<Esc>`<i[<Esc>
-vnoremap S< <Esc>`>a><Esc>`<i<<Esc>
-vnoremap S` <Esc>`>a`<Esc>`<i`<Esc>
 " I think the <expr> means map to expr since we are running a ternary op to see which vis mode we ar in
 " see :h mode() or :h visualmode()
-vnoremap <expr> S{ visualmode() ==# "v" ? "<Esc>`>a}<Esc>`<i{<Esc>" : "<Esc>`>a<cr>}<Esc>`<O{<Esc>va{="
+" \e is <esc>
+" xno is xnoremap
+xno <expr> S{ {
+\  'v': "\e`>a}\e`<i{\e",
+\  'V': "\e`>o}\e`<O{\eva{=",
+\  '<c-v>': "A}\egvI{\e",
+\ }[mode()]
+
+xno <expr> S[ {
+\  'v': "\e`>a]\e`<i[\e",
+\  'V': "\e`>o]\e`<O[\eva[=",
+\  '<c-v>': "A]\egvI[\e",
+\ }[mode()]
+
+xno <expr> S( {
+\  'v': "\e`>a)\e`<i(\e",
+\  'V': "\e`>o)\e`<O(\eva(=",
+\  '<c-v>': "A)\egvI(\e",
+\ }[mode()]
+
+xno <expr> S< {
+\  'v': "\e`>a>\e`<i<\e",
+\  'V': "\e`>o>\e`<O<\eva<=",
+\  '<c-v>': "A>\egvI<\e",
+\ }[mode()]
+
+xno <expr> S' {
+\  'v': "\e`>a'\e`<i'\e",
+\  'V': "\e`>o'\e`<O'\eva'=",
+\  '<c-v>': "A'\egvI'\e",
+\ }[mode()]
+
+xno <expr> S" {
+\  'v': "\e`>a\"\e`<i\"\e",
+\  'V': "\e`>o\"\e`<O\"\eva\"=",
+\  '<c-v>': "A\"\egvI\"\e",
+\ }[mode()]
+
+xno <expr> S` {
+\  'v': "\e`>a`\e`<i`\e",
+\  'V': "\e`>o`\e`<O`\eva`=",
+\  '<c-v>': "A`\egvI`\e",
+\ }[mode()]
 
 " Make a file and add it to git
 function! MakeAFileAndAddToGit(filename)
@@ -438,7 +477,6 @@ function! MakeAFileAndAddToGit(filename)
     endif
 endfunction
 nnoremap <leader>mf :call MakeAFileAndAddToGit("")<left><left>
-
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
