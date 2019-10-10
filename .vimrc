@@ -1,5 +1,4 @@
 ﻿" See repo for disable capslock reg file for windows 10, double click to merge it then restart
-" TODO: remove surround with a couple of mappings
 
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
@@ -269,14 +268,12 @@ let g:airline_theme='ayu_dark'
 " menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
 " nnoremap <a-l> gt
 " nnoremap <a-h> gT
-nnoremap <a-l> :bn<cr>
-nnoremap <a-h> :bp<cr>
-nnoremap <leader>1 :tabfirst<cr>
-nnoremap <leader>2 2gt
-nnoremap <leader>3 3gt
-nnoremap <leader>4 4gt
-nnoremap <leader>5 5gt
-nnoremap <leader>0 :tablast<cr>
+" nnoremap <leader>1 :tabfirst<cr>
+" nnoremap <leader>2 2gt
+" nnoremap <leader>3 3gt
+" nnoremap <leader>4 4gt
+" nnoremap <leader>5 5gt
+" nnoremap <leader>0 :tablast<cr>
 
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
@@ -349,7 +346,7 @@ set t_Co=256
 "Plug 'flazz/vim-colorschemes'
 " gruvbox
 Plug 'AlessandroYorba/Alduin'
-" let g:alduin_Shout_Dragon_Aspect = 1
+Plug 'AlessandroYorba/Despacio'
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 colorscheme alduin
 
@@ -415,7 +412,6 @@ xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
 " Surrounding things
 vnoremap s <nop>
 vnoremap S <nop>
-" I think the <expr> means map to expr since we are running a ternary op to see which vis mode we ar in
 " see :h mode() or :h visualmode()
 " \e is <esc>
 " xno is xnoremap
@@ -558,23 +554,21 @@ tnoremap <C-\> <C-\><C-n>
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
 " " airline removes term from tabline but must still skip it
-" function! BufferPrev()
-"   bprev
-"   if &buftype == 'terminal'
-"     bprev
-"   endif
-" endfunction
-" function! BufferNext()
-"   bnext
-"   if &buftype == 'terminal'
-"     bnext
-"   endif
-" endfunction
+function! BufferPrev()
+  bprev
+  if &buftype == 'terminal'
+    bprev
+  endif
+endfunction
+function! BufferNext()
+  bnext
+  if &buftype == 'terminal'
+    bnext
+  endif
+endfunction
 " " Cycle tabs in tab bar
-" nnoremap <silent> <c-a> :call BufferPrev()<cr>
-" nnoremap <silent> <c-x> :call BufferNext()<cr>
-" nnoremap <silent> <a-l> gt
-" nnoremap <silent> <a-h> gT
+nnoremap <silent> <a-h> :call BufferPrev()<cr>
+nnoremap <silent> <a-l> :call BufferNext()<cr>
 " " kill buffer tab
 nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
 
