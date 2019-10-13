@@ -570,7 +570,8 @@ endfunction
 nnoremap <silent> <a-h> :call BufferPrev()<cr>
 nnoremap <silent> <a-l> :call BufferNext()<cr>
 " " kill buffer tab
-nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
+" nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
+nnoremap <silent> <c-q> :silent! up! <bar> silent! bd! <bar> call BufferNext() <cr>
 
 " " Toggle between header and source for c/cpp files
 " if has("gui_running") || has("nvim")
