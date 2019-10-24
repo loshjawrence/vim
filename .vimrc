@@ -26,7 +26,7 @@ syntax enable    " syntax highlighting
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set nrformats-=octal
 set number              " Show line numbers
-set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
+" set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
 set background=dark     " tell vim what the background color looks like
 set backspace=indent,eol,start " allow backspace to work normally
 set history=200         " how many : commands to save in history
@@ -130,7 +130,7 @@ command! -bang Colors call fzf#vim#colors({'left': '15%', 'options': '--reverse 
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
 
 " ripgrep
-set grepprg=rg\ --vimgrep
+set grepprg=rg\ --vimgrep\ --glob\ !tags
 
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
