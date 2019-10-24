@@ -1,17 +1,18 @@
 // My Linux Path: ~/.config/Code/User/
 {
-    "window.zoomLevel": -1,
+    "window.zoomLevel": 1,
     "C_Cpp.updateChannel": "Insiders",
     "editor.renderIndentGuides": false,
 
+    "cmake.cmakePath": "/usr/bin/cmake",
     // VIM
     // see https://github.com/VSCodeVim/Vim#viminsertmodekeybindingsvimothermodeskeybindings
-    "vim.easymotion": true,
-    "vim.easymotionKeys": "fjdksla;gheiruwoqptynvmcbzx",
-    "vim.easymotionMarkerHeight": 20,
-    "vim.easymotionMarkerWidthPerChar": 13,
-    "vim.easymotionMarkerYOffset": 0,
-    "vim.easymotionMarkerFontSize": "18",
+    // "vim.easymotion": true,
+    // "vim.easymotionKeys": "fjdksla;gheiruwoqptynvmcbzx",
+    // "vim.easymotionMarkerHeight": 20,
+    // "vim.easymotionMarkerWidthPerChar": 13,
+    // "vim.easymotionMarkerYOffset": 0,
+    // "vim.easymotionMarkerFontSize": "18",
     "vim.useSystemClipboard": true,
     "vim.hlsearch": true,
     "vim.incsearch": true,
@@ -58,6 +59,31 @@
         {
             "before": ["<"],
             "after": ["<", "<"]
+        },
+
+        {
+            "before": ["J"],
+            "after": ["}"]
+        },
+
+        {
+            "before": ["{"],
+            "after": ["J"]
+        },
+
+        {
+            "before": ["K"],
+            "after": ["{"]
+        },
+
+        {
+            "before": ["H"],
+            "after": ["^"]
+        },
+
+        {
+            "before": ["L"],
+            "after": ["$"]
         },
 
         {
@@ -118,12 +144,14 @@
 
         {
             "before": ["<C-d>"],
-            "after": ["7", "<C-e>"]
+            "after": ["10", "<C-e>"]
         },
 
         {
             "before": ["<C-u>"],
-            "after": ["7", "<C-y>"]
+            "after": ["10", "<C-y>"]
         },
     ],
+    "cmake.configureOnOpen": true,
+    "git.ignoreLegacyWarning": true,
 }
