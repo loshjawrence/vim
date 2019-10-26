@@ -123,6 +123,11 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
+" USE FD https://github.com/sharkdp/fd
+" put in .bashrc for fd
+" export FZF_DEFAULT_COMMAND="fd --type file --color=always"
+" Add to "export FZF_DEFAULT_OPTS=" --ansi
+" export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 " Better Colors command.
 command! -bang Colors call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 1%,0'}, <bang>0)
 " to make all fzf lists go top-down, put something like
@@ -676,6 +681,10 @@ nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
 " Pretty Json
 nnoremap <leader>p :%!python -m json.tool<cr>
+" convert to hex view
+nnoremap <leader>xx :%!xxd<cr>
+" undo convert to hex view
+nnoremap <leader>xr :%!xxd -r<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
