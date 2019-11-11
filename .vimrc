@@ -174,14 +174,14 @@ command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | exe
 nmap <leader>aa :MyGrep ""<left>
 nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
-nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
+" nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
 
 " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
 nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
-nmap <leader>rm :MyCdo %s/gIe<left><left><left>
-nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
-nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
-nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
+" nmap <leader>rm :MyCdo %s/gIe<left><left><left>
+" nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
+" nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+" nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
 " " using range-aware function
 " function! QFdelete() range
@@ -384,24 +384,26 @@ endif
 " The \< and \> means don't do a raw string replace but a word replace (only operate on that string if its a stand-alone word)
 " so if you want to replace someVar, it won't touch vars name someVarOther
 " edit word in whole file
-nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
+" nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
 " Edit confirm word in whole file
-nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
+" nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
 " edit word under cursor within the visual lines
 " gv selects the last vis selection (line, block or select)
-vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
+" vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
 " Visually selected text in file
 " If mode is visual line mode, edit the prev yank acros the vis lines, else across the whole file
 " see :h escape() (escape the chars in teh second arg with backslash)
 " c-r=escape() means paste in the result of escape
-vnoremap <expr> <leader>ey mode() ==# "V" ?
-      \ ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
-      \: "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+" vnoremap <expr> <leader>ey mode() ==# "V" ?
+"       \ ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+"       \: "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
 " Whole file edit yank (E version being with confim)
-nnoremap <leader>ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
-nnoremap <leader>Ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
+" nnoremap <leader>ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
+" nnoremap <leader>Ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
 " Visual lines or visual select edit-last-search, 4 backslashes since we are in a "" and to insert a \ into "" you need \\
 " and to get the \\ in a '' from a "" you need 4.
+" NOTE: the w and y versions are never used in practice since * is used
+" to see whats there and V to select the ones that need to change
 vnoremap <expr> <leader>es mode() ==# "V" ?
       \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
       \: ""
@@ -410,7 +412,7 @@ nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$
 nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
 
 " see "h <expr> and :help mode()
-" Make A and I work in vis line mode. They already  work in the block bounds so leave that be.
+" Make A and I work in vis line mode. They already work in the block bounds so leave that be.
 xnoremap <expr> A mode() ==# "V" ? "<c-v>$A" : "A"
 xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
 
@@ -477,6 +479,7 @@ function! MakeAFileAndAddToGit(filename)
         execute 'silent !git add ' . hfile
     endif
 endfunction
+" Additional .h file created when .cpp passed in
 nnoremap <leader>mf :call MakeAFileAndAddToGit("")<left><left>
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. Only \ and / have meaning and must be escaped with \
@@ -518,17 +521,17 @@ noremap <silent> <c-b> <nop>
 noremap <silent> <c-u> 10<c-y>
 noremap <silent> <c-d> 10<c-e>
 
-noremap J }
-noremap K {
-noremap { J
-noremap } K
-noremap H ^
-noremap L $
-noremap $ <nop>
-noremap ^ <nop>
-noremap <a-j> L
-noremap <a-k> H
-noremap <a-m> M
+" noremap J }
+" noremap K {
+" noremap { J
+" noremap } K
+" noremap H ^
+" noremap L $
+" noremap $ <nop>
+" noremap ^ <nop>
+" noremap <a-j> L
+" noremap <a-k> H
+" noremap <a-m> M
 
 " split nav
 inoremap <c-h> <Esc><c-w>h
@@ -681,6 +684,7 @@ nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
 " Pretty Json
 nnoremap <leader>p :%!python -m json.tool<cr>
+" NOTE xxd is a linux thing
 " convert to hex view
 nnoremap <leader>xx :%!xxd<cr>
 " undo convert to hex view
@@ -820,6 +824,7 @@ nnoremap <leader>xr :%!xxd -r<cr>
 " [m cursor n times back to start of member function
 " gD go to def of word under cursor in current file
 " gd go to def of word under cursor in current function
+" g; goes to last edited position
 
 " REGISTERS
 " :reg to list whats in all the registers
