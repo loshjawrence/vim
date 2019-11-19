@@ -3,12 +3,6 @@
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
 
-if has("win32")
-    set guifont=Consolas:h10
-else
-    " set guifont=Ubuntu:h10
-endif
-
 " The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
 " autocmd-events for executing : commands (full explanations: autocmd-events-abc)
 
@@ -305,10 +299,29 @@ let g:neoterm_size = 40
 " " FONT SIZE FONT ZOOM
 " " neovim seems to work with both
 " " theres a neovim gtk version that works for linux and windows
-Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
-let guifontpp_size_increment=1
-let guifontpp_smaller_font_map="<c-->"
-let guifontpp_larger_font_map="<c-=>"
+" Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
+" let guifontpp_size_increment=1
+" let guifontpp_smaller_font_map="<c-->"
+" let guifontpp_larger_font_map="<c-=>"
+
+if has("win32")
+    set guifont=Consolas:h10
+else
+    " Doesn't trigger for some reason
+    " Trigger with ctrl = and -
+    set guifont=Monospace:h8
+endif
+
+let s:fontsize = 9
+function! AdjustFontSize(amount)
+    let s:fontsize = s:fontsize+a:amount
+    :execute "GuiFont! Monospace:h" . s:fontsize
+endfunction
+
+noremap <c-=> :call AdjustFontSize(1)<CR>
+noremap <c--> :call AdjustFontSize(-1)<CR>
+" put in ginit.vim, Doesn't work
+" GuiFont Monospace:h8
 
 " gcc toggles line
 " gc on selection to toggle
@@ -521,10 +534,10 @@ noremap <silent> <c-b> <nop>
 noremap <silent> <c-u> 10<c-y>
 noremap <silent> <c-d> 10<c-e>
 
-" noremap J }
-" noremap K {
-" noremap { J
-" noremap } K
+noremap J }
+noremap K {
+noremap { J
+noremap } K
 " noremap H ^
 " noremap L $
 " noremap $ <nop>
