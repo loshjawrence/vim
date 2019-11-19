@@ -370,7 +370,6 @@ colorscheme alduin
 
 call plug#end()
 
-
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
 " set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
@@ -546,7 +545,7 @@ noremap } K
 " noremap <a-k> H
 " noremap <a-m> M
 
-" split nav
+" Split navigation
 inoremap <c-h> <Esc><c-w>h
 inoremap <c-j> <Esc><c-w>j
 inoremap <c-k> <Esc><c-w>k
