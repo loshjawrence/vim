@@ -58,16 +58,20 @@ set ttyfast           " should make scrolling faster
 set lazyredraw        " should make scrolling faster
 set diffopt+=vertical " Always use vertical diffs
 set visualbell " visual bell for errors
+
 set wildignorecase
 set wildmenu                        " enable wildmenu
-set wildmode=list:longest,list:full " configure wildmenu
+if &wildoptions == "pum"
+    cnoremap <expr> <up>   pumvisible() ? "<C-p>" : "\<up>"
+    cnoremap <expr> <down> pumvisible() ? "<C-n>" : "\<down>"
+endif
+
 set textwidth=80
 set nowrap                          " Don't word wrap
 set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 set cmdheight=2 " Better display for messages
 set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
 set shortmess+=c " don't give |ins-completion-menu| messages.
-
 if has('gui')
   " Turn off scrollbars. (Default on macOS is "egmrL").
   set winaltkeys=no
@@ -158,7 +162,7 @@ Plug 'jiangmiao/auto-pairs'
 let g:AutoPairsMapSpace=0
 
 " QUICKFIX LIST
-" can dd, visual delete and other things like undo, :v/someText/d (delete lines not containing someText) or :g/someText/d (delete lines containing someText)
+" can dd, visual delete and other things like undo, :v/someText/d (keep lines containing someText) or :g/someText/d (delete lines containing someText)
 " Nice to have but probably don't need it in practice
 Plug 'itchyny/vim-qfedit'
 
@@ -166,15 +170,15 @@ Plug 'itchyny/vim-qfedit'
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
 nmap <leader>aa :MyGrep ""<left>
-nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
-" nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
-
-" nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
 nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
-" nmap <leader>rm :MyCdo %s/gIe<left><left><left>
+nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+nmap <leader>rm :MyCdo %s/gIe<left><left><left>
+
+" nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
+" nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
+" nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
 " nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
-" nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
 " nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
 " " using range-aware function
@@ -277,6 +281,11 @@ let g:airline_theme='ayu_dark'
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
 
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+
+" File browse, edit browser buffer like normal
+Plug 'justinmk/vim-dirvish'
+
 " Type s and a char of interesst then the colored letters at the char to jump to it.
 Plug 'easymotion/vim-easymotion'
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
@@ -370,6 +379,7 @@ colorscheme alduin
 
 call plug#end()
 
+
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
 " set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
@@ -401,7 +411,7 @@ endif
 " nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
 " edit word under cursor within the visual lines
 " gv selects the last vis selection (line, block or select)
-" vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>
+" vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><left><left><left><left>
 " Visually selected text in file
 " If mode is visual line mode, edit the prev yank acros the vis lines, else across the whole file
 " see :h escape() (escape the chars in teh second arg with backslash)
@@ -417,7 +427,7 @@ endif
 " NOTE: the w and y versions are never used in practice since * is used
 " to see whats there and V to select the ones that need to change
 vnoremap <expr> <leader>es mode() ==# "V" ?
-      \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+      \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
       \: ""
 " Whole file edit last search(E version being with confim). Get rid of teh extre \V then get rid of any ending \n
 nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
@@ -429,54 +439,77 @@ xnoremap <expr> A mode() ==# "V" ? "<c-v>$A" : "A"
 xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
 
 " Surrounding things
-vnoremap s <nop>
-vnoremap S <nop>
+xnoremap s <nop>
+xnoremap S <nop>
 " see :h mode() or :h visualmode()
-" \e is <esc>
+" \e is <esc> (can also use <esc> too), see pattern-atoms
+" `> and `< is jump to end and beg of vis selection
 " xno is xnoremap
 xno <expr> S{ {
 \  'v': "\e`>a}\e`<i{\e",
 \  'V': "\e`>o}\e`<O{\eva{=",
-\  '<c-v>': "A}\egvI{\e",
 \ }[mode()]
 
 xno <expr> S[ {
 \  'v': "\e`>a]\e`<i[\e",
 \  'V': "\e`>o]\e`<O[\eva[=",
-\  '<c-v>': "A]\egvI[\e",
 \ }[mode()]
 
 xno <expr> S( {
 \  'v': "\e`>a)\e`<i(\e",
 \  'V': "\e`>o)\e`<O(\eva(=",
-\  '<c-v>': "A)\egvI(\e",
 \ }[mode()]
 
 xno <expr> S< {
 \  'v': "\e`>a>\e`<i<\e",
 \  'V': "\e`>o>\e`<O<\eva<=",
-\  '<c-v>': "A>\egvI<\e",
 \ }[mode()]
 
 xno <expr> S' {
 \  'v': "\e`>a'\e`<i'\e",
 \  'V': "\e`>o'\e`<O'\eva'=",
-\  '<c-v>': "A'\egvI'\e",
 \ }[mode()]
 
 xno <expr> S" {
 \  'v': "\e`>a\"\e`<i\"\e",
 \  'V': "\e`>o\"\e`<O\"\eva\"=",
-\  '<c-v>': "A\"\egvI\"\e",
 \ }[mode()]
 
 xno <expr> S` {
 \  'v': "\e`>a`\e`<i`\e",
-\  'V': "\e`>o`\e`<O`\eva`=",
-\  '<c-v>': "A`\egvI`\e",
+\  'V': "\e`>o```\e`<O```\eva`=",
 \ }[mode()]
 
-" Make a file and add it to git
+" Every line beg and end gets wrapped with the pair
+xno <expr> s{ {
+\  'V': "<c-v>^I{\egvV<c-v>$A}\e",
+\  '<c-v>': "A}\egvI{\e",
+\ }[mode()]
+xno <expr> s[ {
+\  'V': "<c-v>^I[<esc>gvV<c-v>$A]<esc>",
+\  '<c-v>': "A]\egvI[\e",
+\ }[mode()]
+xno <expr> s( {
+\  'V': "<c-v>^I(<esc>gvV<c-v>$A)<esc>",
+\  '<c-v>': "A)\egvI(\e",
+\ }[mode()]
+xno <expr> s< {
+\  'V': "<c-v>^I<<esc>gvV<c-v>$A><esc>",
+\  '<c-v>': "A>\egvI<\e",
+\ }[mode()]
+xno <expr> s` {
+\  'V': "<c-v>^I`<esc>gvV<c-v>$A`<esc>",
+\  '<c-v>': "A`\egvI`\e",
+\ }[mode()]
+xno <expr> s' {
+\  'V': "<c-v>^I'<esc>gvV<c-v>$A'<esc>",
+\  '<c-v>': "A'\egvI'\e",
+\ }[mode()]
+xno <expr> s" {
+\  'V': "<c-v>^I\"<esc>gvV<c-v>$A\"<esc>",
+\  '<c-v>': "A\"\egvI\"\e",
+\ }[mode()]
+
 function! MakeAFileAndAddToGit(filename)
     execute 'edit ' . a:filename
     write
@@ -545,7 +578,7 @@ noremap } K
 " noremap <a-k> H
 " noremap <a-m> M
 
-" Split navigation
+" split nav
 inoremap <c-h> <Esc><c-w>h
 inoremap <c-j> <Esc><c-w>j
 inoremap <c-k> <Esc><c-w>k
