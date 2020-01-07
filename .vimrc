@@ -86,8 +86,8 @@ endif
 
 " tell :find to recursively search
 set path+=**
-" cd to current file's dir (% is file name :p expands to full path :h takes the head)
-nnoremap <leader>cd :cd %:p:h<cr>
+" local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
+nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 
 " include inheritance info and signatures of functions
 " it seems most of these flags are needed for :h omnicppcomplete
@@ -169,16 +169,16 @@ Plug 'itchyny/vim-qfedit'
 " tell vim to use ripgrep for the its external grep program
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
-nmap <leader>aa :MyGrep ""<left>
+nmap <leader>am :MyGrep ""<left>
+nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
 nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
 nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
 nmap <leader>rm :MyCdo %s/gIe<left><left><left>
 
-" nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 " nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
 " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
-" nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
 " nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
 " " using range-aware function
