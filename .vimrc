@@ -42,7 +42,7 @@ set tabstop=4           " Use 4 spaces for tabs.
 set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " insert tab with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
-set termguicolors       " enable true colors
+set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
 set hidden              " enable hidden unsaved buffers
 silent! helptags ALL    " Generate help doc for all plugins
 " set iskeyword+=-        " as-asdf-asdf-asdf-a-fd
@@ -369,16 +369,13 @@ Plug 'wellle/targets.vim'
 
 " Colorschemes
 set t_Co=256
-" giant repo of Colorschemes
-"Plug 'flazz/vim-colorschemes'
-" gruvbox
 Plug 'AlessandroYorba/Alduin'
-Plug 'AlessandroYorba/Despacio'
+" Plug 'AlessandroYorba/Despacio'
+" gruvbox
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 colorscheme alduin
 
 call plug#end()
-
 
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
@@ -390,6 +387,24 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+
+" Terminal colors
+let g:terminal_color_0  = '#2e3436'
+let g:terminal_color_1  = '#cc0000'
+let g:terminal_color_2  = '#4e9a06'
+let g:terminal_color_3  = '#c4a000'
+let g:terminal_color_4  = '#3465a4'
+let g:terminal_color_5  = '#75507b'
+let g:terminal_color_6  = '#0b939b'
+let g:terminal_color_7  = '#d3d7cf'
+let g:terminal_color_8  = '#555753'
+let g:terminal_color_9  = '#ef2929'
+let g:terminal_color_10 = '#8ae234'
+let g:terminal_color_11 = '#fce94f'
+let g:terminal_color_12 = '#729fcf'
+let g:terminal_color_13 = '#ad7fa8'
+let g:terminal_color_14 = '#00f5e9'
+let g:terminal_color_15 = '#eeeeec'
 
 if has("nvim")
   set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
