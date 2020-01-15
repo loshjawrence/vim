@@ -142,16 +142,18 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
-" Likewise, Files command with preview window
+" Likewise, Files command with preview window (preview not really that useful)
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-"TODO: what is the GFiles vesion of this?
 
 nnoremap <leader>t :BTags<cr>
 nnoremap <leader>T :Tags<cr>
 nnoremap <leader>f :GFiles<cr>
 nnoremap <leader>F :Files<cr>
+" Don't really need this with buffer-as-tabs setup
 nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>gg :Rg!<cr>
+nnoremap <leader>gm :Rg!<cr>
+
+" These are like the ack versions (which use Rg) but have previews of the results.
 nnoremap <leader>gw :Rg! <c-r><c-w><cr>
 " TODO: need to escape some special chars for ripgrep like ( and { etc.
 nnoremap <leader>gs :Rg! <c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr><cr>
