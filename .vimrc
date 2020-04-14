@@ -207,6 +207,9 @@ nmap <leader>rm :MyCdo %s/gIe<left><left><left>
 " Syntax highlighting for a ton of languages
 Plug 'sheerun/vim-polyglot'
 
+" :StartupTime to see a graph of startup timings
+Plug 'dstein64/vim-startuptime'
+
 " LSP for code completion options:
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
 " # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
@@ -284,8 +287,22 @@ let g:airline_theme='ayu_dark'
 Plug 'tpope/vim-repeat'
 
 Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+" Disable vim-airline when firenvim starts since vim-airline takes two lines.
+if !exists('g:started_by_firenvim')
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+endif
+if exists('g:started_by_firenvim') && g:started_by_firenvim
+    " general options
+    set laststatus=0 nonumber noruler noshowcmd
 
-" File browse, edit browser buffer like normal
+    augroup firenvim
+        autocmd!
+        autocmd BufEnter *.txt setlocal filetype=markdown.pandoc
+    augroup END
+endif
+
+" File browse, edit browser buffer like normal, todo: read docs
 Plug 'justinmk/vim-dirvish'
 
 " Type s and a char of interesst then the colored letters at the char to jump to it.
@@ -423,12 +440,12 @@ endif
 " The \< and \> means don't do a raw string replace but a word replace (only operate on that string if its a stand-alone word)
 " so if you want to replace someVar, it won't touch vars name someVarOther
 " edit word in whole file
-" nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
+nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
 " Edit confirm word in whole file
-" nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
+nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
 " edit word under cursor within the visual lines
 " gv selects the last vis selection (line, block or select)
-" vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><left><left><left><left>
+vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><left><left><left><left>
 " Visually selected text in file
 " If mode is visual line mode, edit the prev yank acros the vis lines, else across the whole file
 " see :h escape() (escape the chars in teh second arg with backslash)
