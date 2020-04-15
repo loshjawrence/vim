@@ -1,4 +1,6 @@
-﻿" See repo for disable capslock reg file for windows 10, double click to merge it then restart
+﻿" On Windows:
+" See repo for disable capslock reg file for windows 10, double click to merge it then restart.
+" Use bash by typing bash in any of their shitty terminals and avoid all the pointless headaches.
 
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
