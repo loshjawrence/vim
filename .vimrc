@@ -333,7 +333,7 @@ let g:neoterm_size = 40
 " let guifontpp_larger_font_map="<c-=>"
 
 if has("win32")
-    set guifont=Consolas:h10
+    " set guifont=Consolas:h10
 else
     " Doesn't trigger for some reason
     " Trigger with ctrl = and -
