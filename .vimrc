@@ -286,21 +286,21 @@ let g:airline_theme='ayu_dark'
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
 
-Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
-" Disable vim-airline when firenvim starts since vim-airline takes two lines.
-if !exists('g:started_by_firenvim')
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-endif
-if exists('g:started_by_firenvim') && g:started_by_firenvim
-    " general options
-    set laststatus=0 nonumber noruler noshowcmd
-
-    augroup firenvim
-        autocmd!
-        autocmd BufEnter *.txt setlocal filetype=markdown.pandoc
-    augroup END
-endif
+" Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+" " Disable vim-airline when firenvim starts since vim-airline takes two lines.
+" if !exists('g:started_by_firenvim')
+"     Plug 'vim-airline/vim-airline'
+"     Plug 'vim-airline/vim-airline-themes'
+" endif
+" if exists('g:started_by_firenvim') && g:started_by_firenvim
+"     " general options
+"     set laststatus=0 nonumber noruler noshowcmd
+"
+"     augroup firenvim
+"         autocmd!
+"         autocmd BufEnter *.txt setlocal filetype=markdown.pandoc
+"     augroup END
+" endif
 
 " File browse, edit browser buffer like normal, todo: read docs
 Plug 'justinmk/vim-dirvish'
