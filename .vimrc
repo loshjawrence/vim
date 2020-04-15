@@ -110,40 +110,50 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
+" Use ripgrep
+set grepprg=rg\ --vimgrep\ --glob\ !tags
+
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 " fzf using skim
 " Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
 " Plug 'lotabout/skim.vim'
+
 " command! -bang -nargs=* Rg call fzf#vim#rg_interactive(<q-args>, fzf#vim#with_preview('right:50%:hidden', 'alt-h'))
-" choco install ripgrep
+
+" choco install ripgrep fd fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 " USE FD https://github.com/sharkdp/fd
 " put in .bashrc for fd
-" export FZF_DEFAULT_COMMAND="fd --type file --color=always"
+" export FZF_DEFAULT_COMMAND="fd --type file" can also add --color=always at the end of that if things aren't too slow
 " Add to "export FZF_DEFAULT_OPTS=" --ansi
 " export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-" Better Colors command.
-command! -bang Colors call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 1%,0'}, <bang>0)
+
+" Better fzf :Colors command.
+" command! -bang Colors call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 1%,0'}, <bang>0)
+
 " to make all fzf lists go top-down, put something like
-" export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+" export FZF_DEFAULT_OPTS='--height 40% --layout=reverse' (can add --border at the end as well)
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
 
-" ripgrep
-set grepprg=rg\ --vimgrep\ --glob\ !tags
-
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
+" command! -bang -nargs=* Rg
+"   \ call fzf#vim#grep(
+"   \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+"   \   <bang>0 ? fzf#vim#with_preview('up:60%')
+"   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+"   \   <bang>0)
+" nnoremap <leader>gm :Rg!<cr>
+" " These are like the ack versions (which use Rg) but have previews of the results.
+" nnoremap <leader>gw :Rg! <c-r><c-w><cr>
+" " TODO: need to escape some special chars for ripgrep like ( and { etc.
+" nnoremap <leader>gs :Rg! <c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr><cr>
+" nnoremap <leader>gy :Rg! <c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr><cr>
 
 " Likewise, Files command with preview window (preview not really that useful)
-command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+" command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
 nnoremap <leader>t :BTags<cr>
 nnoremap <leader>T :Tags<cr>
@@ -151,14 +161,6 @@ nnoremap <leader>f :GFiles<cr>
 nnoremap <leader>F :Files<cr>
 " Don't really need this with buffer-as-tabs setup
 nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>gm :Rg!<cr>
-
-" These are like the ack versions (which use Rg) but have previews of the results.
-nnoremap <leader>gw :Rg! <c-r><c-w><cr>
-" TODO: need to escape some special chars for ripgrep like ( and { etc.
-nnoremap <leader>gs :Rg! <c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr><cr>
-nnoremap <leader>gy :Rg! <c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr><cr>
-
 Plug 'jiangmiao/auto-pairs'
 " This allows surround.vim to not pad with spaces
 let g:AutoPairsMapSpace=0
@@ -229,7 +231,7 @@ Plug 'dstein64/vim-startuptime'
 " :checkhealth to see if running
 " Useful commands CocConfig, CocInfo, CocInstall, CocUninstall, CocList, CocCommand
 " For c based langs, use clangd (choco install llvm then :CocConfig and paste the json settings from coc.nvim github wiki)
-" "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-rls coc-syntax coc-tag
+" "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-clangd coc-rls coc-syntax coc-tag
 " "CocCommand <tab>
 " :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
 
@@ -392,7 +394,7 @@ Plug 'AlessandroYorba/Alduin'
 " Plug 'AlessandroYorba/Despacio'
 " gruvbox
 " COLORSCHEME must come before whitespace highlighting and other color alterations
-colorscheme alduin
+colorscheme alduin2
 
 call plug#end()
 
