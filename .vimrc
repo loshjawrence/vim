@@ -1,6 +1,11 @@
 ﻿" On Windows:
-" See repo for disable capslock reg file for windows 10, double click to merge it then restart.
-" Use bash by typing bash in any of their shitty terminals and avoid all the pointless headaches.
+" See personal vim repo for disable capslock reg file for windows 10, double click to merge it then restart.
+" Use bash by typing "bash" in any of the terminals and avoid all the pointless headaches.
+" bash will use wsl/ubuntu (i think) on /mnt/c/
+" Terminal shortcuts/tips:
+" r-click on menu bar to configure terminal properties like colors/fonts/size,etc
+" full screen toggle: alt+enter
+" alpha blend: ctrl+shift+mouse scroll
 
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
@@ -91,9 +96,20 @@ set path+=**
 " local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
 nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 
+" UNIVERSAL CTAGS
+" ===============
 " include inheritance info and signatures of functions
 " it seems most of these flags are needed for :h omnicppcomplete
-command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build*' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
+" install from source (backup way to install)
+" ========================================================
+" git clone https://github.com/universal-ctags/ctags.git
+" cd ctags
+" ./autogen.sh
+" ./configure
+" make
+" sudo make install
+" ========================================================
+command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build/**' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
 " nnoremap <leader>ct :cd %:p:h <bar> CTags<cr>
 nnoremap <leader>ct :CTags<cr>
 
@@ -102,6 +118,8 @@ nnoremap <leader>ct :CTags<cr>
 autocmd BufRead,BufNewFile *.shader set filetype=c
 autocmd BufRead,BufNewFile *.vert   set filetype=c
 autocmd BufRead,BufNewFile *.frag   set filetype=c
+autocmd BufRead,BufNewFile *.glsl   set filetype=c
+autocmd BufRead,BufNewFile *.hlsl   set filetype=c
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
 
 " Enable spellchecking for Markdown
@@ -119,7 +137,6 @@ let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 " fzf using skim
 " Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
-" Plug 'lotabout/skim.vim'
 
 " command! -bang -nargs=* Rg call fzf#vim#rg_interactive(<q-args>, fzf#vim#with_preview('right:50%:hidden', 'alt-h'))
 
@@ -128,18 +145,17 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
+" disable preview window
+let g:fzf_preview_window = ''
 " USE FD https://github.com/sharkdp/fd
-" put in .bashrc for fd
-" export FZF_DEFAULT_COMMAND="fd --type file" can also add --color=always at the end of that if things aren't too slow
-" Add to "export FZF_DEFAULT_OPTS=" --ansi
+" put in .bashrc for fd/other things
+"in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
+" export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
+" export FZF_DEFAULT_COMMAND="fd --type file"
 " export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 " Better fzf :Colors command.
 " command! -bang Colors call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 1%,0'}, <bang>0)
-
-" to make all fzf lists go top-down, put something like
-" export FZF_DEFAULT_OPTS='--height 40% --layout=reverse' (can add --border at the end as well)
-"in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
 
 " command! -bang -nargs=* Rg
 "   \ call fzf#vim#grep(
@@ -153,9 +169,6 @@ let g:fzf_buffers_jump = 1
 " " TODO: need to escape some special chars for ripgrep like ( and { etc.
 " nnoremap <leader>gs :Rg! <c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr><cr>
 " nnoremap <leader>gy :Rg! <c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr><cr>
-
-" Likewise, Files command with preview window (preview not really that useful)
-" command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
 nnoremap <leader>t :BTags<cr>
 nnoremap <leader>T :Tags<cr>
@@ -214,6 +227,64 @@ Plug 'sheerun/vim-polyglot'
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
 
+" " WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
+" " linux search keyboard set to 200ms delay, 40c/s
+Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
+Plug 'vim-airline/vim-airline-themes'
+" let g:airline_powerline_fonts = 1
+" let g:airline#extensions#gutentags#enabled = 1
+let g:airline_theme='ayu_dark'
+let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#branch#enabled=1
+let g:airline#extensions#branch#empty_message = ''
+let g:airline#extensions#branch#displayed_head_limit = 10
+let g:airline#extensions#branch#format = 2
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t' " Just display filename
+let g:airline#extensions#tabline#show_buffers = 1
+let g:airline#extensions#tabline#show_tabs = 0
+let g:airline#extensions#tabline#show_tab_nr = 0
+let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_tab_count = 0
+let g:airline#extensions#tabline#ignore_bufadd_pat = 'goyo|gundo|undotree|vimfiler|tagbar|nerd_tree|startify|!|term\:'
+let g:airline_section_a = '' " mode.
+let g:airline_section_c = '' " filename is already in the airline tabline
+let g:airline_section_x = '' " (tagbar, filetype, virtualenv).
+let g:airline_section_y = '' " (fileencoding, fileformat)
+let g:airline_section_z = '' " (percentage, line number, column number)
+
+" when using alt keys make sure you can diasable the corresponding alt-menu key
+" in any other IDE's you may use
+" vscode has a way to turn off the menu and msvc has a way to turn off certain
+" menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
+" nnoremap <a-l> gt
+" nnoremap <a-h> gT
+" nnoremap <leader>1 :tabfirst<cr>
+" nnoremap <leader>2 2gt
+" nnoremap <leader>3 3gt
+" nnoremap <leader>4 4gt
+" nnoremap <leader>5 5gt
+" nnoremap <leader>0 :tablast<cr>
+
+
+" Centering text in the window
+" pretty cool but doesnt show buffer bar
+" (and probably? no sign column)
+Plug 'junegunn/goyo.vim'
+let g:goyo_width = 180
+let g:goyo_height = 100
+let g:goyo_linenr = 1
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+function! s:goyo_enter()
+    AirlineToggle
+    AirlineRefresh
+endfunction
+function! s:goyo_leave()
+    AirlineToggle
+    AirlineRefresh
+endfunction
 " LSP for code completion options:
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
 " # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
@@ -246,47 +317,6 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " use j and k to navigate list, use p to toggle preview window
 nmap <silent> <leader>lr <Plug>(coc-references)
 
-" " TODO: not sure I need/want this anymore
-" " WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
-" " linux search keyboard set to 200ms delay, 40c/s
-Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
-" let g:airline_powerline_fonts = 1
-" let g:airline#extensions#gutentags#enabled = 1
-let g:airline#extensions#coc#enabled = 1
-let g:airline#extensions#branch#enabled=1
-let g:airline#extensions#branch#empty_message = ''
-let g:airline#extensions#branch#displayed_head_limit = 10
-let g:airline#extensions#branch#format = 2
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t' " Just display filename
-let g:airline#extensions#tabline#show_buffers = 1
-let g:airline#extensions#tabline#show_tabs = 0
-let g:airline#extensions#tabline#show_tab_nr = 0
-let g:airline#extensions#tabline#show_close_button = 0
-let g:airline#extensions#tabline#show_splits = 0
-let g:airline#extensions#tabline#show_tab_count = 0
-let g:airline#extensions#tabline#ignore_bufadd_pat = 'gundo|undotree|vimfiler|tagbar|nerd_tree|startify|!|term\:'
-let g:airline_section_a = '' " mode.
-let g:airline_section_c = '' " filename is already in the airline tabline
-let g:airline_section_x = '' " (tagbar, filetype, virtualenv).
-let g:airline_section_y = '' " (fileencoding, fileformat)
-let g:airline_section_z = '' " (percentage, line number, column number)
-Plug 'vim-airline/vim-airline-themes'
-let g:airline_theme='ayu_dark'
-
-" when using alt keys make sure you can diasable the corresponding alt-menu key
-" in any other IDE's you may use
-" vscode has a way to turn off the menu and msvc has a way to turn off certain
-" menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
-" nnoremap <a-l> gt
-" nnoremap <a-h> gT
-" nnoremap <leader>1 :tabfirst<cr>
-" nnoremap <leader>2 2gt
-" nnoremap <leader>3 3gt
-" nnoremap <leader>4 4gt
-" nnoremap <leader>5 5gt
-" nnoremap <leader>0 :tablast<cr>
-
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
 
@@ -309,15 +339,15 @@ Plug 'tpope/vim-repeat'
 " File browse, edit browser buffer like normal, todo: read docs
 Plug 'justinmk/vim-dirvish'
 
-" Type s and a char of interesst then the colored letters at the char to jump to it.
-Plug 'easymotion/vim-easymotion'
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
-let g:EasyMotion_use_upper = 1
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_keys =   'ASDGHKLQWERTYUIOPZXCVBNMFJ;' " should sort from easy to hard (left to right)
-" This will search before and after cursor in current pane
-nmap s <Plug>(easymotion-s)
-nnoremap S <nop>
+" " Type s and a char of interesst then the colored letters at the char to jump to it.
+" Plug 'easymotion/vim-easymotion'
+" let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" let g:EasyMotion_use_upper = 1
+" let g:EasyMotion_smartcase = 1
+" let g:EasyMotion_keys =   'ASDGHKLQWERTYUIOPZXCVBNMFJ;' " should sort from easy to hard (left to right)
+" " This will search before and after cursor in current pane
+" nmap s <Plug>(easymotion-s)
+" nnoremap S <nop>
 
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
@@ -473,8 +503,9 @@ nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$
 
 " see "h <expr> and :help mode()
 " Make A and I work in vis line mode. They already work in the block bounds so leave that be.
-xnoremap <expr> A mode() ==# "V" ? "<c-v>$A" : "A"
-xnoremap <expr> I mode() ==# "V" ? "<c-v>^I"  : "I"
+" gv is highlight previous visual selection, `> and `< is jump to end and beg of vis selection
+xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
+xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 
 " Surrounding things
 xnoremap s <nop>
