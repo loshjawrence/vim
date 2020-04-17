@@ -133,11 +133,11 @@ _fzf_compgen_path() {
 
 # Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
-  fd --type d --hidden --follow --no-ignore-vcs . "$1"
+  fd --type directory --hidden --follow --no-ignore-vcs . "$1"
 }
 
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
-export FZF_DEFAULT_COMMAND="fd --type file --hidden --follow --no-ignore-vcs --color always"
+export FZF_DEFAULT_COMMAND="fd --type file --hidden --follow --no-ignore-vcs"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # NVM OPTIONS
