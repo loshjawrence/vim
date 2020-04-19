@@ -1,6 +1,7 @@
+alias nvim="/usr/local/bin/nvim"
 alias s="source ~/.bashrc"
 alias a="nvim ~/.bash_aliases"
-alias k="killall nvim-qt"
+alias knvim="killall nvim*"
 alias e="xdg-open ."
 
 # Cpp builds via docker
