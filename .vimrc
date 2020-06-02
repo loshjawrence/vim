@@ -113,6 +113,18 @@ command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='bu
 " nnoremap <leader>ct :cd %:p:h <bar> CTags<cr>
 nnoremap <leader>ct :CTags<cr>
 
+" Simple re-format for minified Javascript
+command! UnMinify call UnMinify()
+function! UnMinify()
+    %s/{\ze[^\r\n]/{\r/g
+    %s/){/) {/g
+    %s/};\?\ze[^\r\n]/\0\r/g
+    %s/;\ze[^\r\n]/;\r/g
+    %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
+    normal ggVG=
+endfunction
+nnoremap <leader>um :UnMinify<cr>
+
 " FILETYPE
 " Associate filetypes with other filetypes
 autocmd BufRead,BufNewFile *.shader set filetype=c
@@ -315,7 +327,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Use c-j (back) and c-k (forward) to jump to args pulled method signature
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " use j and k to navigate list, use p to toggle preview window
-nmap <silent> <leader>lr <Plug>(coc-references)
+nmap <silent> <leader>gd <Plug>(coc-definition)
+nmap <silent> <leader>gr <Plug>(coc-references)
 
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
