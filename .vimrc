@@ -316,6 +316,7 @@ endfunction
 " :checkhealth to see if running
 " Useful commands CocConfig, CocInfo, CocInstall, CocUninstall, CocList, CocCommand
 " For c based langs, use clangd (choco install llvm then :CocConfig and paste the json settings from coc.nvim github wiki)
+" `CocList marketplace` to see things you can CocInstall
 " "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-clangd coc-rls coc-syntax coc-tag
 " "CocCommand <tab>
 " :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
@@ -327,8 +328,16 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Use c-j (back) and c-k (forward) to jump to args pulled method signature
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " use j and k to navigate list, use p to toggle preview window
-nmap <silent> <leader>gd <Plug>(coc-definition)
-nmap <silent> <leader>gr <Plug>(coc-references)
+nmap <buffer> <leader>gd <Plug>(coc-definition)
+nmap <buffer> <leader>gr <Plug>(coc-references)
+nmap <buffer> <leader>gt <Plug>(coc-type-definition)
+nmap <buffer> <leader>gi <Plug>(coc-implementation)
+nnoremap <buffer> <c-space> :CocRestart<cr>
+nmap <leader>gn <Plug>(coc-rename)
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
@@ -869,6 +878,7 @@ nnoremap <leader>xr :%!xxd -r<cr>
 " nnoremap cil" ?".*\S\+.*"<cr>cs""<Esc>:noh<cr>i
 
 "NOTES:
+" c-r" to paste from register doublequote when in command/search/terminal
 " wow: https://vim.fandom.com/wiki/Power_of_g
 " In the "power of g" how do I do the display context of search across all files in project/pwd to do what sublime does?
 " highlighing lines then doing a :w TEST will write those lines to TEST
