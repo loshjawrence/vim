@@ -234,7 +234,14 @@ nmap <leader>rm :MyCdo %s/gIe<left><left><left>
 " augroup end
 
 " Syntax highlighting for a ton of languages
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
+
+" Use specific plugins for more detailed syntax highlighting
+" Syntax for js ts react ect
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
+" c languages, need llvm and pynvim for python3
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
