@@ -233,15 +233,16 @@ nmap <leader>rm :MyCdo %s/gIe<left><left><left>
 "     autocmd BufWinEnter quickfix endif
 " augroup end
 
-" Syntax highlighting for a ton of languages
-" Plug 'sheerun/vim-polyglot'
-
-" Use specific plugins for more detailed syntax highlighting
-" Syntax for js ts react ect
-Plug 'yuezk/vim-js'
+" Syntax for js ts react ect. comes before polyglot
 Plug 'maxmellon/vim-jsx-pretty'
+
+" Syntax highlighting for a ton of languages
+Plug 'sheerun/vim-polyglot'
+" if using polyglot and vim-jsx-pretty
+let g:polyglot_disabled = ['jsx']
+
 " c languages, need llvm and pynvim for python3
-Plug 'jackguo380/vim-lsp-cxx-highlight'
+" Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
@@ -290,20 +291,20 @@ let g:airline_section_z = '' " (percentage, line number, column number)
 " Centering text in the window
 " pretty cool but doesnt show buffer bar
 " (and probably? no sign column)
-Plug 'junegunn/goyo.vim'
-let g:goyo_width = 180
-let g:goyo_height = 100
-let g:goyo_linenr = 1
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
-function! s:goyo_enter()
-    AirlineToggle
-    AirlineRefresh
-endfunction
-function! s:goyo_leave()
-    AirlineToggle
-    AirlineRefresh
-endfunction
+" Plug 'junegunn/goyo.vim'
+" let g:goyo_width = 180
+" let g:goyo_height = 100
+" let g:goyo_linenr = 1
+" autocmd! User GoyoEnter nested call <SID>goyo_enter()
+" autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" function! s:goyo_enter()
+"     AirlineToggle
+"     AirlineRefresh
+" endfunction
+" function! s:goyo_leave()
+"     AirlineToggle
+"     AirlineRefresh
+" endfunction
 " LSP for code completion options:
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
 " # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
