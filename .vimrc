@@ -234,7 +234,14 @@ nmap <leader>rm :MyCdo %s/gIe<left><left><left>
 " augroup end
 
 " Syntax highlighting for a ton of languages
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
+
+" Use specific plugins for more detailed syntax highlighting
+" Syntax for js ts react ect
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
+" c languages, need llvm and pynvim for python3
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
@@ -334,6 +341,20 @@ nmap <buffer> <leader>gt <Plug>(coc-type-definition)
 nmap <buffer> <leader>gi <Plug>(coc-implementation)
 nnoremap <buffer> <c-space> :CocRestart<cr>
 nmap <leader>gn <Plug>(coc-rename)
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+" Use K to show documentation in preview window
+nnoremap <silent> <leader>K :call <SID>show_documentation()<CR>
+
+" Highlight symbol under cursor on CursorHold
+" autocmd CursorHold * silent call CocActionAsync('highlight')
+
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
