@@ -125,20 +125,6 @@ function! UnMinify()
 endfunction
 nnoremap <leader>um :UnMinify<cr>
 
-" FILETYPE
-" Associate filetypes with other filetypes
-autocmd BufRead,BufNewFile *.shader set filetype=c
-autocmd BufRead,BufNewFile *.vert   set filetype=c
-autocmd BufRead,BufNewFile *.frag   set filetype=c
-autocmd BufRead,BufNewFile *.glsl   set filetype=c
-autocmd BufRead,BufNewFile *.hlsl   set filetype=c
-autocmd BufRead,BufNewFile *.md     set filetype=markdown
-
-" Enable spellchecking for Markdown
-autocmd FileType markdown setlocal spell
-" add support for comments in json (jsonc format used as configuration for many utilities)
-autocmd FileType json syntax match Comment +\/\/.\+$+
-
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
@@ -484,6 +470,20 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+
+" FILETYPE
+" Associate filetypes with other filetypes
+autocmd BufRead,BufNewFile *.shader set filetype=cpp
+autocmd BufRead,BufNewFile *.vert   set filetype=cpp
+autocmd BufRead,BufNewFile *.frag   set filetype=cpp
+autocmd BufRead,BufNewFile *.glsl   set filetype=cpp
+autocmd BufRead,BufNewFile *.hlsl   set filetype=cpp
+autocmd BufRead,BufNewFile *.md     set filetype=markdown
+
+" Enable spellchecking for Markdown
+autocmd FileType markdown setlocal spell
+" add support for comments in json (jsonc format used as configuration for many utilities)
+autocmd FileType json syntax match Comment +\/\/.\+$+
 
 " Terminal colors
 let g:terminal_color_0  = '#2e3436'
