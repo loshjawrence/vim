@@ -176,6 +176,9 @@ let g:fzf_preview_window = ''
 " Plug 'glts/vim-magnum'
 " Plug 'glts/vim-radical'
 
+Plug 'sjl/gundo.vim'
+nnoremap <F5> :GundoToggle<CR>
+
 " tags in open buffers
 nnoremap <leader>t :BTags<cr>
 " all tags (pulled from ctags i think)
