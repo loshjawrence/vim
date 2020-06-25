@@ -7,6 +7,10 @@
 " full screen toggle: alt+enter
 " alpha blend: ctrl+shift+mouse scroll
 
+" Surrounding things
+xnoremap s <nop>
+xnoremap S <nop>
+
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
 
@@ -167,16 +171,37 @@ let g:fzf_preview_window = ''
 " " TODO: need to escape some special chars for ripgrep like ( and { etc.
 " nnoremap <leader>gs :Rg! <c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr><cr>
 " nnoremap <leader>gy :Rg! <c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr><cr>
+" These two are for flippling between dec hex oct bin
+" magnum is just a dependency of radical
+" Plug 'glts/vim-magnum'
+" Plug 'glts/vim-radical'
 
+" tags in open buffers
 nnoremap <leader>t :BTags<cr>
+" all tags (pulled from ctags i think)
 nnoremap <leader>T :Tags<cr>
+" files in `git ls-files``
 nnoremap <leader>f :GFiles<cr>
+" all files under pwd (recursive)
 nnoremap <leader>F :Files<cr>
-" Don't really need this with buffer-as-tabs setup
+" Don't really need this with buffers-as-tabs setup
 nnoremap <leader>b :Buffers<cr>
 Plug 'jiangmiao/auto-pairs'
 " This allows surround.vim to not pad with spaces
+" NOTE: used to work
 let g:AutoPairsMapSpace=0
+
+Plug 'tpope/vim-surround'
+" cs'"  This means change surround ' to "
+" ds[  This means delete surround [
+" When v selected:
+" S{  This means surround selection with { NOTE: pads with spaces as well
+" When V selected:
+" S{  This means surround selected LINES with { (open and closed brackets above and below the lines)
+
+" Framework for enabling repeat command on plugin commands
+" The plugin itself must explicitly support it though
+Plug 'tpope/vim-repeat'
 
 " QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (keep lines containing someText) or :g/someText/d (delete lines containing someText)
@@ -551,77 +576,68 @@ nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$
 xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
 xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 
-" Surrounding things
-xnoremap s <nop>
-xnoremap S <nop>
-" see :h mode() or :h visualmode()
-" \e is <esc> (can also use <esc> too), see pattern-atoms
-" `> and `< is jump to end and beg of vis selection
-" xno is xnoremap
-xno <expr> S{ {
-\  'v': "\e`>a}\e`<i{\e",
-\  'V': "\e`>o}\e`<O{\eva{=",
-\ }[mode()]
-
-xno <expr> S[ {
-\  'v': "\e`>a]\e`<i[\e",
-\  'V': "\e`>o]\e`<O[\eva[=",
-\ }[mode()]
-
-xno <expr> S( {
-\  'v': "\e`>a)\e`<i(\e",
-\  'V': "\e`>o)\e`<O(\eva(=",
-\ }[mode()]
-
+" " see :h mode() or :h visualmode()
+" " \e is <esc> (can also use <esc> too), see pattern-atoms
+" " `> and `< is jump to end and beg of vis selection
+" " xno is xnoremap
+" xno <expr> S{ {
+" \  'v': "\e`>a}\e`<i{\e",
+" \  'V': "\e`>o}\e`<O{\eva{=",
+" \ }[mode()]
+" xno <expr> S[ {
+" \  'v': "\e`>a]\e`<i[\e",
+" \  'V': "\e`>o]\e`<O[\eva[=",
+" \ }[mode()]
+" xno <expr> S( {
+" \  'v': "\e`>a)\e`<i(\e",
+" \  'V': "\e`>o)\e`<O(\eva(=",
+" \ }[mode()]
 xno <expr> S< {
 \  'v': "\e`>a>\e`<i<\e",
 \  'V': "\e`>o>\e`<O<\eva<=",
 \ }[mode()]
-
-xno <expr> S' {
-\  'v': "\e`>a'\e`<i'\e",
-\  'V': "\e`>o'\e`<O'\eva'=",
-\ }[mode()]
-
-xno <expr> S" {
-\  'v': "\e`>a\"\e`<i\"\e",
-\  'V': "\e`>o\"\e`<O\"\eva\"=",
-\ }[mode()]
-
-xno <expr> S` {
-\  'v': "\e`>a`\e`<i`\e",
-\  'V': "\e`>o```\e`<O```\eva`=",
-\ }[mode()]
-
-" Every line beg and end gets wrapped with the pair
-xno <expr> s{ {
-\  'V': "<c-v>^I{\egvV<c-v>$A}\e",
-\  '<c-v>': "A}\egvI{\e",
-\ }[mode()]
-xno <expr> s[ {
-\  'V': "<c-v>^I[<esc>gvV<c-v>$A]<esc>",
-\  '<c-v>': "A]\egvI[\e",
-\ }[mode()]
-xno <expr> s( {
-\  'V': "<c-v>^I(<esc>gvV<c-v>$A)<esc>",
-\  '<c-v>': "A)\egvI(\e",
-\ }[mode()]
-xno <expr> s< {
-\  'V': "<c-v>^I<<esc>gvV<c-v>$A><esc>",
-\  '<c-v>': "A>\egvI<\e",
-\ }[mode()]
-xno <expr> s` {
-\  'V': "<c-v>^I`<esc>gvV<c-v>$A`<esc>",
-\  '<c-v>': "A`\egvI`\e",
-\ }[mode()]
-xno <expr> s' {
-\  'V': "<c-v>^I'<esc>gvV<c-v>$A'<esc>",
-\  '<c-v>': "A'\egvI'\e",
-\ }[mode()]
-xno <expr> s" {
-\  'V': "<c-v>^I\"<esc>gvV<c-v>$A\"<esc>",
-\  '<c-v>': "A\"\egvI\"\e",
-\ }[mode()]
+" xno <expr> S' {
+" \  'v': "\e`>a'\e`<i'\e",
+" \  'V': "\e`>o'\e`<O'\eva'=",
+" \ }[mode()]
+" xno <expr> S" {
+" \  'v': "\e`>a\"\e`<i\"\e",
+" \  'V': "\e`>o\"\e`<O\"\eva\"=",
+" \ }[mode()]
+" xno <expr> S` {
+" \  'v': "\e`>a`\e`<i`\e",
+" \  'V': "\e`>o```\e`<O```\eva`=",
+" \ }[mode()]
+"
+" " Every line beg and end gets wrapped with the pair
+" xno <expr> s{ {
+" \  'V': "<c-v>^I{\egvV<c-v>$A}\e",
+" \  '<c-v>': "A}\egvI{\e",
+" \ }[mode()]
+" xno <expr> s[ {
+" \  'V': "<c-v>^I[<esc>gvV<c-v>$A]<esc>",
+" \  '<c-v>': "A]\egvI[\e",
+" \ }[mode()]
+" xno <expr> s( {
+" \  'V': "<c-v>^I(<esc>gvV<c-v>$A)<esc>",
+" \  '<c-v>': "A)\egvI(\e",
+" \ }[mode()]
+" xno <expr> s< {
+" \  'V': "<c-v>^I<<esc>gvV<c-v>$A><esc>",
+" \  '<c-v>': "A>\egvI<\e",
+" \ }[mode()]
+" xno <expr> s` {
+" \  'V': "<c-v>^I`<esc>gvV<c-v>$A`<esc>",
+" \  '<c-v>': "A`\egvI`\e",
+" \ }[mode()]
+" xno <expr> s' {
+" \  'V': "<c-v>^I'<esc>gvV<c-v>$A'<esc>",
+" \  '<c-v>': "A'\egvI'\e",
+" \ }[mode()]
+" xno <expr> s" {
+" \  'V': "<c-v>^I\"<esc>gvV<c-v>$A\"<esc>",
+" \  '<c-v>': "A\"\egvI\"\e",
+" \ }[mode()]
 
 function! MakeAFileAndAddToGit(filename)
     execute 'edit ' . a:filename
