@@ -71,7 +71,6 @@ set wildmenu                        " enable wildmenu
 
 set textwidth=80
 set nowrap                          " Don't word wrap
-set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 set cmdheight=2 " Better display for messages
 set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
 set shortmess+=c " don't give |ins-completion-menu| messages.
@@ -749,6 +748,9 @@ endif
 " For this single sroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
 noremap <silent> <c-e> <nop>
 noremap <silent> <c-y> <nop>
+" NOTE: cause of slowness on 0.5.0 nvim nightly:
+" set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+xnoremap <c-y> "+y
 noremap <silent> <c-f> <nop>
 noremap <silent> <c-b> <nop>
 noremap <silent> <c-u> 10<c-y>
