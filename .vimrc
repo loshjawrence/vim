@@ -502,6 +502,9 @@ call plug#end()
 " nvim-lsp ----------------------------------------
 " lsp specific config
 " NOTE: need to do :LspInstall for each of these
+" go to the github for nvim-lsp to check how to install the language servers
+" For tsserver you need to do npm install -g typescript AND
+" npm install -g typescript-language-server
 lua << EOF
   require'nvim_lsp'.vimls.setup{on_attach=require'completion'.on_attach}
   require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
