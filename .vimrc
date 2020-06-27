@@ -89,8 +89,6 @@ endif
 
 " tell :find to recursively search
 set path+=**
-" local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
-nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 
 " UNIVERSAL CTAGS
 " =======================================================
@@ -385,15 +383,11 @@ function! ToggleAndKillOldBuffer()
 endfunction
 nnoremap <a-o> :call ToggleAndKillOldBuffer()<CR>
 
-" see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
-" There was a comment about making sure .viminfo is read/write
-autocmd BufReadPost *
-\ if line("'\"") > 0 && line("'\"") <= line("$") |
-\   exe "normal! g`\"" |
-\ endif
+Plug 'airblade/vim-rooter'
+let g:rooter_manual_only = 1
+nnoremap <leader>cr :Rooter<cr>
 
 " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a.
-
 " Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
 " d2ina skips an arg and deletes the next one
 Plug 'wellle/targets.vim'
@@ -407,6 +401,16 @@ Plug 'AlessandroYorba/Alduin'
 colorscheme alduin2
 
 call plug#end()
+
+" see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
+" There was a comment about making sure .viminfo is read/write
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\   exe "normal! g`\"" |
+\ endif
+
+" Change pwd to this files location. local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
+nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
 " " lsp specific config
