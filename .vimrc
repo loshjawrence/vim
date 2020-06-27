@@ -801,9 +801,11 @@ nnoremap <c-right> :vert res +8<cr>
 nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
-" Source the vimrc so we don't have to refresh, edit the vimrc in new tab
+" Source the vimrc so we don't have to refresh
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
+" Edit the vimrc in a new tab
 nmap <silent> <leader>ve :vs ~/.vimrc<cr>
+" Diff the current local vimrc against master
 nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp ../.vimrc .<cr>git diff<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
