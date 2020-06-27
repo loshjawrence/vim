@@ -324,6 +324,7 @@ nnoremap <buffer> gr <Plug>(coc-references)
 nnoremap <leader>rn <Plug>(coc-rename)
 nnoremap <buffer> <c-space> :CocRestart<cr>
 
+"NOTE: see the minimal vimrc here https://github.com/nvim-lua/completion-nvim/issues/143
 " " 0.5.0 nightly nvim-lsp
 " " relevant plugins
 " Plug 'neovim/nvim-lsp'
@@ -803,6 +804,7 @@ nnoremap <c-up>   :res +8<cr>
 " Source the vimrc so we don't have to refresh, edit the vimrc in new tab
 nmap <silent> <leader>vs :so ~/.vimrc<cr>
 nmap <silent> <leader>ve :vs ~/.vimrc<cr>
+nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp ../.vimrc .<cr>git diff<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
 " Useful but better to use the visual select search and repace mappings that I setup (<leader> ey Ey ew Ew)
