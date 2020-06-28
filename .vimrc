@@ -7,10 +7,6 @@
 " full screen toggle: alt+enter
 " alpha blend: ctrl+shift+mouse scroll
 
-" Surrounding things
-xnoremap s <nop>
-xnoremap S <nop>
-
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
 
@@ -189,22 +185,30 @@ nnoremap <leader>f :GFiles<cr>
 nnoremap <leader>F :Files<cr>
 " Don't really need this with buffers-as-tabs setup
 nnoremap <leader>b :Buffers<cr>
-Plug 'jiangmiao/auto-pairs'
-" This allows surround.vim to not pad with spaces
-" NOTE: used to work
-let g:AutoPairsMapSpace=0
 
+xnoremap s <nop>
+xnoremap S <nop>
+nnoremap s <nop>
+nnoremap S <nop>
+" Surrounding things
 Plug 'tpope/vim-surround'
+" NOTE: If you use the closing version, i.e ),>,},] it will NOT be surrounded by spaces.
+" NOTE: behavior of S< is such that it expects a tag enclosure so only S> is able to surround as <>.
 " cs'"  This means change surround ' to "
 " ds[  This means delete surround [
 " When v selected:
-" S{  This means surround selection with { NOTE: pads with spaces as well
+" S{  This means surround selection with {
 " When V selected:
 " S{  This means surround selected LINES with { (open and closed brackets above and below the lines)
 
 " Framework for enabling repeat command on plugin commands
 " The plugin itself must explicitly support it though
 Plug 'tpope/vim-repeat'
+
+Plug 'jiangmiao/auto-pairs'
+" This allows surround.vim to not pad with spaces
+" NOTE: no longer works
+" let g:AutoPairsMapSpace=0
 
 " QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (keep lines containing someText) or :g/someText/d (delete lines containing someText)
@@ -595,10 +599,10 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " \  'v': "\e`>a)\e`<i(\e",
 " \  'V': "\e`>o)\e`<O(\eva(=",
 " \ }[mode()]
-xno <expr> S< {
-\  'v': "\e`>a>\e`<i<\e",
-\  'V': "\e`>o>\e`<O<\eva<=",
-\ }[mode()]
+" xno <expr> S< {
+" \  'v': "\e`>a>\e`<i<\e",
+" \  'V': "\e`>o>\e`<O<\eva<=",
+" \ }[mode()]
 " xno <expr> S' {
 " \  'v': "\e`>a'\e`<i'\e",
 " \  'V': "\e`>o'\e`<O'\eva'=",
