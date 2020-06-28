@@ -221,7 +221,7 @@ command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent gr
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
 nmap <leader>am :MyGrep ""<left>
-" nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
+nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 " nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
 " NOTE: bug with rr where if item is also a substring of the new version it
 " will get n substitions where n is occurance count in quickfix window.
