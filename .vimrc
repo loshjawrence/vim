@@ -216,18 +216,21 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'itchyny/vim-qfedit'
 
 " tell vim to use ripgrep for the its external grep program
+" mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
-nmap <leader>am :MyGrep ""<left>
-nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
-nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
-nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
-nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
-nmap <leader>rm :MyCdo %s/gIe<left><left><left>
-
+nmap <leader>am :MyGrep ""<left>
+" nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 " nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
+" NOTE: bug with rr where if item is also a substring of the new version it
+" will get n substitions where n is occurance count in quickfix window.
+" example old: jawn, new: m_jawn, output: m_m_m_m_jawn
+" nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
 " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
+nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+nmap <leader>rm :MyCdo %s/gIe<left><left><left>
+" nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
 " nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
 " " using range-aware function
