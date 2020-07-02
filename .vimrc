@@ -523,7 +523,7 @@ endfunction
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
     nnoremap <silent> <buffer> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
     nnoremap <silent> <buffer> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-    nnoremap <silent> <buffer> K     <cmd>lua vim.lsp.buf.hover()<CR>
+    nnoremap <silent> <buffer> <leader>k     <cmd>lua vim.lsp.buf.hover()<CR>
     nnoremap <silent> <buffer> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
     nnoremap <silent> <buffer> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
     nnoremap <silent> <buffer> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
