@@ -519,7 +519,7 @@ function! LSPRename()
     lua vim.lsp.buf.rename(s:newName)
 endfunction
 
-function! LSPSetMappings()
+" function! LSPSetMappings()
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
     nnoremap <silent> <buffer> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
     nnoremap <silent> <buffer> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
@@ -528,16 +528,21 @@ function! LSPSetMappings()
     nnoremap <silent> <buffer> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
     nnoremap <silent> <buffer> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
     nnoremap <silent> <buffer> gr    <cmd>lua vim.lsp.buf.references()<CR>
-    " nnoremap <silent> <buffer> <F2> :call LSPRename()<CR>
-endfunction
-
-au FileType lua,sh,c,cpp,json,js,html,cmake,viml :call LSPSetMappings()
+    nnoremap <silent> <buffer> <F2> :call LSPRename()<CR>
+" endfunction
+" au FileType lua,sh,c,cpp,json,js,html,cmake,viml :call LSPSetMappings()
 
 " completion-nvim -----------------------------
 " Use completion-nvim in every buffer
 autocmd BufEnter * lua require'completion'.on_attach()
 " Set completeopt to have a better completion experience within completion-nvim
 set completeopt=menuone,noinsert,noselect
+
+" Highlight yanked text
+" augroup LuaHighlight
+"   autocmd!
+"   autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+" augroup END
 
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
