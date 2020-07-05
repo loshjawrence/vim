@@ -181,10 +181,6 @@ nnoremap <leader>F :Files<cr>
 " Don't really need this with buffers-as-tabs setup
 nnoremap <leader>b :Buffers<cr>
 
-xnoremap s <nop>
-xnoremap S <nop>
-nnoremap s <nop>
-nnoremap S <nop>
 " Surrounding things
 Plug 'tpope/vim-surround'
 " NOTE: If you use the closing version, i.e ),>,},] it will NOT be surrounded by spaces.
@@ -346,28 +342,26 @@ let g:airline_section_z = '' " (percentage, line number, column number)
 " :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
 
 " Install clang/clangd with: choco install llvm
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " NOTE: look here for example .vimrc: https://github.com/neoclide/coc.nvim#example-vim-configuration
 " <cr> confirm, need this for filling selecting  method signature from the list
-" Use c-j (back) and c-k (forward) to jump to args pulled method signature
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Use c-j (back) and c-k (forward) to jump to args pulled method signature
 " use j and k to navigate list, use p to toggle preview window
-" nmap <buffer> <leader>gd <Plug>(coc-definition)
-" nmap <buffer> <leader>gr <Plug>(coc-references)
-" nmap <buffer> <leader>gt <Plug>(coc-type-definition)
-" nmap <buffer> <leader>gi <Plug>(coc-implementation)
-" nnoremap <buffer> <c-space> :CocRestart<cr>
-" nmap <leader>gn <Plug>(coc-rename)
-"
-" function! s:show_documentation()
-"   if (index(['vim','help'], &filetype) >= 0)
-"     execute 'h '.expand('<cword>')
-"   else
-"     call CocAction('doHover')
-"   endif
-" endfunction
-" Use K to show documentation in preview window
-" nnoremap <silent> <leader>K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+nnoremap <silent> gk :call <SID>show_documentation()<CR>
+nnoremap <buffer> gd <Plug>(coc-definition)
+nnoremap <buffer> gr <Plug>(coc-references)
+nnoremap <buffer> gt <Plug>(coc-type-definition)
+nnoremap <buffer> gi <Plug>(coc-implementation)
+nnoremap <leader>rn <Plug>(coc-rename)
+nnoremap <buffer> <c-space> :CocRestart<cr>
 
 " Highlight symbol under cursor on CursorHold
 " autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -377,14 +371,11 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " provide custom statusline: lightline.vim, vim-airline.
 " set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-
-" 0.5.0 nightly nvim-lsp
-" relevant plugins
-Plug 'neovim/nvim-lsp'
-Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-lua/diagnostic-nvim'
-
-
+" " 0.5.0 nightly nvim-lsp
+" " relevant plugins
+" Plug 'neovim/nvim-lsp'
+" Plug 'nvim-lua/completion-nvim'
+" Plug 'nvim-lua/diagnostic-nvim'
 
 " Enable repeat for supported plugins
 Plug 'tpope/vim-repeat'
@@ -499,49 +490,41 @@ colorscheme alduin2
 
 call plug#end()
 
-" nvim-lsp ----------------------------------------
-" lsp specific config
-" NOTE: need to do :LspInstall for each of these
-lua << EOF
-  require'nvim_lsp'.vimls.setup{on_attach=require'completion'.on_attach}
-  require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
-  require'nvim_lsp'.tsserver.setup{on_attach=require'completion'.on_attach}
-  require'nvim_lsp'.jsonls.setup{on_attach=require'completion'.on_attach}
-  require'nvim_lsp'.cmake.setup{on_attach=require'completion'.on_attach}
-  require'nvim_lsp'.html.setup{on_attach=require'completion'.on_attach}
-  require'nvim_lsp'.bashls.setup{on_attach=require'completion'.on_attach}
-EOF
-
-function! LSPRename()
-    let s:newName = input('Enter new name: ', expand('<cword>'))
-    echom "s:newName = " . s:newName
-    lua vim.lsp.buf.rename(s:newName)
-endfunction
-
+" " nvim-lsp ----------------------------------------
+" " lsp specific config
+" " NOTE: need to do :LspInstall for each of these
+" lua << EOF
+"   require'nvim_lsp'.vimls.setup{on_attach=require'completion'.on_attach}
+"   require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
+"   require'nvim_lsp'.tsserver.setup{on_attach=require'completion'.on_attach}
+"   require'nvim_lsp'.jsonls.setup{on_attach=require'completion'.on_attach}
+"   require'nvim_lsp'.cmake.setup{on_attach=require'completion'.on_attach}
+"   require'nvim_lsp'.html.setup{on_attach=require'completion'.on_attach}
+"   require'nvim_lsp'.bashls.setup{on_attach=require'completion'.on_attach}
+" EOF
+" function! LSPRename()
+"     let s:newName = input('Enter new name: ', expand('<cword>'))
+"     echom "s:newName = " . s:newName
+"     lua vim.lsp.buf.rename(s:newName)
+" endfunction
 " function! LSPSetMappings()
-    setlocal omnifunc=v:lua.vim.lsp.omnifunc
-    nnoremap <silent> <buffer> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
-    nnoremap <silent> <buffer> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-    nnoremap <silent> <buffer> <leader>k     <cmd>lua vim.lsp.buf.hover()<CR>
-    nnoremap <silent> <buffer> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-    nnoremap <silent> <buffer> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-    nnoremap <silent> <buffer> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-    nnoremap <silent> <buffer> gr    <cmd>lua vim.lsp.buf.references()<CR>
-    nnoremap <silent> <buffer> <F2> :call LSPRename()<CR>
+"     setlocal omnifunc=v:lua.vim.lsp.omnifunc
+"     nnoremap <silent> <buffer> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+"     nnoremap <silent> <buffer> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+"     nnoremap <silent> <buffer> <leader>k     <cmd>lua vim.lsp.buf.hover()<CR>
+"     nnoremap <silent> <buffer> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+"     nnoremap <silent> <buffer> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+"     nnoremap <silent> <buffer> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+"     nnoremap <silent> <buffer> gr    <cmd>lua vim.lsp.buf.references()<CR>
+"     nnoremap <silent> <buffer> <F2> :call LSPRename()<CR>
 " endfunction
 " au FileType lua,sh,c,cpp,json,js,html,cmake,viml :call LSPSetMappings()
-
-" completion-nvim -----------------------------
-" Use completion-nvim in every buffer
-autocmd BufEnter * lua require'completion'.on_attach()
-" Set completeopt to have a better completion experience within completion-nvim
-set completeopt=menuone,noinsert,noselect
-
-" Highlight yanked text
-" augroup LuaHighlight
-"   autocmd!
-"   autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
-" augroup END
+" " completion-nvim -----------------------------
+" " Use completion-nvim in every buffer
+" autocmd BufEnter * lua require'completion'.on_attach()
+" " Set completeopt to have a better completion experience within completion-nvim
+" set completeopt=menuone,noinsert,noselect
+" " nvim-lsp ----------------------------------------
 
 " trailing whitespace, and end-of-lines. VERY useful!
 " Also highlight all tabs and trailing whitespace characters.
@@ -638,6 +621,10 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " " \e is <esc> (can also use <esc> too), see pattern-atoms
 " " `> and `< is jump to end and beg of vis selection
 " " xno is xnoremap
+" xnoremap s <nop>
+" xnoremap S <nop>
+" nnoremap s <nop>
+" nnoremap S <nop>
 " xno <expr> S{ {
 " \  'v': "\e`>a}\e`<i{\e",
 " \  'V': "\e`>o}\e`<O{\eva{=",
