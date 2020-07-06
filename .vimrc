@@ -762,8 +762,9 @@ function! Flash()
     if g:useCursorline == 0
         set nocursorline
     endif
+    set nohlsearch
 endfunction
-nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
+nnoremap <c-[> :silent! call Flash()<cr>
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
