@@ -372,21 +372,21 @@ endfunction
 noremap <c-=> :call AdjustFontSize(1)<CR>
 noremap <c--> :call AdjustFontSize(-1)<CR>
 
+Plug 'tomtom/tcomment_vim'
 " gcc toggles line
 " gc on selection to toggle
 " gcip gci{ etc. will toggle within those motions
-Plug 'tomtom/tcomment_vim'
 " Prevent tcomment from making a zillion mappings (we just want the gc operator).
 let g:tcomment_mapleader1=''
 let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
 
-Plug 'kana/vim-altr'
 " Use this to toggle .h/cpp buffers without polluting the buffer list
 " see https://vi.stackexchange.com/questions/11087/switch-between-header-and-source-files-in-one-buffer
 " https://github.com/kana/vim-altr/blob/master/doc/altr.txt
 " also consider vim-scripts/a.vim
+Plug 'kana/vim-altr'
 function! ToggleAndKillOldBuffer()
   let b = bufnr("%")
   silent! update!
@@ -417,7 +417,7 @@ colorscheme alduin2
 
 call plug#end()
 
-" " nvim-lsp ----------------------------------------
+" " nvim-lsp NOTE: This must go after plug section ----------------------------------------
 " " lsp specific config
 " " NOTE: need to do :LspInstall for each of these
 " lua << EOF
@@ -453,7 +453,8 @@ call plug#end()
 " set completeopt=menuone,noinsert,noselect
 " " nvim-lsp ----------------------------------------
 
-" trailing whitespace, and end-of-lines. VERY useful!
+
+" trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
 " Also highlight all tabs and trailing whitespace characters.
 " set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
 " set list                            " Show problematic characters.
@@ -463,6 +464,8 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+" Manually remove whitespace replace tabs with spaces
+nnoremap <leader>w mw:%s/\s\+$//e <bar> %s/\t/    /ge<cr>`w`w
 
 " FILETYPE
 " Associate filetypes with other filetypes
@@ -632,11 +635,7 @@ nnoremap <leader>mf :call MakeAFileAndAddToGit("")<left><left>
 nnoremap / /\V
 vnoremap / /\V
 
-" NAVIGATION WINDOW RESIZE
-" Only seems to work for gvim on windows
-" might work with neovim-gtk on windows
-" neovim-gtk on kubuntu is dead on arrival
-" This might work on neovim 0.4
+" Window split resizing
 if has("win32") && has("gui_running")
     " Resize window
     set lines=999
@@ -659,16 +658,18 @@ endif
 
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
-" For this single sroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
+" For this single scroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
 noremap <silent> <c-e> <nop>
 noremap <silent> <c-y> <nop>
-" NOTE: cause of slowness on 0.5.0 nvim nightly:
-" set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
-xnoremap <c-y> "+y
 noremap <silent> <c-f> <nop>
 noremap <silent> <c-b> <nop>
 noremap <silent> <c-u> 10<c-y>
 noremap <silent> <c-d> 10<c-e>
+
+" NOTE: cause of slowness on 0.5.0 nvim nightly:
+" set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+xnoremap <c-y> "+y
+nnoremap <c-p> "+p
 
 noremap J }
 noremap K {
@@ -676,13 +677,10 @@ noremap { J
 noremap } K
 " noremap H ^
 " noremap L $
-" noremap $ <nop>
-" noremap ^ <nop>
 " noremap <a-j> L
 " noremap <a-k> H
-" noremap <a-m> M
 
-" split nav
+" Split navigation
 inoremap <c-h> <Esc><c-w>h
 inoremap <c-j> <Esc><c-w>j
 inoremap <c-k> <Esc><c-w>k
@@ -723,11 +721,12 @@ function! BufferNext()
     bnext
   endif
 endfunction
-" " Cycle tabs in tab bar
+
+" Cycle tabs in tab bar
 nnoremap <silent> <a-h> :call BufferPrev()<cr>
 nnoremap <silent> <a-l> :call BufferNext()<cr>
-" " kill buffer tab
-" nnoremap <silent> <c-q> :silent! up! <bar> silent! bp! <bar> silent! bd! #<cr>
+
+" kill buffer tab
 nnoremap <silent> <c-q> :silent! up! <bar> silent! bd! <bar> call BufferNext() <cr>
 
 " " Toggle between header and source for c/cpp files
@@ -785,9 +784,6 @@ function! Flash()
     endif
 endfunction
 nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
-
-" Remove whitespace replace tabs with spaces
-nnoremap <leader>w mw:%s/\s\+$//e <bar> %s/\t/    /ge<cr>`w`w
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
