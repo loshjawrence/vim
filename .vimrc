@@ -52,7 +52,7 @@ set shiftround          " Round indent to multiple of 'shiftwidth'
 set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
 set hidden              " enable hidden unsaved buffers
 silent! helptags ALL    " Generate help doc for all plugins
-" set iskeyword+=-        " as-asdf-asdf-asdf-a-fd
+" set iskeyword+=-        " Add chars that count as word boundaries. test: asdf-asdf
 set enc=utf-8 fenc=utf-8 termencoding=utf-8 " set UTF-8 encoding
 set complete+=kspell " Autocomplete with dictionary words when spell check is on
 set nobackup
@@ -92,11 +92,10 @@ set path+=**
 nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 
 " UNIVERSAL CTAGS
-" ===============
+" =======================================================
 " include inheritance info and signatures of functions
 " it seems most of these flags are needed for :h omnicppcomplete
-" install from source (backup way to install)
-" ========================================================
+" How to install from source:
 " git clone https://github.com/universal-ctags/ctags.git
 " cd ctags
 " ./autogen.sh
@@ -123,23 +122,22 @@ nnoremap <leader>um :UnMinify<cr>
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
-" Use ripgrep
+" Tell vim to use ripgrep as its grep program
 set grepprg=rg\ --vimgrep\ --glob\ !tags
 
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
-" fzf using skim
-" Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
 
-" command! -bang -nargs=* Rg call fzf#vim#rg_interactive(<q-args>, fzf#vim#with_preview('right:50%:hidden', 'alt-h'))
-
-" choco install ripgrep fd fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-" [Buffers] Jump to the existing window if possible
+" Jump to buffer if open
 let g:fzf_buffers_jump = 1
 " disable preview window
 let g:fzf_preview_window = ''
+" fzf using skim
+" Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
+" command! -bang -nargs=* Rg call fzf#vim#rg_interactive(<q-args>, fzf#vim#with_preview('right:50%:hidden', 'alt-h'))
+" choco install ripgrep fd fzf
 " USE FD https://github.com/sharkdp/fd
 " put in .bashrc for fd/other things
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
@@ -170,14 +168,14 @@ let g:fzf_preview_window = ''
 Plug 'sjl/gundo.vim'
 nnoremap <F5> :GundoToggle<CR>
 
-" tags in open buffers
-nnoremap <leader>t :BTags<cr>
-" all tags (pulled from ctags i think)
-nnoremap <leader>T :Tags<cr>
 " files in `git ls-files``
 nnoremap <leader>f :GFiles<cr>
 " all files under pwd (recursive)
 nnoremap <leader>F :Files<cr>
+" tags in open buffers
+nnoremap <leader>t :BTags<cr>
+" all tags (pulled from ctags i think)
+nnoremap <leader>T :Tags<cr>
 " Don't really need this with buffers-as-tabs setup
 nnoremap <leader>b :Buffers<cr>
 
@@ -197,17 +195,13 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 
 Plug 'jiangmiao/auto-pairs'
-" This allows surround.vim to not pad with spaces
-" NOTE: no longer works
-" let g:AutoPairsMapSpace=0
 
 " QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (keep lines containing someText) or :g/someText/d (delete lines containing someText)
-" Nice to have but probably don't need it in practice
 Plug 'itchyny/vim-qfedit'
 
-" tell vim to use ripgrep for the its external grep program
 " mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
+" NOTE: use word versions(aw, rw) if doing var name changes
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
@@ -221,7 +215,7 @@ nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
 nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
 nmap <leader>rm :MyCdo %s/gIe<left><left><left>
-" nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
+nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
 " nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
 " " using range-aware function
@@ -253,9 +247,6 @@ Plug 'sheerun/vim-polyglot'
 " if using polyglot and vim-jsx-pretty
 let g:polyglot_disabled = ['jsx']
 
-" c languages, need llvm and pynvim for python3
-" Plug 'jackguo380/vim-lsp-cxx-highlight'
-
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
 
@@ -266,7 +257,7 @@ Plug 'vim-airline/vim-airline-themes'
 " let g:airline_powerline_fonts = 1
 " let g:airline#extensions#gutentags#enabled = 1
 let g:airline_theme='ayu_dark'
-" let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#coc#enabled = 1
 let g:airline#extensions#branch#enabled=1
 let g:airline#extensions#branch#empty_message = ''
 let g:airline#extensions#branch#displayed_head_limit = 10
@@ -299,24 +290,6 @@ let g:airline_section_z = '' " (percentage, line number, column number)
 " nnoremap <leader>5 5gt
 " nnoremap <leader>0 :tablast<cr>
 
-
-" Centering text in the window
-" pretty cool but doesnt show buffer bar
-" (and probably? no sign column)
-" Plug 'junegunn/goyo.vim'
-" let g:goyo_width = 180
-" let g:goyo_height = 100
-" let g:goyo_linenr = 1
-" autocmd! User GoyoEnter nested call <SID>goyo_enter()
-" autocmd! User GoyoLeave nested call <SID>goyo_leave()
-" function! s:goyo_enter()
-"     AirlineToggle
-"     AirlineRefresh
-" endfunction
-" function! s:goyo_leave()
-"     AirlineToggle
-"     AirlineRefresh
-" endfunction
 " LSP for code completion options:
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
 " # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
@@ -358,46 +331,16 @@ endfunction
 nnoremap <silent> gk :call <SID>show_documentation()<CR>
 nnoremap <buffer> gd <Plug>(coc-definition)
 nnoremap <buffer> gr <Plug>(coc-references)
-nnoremap <buffer> gt <Plug>(coc-type-definition)
-nnoremap <buffer> gi <Plug>(coc-implementation)
+" nnoremap <buffer> gt <Plug>(coc-type-definition)
+" nnoremap <buffer> gi <Plug>(coc-implementation)
 nnoremap <leader>rn <Plug>(coc-rename)
 nnoremap <buffer> <c-space> :CocRestart<cr>
-
-" Highlight symbol under cursor on CursorHold
-" autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " " 0.5.0 nightly nvim-lsp
 " " relevant plugins
 " Plug 'neovim/nvim-lsp'
 " Plug 'nvim-lua/completion-nvim'
 " Plug 'nvim-lua/diagnostic-nvim'
-
-" Enable repeat for supported plugins
-Plug 'tpope/vim-repeat'
-
-" Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
-" " Disable vim-airline when firenvim starts since vim-airline takes two lines.
-" if !exists('g:started_by_firenvim')
-"     Plug 'vim-airline/vim-airline'
-"     Plug 'vim-airline/vim-airline-themes'
-" endif
-" if exists('g:started_by_firenvim') && g:started_by_firenvim
-"     " general options
-"     set laststatus=0 nonumber noruler noshowcmd
-"
-"     augroup firenvim
-"         autocmd!
-"         autocmd BufEnter *.txt setlocal filetype=markdown.pandoc
-"     augroup END
-" endif
-
-" File browse, edit browser buffer like normal, todo: read docs
-Plug 'justinmk/vim-dirvish'
 
 " " Type s and a char of interesst then the colored letters at the char to jump to it.
 " Plug 'easymotion/vim-easymotion'
@@ -408,42 +351,26 @@ Plug 'justinmk/vim-dirvish'
 " " This will search before and after cursor in current pane
 " nmap s <Plug>(easymotion-s)
 " nnoremap S <nop>
+" NOTE: conflicts with surround
 
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
 
-" Only use this for Ttoggle (term toggle) any way to do this myself?
-Plug 'kassio/neoterm' " Only use this for Ttoggle (term toggle) any way to do this myself?
+" Only use this for Ttoggle (term toggle)
+Plug 'kassio/neoterm'
 let g:neoterm_autojump = 1
 let g:neoterm_autoinsert = 1
 let g:neoterm_size = 40
 
-" " FONT SIZE FONT ZOOM
-" " neovim seems to work with both
-" " theres a neovim gtk version that works for linux and windows
-" Plug 'schmich/vim-guifont' " quickly increase decrease font size in guis
-" let guifontpp_size_increment=1
-" let guifontpp_smaller_font_map="<c-->"
-" let guifontpp_larger_font_map="<c-=>"
-
-if has("win32")
-    " set guifont=Consolas:h10
-else
-    " Doesn't trigger for some reason
-    " Trigger with ctrl = and -
-    set guifont=Monospace:h8
-endif
-
+" Font, size, resize
+set guifont=Monospace:h8
 let s:fontsize = 9
 function! AdjustFontSize(amount)
     let s:fontsize = s:fontsize+a:amount
     :execute "GuiFont! Monospace:h" . s:fontsize
 endfunction
-
 noremap <c-=> :call AdjustFontSize(1)<CR>
 noremap <c--> :call AdjustFontSize(-1)<CR>
-" put in ginit.vim, Doesn't work
-" GuiFont Monospace:h8
 
 " gcc toggles line
 " gc on selection to toggle
