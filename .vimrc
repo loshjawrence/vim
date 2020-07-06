@@ -454,8 +454,8 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
-" Manually remove whitespace, replace tabs with 4 spaces, merge consec blank lines into 1
-nnoremap <leader>w mw:%s/\s\+$//e<cr>:%s/\t/    /ge<cr>:%s/^\_s\+/\r/g<cr>`w`w:call Flash()
+" Manually remove whitespace, replace tabs with 4 spaces
+nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:call Flash()<cr>`w
 
 " FILETYPE
 " Associate filetypes with other filetypes
