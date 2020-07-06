@@ -15,7 +15,8 @@ let mapleader="\<space>" " Map the leader key to space bar
 
 " So git bash or whatever doesn't throw up errors everywhere when it needs you to edit a commit message
 if v:progname == 'vi'
-  set noloadplugins
+
+set noloadplugins
 endif
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
@@ -75,15 +76,15 @@ set cmdheight=2 " Better display for messages
 set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
 set shortmess+=c " don't give |ins-completion-menu| messages.
 if has('gui')
-  " Turn off scrollbars. (Default on macOS is "egmrL").
-  set winaltkeys=no
-  set guioptions-=L
-  set guioptions-=R
-  set guioptions-=b
-  set guioptions-=l
-  set guioptions-=r
-  set guioptions-=T
-  set guioptions-=m
+    " Turn off scrollbars. (Default on macOS is "egmrL").
+    set winaltkeys=no
+    set guioptions-=L
+    set guioptions-=R
+    set guioptions-=b
+    set guioptions-=l
+    set guioptions-=r
+    set guioptions-=T
+    set guioptions-=m
 endif
 
 " tell :find to recursively search
@@ -106,18 +107,6 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build/**' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
 " nnoremap <leader>ct :cd %:p:h <bar> CTags<cr>
 nnoremap <leader>ct :CTags<cr>
-
-" Simple re-format for minified Javascript
-command! UnMinify call UnMinify()
-function! UnMinify()
-    %s/{\ze[^\r\n]/{\r/g
-    %s/){/) {/g
-    %s/};\?\ze[^\r\n]/\0\r/g
-    %s/;\ze[^\r\n]/;\r/g
-    %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
-    normal ggVG=
-endfunction
-nnoremap <leader>um :UnMinify<cr>
 
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
@@ -168,6 +157,7 @@ let g:fzf_preview_window = ''
 Plug 'sjl/gundo.vim'
 nnoremap <F5> :GundoToggle<CR>
 
+" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
 " files in `git ls-files``
 nnoremap <leader>f :GFiles<cr>
 " all files under pwd (recursive)
@@ -322,11 +312,11 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Use c-j (back) and c-k (forward) to jump to args pulled method signature
 " use j and k to navigate list, use p to toggle preview window
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
 endfunction
 nnoremap <silent> gk :call <SID>show_documentation()<CR>
 nnoremap <buffer> gd <Plug>(coc-definition)
@@ -388,22 +378,23 @@ let g:tcomment_textobject_inlinecomment=''
 " also consider vim-scripts/a.vim
 Plug 'kana/vim-altr'
 function! ToggleAndKillOldBuffer()
-  let b = bufnr("%")
-  silent! update!
-  call altr#forward()
-  execute "bdelete " . b
+    let b = bufnr("%")
+    silent! update!
+    call altr#forward()
+    execute "bdelete " . b
 endfunction
 nnoremap <a-o> :call ToggleAndKillOldBuffer()<CR>
 
 " see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
 " There was a comment about making sure .viminfo is read/write
 autocmd BufReadPost *
-     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-     \   exe "normal! g`\"" |
-     \ endif
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\   exe "normal! g`\"" |
+\ endif
 
- " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a.
- " Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
+" Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a.
+
+" Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
 " d2ina skips an arg and deletes the next one
 Plug 'wellle/targets.vim'
 
@@ -453,7 +444,6 @@ call plug#end()
 " set completeopt=menuone,noinsert,noselect
 " " nvim-lsp ----------------------------------------
 
-
 " trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
 " Also highlight all tabs and trailing whitespace characters.
 " set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
@@ -464,8 +454,8 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
-" Manually remove whitespace replace tabs with spaces
-nnoremap <leader>w mw:%s/\s\+$//e <bar> %s/\t/    /ge<cr>`w`w
+" Manually remove whitespace, replace tabs with 4 spaces, merge consec blank lines into 1
+nnoremap <leader>w mw:%s/\s\+$//e<cr>:%s/\t/    /ge<cr>:%s/^\_s\+/\r/g<cr>`w`w:call Flash()
 
 " FILETYPE
 " Associate filetypes with other filetypes
@@ -500,7 +490,7 @@ let g:terminal_color_14 = '#00f5e9'
 let g:terminal_color_15 = '#eeeeec'
 
 if has("nvim")
-  set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
+    set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 endif
 
 " SEARCH
@@ -535,8 +525,10 @@ vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><lef
 " NOTE: the w and y versions are never used in practice since * is used
 " to see whats there and V to select the ones that need to change
 vnoremap <expr> <leader>es mode() ==# "V" ?
-      \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
-      \: ""
+
+\ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
+
+\: ""
 " Whole file edit last search(E version being with confim). Get rid of teh extre \V then get rid of any ending \n
 nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
 nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
@@ -618,7 +610,6 @@ function! MakeAFileAndAddToGit(filename)
     execute 'edit ' . a:filename
     write
     execute 'silent !git add ' . a:filename
-
     " match .c then 0 or 2 p's then end of line
     " see :h pattern-overview
     let hfile=substitute(a:filename, '\.c[p]\{-,2}$', '.h', '')
@@ -635,26 +626,17 @@ nnoremap <leader>mf :call MakeAFileAndAddToGit("")<left><left>
 nnoremap / /\V
 vnoremap / /\V
 
-" Window split resizing
 if has("win32") && has("gui_running")
     " Resize window
     set lines=999
     set columns=255
-    " grow window horizontally
+    " Grow active split horizontally
     nnoremap <s-left> :set columns-=8<cr>
     nnoremap <s-right> :set columns+=8<cr>
-    " grow window vertically
+    " Grow active split vertically
     nnoremap <s-down> :set lines-=8<cr>
     nnoremap <s-up> :set lines+=8<cr>
 endif
-
-" If you set the winheight option to 999, the current split occupies as much of the screen as possible(vertically)
-" and all other windows occupy only one line (I have seen this called "Rolodex mode"):
-" set winheight=999
-" sideways version:
-" set winwidth=999
-" To increase a split to its maximum height, use Ctrl-w _.
-" To increase a split to its maximum width, use Ctrl-w |.
 
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
@@ -710,16 +692,16 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
 " " airline removes term from tabline but must still skip it
 function! BufferPrev()
-  bprev
-  if &buftype == 'terminal'
     bprev
-  endif
+    if &buftype == 'terminal'
+        bprev
+    endif
 endfunction
 function! BufferNext()
-  bnext
-  if &buftype == 'terminal'
     bnext
-  endif
+    if &buftype == 'terminal'
+        bnext
+    endif
 endfunction
 
 " Cycle tabs in tab bar
@@ -749,11 +731,10 @@ nnoremap <silent> <c-q> :silent! up! <bar> silent! bd! <bar> call BufferNext() <
 " COLORCOLUMN
 " CURSORLINE (can be slower in some terminals)
 
-" purple4 royalblue4 black
+" purple4 black
 " You can also specify a color by its RGB (red, green, blue) values.
 " The format is "#rrggbb", where
-" :highlight Comment guifg=#11f0c3 guibg=#ff00ff
-" hi CursorLine  cterm=NONE ctermbg=royalblue4 ctermfg=NONE
+" hi Comment guifg=#11f0c3 guibg=#ff00ff
 hi cursorline  gui=NONE guibg=purple4 guifg=NONE
 hi cursorcolumn  gui=NONE guibg=purple4 guifg=NONE
 
@@ -777,7 +758,6 @@ function! Flash()
     set cursorline cursorcolumn
     redraw
     sleep 30m
-
     set nocursorcolumn
     if g:useCursorline == 0
         set nocursorline
@@ -801,7 +781,7 @@ vnoremap Q :norm @q<cr>
 nnoremap j gj
 nnoremap k gk
 
-" yank to end of line to follow the C and D convention. vim is terrible
+" yank to end of line to follow the C and D convention.
 nnoremap Y y$
 
 " nvim_win_config
@@ -827,6 +807,7 @@ nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 "             \:<c-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
 " onoremap s :normal vs<cr>
 
+" Fomatting
 " Pretty Json
 nnoremap <leader>p :%!python -m json.tool<cr>
 " NOTE xxd is a linux thing
@@ -834,6 +815,17 @@ nnoremap <leader>p :%!python -m json.tool<cr>
 nnoremap <leader>xx :%!xxd<cr>
 " undo convert to hex view
 nnoremap <leader>xr :%!xxd -r<cr>
+" Simple re-format for minified Javascript
+command! UnMinify call UnMinify()
+function! UnMinify()
+    %s/{\ze[^\r\n]/{\r/g
+    %s/){/) {/g
+    %s/};\?\ze[^\r\n]/\0\r/g
+    %s/;\ze[^\r\n]/;\r/g
+    %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
+    normal ggVG=
+endfunction
+nnoremap <leader>um :UnMinify<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -888,8 +880,6 @@ nnoremap <leader>xr :%!xxd -r<cr>
 
 "NOTES:
 " c-r" to paste from register doublequote when in command/search/terminal
-" wow: https://vim.fandom.com/wiki/Power_of_g
-" In the "power of g" how do I do the display context of search across all files in project/pwd to do what sublime does?
 " highlighing lines then doing a :w TEST will write those lines to TEST
 " :r TEST will put lines from test at the cursor
 " :r !ls will put the result of ls at the cursor
@@ -898,44 +888,46 @@ nnoremap <leader>xr :%!xxd -r<cr>
 " :wqa! write and quits all
 "  with tcomment_vim installed you can comment lines with gc when they are visually selected
 " possibly useful nomral mode keys:
-" :%!python -m json.tool // Prettify Json files (choco install python)
-" <c-w>gf to open file under cursor in a new tab, gf will open file in this tab
 " ; will repeat t/T and f/F (line movement to and find) commonds. , will repeat reverse directio direction
-" <c-w><c-w> cycle split windows
-" c-w + h,j,k, or l will nav to other splits
 " c-w + s,v opens the same buffer in a horiz or vert split
-" K will search in man pages for the command under cursor (this has been remapped to to opposite of J)
+" K will search in man pages for the command under cursor (this has been remapped)
 " :sh will open a shell
 " di{ to delete method body, can do this with these as well: " ( [ ' <
 " daw deletes around(includes white space) word use this instead of db unless you really need db
 " :windo diffthis (diff windows in current tab, :diffoff! to turn it off)
-" :g/^\s*$/d global delete lines containing regex(whitespace-only lines)
-" :g!/error\|warn\|fail/d opposite of global delete (equivalent to global inverse delete (v//d)) keep the lines containing the regex(error or warn or fail)
-" :tab sball -> convert everything to tabs
-" gt (next tab) gT(prev tab) #gt (jump to tab #)
+" :tab sball -> convert buffers to tabs
 " :mks! to save Session.vim in current folder
-" :source Session.vim to open the Session.vim saved session
+" :source Session.vim to load its session config
 " c-n, c-p tab-like completion pulling from variety of sources (also for prompt navigation, prev, next)
 " c-x c-l whole line completion
 " c-x c-o syntax aware omnicompletion
 " see this for native vim auto complete https://robots.thoughtbot.com/vim-you-complete-me
-" clipboard reg 1 yank in word nmode: "1yiw vmode: "
 " clipboard reg 1 yank in word nmode: "1yiw vmode: "1y
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
-" edit file under cursor: gf
 " open prevoius file: <c-6> good for toggling .h and .cpp (can also use fzf's :History command <leader>hh)
 " paste in word from reg 1: nmode: viw"1p vmode: "1p
-" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
-" :Vex vertical explorer (can navigate and search like normal vim, READ THE F1 help looks configurable  to work like a tree)
-" can turn a split into a tab by doing c-w then T
-" zz to center the line you're on in the middle of the screen
-" zt to put the line you're on at the top of the screen
-" c-y anc c-e scroll up and down keeping the cursor on the same line
 " c-x subtracts 1 from number under curosr c-a adds 1
 " zE remove all folds
 " [{ ]} will jump to beginning and end of a {} scope
 " vip will highlight a block bound by blank lines
 " % will jump to (), [], [] on a line
+
+" In the "power of g" how do I do the display context of search across all files in project/pwd to do what sublime does?
+" https://vim.fandom.com/wiki/Power_of_g
+" gD go to def of word under cursor in current file
+" gd go to def of word under cursor in current function
+" g; goes to last edited position
+" gt (next tab) gT(prev tab) #gt (jump to tab #)
+" gf will open file under cursor, <c-w>gf to open file under cursor in a new tab
+" :g/^\s*$/d - global delete lines containing regex(blank or whitespace-only lines)
+" :g/pattern/d _ - fast delete lines matching pattern
+" :g!/error\|warn\|fail/d - opposite of global delete (equivalent to global inverse delete (v//d)) keep the lines containing the regex(error or warn or fail)
+" :g/pattern/z#.5|echo "==========" - display context, 5 lines, of pattern
+" :g/pattern/t$  - copy all lines matching pattern to the end of the file
+" :g/pattern/m$  - move all lines matching pattern to the end of the file
+" qaq:g/pattern/y A Copy all lines matching a pattern to register 'a'. qa starts recording a macro to register a, then q stops recording, leaving a empty. y is yank, A is append to register a.
+" :g/pattern/normal @q - run macro recorded in q on matching lines
+
 " INSERT MODE:
 " c-w   Delete word to the left of cursor
 " c-u   Delete everything to the left of cursor
@@ -947,7 +939,8 @@ nnoremap <leader>xr :%!xxd -r<cr>
 " ctrl-n, p next previous command in history
 " c-f will pop up a buffer of previous command history, you can edit like a normal buffer and hit enter to execute
 " c-f will do the same thing for / searching
-"
+" c-v  followed by an action key, say delete, will insert <Del>
+
 " COMPLETION:
 " c-x c-f filepath completion
 " c-x c-o "omni" completion, code aware completion
@@ -955,8 +948,6 @@ nnoremap <leader>xr :%!xxd -r<cr>
 " c-x c-d macro completion
 " c-x c-i current and included files
 " c-x c-] tags
-" c-x c-v vim command line (hitting delete will insert <Del>)
-" :iab ad advertisement (insert abbreviation: when I type ad<space> it puts advertisement)
 
 " [ COMMANDS (The ] key is the forward version of the [ key)
 " [ ctrl-i jump to first line in current and included files that contains the word under the cursor
@@ -965,12 +956,9 @@ nnoremap <leader>xr :%!xxd -r<cr>
 " [( cursor n times back to unmatched (
 " [{ cursor n times back to unmatched {
 " [[ cursor n times back to unmatched [
-" [D list all defines found in current and lincluded files matching word under cursor
-" [I list all lines found in current and lincluded files matching word under cursor
+" [D list all defines found in current and included files matching word under cursor
+" [I list all lines found in current and included files matching word under cursor
 " [m cursor n times back to start of member function
-" gD go to def of word under cursor in current file
-" gd go to def of word under cursor in current function
-" g; goes to last edited position
 
 " REGISTERS
 " :reg to list whats in all the registers
@@ -989,15 +977,11 @@ nnoremap <leader>xr :%!xxd -r<cr>
 " This can be used to execute all sort of expressions, even calling external commands. To give another example, if you type Ctrl-r = and then, in the command line, system('ls') <enter>, the output of the ls command will be pasted in your buffer
 " "/ is the search register, the last thing searched for
 
-" INSERT MODE
-" c-w deletes word
-" c-u deletes line
-
-" jump to tag. / will do fuzzy match
+" Jump to tag. / will do fuzzy match
 " nnoremap <leader>j :tjump /
-"
+
 " list the buffers and prepare open buffer command
-" nnoremap gb :ls<CR>:b<space>
+" nnoremap <leader>b :ls<CR>:b<space>
 
 " Bad but might have nugget of good idea
 " Bind p in visual mode to paste without overriding the current register
@@ -1026,9 +1010,9 @@ nnoremap <leader>xr :%!xxd -r<cr>
 "
 "If you want to complete system functions you can do something like this.  Use
 " ctags to generate a tags file for all the system header files:
-" 	% ctags -R -f ~/.vim/systags /usr/include /usr/local/include
+"     % ctags -R -f ~/.vim/systags /usr/include /usr/local/include
 " In your vimrc file add this tags file to the 'tags' option:
-" 	set tags+=~/.vim/systags
+"     set tags+=~/.vim/systags
 
 " :Cfilter some-string to filter the quickfix list, :Cfilter will grab entries not matching some-string
 " :Cfilter[!] /{pat}/
