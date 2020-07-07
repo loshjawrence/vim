@@ -460,7 +460,7 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 " Manually remove whitespace, replace tabs with 4 spaces
-nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:call Flash()<cr>`w
+nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
 " FILETYPE
 " Associate filetypes with other filetypes
@@ -765,9 +765,8 @@ function! Flash()
     if g:useCursorline == 0
         set nocursorline
     endif
-    set nohlsearch
 endfunction
-nnoremap <c-[> :silent! call Flash()<cr>
+nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
