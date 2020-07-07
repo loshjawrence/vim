@@ -530,9 +530,7 @@ vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><lef
 " NOTE: the w and y versions are never used in practice since * is used
 " to see whats there and V to select the ones that need to change
 vnoremap <expr> <leader>es mode() ==# "V" ?
-
 \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
-
 \: ""
 " Whole file edit last search(E version being with confim). Get rid of teh extre \V then get rid of any ending \n
 nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
@@ -972,7 +970,7 @@ nnoremap <leader>um :UnMinify<cr>
 " REGISTERS
 " :reg to list whats in all the registers
 " @: uses this register to execute the command again
-" Editing macros since they are stored in registers: For example, if you forgot to add a semicolon in the end of that w macro, just do something like :let @W='i;'. Noticed the upcased W?
+" Editing macros since they are stored in registers: For example, if you forgot to add a semicolon in the end of that w macro, just do something like :let @W='i;'. Noticed the uppercase W
 " That’s just how we append a value to a register, using its upcased name, so here we are just appending the command i; to the register, to enter insert mode (i) and add a semicolon.
 " If you need to edit something in the middle of the register, just do :let @w='<Ctrl-r w>, change what you want, and close the quotes in the end. Done, no more recording a macro 10 times before you get it right.
 " "" is the unamed register (d,x,s,c) will go there
