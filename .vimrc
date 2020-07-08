@@ -299,14 +299,28 @@ let g:airline_section_z = '' " (percentage, line number, column number)
 " For c based langs, use clangd (choco install llvm then :CocConfig and paste the json settings from coc.nvim github wiki)
 " `CocList marketplace` to see things you can CocInstall
 " "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-clangd coc-rls coc-syntax coc-tag
+" CocList extensions
+" hit tab to view actions on an extension
 " "CocCommand <tab>
 " :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
 
 " Install clang/clangd with: choco install llvm
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+let g:coc_global_extensions = ['coc-tsserver', 'coc-clangd', 'coc-cmake', 'coc-vimlsp', 'coc-html', 'coc-eslint', 'coc-sh', 'coc-json', 'coc-yaml', 'coc-xml', 'coc-sql']
 " NOTE: look here for example .vimrc: https://github.com/neoclide/coc.nvim#example-vim-configuration
-" <cr> confirm, need this for filling selecting  method signature from the list
+" <cr> to comfirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
 " Use c-j (back) and c-k (forward) to jump to args pulled method signature
 " use j and k to navigate list, use p to toggle preview window
 function! s:show_documentation()
@@ -317,10 +331,9 @@ function! s:show_documentation()
     endif
 endfunction
 nnoremap <silent> gk :call <SID>show_documentation()<CR>
-nnoremap <buffer> gd <Plug>(coc-definition)
+nnoremap <buffer> <c-]> <Plug>(coc-definition)
 nnoremap <buffer> gr <Plug>(coc-references)
 " nnoremap <buffer> gt <Plug>(coc-type-definition)
-" nnoremap <buffer> gi <Plug>(coc-implementation)
 nnoremap <leader>rn <Plug>(coc-rename)
 nnoremap <buffer> <c-space> :CocRestart<cr>
 
