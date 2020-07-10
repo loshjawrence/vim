@@ -186,46 +186,8 @@ Plug 'jiangmiao/auto-pairs'
 
 " QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (keep lines containing someText) or :g/someText/d (delete lines containing someText)
+" used in the mappings for global ack and replace
 Plug 'itchyny/vim-qfedit'
-
-" mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
-" NOTE: use word versions(aw, rw) if doing var name changes
-command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
-command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
-nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
-nmap <leader>am :MyGrep ""<left>
-nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
-" nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
-" NOTE: bug with rr where if item is also a substring of the new version it
-" will get n substitions where n is occurance count in quickfix window.
-" example old: jawn, new: m_jawn, output: m_m_m_m_jawn
-" nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
-" nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
-nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
-nmap <leader>rm :MyCdo %s/gIe<left><left><left>
-nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
-" nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
-
-" " using range-aware function
-" function! QFdelete() range
-"     " get current qflist
-"     let l:qfl = getqflist()
-"     " no need for filter() and such; just drop the items in range
-"     call remove(l:qfl, a:firstline - 1, a:lastline - 1)
-"     " replace items in the current list, do not make a new copy of it;
-"     " this also preserves the list title
-"     call setqflist([], 'r', {'items': l:qfl})
-"    " restore current line
-"    call cursor(a:firstline, 1)
-" endfunction
-" " using buffer-local mappings
-" " note: still have to check &bt value to filter out `:e quickfix` and such
-" augroup QFList | au!
-"     autocmd BufWinEnter quickfix if &bt ==# 'quickfix'
-"     autocmd BufWinEnter quickfix    nnoremap <silent><buffer>dd :call QFdelete()<CR>
-"     autocmd BufWinEnter quickfix    vnoremap <silent><buffer>d  :call QFdelete()<CR>
-"     autocmd BufWinEnter quickfix endif
-" augroup end
 
 " Syntax for js ts react ect. comes before polyglot
 Plug 'maxmellon/vim-jsx-pretty'
@@ -425,6 +387,46 @@ autocmd BufReadPost *
 
 " Change pwd to this files location. local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
 nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
+
+" mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
+" NOTE: use word versions(aw, rw) if doing var name changes
+command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
+command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
+nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
+nmap <leader>am :MyGrep ""<left>
+nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
+" nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
+" NOTE: bug with rr where if item is also a substring of the new version it
+" will get n substitions where n is occurance count in quickfix window.
+" example old: jawn, new: m_jawn, output: m_m_m_m_jawn
+" nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
+" nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
+nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+nmap <leader>rm :MyCdo %s/gIe<left><left><left>
+nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
+" nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
+
+" " using range-aware function
+" function! QFdelete() range
+"     " get current qflist
+"     let l:qfl = getqflist()
+"     " no need for filter() and such; just drop the items in range
+"     call remove(l:qfl, a:firstline - 1, a:lastline - 1)
+"     " replace items in the current list, do not make a new copy of it;
+"     " this also preserves the list title
+"     call setqflist([], 'r', {'items': l:qfl})
+"    " restore current line
+"    call cursor(a:firstline, 1)
+" endfunction
+" " using buffer-local mappings
+" " note: still have to check &bt value to filter out `:e quickfix` and such
+" augroup QFList | au!
+"     autocmd BufWinEnter quickfix if &bt ==# 'quickfix'
+"     autocmd BufWinEnter quickfix    nnoremap <silent><buffer>dd :call QFdelete()<CR>
+"     autocmd BufWinEnter quickfix    vnoremap <silent><buffer>d  :call QFdelete()<CR>
+"     autocmd BufWinEnter quickfix endif
+" augroup end
+
 
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
 " " lsp specific config
