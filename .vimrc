@@ -389,7 +389,7 @@ autocmd BufReadPost *
 nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 
 " mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
-" NOTE: use word versions(aw, rw) if doing var name changes
+" TODO: need proper word boundary versions(aw, rw) for better var name changes.
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
