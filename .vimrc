@@ -292,11 +292,11 @@ function! s:show_documentation()
         call CocAction('doHover')
     endif
 endfunction
-nnoremap <silent> gk :call <SID>show_documentation()<CR>
-nnoremap <buffer> <c-]> <Plug>(coc-definition)
-nnoremap <buffer> gr <Plug>(coc-references)
-" nnoremap <buffer> gt <Plug>(coc-type-definition)
-nnoremap <leader>rn <Plug>(coc-rename)
+" nnoremap <silent> gk :call <SID>show_documentation()<CR>
+" nnoremap <buffer> <c-]> <Plug>(coc-definition)
+" nnoremap <buffer> gr <Plug>(coc-references)
+" " nnoremap <buffer> gt <Plug>(coc-type-definition)
+" nnoremap <leader>rn <Plug>(coc-rename)
 nnoremap <buffer> <c-space> :CocRestart<cr>
 
 "NOTE: see the minimal vimrc here https://github.com/nvim-lua/completion-nvim/issues/143
@@ -667,9 +667,9 @@ noremap <silent> <c-u> 10<c-y>
 noremap <silent> <c-d> 10<c-e>
 
 " NOTE: cause of slowness on 0.5.0 nvim nightly:
-" set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
-xnoremap <c-y> "+y
-nnoremap <c-p> "+p
+set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+" xnoremap <c-y> "+y
+" nnoremap <c-p> "+p
 
 noremap J }
 noremap K {
