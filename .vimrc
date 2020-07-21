@@ -101,8 +101,33 @@ set path+=**
 " ./configure
 " make
 " sudo make install
+" ctags --version
+" TO SEE A LIST OF LANGS:
+" ctags --list-languages
 " ========================================================
-command! CTags !ctags -R --c++-kinds=+pl --fields=+iaS --extras=+q --exclude='build/**' --exclude='node_modules/**' --exclude='data/**' --exclude='bin/**' --exclude='*.json' .
+command! CTags !ctags -R
+            \ --languages=C,C++,CMake,CUDA,Javascript,TypeScript
+            \ --c++-kinds=+pl
+            \ --fields=+iaS
+            \ --extras=+q
+            \ --exclude='node_modules'
+            \ --exclude='Bin'
+            \ --exclude='bin'
+            \ --exclude='Build'
+            \ --exclude='build'
+            \ --exclude='Data'
+            \ --exclude='data'
+            \ --exclude='Docs'
+            \ --exclude='docs'
+            \ --exclude='Documentation'
+            \ --exclude='documentation'
+            \ --exclude='Docker'
+            \ --exclude='docker'
+            \ --exclude='Specs'
+            \ --exclude='specs'
+            \ --exclude='travis'
+            \ --exclude='.git'
+            \ .
 " nnoremap <leader>ct :cd %:p:h <bar> CTags<cr>
 nnoremap <leader>ct :CTags<cr>
 
