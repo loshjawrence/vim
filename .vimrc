@@ -47,6 +47,7 @@ set noshowmode          " don't show mode as airline already does
 set mouse=a             " enable mouse (selection, resizing windows)
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
 set tabstop=4           " Use 4 spaces for tabs.
+set softtabstop=4       " Use 4 spaces for tabs.
 set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " insert tab with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
@@ -569,6 +570,7 @@ vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><lef
 " and to get the \\ in a '' from a "" you need 4.
 " NOTE: the w and y versions are never used in practice since * is used
 " to see whats there and V to select the ones that need to change
+" TODO: want a other v versions of this
 vnoremap <expr> <leader>es mode() ==# "V" ?
 \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
 \: ""
@@ -680,6 +682,10 @@ if has("win32") && has("gui_running")
     nnoremap <s-down> :set lines-=8<cr>
     nnoremap <s-up> :set lines+=8<cr>
 endif
+
+augroup FileTypeSpecificAutocommands
+    autocmd FileType javascript setlocal tabstop=2 softtabstop=2 shiftwidth=2
+augroup END
 
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
