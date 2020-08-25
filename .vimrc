@@ -15,8 +15,7 @@ let mapleader="\<space>" " Map the leader key to space bar
 
 " So git bash or whatever doesn't throw up errors everywhere when it needs you to edit a commit message
 if v:progname == 'vi'
-
-set noloadplugins
+    set noloadplugins
 endif
 
 filetype plugin indent on  " try to recognize filetypes and load rel' plugins
@@ -47,7 +46,6 @@ set noshowmode          " don't show mode as airline already does
 set mouse=a             " enable mouse (selection, resizing windows)
 set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
 set tabstop=4           " Use 4 spaces for tabs.
-set softtabstop=4       " Use 4 spaces for tabs.
 set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " insert tab with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
@@ -503,7 +501,7 @@ autocmd BufWinLeave * call clearmatches()
 " Manually remove whitespace, replace tabs with 4 spaces
 nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
-" FILETYPE
+" FILETYPE filetype
 " Associate filetypes with other filetypes
 autocmd BufRead,BufNewFile *.shader set filetype=cpp
 autocmd BufRead,BufNewFile *.vert   set filetype=cpp
@@ -511,11 +509,11 @@ autocmd BufRead,BufNewFile *.frag   set filetype=cpp
 autocmd BufRead,BufNewFile *.glsl   set filetype=cpp
 autocmd BufRead,BufNewFile *.hlsl   set filetype=cpp
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
-
 " Enable spellchecking for Markdown
 autocmd FileType markdown setlocal spell
 " add support for comments in json (jsonc format used as configuration for many utilities)
 autocmd FileType json syntax match Comment +\/\/.\+$+
+autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 
 " Terminal colors
 let g:terminal_color_0  = '#2e3436'
@@ -682,10 +680,6 @@ if has("win32") && has("gui_running")
     nnoremap <s-down> :set lines-=8<cr>
     nnoremap <s-up> :set lines+=8<cr>
 endif
-
-augroup FileTypeSpecificAutocommands
-    autocmd FileType javascript setlocal tabstop=2 softtabstop=2 shiftwidth=2
-augroup END
 
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
