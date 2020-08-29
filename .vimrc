@@ -849,7 +849,7 @@ nnoremap <silent> <leader>vs :so ~/.vimrc<cr>
 nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
 " Diff the current local vimrc against master
 nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp ../.vimrc .<cr>git diff<cr>
-" Pull latest vimrc
+" Pull latest vimrc, copy it to vimrc location, source it, restart coc
 nmap <silent> <leader>vp <c-\>cd ~/vim<cr>git pull<cr>cp .vimrc ..<cr>cd -<cr><c-[><c-[><leader>vs<c-space>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
