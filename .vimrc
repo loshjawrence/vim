@@ -417,22 +417,22 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 " NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
-nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
-nmap <leader>am :MyGrep ""<left>
+nnoremap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
+nnoremap <leader>am :MyGrep ""<left>
 " NOTE: rg's idea of word boundary is different from vim.
 " But <leader>rs command will put the vim word boundary
 " things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
-nmap <leader>aw :MyGrep "<c-r><c-w>" "-w"<cr>
-" nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
+nnoremap <leader>aw :MyGrep "<c-r><c-w>" "-w"<cr>
+" nnoremap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
 " NOTE: bug with rr where if item is also a substring of the new version it
 " will get n substitions where n is occurance count in quickfix window.
 " example old: jawn, new: m_jawn, output: m_m_m_m_jawn
-" nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
-" nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
-nmap <leader>rs :MyCdo %s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
-nmap <leader>rm :MyCdo %s/\VgIe<left><left><left>
-nmap <leader>rw :MyCdo %s/\V\<<c-r><c-w>\>//gIe<left><left><left><left>
-" nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
+" nnoremap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
+" nnoremap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
+nnoremap <leader>rs :MyCdo %s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
+nnoremap <leader>rw :MyCdo %s/\V\<<c-r><c-w>\>//gIe<left><left><left><left>
+" nnoremap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
 " " using range-aware function
 " function! QFdelete() range
@@ -557,9 +557,10 @@ nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left
 nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
 " edit word under cursor within the visual lines
 " gv selects the last vis selection (line, block or select)
-vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><left><left><left><left>
+" NOTE: just use *, vis select, then <leader>es
+" vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><left><left><left><left>
 " Visually selected text in file
-" If mode is visual line mode, edit the prev yank acros the vis lines, else across the whole file
+" If mode is visual line mode, edit the prev yank across the vis lines, else across the whole file
 " see :h escape() (escape the chars in teh second arg with backslash)
 " c-r=escape() means paste in the result of escape
 " vnoremap <expr> <leader>ey mode() ==# "V" ?
@@ -570,12 +571,12 @@ vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><lef
 " nnoremap <leader>Ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
 " Visual lines or visual select edit-last-search, 4 backslashes since we are in a "" and to insert a \ into "" you need \\
 " and to get the \\ in a '' from a "" you need 4.
-" NOTE: the w and y versions are never used in practice since * is used
+" NOTE: the w and y versions are never used in practice since * can handle those cases as well
 " to see whats there and V to select the ones that need to change
-" TODO: want a other v versions of this
-vnoremap <expr> <leader>es mode() ==# "V" ?
-\ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
-\: ""
+" vnoremap <expr> <leader>es mode() ==# "V" ?
+" \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
+" \: ""
+xnoremap <leader>es :s/\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>
 " Whole file edit last search(E version being with confim). Get rid of teh extre \V then get rid of any ending \n
 nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
 nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
@@ -843,9 +844,9 @@ nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
 " Source the vimrc so we don't have to refresh
-nmap <silent> <leader>vs :so ~/.vimrc<cr>
+nnoremap <silent> <leader>vs :so ~/.vimrc<cr>
 " Edit the vimrc in a new tab
-nmap <silent> <leader>ve :vs ~/.vimrc<cr>
+nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
 " Diff the current local vimrc against master
 nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp ../.vimrc .<cr>git diff<cr>
 " Pull latest vimrc
