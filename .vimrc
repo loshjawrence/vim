@@ -1,7 +1,6 @@
 ﻿" On Windows:
-" See personal vim repo for disable capslock reg file for windows 10, double click to merge it then restart.
-" Use bash by typing "bash" in any of the terminals and avoid all the pointless headaches.
-" bash will use wsl/ubuntu (i think) on /mnt/c/
+" See personal vim repo for disable capslock reg file for windows 10, double click to merge it then restart your computer.
+" "bash" in a windows term will use wsl/ubuntu on /mnt/c/
 " Terminal shortcuts/tips:
 " r-click on menu bar to configure terminal properties like colors/fonts/size,etc
 " full screen toggle: alt+enter
@@ -18,7 +17,7 @@ if v:progname == 'vi'
     set noloadplugins
 endif
 
-filetype plugin indent on  " try to recognize filetypes and load rel' plugins
+filetype plugin indent on  " try to recognize filetypes and load related plugins/settings for those filetypes
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set nocompatible " vim, not vi
@@ -69,7 +68,7 @@ set visualbell " visual bell for errors
 set wildignorecase
 set wildmenu                        " enable wildmenu
 
-set textwidth=80
+set textwidth=300
 set nowrap                          " Don't word wrap
 set cmdheight=2 " Better display for messages
 set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
@@ -114,6 +113,8 @@ command! CTags !ctags -R
             \ --exclude='bin'
             \ --exclude='Build'
             \ --exclude='build'
+            \ --exclude='out'
+            \ --exclude='Out'
             \ --exclude='Data'
             \ --exclude='data'
             \ --exclude='Docs'
