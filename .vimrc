@@ -429,9 +429,9 @@ nmap <leader>aw :MyGrep "<c-r><c-w>" "-w"<cr>
 " example old: jawn, new: m_jawn, output: m_m_m_m_jawn
 " nmap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
 " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
-nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
-nmap <leader>rm :MyCdo %s/gIe<left><left><left>
-nmap <leader>rw :MyCdo %s/\<<c-r><c-w>\>//gIe<left><left><left><left>
+nmap <leader>rs :MyCdo %s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+nmap <leader>rm :MyCdo %s/\VgIe<left><left><left>
+nmap <leader>rw :MyCdo %s/\V\<<c-r><c-w>\>//gIe<left><left><left><left>
 " nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
 " " using range-aware function
@@ -519,7 +519,7 @@ autocmd FileType markdown setlocal spell
 autocmd FileType json syntax match Comment +\/\/.\+$+
 autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 
-" Terminal colors
+" No fuss terminal colors
 let g:terminal_color_0  = '#2e3436'
 let g:terminal_color_1  = '#cc0000'
 let g:terminal_color_2  = '#4e9a06'
