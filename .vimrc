@@ -414,11 +414,15 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 
 " mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
 " TODO: need proper word boundary versions(aw, rw) for better var name changes.
+" NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
 command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
 nmap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
 nmap <leader>am :MyGrep ""<left>
-nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
+" NOTE: rg's idea of word boundary is different from vim.
+" But <leader>rs command will put the vim word boundary
+" things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
+nmap <leader>aw :MyGrep "<c-r><c-w>" "-w"<cr>
 " nmap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
 " NOTE: bug with rr where if item is also a substring of the new version it
 " will get n substitions where n is occurance count in quickfix window.
@@ -427,7 +431,7 @@ nmap <leader>aw :MyGrep "<c-r><c-w>"<cr>
 " nmap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
 nmap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
 nmap <leader>rm :MyCdo %s/gIe<left><left><left>
-nmap <leader>rw :MyCdo %s/<c-r><c-w>//gIe<left><left><left><left>
+nmap <leader>rw :MyCdo %s/\<<c-r><c-w>\>//gIe<left><left><left><left>
 " nmap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
 " " using range-aware function
