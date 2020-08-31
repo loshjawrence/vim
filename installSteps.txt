@@ -69,4 +69,13 @@ sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 nvm install node
 
+# WSL
+=====
+go to microsoft store. hit winkey and search store
+download the latest LTS ubuntu and windows terminal
+update windows 10 to version 2004 or higher
+upgrade to WSL 2
+go to settings location and make ubuntu default. hide azure and cmd.
+/mnt/c/Users/loshj/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+
 Open nvim and do a :PlugInstall

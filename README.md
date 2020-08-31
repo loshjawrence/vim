@@ -14,7 +14,8 @@ vim --startuptime startup.report
 copy .bash* and .vimrc into home dir
 follow installSteps.txt
 
-For windows terminal settings, copy LocalState/settings.json to ~/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+For windows terminal settings, copy LocalState/settings.json to /mnt/c/Users/loshj/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+NOTE: or just change the default to the ubuntu profile
 
 Windows terminal shortcuts:
 ctrl+/- zoom
