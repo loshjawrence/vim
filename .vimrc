@@ -845,7 +845,7 @@ nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
 " Source the vimrc so we don't have to refresh
-nnoremap <silent> <leader>vs :so ~/.vimrc<cr>
+nnoremap <silent> <leader>vs :wa! <bar> so $MYVIMRC <bar> e<cr>
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
 " Diff the current local vimrc against master
