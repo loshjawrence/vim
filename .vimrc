@@ -180,6 +180,9 @@ let g:fzf_preview_window = ''
 Plug 'sjl/gundo.vim'
 nnoremap <F5> :GundoToggle<CR>
 
+Plug 'majutsushi/tagbar'
+nnoremap <F8> :TagbarToggle<CR>
+
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
 " files in `git ls-files``
 nnoremap <leader>f :GFiles<cr>
