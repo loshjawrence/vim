@@ -32,8 +32,11 @@ yes | sudo apt-get install ninja-build gettext libtool libtool-bin autoconf auto
 cd; mkdir clones; cd clones; git clone https://github.com/neovim/neovim.git; cd neovim
 git tag
 git checkout tags/desired_version_number -b tagName-branch
+(or just use master for latest)
+rm -rf build
 make CMAKE_BUILD_TYPE=Release
 sudo make install
+git branch -D tagName-branch
 
 # UNINSTALL NEOVIM:
 ===================
