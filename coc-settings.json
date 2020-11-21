@@ -10,9 +10,7 @@
 
     "suggest.echodocSupport": true,
     "suggest.maxCompleteItemCount": 20,
+    "diagnostic.enableSign": false,
     "eslint.filetypes": ["javascript", "javascriptreact"],
-    "diagnostic.errorSign": "!",
-    "diagnostic.warningSign": "•",
-    "diagnostic.infoSign": "•",
     "suggest.autoTrigger": "always"
 }
