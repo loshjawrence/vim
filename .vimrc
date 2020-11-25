@@ -316,10 +316,11 @@ Plug 'wellle/targets.vim'
 " Colorschemes
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-" Plug 'AlessandroYorba/Despacio'
-" gruvbox
 " COLORSCHEME must come before whitespace highlighting and other color alterations
-colorscheme alduin2
+let g:alduin_Shout_Dragon_Aspect = 1
+colorscheme alduin
+
+" Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 
@@ -392,7 +393,7 @@ nnoremap <leader>rw :MyCdo %s/\V\<<c-r><c-w>\>//gIe<left><left><left><left>
 set completeopt=menuone,noinsert,noselect
 let g:diagnostic_virtual_text_prefix = ''
 let g:diagnostic_enable_virtual_text = 1
-" let g:completion_confirm_key = "\<C-y>"
+let g:completion_confirm_key = "\<C-y>"
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 " Blog post on lsp: https://rishabhrd.github.io/jekyll/update/2020/09/19/nvim_lsp_config.html
@@ -411,7 +412,7 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>xd', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   end
-  local servers = {'jsonls', 'clangd', 'tsserver', 'html', 'vimls', 'cssls'}
+  local servers = {'jsonls', 'clangd', 'tsserver', 'html', 'vimls', 'cssls', 'bashls'}
   for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup {
       on_attach = on_attach,
@@ -419,8 +420,8 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
   end
 EOF
 
-" command! -buffer -nargs=0 LspShowLineDiagnostics lua require'jumpLoc'.openLineDiagnostics()
-" nnoremap <buffer><silent> <C-h> <cmd>LspShowLineDiagnostics<CR>
+command! -buffer -nargs=0 LspShowLineDiagnostics lua require'jumpLoc'.openLineDiagnostics()
+nnoremap <buffer><silent> <C-h> <cmd>LspShowLineDiagnostics<CR>
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
@@ -433,8 +434,6 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     },
   }
 EOF
-
-au FileType cpp ia <buffer> itn int
 " nvim-lsp ----------------------------------------
 
 " trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
