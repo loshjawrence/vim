@@ -146,9 +146,6 @@ Plug 'junegunn/fzf.vim'
 let g:fzf_buffers_jump = 1
 " disable preview window
 let g:fzf_preview_window = ''
-" fzf using skim
-" Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
-" command! -bang -nargs=* Rg call fzf#vim#rg_interactive(<q-args>, fzf#vim#with_preview('right:50%:hidden', 'alt-h'))
 " choco install ripgrep fd fzf
 " USE FD https://github.com/sharkdp/fd
 " put in .bashrc for fd/other things
@@ -157,21 +154,6 @@ let g:fzf_preview_window = ''
 " export FZF_DEFAULT_COMMAND="fd --type file"
 " export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-" Better fzf :Colors command.
-" command! -bang Colors call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 1%,0'}, <bang>0)
-
-" command! -bang -nargs=* Rg
-"   \ call fzf#vim#grep(
-"   \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-"   \   <bang>0 ? fzf#vim#with_preview('up:60%')
-"   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-"   \   <bang>0)
-" nnoremap <leader>gm :Rg!<cr>
-" " These are like the ack versions (which use Rg) but have previews of the results.
-" nnoremap <leader>gw :Rg! <c-r><c-w><cr>
-" " TODO: need to escape some special chars for ripgrep like ( and { etc.
-" nnoremap <leader>gs :Rg! <c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr><cr>
-" nnoremap <leader>gy :Rg! <c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr><cr>
 " These two are for flippling between dec hex oct bin
 " magnum is just a dependency of radical
 " Plug 'glts/vim-magnum'
@@ -217,14 +199,6 @@ Plug 'jiangmiao/auto-pairs'
 " used in the mappings for global ack and replace
 Plug 'itchyny/vim-qfedit'
 
-" Syntax for js ts react ect. comes before polyglot
-Plug 'maxmellon/vim-jsx-pretty'
-
-" Syntax highlighting for a ton of languages
-Plug 'sheerun/vim-polyglot'
-" if using polyglot and vim-jsx-pretty
-let g:polyglot_disabled = ['jsx']
-
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
 
@@ -235,7 +209,7 @@ Plug 'vim-airline/vim-airline-themes'
 " let g:airline_powerline_fonts = 1
 " let g:airline#extensions#gutentags#enabled = 1
 let g:airline_theme='ayu_dark'
-let g:airline#extensions#coc#enabled = 1
+" let g:airline#extensions#coc#enabled = 1
 let g:airline#extensions#branch#enabled=1
 let g:airline#extensions#branch#empty_message = ''
 let g:airline#extensions#branch#displayed_head_limit = 10
@@ -268,6 +242,7 @@ let g:airline_section_z = '' " (percentage, line number, column number)
 " nnoremap <leader>5 5gt
 " nnoremap <leader>0 :tablast<cr>
 
+
 " LSP for code completion options:
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
 " # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
@@ -277,73 +252,15 @@ let g:airline_section_z = '' " (percentage, line number, column number)
 " LSP for cpp. Just follow this:
 " https://clang.llvm.org/extra/clangd/Installation.html
 " Windows 10 : https://clang.llvm.org/get_started.html
-" https://github.com/autozimu/LanguageClient-neovim/wiki/Recommended-Settings
-" another lang server for c: https://github.com/MaskRay/ccls
 " worth looking at?: nvim-gdb
-" https://github.com/neoclide/coc.nvim
+" :checkhealth to see if running
+" " Install clang/clangd with: choco install llvm
 " https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
 " https://vim.fandom.com/wiki/Omni_completion
-
-" :checkhealth to see if running
-" Useful commands CocConfig, CocInfo, CocInstall, CocUninstall, CocList, CocCommand
-" For c based langs, use clangd (choco install llvm then :CocConfig and paste the json settings from coc.nvim github wiki)
-" `CocList marketplace` to see things you can CocInstall
-" "CocInstall coc-tsserver coc-eslint coc-json coc-html coc-css coc-sh coc-clangd coc-rls coc-syntax coc-tag
-" CocList extensions
-" hit tab to view actions on an extension
-" "CocCommand <tab>
-" :CocConfig will edit the config file where you put languageservers usually lives here ~/.config/nvim/coc-settings.json
-
-" Install clang/clangd with: choco install llvm
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-tsserver', 'coc-clangd', 'coc-cmake', 'coc-vimlsp', 'coc-html', 'coc-eslint', 'coc-sh', 'coc-json', 'coc-yaml', 'coc-xml', 'coc-sql']
-" NOTE: look here for example .vimrc: https://github.com/neoclide/coc.nvim#example-vim-configuration
-" <cr> to comfirm completion
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" use <tab> for trigger completion and navigate to the next complete item
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
-" Use c-j (back) and c-k (forward) to jump to args pulled method signature
-" use j and k to navigate list, use p to toggle preview window
-function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    else
-        call CocAction('doHover')
-    endif
-endfunction
-" nnoremap <silent> gk :call <SID>show_documentation()<CR>
-" nnoremap <buffer> <c-]> <Plug>(coc-definition)
-" nnoremap <buffer> gr <Plug>(coc-references)
-" " nnoremap <buffer> gt <Plug>(coc-type-definition)
-" nnoremap <leader>rn <Plug>(coc-rename)
-nnoremap <buffer> <c-space> :CocRestart<cr>
-
 "NOTE: see the minimal vimrc here https://github.com/nvim-lua/completion-nvim/issues/143
-" " 0.5.0 nightly nvim-lsp
-" " relevant plugins
-" Plug 'neovim/nvim-lsp'
-" Plug 'nvim-lua/completion-nvim'
-" Plug 'nvim-lua/diagnostic-nvim'
-
-" " Type s and a char of interesst then the colored letters at the char to jump to it.
-" Plug 'easymotion/vim-easymotion'
-" let g:EasyMotion_do_mapping = 0 " Disable default mappings
-" let g:EasyMotion_use_upper = 1
-" let g:EasyMotion_smartcase = 1
-" let g:EasyMotion_keys =   'ASDGHKLQWERTYUIOPZXCVBNMFJ;' " should sort from easy to hard (left to right)
-" " This will search before and after cursor in current pane
-" nmap s <Plug>(easymotion-s)
-" nnoremap S <nop>
-" NOTE: conflicts with surround
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'nvim-treesitter/nvim-treesitter'
 
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
@@ -438,27 +355,6 @@ nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
 nnoremap <leader>rw :MyCdo %s/\V\<<c-r><c-w>\>//gIe<left><left><left><left>
 " nnoremap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
 
-" " using range-aware function
-" function! QFdelete() range
-"     " get current qflist
-"     let l:qfl = getqflist()
-"     " no need for filter() and such; just drop the items in range
-"     call remove(l:qfl, a:firstline - 1, a:lastline - 1)
-"     " replace items in the current list, do not make a new copy of it;
-"     " this also preserves the list title
-"     call setqflist([], 'r', {'items': l:qfl})
-"    " restore current line
-"    call cursor(a:firstline, 1)
-" endfunction
-" " using buffer-local mappings
-" " note: still have to check &bt value to filter out `:e quickfix` and such
-" augroup QFList | au!
-"     autocmd BufWinEnter quickfix if &bt ==# 'quickfix'
-"     autocmd BufWinEnter quickfix    nnoremap <silent><buffer>dd :call QFdelete()<CR>
-"     autocmd BufWinEnter quickfix    vnoremap <silent><buffer>d  :call QFdelete()<CR>
-"     autocmd BufWinEnter quickfix endif
-" augroup end
-
 
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
 " " lsp specific config
@@ -492,9 +388,54 @@ nnoremap <leader>rw :MyCdo %s/\V\<<c-r><c-w>\>//gIe<left><left><left><left>
 " " completion-nvim -----------------------------
 " " Use completion-nvim in every buffer
 " autocmd BufEnter * lua require'completion'.on_attach()
-" " Set completeopt to have a better completion experience within completion-nvim
-" set completeopt=menuone,noinsert,noselect
-" " nvim-lsp ----------------------------------------
+" Set completeopt to have a better completion experience within completion-nvim
+set completeopt=menuone,noinsert,noselect
+let g:diagnostic_virtual_text_prefix = ''
+let g:diagnostic_enable_virtual_text = 1
+" let g:completion_confirm_key = "\<C-y>"
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+
+" Blog post on lsp: https://rishabhrd.github.io/jekyll/update/2020/09/19/nvim_lsp_config.html
+" NOTE: you can install some language servers with :LspInstall <lsp name, i.e. name in local servers>
+" see https://github.com/neovim/nvim-lspconfig#configurations
+" note on diagnostics usage: https://github.com/nvim-lua/diagnostic-nvim/issues/73
+:lua << EOF
+  local nvim_lsp = require('lspconfig')
+  local on_attach = function(_, bufnr)
+    require('completion').on_attach()
+    local opts = { noremap=true, silent=true }
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'c-]', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gK', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>xr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>xd', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  end
+  local servers = {'jsonls', 'clangd', 'tsserver', 'html', 'vimls', 'cssls'}
+  for _, lsp in ipairs(servers) do
+    nvim_lsp[lsp].setup {
+      on_attach = on_attach,
+    }
+  end
+EOF
+
+" command! -buffer -nargs=0 LspShowLineDiagnostics lua require'jumpLoc'.openLineDiagnostics()
+" nnoremap <buffer><silent> <C-h> <cmd>LspShowLineDiagnostics<CR>
+
+command! Format execute 'lua vim.lsp.buf.formatting()'
+
+:lua << EOF
+  require'nvim-treesitter.configs'.setup {
+    ensure_installed = "maintained",
+    highlight = {
+      enable = true,
+      disable = { },
+    },
+  }
+EOF
+
+au FileType cpp ia <buffer> itn int
+" nvim-lsp ----------------------------------------
 
 " trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
 " Also highlight all tabs and trailing whitespace characters.
@@ -591,72 +532,6 @@ nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$
 xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
 xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 
-" " see :h mode() or :h visualmode()
-" " \e is <esc> (can also use <esc> too), see pattern-atoms
-" " `> and `< is jump to end and beg of vis selection
-" " xno is xnoremap
-" xnoremap s <nop>
-" xnoremap S <nop>
-" nnoremap s <nop>
-" nnoremap S <nop>
-" xno <expr> S{ {
-" \  'v': "\e`>a}\e`<i{\e",
-" \  'V': "\e`>o}\e`<O{\eva{=",
-" \ }[mode()]
-" xno <expr> S[ {
-" \  'v': "\e`>a]\e`<i[\e",
-" \  'V': "\e`>o]\e`<O[\eva[=",
-" \ }[mode()]
-" xno <expr> S( {
-" \  'v': "\e`>a)\e`<i(\e",
-" \  'V': "\e`>o)\e`<O(\eva(=",
-" \ }[mode()]
-" xno <expr> S< {
-" \  'v': "\e`>a>\e`<i<\e",
-" \  'V': "\e`>o>\e`<O<\eva<=",
-" \ }[mode()]
-" xno <expr> S' {
-" \  'v': "\e`>a'\e`<i'\e",
-" \  'V': "\e`>o'\e`<O'\eva'=",
-" \ }[mode()]
-" xno <expr> S" {
-" \  'v': "\e`>a\"\e`<i\"\e",
-" \  'V': "\e`>o\"\e`<O\"\eva\"=",
-" \ }[mode()]
-" xno <expr> S` {
-" \  'v': "\e`>a`\e`<i`\e",
-" \  'V': "\e`>o```\e`<O```\eva`=",
-" \ }[mode()]
-"
-" " Every line beg and end gets wrapped with the pair
-" xno <expr> s{ {
-" \  'V': "<c-v>^I{\egvV<c-v>$A}\e",
-" \  '<c-v>': "A}\egvI{\e",
-" \ }[mode()]
-" xno <expr> s[ {
-" \  'V': "<c-v>^I[<esc>gvV<c-v>$A]<esc>",
-" \  '<c-v>': "A]\egvI[\e",
-" \ }[mode()]
-" xno <expr> s( {
-" \  'V': "<c-v>^I(<esc>gvV<c-v>$A)<esc>",
-" \  '<c-v>': "A)\egvI(\e",
-" \ }[mode()]
-" xno <expr> s< {
-" \  'V': "<c-v>^I<<esc>gvV<c-v>$A><esc>",
-" \  '<c-v>': "A>\egvI<\e",
-" \ }[mode()]
-" xno <expr> s` {
-" \  'V': "<c-v>^I`<esc>gvV<c-v>$A`<esc>",
-" \  '<c-v>': "A`\egvI`\e",
-" \ }[mode()]
-" xno <expr> s' {
-" \  'V': "<c-v>^I'<esc>gvV<c-v>$A'<esc>",
-" \  '<c-v>': "A'\egvI'\e",
-" \ }[mode()]
-" xno <expr> s" {
-" \  'V': "<c-v>^I\"<esc>gvV<c-v>$A\"<esc>",
-" \  '<c-v>': "A\"\egvI\"\e",
-" \ }[mode()]
 
 function! MakeAFileAndAddToGit(filename)
     execute 'edit ' . a:filename
@@ -700,7 +575,7 @@ noremap <silent> <c-b> <nop>
 noremap <silent> <c-u> 10<c-y>
 noremap <silent> <c-d> 10<c-e>
 
-" NOTE: cause of slowness on 0.5.0 nvim nightly:
+" NOTE: was cause of slowness at one point
 set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 " xnoremap <c-y> "+y
 " nnoremap <c-p> "+p
@@ -711,8 +586,8 @@ noremap { J
 noremap } K
 " noremap H ^
 " noremap L $
-" noremap <a-j> L
-" noremap <a-k> H
+" noremap $ L
+" noremap ^ H
 
 " Split navigation
 inoremap <c-h> <Esc><c-w>h
@@ -730,7 +605,6 @@ tnoremap <c-l> <c-\><c-n><c-w>l
 
 " TERMINAL
 " Go to insert mode when switching to a terminal
-au BufEnter * if &buftype == 'terminal' | startinsert | else | stopinsert | endif
 " Distinguish terminal by making cursor red
 highlight TermCursor ctermfg=red guifg=red
 " Ttoggle will start to always fail if that first terminal gets killed
@@ -763,26 +637,8 @@ nnoremap <silent> <a-l> :call BufferNext()<cr>
 " kill buffer tab
 nnoremap <silent> <c-q> :silent! up! <bar> silent! bd! <bar> call BufferNext() <cr>
 
-" " Toggle between header and source for c/cpp files
-" if has("gui_running") || has("nvim")
-"   " " alt-A will move the current tab to the left
-"   " nnoremap <A-A> :tabm -1<cr>
-"   " " alt-D will go to next right tab
-"   " nnoremap <A-D> :tabm +1<cr>
-" else
-"   " NOTE: Escape mappings will cause delay in vim terminal
-"   " In terminal vi, the alt+a and alt+d keys are actually ^[a and ^[d
-"   " You can see this by typing the key sequence in a command line after doing a
-"   " cat followed by enter or sed -n l followed by enter
-"   " If you type alt-a after that the output will be something like ^[a which is <escape> a
-"   " if not terminal winodw this would just be noremap <a-a> gT
-"   " alt-a will go to next left tab
-"   " Bad to have Esc mappings avoid Alt key since terminal commonly maps Alt to Esc
-" endif
-
 " COLORCOLUMN
 " CURSORLINE (can be slower in some terminals)
-
 " purple4 black
 " You can also specify a color by its RGB (red, green, blue) values.
 " The format is "#rrggbb", where
@@ -857,12 +713,6 @@ nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp ../.vimrc .<cr>git diff<cr>
 nmap <silent> <leader>vp <c-\>cd ~/vim<cr>git pull<cr>cp .vimrc ..<cr>cd -<cr><c-[><c-[><leader>vs<c-space>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
-" Useful but better to use the visual select search and repace mappings that I setup (<leader> ey Ey ew Ew)
-" Make a simple "search" text object, then cs to change search hit, n. to repeat
-" http://vim.wikia.com/wiki/Copy_or_change_search_hit
-" vnoremap <silent> s //e<c-r>=&selection=='exclusive'?'+1':''<cr><cr>
-"             \:<c-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<cr>gv
-" onoremap s :normal vs<cr>
 
 " Fomatting
 " Pretty Json
