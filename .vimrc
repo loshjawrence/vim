@@ -317,7 +317,7 @@ Plug 'wellle/targets.vim'
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-colorscheme alduin
+colorscheme alduin2
 
 " Plug 'sheerun/vim-polyglot'
 
