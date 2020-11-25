@@ -314,10 +314,9 @@ nnoremap <leader>cr :Rooter<cr>
 Plug 'wellle/targets.vim'
 
 " Colorschemes
+" COLORSCHEME must come before whitespace highlighting and other color alterations
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-" COLORSCHEME must come before whitespace highlighting and other color alterations
-let g:alduin_Shout_Dragon_Aspect = 1
 colorscheme alduin
 
 " Plug 'sheerun/vim-polyglot'
