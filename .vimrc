@@ -17,6 +17,11 @@ if v:progname == 'vi'
     set noloadplugins
 endif
 
+" helps startup speed
+let g:python_host_prog  = '/usr/bin/python2'
+let g:python3_host_prog  = '/usr/bin/python3'
+let g:perl_host_prog = '/usr/bin/perl'
+
 filetype plugin indent on  " try to recognize filetypes and load related plugins/settings for those filetypes
 set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
 set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
