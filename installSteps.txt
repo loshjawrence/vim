@@ -80,8 +80,11 @@ sudo make install
 // https://clangd.llvm.org/installation.html
 sudo apt update -y
 sudo apt install -y clangd-10
+sudo apt install -y clang-10
 sudo apt remove clangd-<otherversions>
+sudo apt remove clang-<otherversions>
 sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-10 100
 
 # NVM
 =====
