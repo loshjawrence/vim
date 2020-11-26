@@ -27,6 +27,7 @@ mkdir .vim; cp -r vim/vimfiles/colors .vim/
 # PYTHON MODULES REQS
 =====================
 // see: https://neovim.io/doc/user/provider.html
+// see https://linuxize.com/post/how-to-install-pip-on-ubuntu-20.04/
 sudo apt update -y
 sudo apt install -y python-dev python-pip python3-dev python3-pip
 python2 -m pip install --user --upgrade pip pynvim
@@ -79,6 +80,7 @@ sudo make install
 // https://clangd.llvm.org/installation.html
 sudo apt update -y
 sudo apt install -y clangd-10
+sudo apt remove clangd-<otherversions>
 sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
 
 # NVM
