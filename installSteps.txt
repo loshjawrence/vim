@@ -24,11 +24,26 @@ cp vim/.bash* .; cp vim/.vimrc .; cp vim/.gitconfig .;
 mkdir .config/nvim; cp vim/*init.vim .config/nvim;
 mkdir .vim; cp -r vim/vimfiles/colors .vim/
 
+# PYTHON MODULES REQS
+=====================
+// see: https://neovim.io/doc/user/provider.html
+sudo apt update -y
+sudo apt install -y python-dev python-pip python3-dev python3-pip
+python2 -m pip install --user --upgrade pip pynvim
+python3 -m pip install --user --upgrade pip pynvim
+
+# PERL MODULES REQS
+===================
+sudo apt update -y
+sudo apt install -y perl cpanminus
+sudo cpanm -n Neovim::Ext
+
 # INSTALL NEOVIM:
 ================
 //https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
 //https://github.com/neovim/neovim/wiki/Installing-Neovim#install-from-source
-yes | sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
+sudo apt update -y
+sudo apt install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
 cd; mkdir clones; cd clones; git clone https://github.com/neovim/neovim.git; cd neovim
 git tag
 git checkout tags/desired_version_number -b tagName-branch
@@ -62,8 +77,9 @@ sudo make install
 # Clangd
 ========
 // https://clangd.llvm.org/installation.html
-sudo apt-get install clangd-9
-sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
+sudo apt update -y
+sudo apt install -y clangd-10
+sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
 
 # NVM
 =====
