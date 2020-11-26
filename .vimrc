@@ -378,18 +378,6 @@ nnoremap <leader>rw :MyCdo %s/\V\<<c-r><c-w>\>//gIe<left><left><left><left>
 "     echom "s:newName = " . s:newName
 "     lua vim.lsp.buf.rename(s:newName)
 " endfunction
-" function! LSPSetMappings()
-"     setlocal omnifunc=v:lua.vim.lsp.omnifunc
-"     nnoremap <silent> <buffer> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
-"     nnoremap <silent> <buffer> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-"     nnoremap <silent> <buffer> <leader>k     <cmd>lua vim.lsp.buf.hover()<CR>
-"     nnoremap <silent> <buffer> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-"     nnoremap <silent> <buffer> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-"     nnoremap <silent> <buffer> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-"     nnoremap <silent> <buffer> gr    <cmd>lua vim.lsp.buf.references()<CR>
-"     nnoremap <silent> <buffer> <F2> :call LSPRename()<CR>
-" endfunction
-" au FileType lua,sh,c,cpp,json,js,html,cmake,viml :call LSPSetMappings()
 " " completion-nvim -----------------------------
 " " Use completion-nvim in every buffer
 " autocmd BufEnter * lua require'completion'.on_attach()
@@ -400,35 +388,6 @@ let g:diagnostic_enable_virtual_text = 1
 let g:completion_confirm_key = "\<C-y>"
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
-" Blog post on lsp: https://rishabhrd.github.io/jekyll/update/2020/09/19/nvim_lsp_config.html
-" NOTE: you can install some language servers with :LspInstall <lsp name, i.e. name in local servers>
-" see https://github.com/neovim/nvim-lspconfig#configurations
-" note on diagnostics usage: https://github.com/nvim-lua/diagnostic-nvim/issues/73
-:lua << EOF
-  local nvim_lsp = require('lspconfig')
-  local on_attach = function(_, bufnr)
-    require('completion').on_attach()
-    local opts = { noremap=true, silent=true }
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'c-]', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gK', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>xr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>xd', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  end
-  local servers = {'jsonls', 'clangd', 'tsserver', 'html', 'vimls', 'cssls', 'bashls'}
-  for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
-      on_attach = on_attach,
-    }
-  end
-EOF
-
-command! -buffer -nargs=0 LspShowLineDiagnostics lua require'jumpLoc'.openLineDiagnostics()
-nnoremap <buffer><silent> <C-h> <cmd>LspShowLineDiagnostics<CR>
-
-command! Format execute 'lua vim.lsp.buf.formatting()'
-
 :lua << EOF
   require'nvim-treesitter.configs'.setup {
     ensure_installed = "maintained",
@@ -437,7 +396,75 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
       disable = { },
     },
   }
+
+  local nvim_lsp = require('lspconfig')
+  local on_attach_custom = function(_, bufnr)
+    require('completion').on_attach()
+    vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    local opts = { noremap=true, silent=true }
+    local cbufn = vim.api.nvim_exec('echo bufnr("%")', true)
+
+    -- see :h lsp
+    -- see: https://github.com/nanotee/nvim-lua-guide
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kD', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kd', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ky', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ki', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kI', '<cmd>lua vim.lsp.buf.outgoing_calls()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kH', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ka', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kA', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kl', '<cmd>lua vim.lsp.buf.list_workspace_folders()<CR>', opts)
+
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ds', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dc', '<cmd>lua vim.lsp.diagnostic.clear(' .. cbufn .. ')<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dl', '<cmd>lua vim.lsp.diagnostic.get_all()<CR>', opts)
+
+    -- NOTE: theres a start_client() but not sure if all this stuff will re-attach or whatever
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-space>', '<cmd>lua vim.lsp.stop_client(vim.lsp.get_active_clients())<cr><cmd>edit<cr>', opts)
+  end
+
+  -- NOTE: you can install some language servers with :LspInstall <lsp name, i.e. name in local servers>
+  -- see https://github.com/neovim/nvim-lspconfig#configurations
+  local servers = {'jsonls', 'clangd', 'tsserver', 'html', 'vimls', 'cssls', 'bashls', 'sumneko_lua', 'cmake'}
+  for _, lsp in ipairs(servers) do
+    nvim_lsp[lsp].setup {
+      on_attach = on_attach_custom,
+    }
+  end
 EOF
+
+" function! LSPSetMappings()
+"     setlocal omnifunc=v:lua.vim.lsp.omnifunc
+"     nnoremap <silent> <buffer> <leader>kt <cmd>lua vim.lsp.buf.type_definition()<CR>
+"     nnoremap <silent> <buffer> <leader>kD <cmd>lua vim.lsp.buf.definition()<CR>
+"     nnoremap <silent> <buffer> <leader>kd <cmd>lua vim.lsp.buf.declaration()<CR>
+"     nnoremap <silent> <buffer> <leader>ky <cmd>lua vim.lsp.buf.implementation()<CR>
+"     nnoremap <silent> <buffer> <leader>ki <cmd>lua vim.lsp.buf.incoming_calls()<CR>
+"     nnoremap <silent> <buffer> <leader>kI <cmd>lua vim.lsp.buf.outgoing_calls()<CR>
+"     nnoremap <silent> <buffer> <leader>kh <cmd>lua vim.lsp.buf.hover()<CR>
+"     nnoremap <silent> <buffer> <leader>kH <cmd>lua vim.lsp.buf.signature_help()<CR>
+"     nnoremap <silent> <buffer> <leader>kr <cmd>lua vim.lsp.buf.references()<CR>
+"     nnoremap <silent> <buffer> <leader>ka <cmd>lua vim.lsp.buf.add_workspace_folder()<CR>
+"     nnoremap <silent> <buffer> <leader>kA <cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>
+"     nnoremap <silent> <buffer> <leader>kl <cmd>lua vim.lsp.buf.list_workspace_folders()<CR>
+"
+"     nnoremap <silent> <buffer> <leader>ds <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+"     nnoremap <silent> <buffer> <leader>dn <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+"     nnoremap <silent> <buffer> <leader>dp <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+"
+"     " stop the lsp
+"     nnoremap <c-space> <cmd>lua vim.lsp.stop_client(vim.lsp.get_active_clients())<cr><cmd>edit<cr>
+" endfunction
+" au FileType lua,sh,c,cpp,json,js,html,cmake,viml :call LSPSetMappings()
+
+command! Format execute 'lua vim.lsp.buf.formatting()'
+
 " nvim-lsp ----------------------------------------
 
 " trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
