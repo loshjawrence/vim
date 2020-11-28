@@ -1,4 +1,7 @@
-﻿" On Windows:
+﻿" IDEAS:
+" move selection horiz with c-w/W c-b/B, vert with c-j/J c-k/K
+
+" On Windows:
 " See personal vim repo for disable capslock reg file for windows 10, double click to merge it then restart your computer.
 " "bash" in a windows term will use wsl/ubuntu on /mnt/c/
 " Terminal shortcuts/tips:
@@ -341,52 +344,27 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 " mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
 " TODO: need proper word boundary versions(aw, rw) for better var name changes.
 " NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
-command! -nargs=+ MyGrep execute 'let @a = <args>' | mark A | execute 'silent grep! "' . @a . '"' | bot cw 20
+command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
 nnoremap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
 nnoremap <leader>am :MyGrep ""<left>
 " NOTE: rg's idea of word boundary is different from vim.
 " But <leader>rs command will put the vim word boundary
 " things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
-nnoremap <leader>aw :MyGrep "<c-r><c-w>" "-w"<cr>
-" nnoremap <leader>ay :MyGrep "<c-r>=substitute(substitute(substitute(@", '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g')<cr>"<cr>
-" NOTE: bug with rr where if item is also a substring of the new version it
-" will get n substitions where n is occurance count in quickfix window.
-" example old: jawn, new: m_jawn, output: m_m_m_m_jawn
-" nnoremap <leader>rr :MyCdo %s/<c-r>=escape(@a, '/\\')<cr>//gIe<left><left><left><left>
-" nnoremap <leader>rr :MyCdo %s/<c-r>a//gIe<left><left><left><left>
+" NOTE: ack word saves to register w for use later with replace word
+nnoremap <leader>aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
 nnoremap <leader>rs :MyCdo %s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
 nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
-nnoremap <leader>rw :MyCdo %s/\V\<<c-r><c-w>\>//gIe<left><left><left><left>
-" nnoremap <leader>ry :MyCdo %s/<c-r>=escape(@", '/\\')<cr>//gIe<left><left><left><left>
-
+nnoremap <leader>rw :MyCdo %s/\V\<<c-r>w\>//gIe<left><left><left><left>
 
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
-" " lsp specific config
-" " NOTE: need to do :LspInstall for each of these
-" lua << EOF
-"   require'nvim_lsp'.vimls.setup{on_attach=require'completion'.on_attach}
-"   require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
-"   require'nvim_lsp'.tsserver.setup{on_attach=require'completion'.on_attach}
-"   require'nvim_lsp'.jsonls.setup{on_attach=require'completion'.on_attach}
-"   require'nvim_lsp'.cmake.setup{on_attach=require'completion'.on_attach}
-"   require'nvim_lsp'.html.setup{on_attach=require'completion'.on_attach}
-"   require'nvim_lsp'.bashls.setup{on_attach=require'completion'.on_attach}
-" EOF
-" function! LSPRename()
-"     let s:newName = input('Enter new name: ', expand('<cword>'))
-"     echom "s:newName = " . s:newName
-"     lua vim.lsp.buf.rename(s:newName)
-" endfunction
-" " completion-nvim -----------------------------
-" " Use completion-nvim in every buffer
-" autocmd BufEnter * lua require'completion'.on_attach()
-" Set completeopt to have a better completion experience within completion-nvim
 set completeopt=menuone,noinsert,noselect
 let g:diagnostic_virtual_text_prefix = ''
 let g:diagnostic_enable_virtual_text = 1
 let g:completion_confirm_key = "\<C-y>"
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+
+command! Format execute 'lua vim.lsp.buf.formatting()'
 
 :lua << EOF
   require'nvim-treesitter.configs'.setup {
@@ -406,26 +384,26 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
     -- see :h lsp
     -- see: https://github.com/nanotee/nvim-lua-guide
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kD', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kd', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ky', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ki', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kI', '<cmd>lua vim.lsp.buf.outgoing_calls()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kH', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ky', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ki', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kI', '<cmd>lua vim.lsp.buf.outgoing_calls()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kH', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ka', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kA', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kl', '<cmd>lua vim.lsp.buf.list_workspace_folders()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dl', '<cmd>lua vim.lsp.diagnostic.get_all()<CR>', opts)
+
+    -- NOTE: this can work (i.e. doesnt matter what dir you are in or what files are opened)
+    -- but sometimes doesnt work on things you cant leader>kd on (not sure what causes it to fail)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-K>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ka', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kA', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kl', '<cmd>lua vim.lsp.buf.list_workspace_folders()<CR>', opts)
-
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kk', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ds', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dc', '<cmd>lua vim.lsp.diagnostic.clear(' .. cbufn .. ')<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dl', '<cmd>lua vim.lsp.diagnostic.get_all()<CR>', opts)
-
-    -- NOTE: theres a start_client() but not sure if all this stuff will re-attach or whatever
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dd', '<cmd>lua vim.lsp.diagnostic.clear(' .. cbufn .. ')<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-space>', '<cmd>lua vim.lsp.stop_client(vim.lsp.get_active_clients())<cr><cmd>edit<cr>', opts)
   end
 
@@ -438,33 +416,6 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
     }
   end
 EOF
-
-" function! LSPSetMappings()
-"     setlocal omnifunc=v:lua.vim.lsp.omnifunc
-"     nnoremap <silent> <buffer> <leader>kt <cmd>lua vim.lsp.buf.type_definition()<CR>
-"     nnoremap <silent> <buffer> <leader>kD <cmd>lua vim.lsp.buf.definition()<CR>
-"     nnoremap <silent> <buffer> <leader>kd <cmd>lua vim.lsp.buf.declaration()<CR>
-"     nnoremap <silent> <buffer> <leader>ky <cmd>lua vim.lsp.buf.implementation()<CR>
-"     nnoremap <silent> <buffer> <leader>ki <cmd>lua vim.lsp.buf.incoming_calls()<CR>
-"     nnoremap <silent> <buffer> <leader>kI <cmd>lua vim.lsp.buf.outgoing_calls()<CR>
-"     nnoremap <silent> <buffer> <leader>kh <cmd>lua vim.lsp.buf.hover()<CR>
-"     nnoremap <silent> <buffer> <leader>kH <cmd>lua vim.lsp.buf.signature_help()<CR>
-"     nnoremap <silent> <buffer> <leader>kr <cmd>lua vim.lsp.buf.references()<CR>
-"     nnoremap <silent> <buffer> <leader>ka <cmd>lua vim.lsp.buf.add_workspace_folder()<CR>
-"     nnoremap <silent> <buffer> <leader>kA <cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>
-"     nnoremap <silent> <buffer> <leader>kl <cmd>lua vim.lsp.buf.list_workspace_folders()<CR>
-"
-"     nnoremap <silent> <buffer> <leader>ds <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-"     nnoremap <silent> <buffer> <leader>dn <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
-"     nnoremap <silent> <buffer> <leader>dp <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-"
-"     " stop the lsp
-"     nnoremap <c-space> <cmd>lua vim.lsp.stop_client(vim.lsp.get_active_clients())<cr><cmd>edit<cr>
-" endfunction
-" au FileType lua,sh,c,cpp,json,js,html,cmake,viml :call LSPSetMappings()
-
-command! Format execute 'lua vim.lsp.buf.formatting()'
-
 " nvim-lsp ----------------------------------------
 
 " trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
@@ -531,8 +482,8 @@ nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left
 " Edit confirm word in whole file
 nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
 " edit word under cursor within the visual lines
-" gv selects the last vis selection (line, block or select)
-" NOTE: just use *, vis select, then <leader>es
+" gv selects the last vis selection (line, block or select), does not work with star select since it selects multiple items
+" NOTE: just use * to grab word, vis select lines with word, then <leader>es
 " vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><left><left><left><left>
 " Visually selected text in file
 " If mode is visual line mode, edit the prev yank across the vis lines, else across the whole file
