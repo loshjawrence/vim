@@ -513,6 +513,12 @@ nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$
 xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
 xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 
+" Move visual selections around
+xnoremap <c-k> xkP`[V`]
+xnoremap <c-j> xp`[V`]
+" NOTE: for horiz it be nice to find for line boundary or pairs first before moving to next space
+xnoremap <c-h> xBP`[v`]
+xnoremap <c-l> xWP`[v`]
 
 function! MakeAFileAndAddToGit(filename)
     execute 'edit ' . a:filename
