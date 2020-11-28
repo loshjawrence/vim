@@ -514,6 +514,7 @@ xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
 xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 
 " Move visual selections around
+" NOTE: i believe `[ and `] are last line edit start/end
 xnoremap <c-k> xkP`[V`]
 xnoremap <c-j> xp`[V`]
 " NOTE: for horiz it be nice to find for line boundary or pairs first before moving to next space
