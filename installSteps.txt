@@ -1,4 +1,4 @@
-For intstalling on linux (WSL/bash on Windows, edit windows files through /mnt/c/)
+For intstalling on linux (WSL/bash on Windows, edit windows files through /mnt/c)
 
 # FZF
 =====

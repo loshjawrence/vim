@@ -181,3 +181,28 @@
 " \  '<c-v>': "A\"\egvI\"\e",
 " \ }[mode()]
 
+" nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
+" Edit confirm word in whole file
+" nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
+" edit word under cursor within the visual lines
+" vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><left><left><left><left>
+" Visually selected text in file
+" If mode is visual line mode, edit the prev yank across the vis lines, else across the whole file
+" c-r=escape() means paste in the result of escape
+" vnoremap <expr> <leader>ey mode() ==# "V" ?
+"       \ ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+"       \: "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
+" Whole file edit yank (E version being with confim)
+" nnoremap <leader>ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
+" nnoremap <leader>Ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
+" Visual lines or visual select edit-last-search, 4 backslashes since we are in a "" and to insert a \ into "" you need \\
+" and to get the \\ in a '' from a "" you need 4.
+" NOTE: the w and y versions are never used in practice since * can handle those cases as well
+" to see whats there and V to select the ones that need to change
+" vnoremap <expr> <leader>es mode() ==# "V" ?
+" \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
+" \: ""
+" nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
+" xnoremap <leader>es :s/\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>
+" Whole file edit last search(E version being with confim). Get rid of teh extre \V then get rid of any ending \n
+" nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>

@@ -348,18 +348,18 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 " NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
-nnoremap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
+nnoremap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
 nnoremap <leader>am :MyGrep ""<left>
+nnoremap <leader>aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
 " NOTE: rg's idea of word boundary is different from vim.
-" But <leader>rs command will put the vim word boundary
+" But <leader>rs command will not remove vim word boundary regex from the / register if it's there
 " things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
-" NOTE: ack word saves to register w for use later with replace word
 " :h cword
 " :h s_flags (I is dont ignore, e is continue on error, g is all instances on line, c is confirm)
 " when doing something like :s//red/ the first arg is assumed to be previous search
-nnoremap <leader>aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
-nnoremap <leader>rs :MyCdo %s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
+nnoremap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
 nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
+" To be used with <leader>aw as it saves word under cursor to w register
 nnoremap <leader>rw :MyCdo %s/\V\<<c-r>w\>//gIe<left><left><left><left>
 
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
@@ -487,43 +487,23 @@ endif
 
 " SEARCH
 " * and # search does not use smartcase
-" see s_flags pattern and substitute. /I forces case-sensitive matching
+" see s_flags pattern and substitute.  I is dont ignore case, c is confirm.
 " NOTE: vim has a gn text object(next search item), star-search plugin (or vim-slash) combined with cgn and . covers alot of cases
-" Problem is it follows smartcase settings
-" E means edit with confirms, e is no confirm.
-" Second letter is source: w is word under cursor, y is yanked text.
-" Even with very no magic (\V) modifier, still need to escape / and \ with \
-" The \< and \> means don't do a raw string replace but a word replace (only operate on that string if its a stand-alone word)
-" so if you want to replace someVar, it won't touch vars name someVarOther
-" edit word in whole file
-nnoremap <leader>ew :%s/\V\<<c-r><c-w>\>//gI \|normal <c-o><c-left><c-left><left><left><left><left>
-" Edit confirm word in whole file
-nnoremap <leader>Ew :,$s/\V\<<c-r><c-w>\>//gIc \|1,''-&&<c-left><left><left><left><left><left>
-" edit word under cursor within the visual lines
 " gv selects the last vis selection (line, block or select), does not work with star select since it selects multiple items
-" NOTE: just use * to grab word, vis select lines with word, then <leader>es
-" vnoremap <leader>ew <Esc>yiwgv:s/\V\<<c-r>"\>//gI \| normal <c-left><c-left><left><left><left><left>
-" Visually selected text in file
-" If mode is visual line mode, edit the prev yank across the vis lines, else across the whole file
+" Problem is it follows smartcase settings
+" Even with very no magic (\V) modifier, still need to escape / and \ with \
 " see :h escape() (escape the chars in teh second arg with backslash)
-" c-r=escape() means paste in the result of escape
-" vnoremap <expr> <leader>ey mode() ==# "V" ?
-"       \ ":s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
-"       \: "y:%s/\\V<c-r><c-r>=escape(@\", '/\\')<cr>//gI \| normal <c-o><c-left><c-left><c-left><left><left><left><left>"
-" Whole file edit yank (E version being with confim)
-" nnoremap <leader>ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
-" nnoremap <leader>Ey :%s/\V<c-r>=escape(@", '/\\')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
-" Visual lines or visual select edit-last-search, 4 backslashes since we are in a "" and to insert a \ into "" you need \\
-" and to get the \\ in a '' from a "" you need 4.
-" NOTE: the w and y versions are never used in practice since * can handle those cases as well
-" to see whats there and V to select the ones that need to change
-" vnoremap <expr> <leader>es mode() ==# "V" ?
-" \ ":s/\\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>"
-" \: ""
-xnoremap <leader>es :s/\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>
-" Whole file edit last search(E version being with confim). Get rid of teh extre \V then get rid of any ending \n
-nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
-nnoremap <leader>Es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gIc <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left><left>
+" <c-r>=escape() means paste the result of escape(), substitute(), etc.
+" The \< and \> means don't do a raw string replace but a word replace (only operate on that string if its a stand-alone word)
+" so if you want to replace someVar, it won't touch vars named someVarOther
+
+" NOTE: just use * to grab word, vis select lines with word, then <leader>es
+" NOTE: under cursor and phrase search works,i.e. word boundary when word under cursor and larger phrase respecting the \V very no magic
+" NOTE: leaving first arg blank in substitute will assume last search i.e. the / register
+" edit last search within vis selection
+xnoremap <leader>es :s///gI<left><left><left>
+" edit last search across whole file
+nnoremap <leader>es :%s///gI<left><left><left>
 
 " see "h <expr> and :help mode()
 " Make A and I work in vis line mode. They already work in the block bounds so leave that be.
@@ -532,12 +512,16 @@ xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
 xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 
 " Move visual selections around
-" NOTE: i believe `[ and `] are last line edit start/end
-xnoremap <c-k> xkP`[V`]
-xnoremap <c-j> xp`[V`]
-" NOTE: for horiz it be nice to find for line boundary or pairs first before moving to next space
-xnoremap <c-h> xBP`[v`]
-xnoremap <c-l> xWP`[v`]
+" NOTE: `[ and `] are last line edit start/end
+xnoremap <a-k> xkP`[V`]
+xnoremap <a-j> xp`[V`]
+xnoremap <c-k> x{P`[V`]
+xnoremap <c-j> x}p`[V`]
+" NOTE: for horiz it be nice to find line boundaries or boundary pair first before moving to next space
+xnoremap <c-b> xBP`[v`]
+xnoremap <c-w> xWP`[v`]
+nnoremap <c-b> f<space>vBxBP`[v`]
+nnoremap <c-w> f<space>vBxWP`[v`]
 
 function! MakeAFileAndAddToGit(filename)
     execute 'edit ' . a:filename
@@ -577,15 +561,16 @@ endif
 noremap <silent> <c-e> <nop>
 noremap <silent> <c-y> <nop>
 noremap <silent> <c-f> <nop>
-noremap <silent> <c-b> <nop>
-noremap <silent> <c-u> 10<c-y>
-noremap <silent> <c-d> 10<c-e>
+" noremap <silent> <c-b> <nop>
+noremap <silent> <c-u> 12<c-y>
+noremap <silent> <c-d> 12<c-e>
 
 " NOTE: was cause of slowness at one point
 set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 " xnoremap <c-y> "+y
 " nnoremap <c-p> "+p
 
+" Some default swaps
 noremap J }
 noremap K {
 noremap { J
