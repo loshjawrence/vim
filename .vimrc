@@ -143,6 +143,7 @@ nnoremap <leader>ct :CTags<cr>
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
 " Tell vim to use ripgrep as its grep program
+" NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
 set grepprg=rg\ --vimgrep\ --glob\ !tags
 
 let baseDataFolder="~/.vim"
@@ -154,13 +155,14 @@ Plug 'junegunn/fzf.vim'
 let g:fzf_buffers_jump = 1
 " disable preview window
 let g:fzf_preview_window = ''
+" Allow passing other args to Rg command
+" Example, :Rg '#include "Shader.h"' -g "*{.cpp,.h}"
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
 " choco install ripgrep fd fzf
 " USE FD https://github.com/sharkdp/fd
 " put in .bashrc for fd/other things
 "in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
-" export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
-" export FZF_DEFAULT_COMMAND="fd --type file"
-" export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+" see .bashrc in personal vim repo
 
 " These two are for flippling between dec hex oct bin
 " magnum is just a dependency of radical
@@ -345,13 +347,16 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 " TODO: need proper word boundary versions(aw, rw) for better var name changes.
 " NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
-command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cdo update | cclose | execute 'normal! `A'
+command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
 nnoremap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\/', '/', 'g'), '\\n$', '', 'g'), '\*', '\\\\*', 'g'), '\\<', '', 'g'), '\\>', '', 'g')<cr>"<cr>
 nnoremap <leader>am :MyGrep ""<left>
 " NOTE: rg's idea of word boundary is different from vim.
 " But <leader>rs command will put the vim word boundary
 " things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
 " NOTE: ack word saves to register w for use later with replace word
+" :h cword
+" :h s_flags (I is dont ignore, e is continue on error, g is all instances on line, c is confirm)
+" when doing something like :s//red/ the first arg is assumed to be previous search
 nnoremap <leader>aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
 nnoremap <leader>rs :MyCdo %s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g')<cr>//gIe<left><left><left><left>
 nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
@@ -418,10 +423,23 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 EOF
 " nvim-lsp ----------------------------------------
 
+" Presentation mode. Need a dir full of .vpm files (number them, for example, 00.vpm) and goyo plugin
+" in command line: cd dir; nvim *
+autocmd BufNewFile,BufRead *.vpm call SetVimPresentationMode()
+function SetVimPresentationMode()
+    nnoremap <buffer> <right> :n<cr>
+    nnoremap <buffer> <left> :N<cr>
+
+    if !exists('#goyo')
+        Goyo
+    endif
+endfunction
+
 " trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
 " Also highlight all tabs and trailing whitespace characters.
 " set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
 " set list                            " Show problematic characters.
+" NOTE see vim-better-whitespace plugin
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
