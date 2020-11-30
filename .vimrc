@@ -1,7 +1,4 @@
-﻿" IDEAS:
-" move selection horiz with c-w/W c-b/B, vert with c-j/J c-k/K
-
-" On Windows:
+﻿" On Windows:
 " See personal vim repo for disable capslock reg file for windows 10, double click to merge it then restart your computer.
 " "bash" in a windows term will use wsl/ubuntu on /mnt/c/
 " Terminal shortcuts/tips:
@@ -238,6 +235,16 @@ let g:airline_section_c = '' " filename is already in the airline tabline
 let g:airline_section_x = '' " (tagbar, filetype, virtualenv).
 let g:airline_section_y = '' " (fileencoding, fileformat)
 let g:airline_section_z = '' " (percentage, line number, column number)
+
+" Type s and a char of interesst then the colored letters at the char to jump to it.
+Plug 'easymotion/vim-easymotion'
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+let g:EasyMotion_use_upper = 1
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_keys =   'ASDGHKLQWERTYUIOPZXCVBNMFJ;' " should sort from easy to hard (left to right)
+" This will search before and after cursor in current pane
+nmap s <Plug>(easymotion-s)
+nnoremap S <nop>
 
 " when using alt keys make sure you can diasable the corresponding alt-menu key
 " in any other IDE's you may use
@@ -515,6 +522,8 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " NOTE: `[ and `] are last line edit start/end
 xnoremap <a-k> xkP`[V`]
 xnoremap <a-j> xp`[V`]
+nnoremap <a-k> VxkP
+nnoremap <a-j> Vxp
 xnoremap <c-k> x{P`[V`]
 xnoremap <c-j> x}p`[V`]
 " NOTE: for horiz it be nice to find line boundaries or boundary pair first before moving to next space
