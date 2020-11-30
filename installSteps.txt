@@ -78,6 +78,7 @@ sudo make install
 # Clangd
 ========
 // https://clangd.llvm.org/installation.html
+// NOTE: if on ubuntu 20.04, clangd package is version 10
 sudo apt update -y
 sudo apt install -y clangd-10
 sudo apt install -y clang-10
@@ -95,11 +96,15 @@ nvm install node
 
 # WSL
 =====
+upgrade ubuntu in place: https://alessio.franceschelli.me/posts/windows/wsl2-upgrade/
+
 go to microsoft store. hit winkey and search store
 download the latest LTS ubuntu and windows terminal
 update windows 10 to version 2004 or higher
 upgrade to WSL 2
 go to settings location and make ubuntu default. hide azure and cmd.
 /mnt/c/Users/loshj/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+
+
 
 Open nvim and do a :PlugInstall
