@@ -364,9 +364,9 @@ nnoremap <leader>rw :MyCdo %s/\V\<<c-r>w\>//gIe<left><left><left><left>
 
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
 set completeopt=menuone,noinsert,noselect
-let g:diagnostic_virtual_text_prefix = ''
 let g:diagnostic_enable_virtual_text = 1
-let g:completion_confirm_key = "\<C-y>"
+let g:diagnostic_virtual_text_prefix = ''
+let g:completion_matching_smart_case = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
