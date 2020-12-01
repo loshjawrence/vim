@@ -244,6 +244,7 @@ let g:EasyMotion_smartcase = 1
 let g:EasyMotion_keys =   'ASDGHKLQWERTYUIOPZXCVBNMFJ;' " should sort from easy to hard (left to right)
 " This will search before and after cursor in current pane
 nmap s <Plug>(easymotion-s)
+xmap s <Plug>(easymotion-s)
 nnoremap S <nop>
 
 " when using alt keys make sure you can diasable the corresponding alt-menu key
