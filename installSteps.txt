@@ -75,6 +75,15 @@ cd ctags
 make
 sudo make install
 
+# language servers
+==================
+most can be installed with :LspInstall <ls name>
+clangd:
+windows: `choco install llvm`
+linux: `sudo apt update -y; sudo apt install -y clangd`
+cmake-language-server:
+pip3 install cmake-language-server
+
 # Clangd
 ========
 // https://clangd.llvm.org/installation.html
