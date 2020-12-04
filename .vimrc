@@ -278,7 +278,7 @@ nnoremap S <nop>
 "NOTE: see the minimal vimrc here https://github.com/nvim-lua/completion-nvim/issues/143
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-treesitter/nvim-treesitter'
+" Plug 'nvim-treesitter/nvim-treesitter'
 
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
@@ -337,7 +337,7 @@ set t_Co=256
 Plug 'AlessandroYorba/Alduin'
 colorscheme alduin2
 
-" Plug 'sheerun/vim-polyglot'
+Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 
@@ -380,13 +380,13 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
 :lua << EOF
-  require'nvim-treesitter.configs'.setup {
-    ensure_installed = "maintained",
-    highlight = {
-      enable = true,
-      disable = { },
-    },
-  }
+  -- require'nvim-treesitter.configs'.setup {
+  --   ensure_installed = "maintained",
+  --   highlight = {
+  --     enable = true,
+  --     disable = { },
+  --   },
+  -- }
 
   local nvim_lsp = require('lspconfig')
   local on_attach_custom = function(_, bufnr)
