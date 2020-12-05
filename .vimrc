@@ -328,7 +328,7 @@ require'bufferline'.setup{
     options = {
         tab_size = 10,
         show_buffer_close_icons = false,
-    }
+    };
 }
 EOF
 
@@ -348,7 +348,7 @@ nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
 nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
 
 " kill buffer tab
-nnoremap <silent> <c-q> :silent! up! <bar> silent! bd! <bar> call BufferLineCycleNext() <cr>
+nnoremap <silent> <a-q> :silent! up! <bar> silent! bd! <bar> call BufferLineCycleNext() <cr>
 
 " see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
 " There was a comment about making sure .viminfo is read/write
