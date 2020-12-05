@@ -209,32 +209,8 @@ Plug 'itchyny/vim-qfedit'
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
 
-" " WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
-" " linux search keyboard set to 200ms delay, 40c/s
-Plug 'vim-airline/vim-airline' " see 'powerline/fonts' for font installation 'sudo apt install fonts-powerline'
-Plug 'vim-airline/vim-airline-themes'
-" let g:airline_powerline_fonts = 1
-" let g:airline#extensions#gutentags#enabled = 1
-let g:airline_theme='ayu_dark'
-" let g:airline#extensions#coc#enabled = 1
-let g:airline#extensions#branch#enabled=1
-let g:airline#extensions#branch#empty_message = ''
-let g:airline#extensions#branch#displayed_head_limit = 10
-let g:airline#extensions#branch#format = 2
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t' " Just display filename
-let g:airline#extensions#tabline#show_buffers = 1
-let g:airline#extensions#tabline#show_tabs = 0
-let g:airline#extensions#tabline#show_tab_nr = 0
-let g:airline#extensions#tabline#show_close_button = 0
-let g:airline#extensions#tabline#show_splits = 0
-let g:airline#extensions#tabline#show_tab_count = 0
-let g:airline#extensions#tabline#ignore_bufadd_pat = 'goyo|gundo|undotree|vimfiler|tagbar|nerd_tree|startify|!|term\:'
-let g:airline_section_a = '' " mode.
-let g:airline_section_c = '' " filename is already in the airline tabline
-let g:airline_section_x = '' " (tagbar, filetype, virtualenv).
-let g:airline_section_y = '' " (fileencoding, fileformat)
-let g:airline_section_z = '' " (percentage, line number, column number)
+" WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
+" linux search keyboard set to 200ms delay, 40c/s
 
 " Type s and a char of interesst then the colored letters at the char to jump to it.
 Plug 'easymotion/vim-easymotion'
@@ -339,7 +315,40 @@ colorscheme alduin2
 
 Plug 'sheerun/vim-polyglot'
 
+Plug 'norcalli/nvim-colorizer.lua'
+
+Plug 'akinsho/nvim-bufferline.lua'
 call plug#end()
+
+" NOTE: Must go after plug#end()
+lua require'colorizer'.setup()
+:lua << EOF
+require'bufferline'.setup{
+    -- override some options from their defaults
+    options = {
+        tab_size = 10,
+        show_buffer_close_icons = false,
+    }
+}
+EOF
+
+" Add the terminal to unlisted buffers so that buffer line doesnt show it
+" NOTE: Tried all the Buf* stuff but only this one seemed to work
+" and so it only gets removed from buffer line when you leave the terminal
+autocmd BufLeave bash* setlocal nobuflisted
+
+" These commands will honor the custom ordering
+" if you change the order of buffers the vim commands :bnext and :bprevious
+" will not respect the custom ordering
+nnoremap <silent><a-l> :BufferLineCycleNext<CR>
+nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+
+" These commands will move the current buffer backwards or forwards in the bufferline
+nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
+nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
+
+" kill buffer tab
+nnoremap <silent> <c-q> :silent! up! <bar> silent! bd! <bar> call BufferLineCycleNext() <cr>
 
 " see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
 " There was a comment about making sure .viminfo is read/write
@@ -616,27 +625,6 @@ tnoremap <Esc> <C-\><C-n>:q<cr>
 tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
-
-" " airline removes term from tabline but must still skip it
-function! BufferPrev()
-    bprev
-    if &buftype == 'terminal'
-        bprev
-    endif
-endfunction
-function! BufferNext()
-    bnext
-    if &buftype == 'terminal'
-        bnext
-    endif
-endfunction
-
-" Cycle tabs in tab bar
-nnoremap <silent> <a-h> :call BufferPrev()<cr>
-nnoremap <silent> <a-l> :call BufferNext()<cr>
-
-" kill buffer tab
-nnoremap <silent> <c-q> :silent! up! <bar> silent! bd! <bar> call BufferNext() <cr>
 
 " COLORCOLUMN
 " CURSORLINE (can be slower in some terminals)
