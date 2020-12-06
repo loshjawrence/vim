@@ -46,9 +46,9 @@ set laststatus=2        " Always display the status line
 set autowrite           " Automatically :write before running commands
 set magic               " Use 'magic' patterns (extended regular expressions).
 set guioptions=         " remove scrollbars on macvim
-set noshowmode          " don't show mode as airline already does
+set noshowmode          " don't show mode
 set mouse=a             " enable mouse (selection, resizing windows)
-set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duckduckgo said to turn it off
+set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duck said to turn it off
 set tabstop=4           " Use 4 spaces for tabs.
 set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " insert tab with right amount of spacing
