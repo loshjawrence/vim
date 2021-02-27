@@ -150,7 +150,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " Jump to buffer if open
 let g:fzf_buffers_jump = 1
-" disable preview window
+" disable preview window with '' set it to right with 'right'
 let g:fzf_preview_window = ''
 " Allow passing other args to Rg command
 " Example, :Rg '#include "Shader.h"' -g "*{.cpp,.h}"
@@ -158,8 +158,33 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-hea
 " choco install ripgrep fd fzf
 " USE FD https://github.com/sharkdp/fd
 " put in .bashrc for fd/other things
-"in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
+" in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
 " see .bashrc in personal vim repo
+" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
+" files in `git ls-files``
+nnoremap <leader>fg :GFiles<cr>
+" all files under pwd (recursive)
+nnoremap <leader>F :Files<cr>
+" tags in current buffer
+nnoremap <leader>fT :BTags<cr>
+
+" Plug 'nvim-lua/popup.nvim'
+" Plug 'nvim-lua/plenary.nvim'
+" Plug 'nvim-telescope/telescope.nvim'
+" " double escape to leave promopt or c-c
+" " Using lua functions
+" nnoremap <leader>F <cmd>lua require('telescope.builtin').find_files()<cr>
+" nnoremap <leader>fg <cmd>lua require('telescope.builtin').git_files()<cr>
+" " good if you closed something and forget the name of it
+" nnoremap <leader>fo <cmd>lua require('telescope.builtin').oldfiles()<cr>
+" " nnoremap <leader>fw <cmd>lua require('telescope.builtin').grep_string()<cr>
+" " " can apparently make dirs and files easily
+" " nnoremap <leader>fe <cmd>lua require('telescope.builtin').file_browser()<cr>
+" " good for large files, unsure since not syntax highlighted
+" " see what BLines does in fzf
+" " would really want a buffer only <leader>as
+" " nnoremap <leader>fb <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
+" " nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 " These two are for flippling between dec hex oct bin
 " magnum is just a dependency of radical
@@ -171,18 +196,6 @@ nnoremap <F5> :GundoToggle<CR>
 
 Plug 'majutsushi/tagbar'
 nnoremap <F8> :TagbarToggle<CR>
-
-" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
-" files in `git ls-files``
-nnoremap <leader>f :GFiles<cr>
-" all files under pwd (recursive)
-nnoremap <leader>F :Files<cr>
-" tags in open buffers
-nnoremap <leader>t :BTags<cr>
-" all tags (pulled from ctags i think)
-nnoremap <leader>T :Tags<cr>
-" Don't really need this with buffers-as-tabs setup
-nnoremap <leader>b :Buffers<cr>
 
 " Surrounding things
 Plug 'tpope/vim-surround'
@@ -327,12 +340,30 @@ call plug#end()
 " NOTE: Must go after plug#end()
 lua require'colorizer'.setup()
 :lua << EOF
-require'bufferline'.setup{
+ require'bufferline'.setup{
     -- override some options from their defaults
     options = {
         tab_size = 10,
         show_buffer_close_icons = false,
     };
+}
+EOF
+
+" telescope
+:lua << EOF
+local actions = require('telescope.actions')
+require('telescope').setup{
+    defaults = {
+        prompt_position = "top",
+        sorting_strategy = "ascending",
+        winblend = 30,
+        mappings = {
+            i = {
+                ["<esc>"] = actions.close,
+                ["<CR>"] = actions.select_default, -- TODO: want this to act like tab in fzf (add to list of files to open and move cursor to next item in list)
+            },
+        },
+    }
 }
 EOF
 
@@ -346,6 +377,7 @@ autocmd BufLeave bash* setlocal nobuflisted
 " will not respect the custom ordering
 nnoremap <silent><a-l> :BufferLineCycleNext<CR>
 nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+
 
 " These commands will move the current buffer backwards or forwards in the bufferline
 nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
@@ -395,7 +427,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 :lua << EOF
   require'nvim-treesitter.configs'.setup {
     -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-    ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "html", },
+    ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "html", "json" },
     highlight = {
       enable = true,
     },
@@ -449,6 +481,7 @@ EOF
 " in command line: cd dir; nvim *
 autocmd BufNewFile,BufRead *.vpm call SetVimPresentationMode()
 function SetVimPresentationMode()
+
     nnoremap <buffer> <right> :n<cr>
     nnoremap <buffer> <left> :N<cr>
 
