@@ -108,6 +108,7 @@ set path+=**
 " TO SEE A LIST OF LANGS:
 " ctags --list-languages
 " ========================================================
+command! CScope !cscope -bcqR
 command! CTags !ctags -R
             \ --languages=C,C++,CMake,CUDA,Javascript,TypeScript
             \ --c++-kinds=+pl
@@ -133,8 +134,47 @@ command! CTags !ctags -R
             \ --exclude='travis'
             \ --exclude='.git'
             \ .
-" nnoremap <leader>ct :cd %:p:h <bar> CTags<cr>
-nnoremap <leader>ct :CTags<cr>
+" nnoremap <leader>t :cd %:p:h <bar> CTags<cr>
+nnoremap <leader>tc :CTags<cr>:CScope<cr>
+nnoremap <c-n> :tn<cr>
+nnoremap <c-p> :tp<cr>
+
+" " setup cscope (need to: sudo apt update -y; sudo apt install cscope)
+if has("cscope")
+    " set to 1 to search tags first instead of cscope database
+    set csto=0
+    " also use tags file
+    set cst
+    " set nocsverb
+    " add any database in current directory
+    if filereadable("cscope.out")
+        silent! cs add cscope.out
+    " else add database pointed to by environment
+    elseif $CSCOPE_DB != ""
+        silent! cs add $CSCOPE_DB
+    endif
+    " set csverb
+    " use qf window, - mean clear prev results for that particular search
+    set cscopequickfix=s-,c-,d-,i-,t-,e-,a-
+endif
+" NOTE: the problem with ctags and cscope is its still not really aware of codebase.
+" if you have same name you have to pick between everything with same name in the
+" lookup files that they generate.
+" therefore, you really want to use language servers instead of this stuff if you can.
+"
+"" cscope jump to a function declaration
+" nnoremap <silent> <C-]> :cs find s <c-r>=expand("<cword>")<cr><cr>1<cr><cr>
+" show a list of where function is called
+" symbol
+nnoremap <silent> <leader>ts :cs find s <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" go to def
+nnoremap <silent> <leader>td :cs find g <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" functions called by this
+nnoremap <silent> <leader>tb :cs find d <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" calling this function
+nnoremap <silent> <leader>tc :cs find c <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" places where this symbol is assigned to
+nnoremap <silent> <leader>ta :cs find a <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
 
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
@@ -858,7 +898,7 @@ nnoremap <leader>um :UnMinify<cr>
 " :g/pattern/z#.5|echo "==========" - display context, 5 lines, of pattern
 " :g/pattern/t$  - copy all lines matching pattern to the end of the file
 " :g/pattern/m$  - move all lines matching pattern to the end of the file
-" qaq:g/pattern/y A Copy all lines matching a pattern to register 'a'. qa starts recording a macro to register a, then q stops recording, leaving a empty. y is yank, A is append to register a.
+" qaq:g/pattern/y A Copy all lines matching a pattern to register 'a'. qa starts recording a macro to register a, then q stops recording, leaving the 'a' reg empty. y is yank, A is append to register a.
 " :g/pattern/normal @q - run macro recorded in q on matching lines
 
 " INSERT MODE:
