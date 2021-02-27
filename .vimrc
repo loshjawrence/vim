@@ -252,9 +252,13 @@ nnoremap S <nop>
 " https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
 " https://vim.fandom.com/wiki/Omni_completion
 "NOTE: see the minimal vimrc here https://github.com/nvim-lua/completion-nvim/issues/143
+Plug 'anott03/nvim-lspinstall'
+" lspconfig got rid of :LspInstall so you need anott03's plugin
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-" Plug 'nvim-treesitter/nvim-treesitter'
+" :TSInstallInfo lists all the languages
+" :TSInstall c cpp bash lua typescript html c_sharp
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
@@ -389,13 +393,13 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 command! Format execute 'lua vim.lsp.buf.formatting()'
 
 :lua << EOF
-  -- require'nvim-treesitter.configs'.setup {
-  --   ensure_installed = "maintained",
-  --   highlight = {
-  --     enable = true,
-  --     disable = { },
-  --   },
-  -- }
+  require'nvim-treesitter.configs'.setup {
+    -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+    ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "html", },
+    highlight = {
+      enable = true,
+    },
+  }
 
   local nvim_lsp = require('lspconfig')
   local on_attach_custom = function(_, bufnr)
@@ -431,7 +435,8 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 
   -- NOTE: you can install some language servers with :LspInstall <lsp name, i.e. name in local servers>
   -- see https://github.com/neovim/nvim-lspconfig#configurations
-  local servers = {'jsonls', 'clangd', 'tsserver', 'html', 'vimls', 'cssls', 'bashls', 'sumneko_lua', 'cmake'}
+  -- vimls, ccsl
+  local servers = {'jsonls', 'clangd', 'tsserver', 'html', 'bashls', 'sumneko_lua', 'cmake'}
   for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup {
       on_attach = on_attach_custom,
@@ -468,6 +473,7 @@ nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
 " FILETYPE filetype
 " Associate filetypes with other filetypes
+autocmd BufRead,BufNewFile *.asm set filetype=asm
 autocmd BufRead,BufNewFile *.shader set filetype=cpp
 autocmd BufRead,BufNewFile *.vert   set filetype=cpp
 autocmd BufRead,BufNewFile *.frag   set filetype=cpp
