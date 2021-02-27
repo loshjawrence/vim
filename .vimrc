@@ -141,7 +141,7 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
 " Tell vim to use ripgrep as its grep program
 " NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
-set grepprg=rg\ --vimgrep\ --glob\ !tags
+set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort
 
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
@@ -161,29 +161,22 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-hea
 " in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
 " see .bashrc in personal vim repo
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
-" files in `git ls-files``
-nnoremap <leader>fg :GFiles<cr>
 " all files under pwd (recursive)
 nnoremap <leader>F :Files<cr>
-" tags in current buffer
-nnoremap <leader>fT :BTags<cr>
+" files in `git ls-files``
+nnoremap <leader>fg :GFiles<cr>
 
-" Plug 'nvim-lua/popup.nvim'
-" Plug 'nvim-lua/plenary.nvim'
+" will eventually go into nvim proper
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+
+" telescope (trying to be fzf replacement)
 " Plug 'nvim-telescope/telescope.nvim'
-" " double escape to leave promopt or c-c
-" " Using lua functions
-" nnoremap <leader>F <cmd>lua require('telescope.builtin').find_files()<cr>
-" nnoremap <leader>fg <cmd>lua require('telescope.builtin').git_files()<cr>
+" " double escape to leave promopt or c-c or use :lua to add insert mode mapping for escape to close
 " " good if you closed something and forget the name of it
 " nnoremap <leader>fo <cmd>lua require('telescope.builtin').oldfiles()<cr>
-" " nnoremap <leader>fw <cmd>lua require('telescope.builtin').grep_string()<cr>
 " " " can apparently make dirs and files easily
 " " nnoremap <leader>fe <cmd>lua require('telescope.builtin').file_browser()<cr>
-" " good for large files, unsure since not syntax highlighted
-" " see what BLines does in fzf
-" " would really want a buffer only <leader>as
-" " nnoremap <leader>fb <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
 " " nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 " These two are for flippling between dec hex oct bin
@@ -330,42 +323,44 @@ set t_Co=256
 Plug 'AlessandroYorba/Alduin'
 colorscheme alduin2
 
-Plug 'sheerun/vim-polyglot'
+" shouldnt be needed with treesitter
+" Plug 'sheerun/vim-polyglot'
 
+" Buffers as tabs setup
 Plug 'norcalli/nvim-colorizer.lua'
-
 Plug 'akinsho/nvim-bufferline.lua'
+
 call plug#end()
 
 " NOTE: Must go after plug#end()
-lua require'colorizer'.setup()
 :lua << EOF
- require'bufferline'.setup{
+  require'colorizer'.setup{}
+  require'bufferline'.setup{
     -- override some options from their defaults
     options = {
         tab_size = 10,
         show_buffer_close_icons = false,
-    };
-}
+    }
+  }
 EOF
 
-" telescope
-:lua << EOF
-local actions = require('telescope.actions')
-require('telescope').setup{
-    defaults = {
-        prompt_position = "top",
-        sorting_strategy = "ascending",
-        winblend = 30,
-        mappings = {
-            i = {
-                ["<esc>"] = actions.close,
-                ["<CR>"] = actions.select_default, -- TODO: want this to act like tab in fzf (add to list of files to open and move cursor to next item in list)
-            },
-        },
-    }
-}
-EOF
+" " telescope
+" :lua << EOF
+" local actions = require'telescope.actions'
+" require'telescope'.setup{
+"     defaults = {
+"         prompt_position = "top",
+"         sorting_strategy = "ascending",
+"         winblend = 30,
+"         mappings = {
+"             i = {
+"                 ["<esc>"] = actions.close,
+"                 ["<CR>"] = actions.select_default, -- TODO: want this to act like tab in fzf (add to list of files to open and move cursor to next item in list)
+"             },
+"         },
+"     }
+" }
+" EOF
 
 " Add the terminal to unlisted buffers so that buffer line doesnt show it
 " NOTE: Tried all the Buf* stuff but only this one seemed to work
@@ -400,10 +395,13 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 " TODO: need proper word boundary versions(aw, rw) for better var name changes.
 " NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
+command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
 nnoremap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
 nnoremap <leader>am :MyGrep ""<left>
 nnoremap <leader>aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
+nnoremap <leader>AS :MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>AW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
 " NOTE: rg's idea of word boundary is different from vim.
 " But <leader>rs command will not remove vim word boundary regex from the / register if it's there
 " things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
@@ -433,9 +431,9 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     },
   }
 
-  local nvim_lsp = require('lspconfig')
+  local nvim_lsp = require'lspconfig'
   local on_attach_custom = function(_, bufnr)
-    require('completion').on_attach()
+    require'completion'.on_attach()
     vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
     local opts = { noremap=true, silent=true }
     local cbufn = vim.api.nvim_exec('echo bufnr("%")', true)
