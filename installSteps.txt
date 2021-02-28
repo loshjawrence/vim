@@ -43,6 +43,7 @@ sudo cpanm -n Neovim::Ext
 ================
 //https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
 //https://github.com/neovim/neovim/wiki/Installing-Neovim#install-from-source
+//https://github.com/neovim/neovim/wiki/Building-Neovim
 sudo apt update -y
 sudo apt install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
 cd; mkdir clones; cd clones; git clone https://github.com/neovim/neovim.git; cd neovim
@@ -88,13 +89,14 @@ pip3 install cmake-language-server
 ========
 // https://clangd.llvm.org/installation.html
 // NOTE: if on ubuntu 20.04, clangd package is version 10
+// for nvim lsp use clang 9
 sudo apt update -y
-sudo apt install -y clangd-10
-sudo apt install -y clang-10
+sudo apt install -y clangd-9
+sudo apt install -y clang-9
 sudo apt remove clangd-<otherversions>
 sudo apt remove clang-<otherversions>
-sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-10 100
+sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 100
 
 # NVM
 =====

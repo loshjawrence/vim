@@ -1,4 +1,5 @@
-﻿" On Windows:
+﻿" TODO: add tab complete to autocomplete
+" On Windows:
 " See personal vim repo for disable capslock reg file for windows 10, double click to merge it then restart your computer.
 " "bash" in a windows term will use wsl/ubuntu on /mnt/c/
 " Terminal shortcuts/tips:
@@ -139,42 +140,41 @@ nnoremap <leader>tc :CTags<cr>:CScope<cr>
 nnoremap <c-n> :tn<cr>
 nnoremap <c-p> :tp<cr>
 
-" " setup cscope (need to: sudo apt update -y; sudo apt install cscope)
-if has("cscope")
-    " set to 1 to search tags first instead of cscope database
-    set csto=0
-    " also use tags file
-    set cst
-    " set nocsverb
-    " add any database in current directory
-    if filereadable("cscope.out")
-        silent! cs add cscope.out
-    " else add database pointed to by environment
-    elseif $CSCOPE_DB != ""
-        silent! cs add $CSCOPE_DB
-    endif
-    " set csverb
-    " use qf window, - mean clear prev results for that particular search
-    set cscopequickfix=s-,c-,d-,i-,t-,e-,a-
-endif
-" NOTE: the problem with ctags and cscope is its still not really aware of codebase.
-" if you have same name you have to pick between everything with same name in the
-" lookup files that they generate.
-" therefore, you really want to use language servers instead of this stuff if you can.
-"
-"" cscope jump to a function declaration
-" nnoremap <silent> <C-]> :cs find s <c-r>=expand("<cword>")<cr><cr>1<cr><cr>
-" show a list of where function is called
-" symbol
-nnoremap <silent> <leader>ts :cs find s <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-" go to def
-nnoremap <silent> <leader>td :cs find g <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-" functions called by this
-nnoremap <silent> <leader>tb :cs find d <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-" calling this function
-nnoremap <silent> <leader>tc :cs find c <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-" places where this symbol is assigned to
-nnoremap <silent> <leader>ta :cs find a <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" " " setup cscope (need to: sudo apt update -y; sudo apt install cscope)
+" if has("cscope")
+"     " set to 1 to search tags first instead of cscope database
+"     set csto=0
+"     " also use tags file
+"     set cst
+"     " set nocsverb
+"     " add any database in current directory
+"     if filereadable("cscope.out")
+"         silent! cs add cscope.out
+"     " else add database pointed to by environment
+"     elseif $CSCOPE_DB != ""
+"         silent! cs add $CSCOPE_DB
+"     endif
+"     " set csverb
+"     " use qf window, - mean clear prev results for that particular search
+"     set cscopequickfix=s-,c-,d-,i-,t-,e-,a-
+" endif
+" " NOTE: the problem with ctags and cscope is its still not really aware of codebase.
+" " if you have same name you have to pick between everything with same name in the
+" " lookup files that they generate.
+" " therefore, you really want to use language servers instead of this stuff if you can.
+" "" cscope jump to a function declaration
+" " nnoremap <silent> <C-]> :cs find s <c-r>=expand("<cword>")<cr><cr>1<cr><cr>
+" " show a list of where function is called
+" " symbol
+" nnoremap <silent> <leader>ts :cs find s <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" " go to def
+" nnoremap <silent> <leader>td :cs find g <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" " functions called by this
+" nnoremap <silent> <leader>tb :cs find d <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" " calling this function
+" nnoremap <silent> <leader>tc :cs find c <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
+" " places where this symbol is assigned to
+" nnoremap <silent> <leader>ta :cs find a <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
 
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
@@ -209,15 +209,6 @@ nnoremap <leader>fg :GFiles<cr>
 " will eventually go into nvim proper
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
-
-" telescope (trying to be fzf replacement)
-" Plug 'nvim-telescope/telescope.nvim'
-" " double escape to leave promopt or c-c or use :lua to add insert mode mapping for escape to close
-" " good if you closed something and forget the name of it
-" nnoremap <leader>fo <cmd>lua require('telescope.builtin').oldfiles()<cr>
-" " " can apparently make dirs and files easily
-" " nnoremap <leader>fe <cmd>lua require('telescope.builtin').file_browser()<cr>
-" " nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 " These two are for flippling between dec hex oct bin
 " magnum is just a dependency of radical
@@ -281,7 +272,6 @@ nnoremap S <nop>
 " nnoremap <leader>4 4gt
 " nnoremap <leader>5 5gt
 " nnoremap <leader>0 :tablast<cr>
-
 
 " LSP for code completion options:
 " Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
@@ -366,8 +356,9 @@ colorscheme alduin2
 " shouldnt be needed with treesitter
 " Plug 'sheerun/vim-polyglot'
 
-" Buffers as tabs setup
 Plug 'norcalli/nvim-colorizer.lua'
+
+" Buffers as tabs setup
 Plug 'akinsho/nvim-bufferline.lua'
 
 call plug#end()
@@ -375,6 +366,10 @@ call plug#end()
 " NOTE: Must go after plug#end()
 :lua << EOF
   require'colorizer'.setup{}
+EOF
+
+" NOTE: Must go after plug#end()
+:lua << EOF
   require'bufferline'.setup{
     -- override some options from their defaults
     options = {
@@ -384,37 +379,17 @@ call plug#end()
   }
 EOF
 
-" " telescope
-" :lua << EOF
-" local actions = require'telescope.actions'
-" require'telescope'.setup{
-"     defaults = {
-"         prompt_position = "top",
-"         sorting_strategy = "ascending",
-"         winblend = 30,
-"         mappings = {
-"             i = {
-"                 ["<esc>"] = actions.close,
-"                 ["<CR>"] = actions.select_default, -- TODO: want this to act like tab in fzf (add to list of files to open and move cursor to next item in list)
-"             },
-"         },
-"     }
-" }
-" EOF
-
 " Add the terminal to unlisted buffers so that buffer line doesnt show it
 " NOTE: Tried all the Buf* stuff but only this one seemed to work
-" and so it only gets removed from buffer line when you leave the terminal
+" and so it only gets removed from buffer tabs when you leave the terminal
 autocmd BufLeave bash* setlocal nobuflisted
 
-" These commands will honor the custom ordering
-" if you change the order of buffers the vim commands :bnext and :bprevious
-" will not respect the custom ordering
+" These commands will honor the custom ordering if you change the order of buffers.
+" The vim commands :bnext and :bprevious will not respect the custom ordering.
 nnoremap <silent><a-l> :BufferLineCycleNext<CR>
 nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
 
-
-" These commands will move the current buffer backwards or forwards in the bufferline
+" These commands will move the current buffer backwards or forwards in the bufferline.
 nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
 nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
 
@@ -461,59 +436,56 @@ let g:completion_matching_smart_case = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
-
+" lsp config
+" https://github.com/neovim/nvim-lspconfig
+  " Check that an LSP client has attached to the current buffer:  >
+  "     :lua print(vim.inspect(vim.lsp.buf_get_clients()))
+  "     :LspInfo
+  "     make sure no ERRORS in
+  "     :lua vim.cmd('e'..vim.lsp.get_log_path())
 :lua << EOF
-  require'nvim-treesitter.configs'.setup {
-    -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-    ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "html", "json" },
-    highlight = {
-      enable = true,
-    },
-  }
-
-  local nvim_lsp = require'lspconfig'
-  local on_attach_custom = function(_, bufnr)
-    require'completion'.on_attach()
-    vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-    local opts = { noremap=true, silent=true }
-    local cbufn = vim.api.nvim_exec('echo bufnr("%")', true)
-
-    -- see :h lsp
-    -- see: https://github.com/nanotee/nvim-lua-guide
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ky', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ki', '<cmd>lua vim.lsp.buf.incoming_calls()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kI', '<cmd>lua vim.lsp.buf.outgoing_calls()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kH', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ka', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kA', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kl', '<cmd>lua vim.lsp.buf.list_workspace_folders()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dl', '<cmd>lua vim.lsp.diagnostic.get_all()<CR>', opts)
-
-    -- NOTE: this can work (i.e. doesnt matter what dir you are in or what files are opened)
-    -- but sometimes doesnt work on things you cant leader>kd on (not sure what causes it to fail)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-K>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>kk', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ds', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dd', '<cmd>lua vim.lsp.diagnostic.clear(' .. cbufn .. ')<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-space>', '<cmd>lua vim.lsp.stop_client(vim.lsp.get_active_clients())<cr><cmd>edit<cr>', opts)
-  end
-
-  -- NOTE: you can install some language servers with :LspInstall <lsp name, i.e. name in local servers>
-  -- see https://github.com/neovim/nvim-lspconfig#configurations
-  -- vimls, ccsl
-  local servers = {'jsonls', 'clangd', 'tsserver', 'html', 'bashls', 'sumneko_lua', 'cmake'}
-  for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
-      on_attach = on_attach_custom,
+    require'nvim-treesitter.configs'.setup {
+        -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "html", "json" },
+        highlight = {
+            enable = true,
+        },
     }
-  end
+    local nvim_lsp = require('lspconfig')
+    vim.lsp.set_log_level("debug")
+    local on_attach = function(client, bufnr)
+        require'completion'.on_attach()
+
+        local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+        local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+        local cbufnvim = vim.api.nvim_exec('echo bufnr("%")', true)
+
+        buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+        -- Mappings.
+        local opts = { noremap=true, silent=true }
+        buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+        buf_set_keymap('n', 'gk', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+        -- rename does not work, but can use *<leader>ar<leader>rs for a more accurate rename over *<leader>as<leader>rs
+        buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        buf_set_keymap('n', '<leader>ar', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+        buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    end
+
+    -- Use a loop to conveniently both setup defined servers
+    -- and map buffer local keybindings when the language server attaches
+    local servers = {"jsonls", "clangd", "tsserver", "html", "bashls", "sumneko_lua", "cmake"}
+    for _, lsp in ipairs(servers) do
+        nvim_lsp[lsp].setup { on_attach = on_attach }
+    end
+
+    -- -- Use to debug clang, remove from server list and remember to put it back
+    -- nvim_lsp.clangd.setup{
+    --     cmd = { "clangd", "-j=1", "--log=verbose" };
+    --     -- on_attach = on_attach
+    -- }
+
 EOF
-" nvim-lsp ----------------------------------------
 
 " Presentation mode. Need a dir full of .vpm files (number them, for example, 00.vpm) and goyo plugin
 " in command line: cd dir; nvim *
