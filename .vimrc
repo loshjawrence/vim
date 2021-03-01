@@ -181,7 +181,8 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
 " Tell vim to use ripgrep as its grep program
 " NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
-set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort
+" in terminal see rg --help for optoins to ripgrep 12
+set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
 
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
@@ -446,7 +447,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 :lua << EOF
     require'nvim-treesitter.configs'.setup {
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "html", "json" },
+        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json" },
         highlight = {
             enable = true,
         },
@@ -474,7 +475,8 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 
     -- Use a loop to conveniently both setup defined servers
     -- and map buffer local keybindings when the language server attaches
-    local servers = {"jsonls", "clangd", "tsserver", "html", "bashls", "sumneko_lua", "cmake"}
+    -- tsserver(not useful)
+    local servers = {"jsonls", "clangd", "html", "bashls", "sumneko_lua", "cmake"}
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end
