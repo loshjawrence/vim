@@ -206,6 +206,8 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-hea
 nnoremap <leader>F :Files<cr>
 " files in `git ls-files``
 nnoremap <leader>fg :GFiles<cr>
+" v:oldfiles
+nnoremap <leader>fo :History<cr>
 
 " will eventually go into nvim proper
 Plug 'nvim-lua/popup.nvim'
