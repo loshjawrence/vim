@@ -381,11 +381,14 @@ EOF
     },
     highlights = {
         buffer_selected = {
-            guifg = "Black",
-            guibg = "Cyan2",
+            guifg = "Black", -- "Black",
+            guibg = "LemonChiffon3", -- "Cyan2",
             gui = "bold",
         },
-
+        -- if its in a split but not the selected buffer
+        buffer_visible = {
+            guifg = "LemonChiffon3",
+        },
     },
   }
 EOF
