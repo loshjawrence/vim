@@ -373,6 +373,8 @@ EOF
 
 " NOTE: Must go after plug#end()
 :lua << EOF
+  local hlColor = "GreenYellow"
+  -- local hlColor = "LemonChiffon3"
   require'bufferline'.setup{
     -- override some options from their defaults
     options = {
@@ -381,13 +383,13 @@ EOF
     },
     highlights = {
         buffer_selected = {
-            guifg = "Black", -- "Black",
-            guibg = "LemonChiffon3", -- "Cyan2",
+            guifg = "Black",
+            guibg = hlColor,
             gui = "bold",
         },
-        -- if its in a split but not the selected buffer
+        -- Accent the split buffer thats not selected
         buffer_visible = {
-            guifg = "LemonChiffon3",
+            guifg = hlColor,
         },
     },
   }
