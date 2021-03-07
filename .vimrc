@@ -182,7 +182,8 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " Tell vim to use ripgrep as its grep program
 " NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
 " in terminal see rg --help for optoins to ripgrep 12
-set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
+" set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
+set grepprg=rg\ --vimgrep\ --glob\ !tags
 
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
@@ -483,9 +484,9 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
         buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
         buf_set_keymap('n', 'gk', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
         -- rename does not work, but can use *<leader>ar<leader>rs for a more accurate rename over *<leader>as<leader>rs
-        buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        -- buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
         buf_set_keymap('n', '<leader>ar', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+        buf_set_keymap('n', '<leader>ae', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
     end
 
     -- Use a loop to conveniently both setup defined servers
@@ -496,7 +497,12 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end
 
-    -- -- Use to debug clang, remove from server list and remember to put it back
+    -- -- NOTE: use these for debug info
+    -- -- :lua print(vim.inspect(vim.lsp.buf_get_clients()))
+    -- -- :LspInfo
+    -- -- to look in the lsp's log:
+    -- -- :lua vim.cmd('e'..vim.lsp.get_log_path())
+    -- -- Use to debug clang, remove from server list above but remember to put it back when fixed
     -- nvim_lsp.clangd.setup{
     --     cmd = { "clangd", "-j=1", "--log=verbose" };
     --     -- on_attach = on_attach
