@@ -356,7 +356,8 @@ Plug 'wellle/targets.vim'
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
 colorscheme alduin2
-
+" make easy colorschemes with this
+Plug 'tjdevries/colorbuddy.vim'
 " shouldnt be needed with treesitter
 " Plug 'sheerun/vim-polyglot'
 
