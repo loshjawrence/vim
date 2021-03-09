@@ -188,36 +188,34 @@ set grepprg=rg\ --vimgrep\ --glob\ !tags
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
 
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-" Plug 'junegunn/fzf.vim'
-" " Jump to buffer if open
-" let g:fzf_buffers_jump = 1
-" " disable preview window with '' set it to right with 'right'
-" let g:fzf_preview_window = ''
-" " Allow passing other args to Rg command
-" " Example, :Rg '#include "Shader.h"' -g "*{.cpp,.h}"
-" command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
-" " choco install ripgrep fd fzf
-" " USE FD https://github.com/sharkdp/fd
-" " put in .bashrc for fd/other things
-" " in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
-" " see .bashrc in personal vim repo
-" " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
-" " all files under pwd (recursive)
-" nnoremap <leader>F :Files<cr>
-" " files in `git ls-files``
-" nnoremap <leader>fg :GFiles<cr>
-" " v:oldfiles
-" nnoremap <leader>fo :History<cr>
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+" Jump to buffer if open
+let g:fzf_buffers_jump = 1
+" disable preview window with '' set it to right with 'right'
+let g:fzf_preview_window = ''
+" Allow passing other args to Rg command
+" Example, :Rg '#include "Shader.h"' -g "*{.cpp,.h}"
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
+" choco install ripgrep fd fzf
+" USE FD https://github.com/sharkdp/fd
+" put in .bashrc for fd/other things
+" in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
+" see .bashrc in personal vim repo
+" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
+" all files under pwd (recursive)
+nnoremap <leader>F :Files<cr>
+" files in `git ls-files``
+nnoremap <leader>fg :GFiles<cr>
+" v:oldfiles
+nnoremap <leader>fo :History<cr>
+" v:oldfiles
+nnoremap <leader>fm :Marks<cr>
 
 " will eventually go into nvim proper
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-nnoremap <leader>F <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap <leader>fg <cmd>lua require('telescope.builtin').git_files()<cr>
-nnoremap <leader>fo <cmd>lua require('telescope.builtin').oldfiles()<cr>
-
+" Plug 'nvim-telescope/telescope.nvim'
 " These two are for flippling between dec hex oct bin
 " magnum is just a dependency of radical
 " Plug 'glts/vim-magnum'
@@ -372,23 +370,44 @@ Plug 'akinsho/nvim-bufferline.lua'
 
 call plug#end()
 
-" telescope
-lua << EOF
-    local actions = require'telescope.actions'
-    require'telescope'.setup{
-        defaults = {
-            prompt_position = "top",
-            sorting_strategy = "ascending",
-            winblend = 30,
-            mappings = {
-                i = {
-                    ["<esc>"] = actions.close,
-                    ["<tab>"] = actions.add_selection,
-                },
-            },
-        },
-    }
-EOF
+" " telescope
+" lua << EOF
+"     local actions = require'telescope.actions'
+"     require'telescope'.setup{
+"         defaults = {
+"             prompt_position = "top",
+"             sorting_strategy = "ascending",
+"             winblend = 30,
+"             mappings = {
+"                 i = {
+"                     ["<esc>"] = actions.close,
+"                     ["<tab>"] = actions.add_selection,
+"                 },
+"             },
+"             -- file_sorter =  require'telescope.sorters'.get_fuzzy_file,
+"             -- file_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
+"             -- file_sorter =  require'telescope.sorters'.get_fzy_sorter,
+"             file_sorter =  require'telescope.sorters'.fuzzy_with_index_bias,
+"             file_ignore_patterns = {},
+"             set_env = { ['COLORTERM'] = 'truecolor' },
+"         },
+"     }
+" EOF
+" nnoremap <leader>F :Telescope find_files find_command=fd,--no-ignore,--hidden,--follow previewer=false<cr>
+" nnoremap <leader>fo :lua require('telescope.builtin').oldfiles()<cr>
+" nnoremap <leader>fm :lua require('telescope.builtin').marks()<cr>
+" nnoremap <leader>fg :lua require('telescope.builtin').git_files()<cr>
+" " list all finders
+" " nnoremap <leader>fp :lua require('telescope.builtin').builtin()<cr>
+" " nnoremap <leader>fa :lua require('telescope.builtin').live_grep()<cr>
+" " linux man pages
+" " nnoremap <leader>fm :lua require('telescope.builtin').man_pages()<cr>
+" " plugin user commands
+" " nnoremap <leader>fc :lua require('telescope.builtin').commands()<cr>
+" " nnoremap <leader>fv :lua require('telescope.builtin').vim_options()<cr>
+" " for colorscheme highlights
+" " nnoremap <leader>fh :lua require('telescope.builtin').highlights()<cr>
+
 
 " NOTE: Must go after plug#end()
 :lua << EOF
