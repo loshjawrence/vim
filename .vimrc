@@ -445,12 +445,18 @@ nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
 " To be used with <leader>aw as it saves word under cursor to w register
 nnoremap <leader>rw :MyCdo %s/\V\<<c-r>w\>//gIe<left><left><left><left>
 
+" COMPLETION
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 set completeopt=menuone,noinsert,noselect
-let g:diagnostic_enable_virtual_text = 1
-let g:diagnostic_virtual_text_prefix = ''
-let g:completion_matching_smart_case = 1
-let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+let g:completion_trigger_on_delete = 1
+let g:completion_enable_auto_paren = 1
+" its default, but if you want a consitant list
+let g:completion_sorting = 'alphabet'
+" too laggy atm
+let g:completion_enable_auto_hover = 0
 
 command! Format execute 'lua vim.lsp.buf.formatting()'
 " lsp config
@@ -492,7 +498,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     -- Use a loop to conveniently both setup defined servers
     -- and map buffer local keybindings when the language server attaches
     -- tsserver(not useful)
-    local servers = {"jsonls", "clangd", "html", "bashls", "sumneko_lua", "cmake"}
+    local servers = {"jsonls", "tsserver", "clangd", "html", "bashls", "sumneko_lua", "cmake"}
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end

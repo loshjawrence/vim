@@ -1,11 +1,15 @@
 For intstalling on linux (WSL/bash on Windows, edit windows files through /mnt/c)
 
+# WINDOWS
+==========
+choco upgrade -y neovim --pre
+choco upgrade -y llvm git cmake fd ripgrep fzf
+
 # FZF
 =====
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
-choco upgrade fzf
 
 # FD
 ====
@@ -13,15 +17,11 @@ cd; mkdir deb; cd deb;
 curl -LO https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb
 sudo dpkg -i fd_8.2.1_amd64.deb
 
-choco upgrade fd
-
 # RIPGREP
 =========
 cd; mkdir deb; cd deb;
 curl -LO https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb
 sudo dpkg -i ripgrep_12.1.1_amd64.deb
-
-choco upgrade ripgrep
 
 # VIM FILES
 ===========
@@ -61,7 +61,6 @@ make CMAKE_BUILD_TYPE=Release
 sudo make install
 git branch -D tagName-branch
 
-choco upgrade neovim --pre
 
 # UNINSTALL NEOVIM:
 ===================
@@ -88,7 +87,6 @@ sudo make install
 ==================
 most can be installed with :LspInstall <ls name>
 clangd:
-windows: `choco install llvm`
 linux: `sudo apt update -y; sudo apt install -y clangd`
 cmake-language-server:
 pip3 install cmake-language-server
@@ -103,8 +101,6 @@ sudo apt install -y clangd-9 clang-9
 sudo apt remove -y clangd-10 clang-10
 sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 100
-
-choco upgrade llvm
 
 # NVM
 =====
