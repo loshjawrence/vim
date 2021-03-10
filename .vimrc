@@ -305,11 +305,8 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
 
-" Only use this for Ttoggle (term toggle)
-Plug 'kassio/neoterm'
-let g:neoterm_autojump = 1
-let g:neoterm_autoinsert = 1
-let g:neoterm_size = 40
+Plug 'voldikss/vim-floaterm'
+
 
 " Font, size, resize
 set guifont=Monospace:h8
@@ -600,6 +597,21 @@ autocmd FileType markdown setlocal spell
 autocmd FileType json syntax match Comment +\/\/.\+$+
 autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 
+" TERMINAL, terminal, term, floaterm
+" Go to insert mode when switching to a terminal
+" Distinguish terminal by making cursor red
+let g:floaterm_borderchars=''
+let g:floaterm_position='center'
+let g:floaterm_width=0.80
+let g:floaterm_height=0.80
+nnoremap <silent>   <c-\>   :FloatermToggle --winblend=100<CR>
+tnoremap <silent>   <c-\>   <C-\><C-n>:FloatermToggle<CR>
+" Esc quits the termial
+" NOTE: This is needed to make fzf and other termal based things not annoying
+tnoremap <Esc> <C-\><C-n>:q<cr>
+tnoremap <C-\> <C-\><C-n>
+" To simulate i_CTRL-R in terminal-mode
+tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " No fuss terminal colors
 let g:terminal_color_0  = '#2e3436'
 let g:terminal_color_1  = '#cc0000'
@@ -617,6 +629,12 @@ let g:terminal_color_12 = '#729fcf'
 let g:terminal_color_13 = '#ad7fa8'
 let g:terminal_color_14 = '#00f5e9'
 let g:terminal_color_15 = '#eeeeec'
+highlight TermCursor ctermfg=red guifg=red
+nnoremap <silent>   <c-\>   :FloatermToggle --winblend=100<CR>
+" Set main floaterm window's background to black
+hi Floaterm guibg=black blend=30
+" Set floaterm border to black
+hi FloatermBorder guibg=black guifg=black blend=30
 
 if has("nvim")
     set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
@@ -732,19 +750,6 @@ tnoremap <c-h> <c-\><c-n><c-w>h
 tnoremap <c-j> <c-\><c-n><c-w>j
 tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
-
-" TERMINAL
-" Go to insert mode when switching to a terminal
-" Distinguish terminal by making cursor red
-highlight TermCursor ctermfg=red guifg=red
-" Ttoggle will start to always fail if that first terminal gets killed
-nnoremap <silent> <c-\> :botright Ttoggle<cr>
-" Esc quits the termial
-" NOTE: This is needed to make fzf and other termal based things not annoying
-tnoremap <Esc> <C-\><C-n>:q<cr>
-tnoremap <C-\> <C-\><C-n>
-" To simulate i_CTRL-R in terminal-mode
-tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
 " COLORCOLUMN
 " CURSORLINE (can be slower in some terminals)
