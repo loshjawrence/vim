@@ -204,12 +204,30 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-hea
 " see .bashrc in personal vim repo
 " fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
 " all files under pwd (recursive)
+"
+" NOTE: calls with fzf#wrap will honor this global setting
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'border': 'horizontal' } }
+" run custom, see :h fzf#run
+
+" override the Files command, see fzf-vim-advanced-customization
 nnoremap <leader>F :Files<cr>
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>,
+    \ {
+    \   'options': ['--layout=reverse'],
+    \   'source': 'fd --no-ignore --hidden --follow --type f'
+    \ }, <bang>0)
+
 " files in `git ls-files``
 nnoremap <leader>fg :GFiles<cr>
+command! -bang -nargs=? -complete=dir GFiles
+    \ call fzf#vim#gitfiles(<q-args>,
+    \ {
+    \   'options': ['--layout=reverse'],
+    \ }, <bang>0)
+
 " v:oldfiles
 nnoremap <leader>fo :History<cr>
-" v:oldfiles
 nnoremap <leader>fm :Marks<cr>
 
 " will eventually go into nvim proper
