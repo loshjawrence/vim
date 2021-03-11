@@ -36,7 +36,7 @@ set number              " Show line numbers
 set background=dark     " tell vim what the background color looks like
 set backspace=indent,eol,start " allow backspace to work normally
 set history=200         " how many : commands to save in history
-set ruler               " show the cursor position all the time
+set noruler               " show the cursor position all the time
 set showcmd             " display incomplete commands
 set hlsearch           " do incremental searching
 set incsearch           " do incremental searching
@@ -278,12 +278,12 @@ Plug 'easymotion/vim-easymotion'
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 let g:EasyMotion_use_upper = 1
 let g:EasyMotion_smartcase = 1
-let g:EasyMotion_keys =   'ASDGHKLQWERTYUIOPZXCVBNMFJ;' " should sort from easy to hard (left to right)
 " This will search before and after cursor in current pane
 nmap s <Plug>(easymotion-s)
 xmap s <Plug>(easymotion-s)
 nnoremap S <nop>
 
+" If using Tabs instead of buffers as tabs
 " when using alt keys make sure you can diasable the corresponding alt-menu key
 " in any other IDE's you may use
 " vscode has a way to turn off the menu and msvc has a way to turn off certain
@@ -397,6 +397,9 @@ call plug#end()
 "                 i = {
 "                     ["<esc>"] = actions.close,
 "                     ["<tab>"] = actions.add_selection,
+"                     -- atm, there is no way to do open-all-selected without writing your own thing
+"                     -- but it is on there todo list to have this built-in
+"                     ["<cr>"] = actions.???,
 "                 },
 "             },
 "             -- file_sorter =  require'telescope.sorters'.get_fuzzy_file,
@@ -619,9 +622,12 @@ autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 " Go to insert mode when switching to a terminal
 " Distinguish terminal by making cursor red
 let g:floaterm_borderchars=''
-let g:floaterm_position='center'
-let g:floaterm_width=0.80
-let g:floaterm_height=0.80
+let g:floaterm_position='right'
+let g:floaterm_width=0.40
+let g:floaterm_height=1.0
+" let g:floaterm_position='bottom'
+" let g:floaterm_width=1.0
+" let g:floaterm_height=0.40
 nnoremap <silent>   <c-\>   :FloatermToggle --winblend=100<CR>
 tnoremap <silent>   <c-\>   <C-\><C-n>:FloatermToggle<CR>
 " Esc quits the termial
@@ -684,19 +690,19 @@ nnoremap <leader>es :%s///gI<left><left><left>
 xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
 xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 
-" Move visual selections around
-" NOTE: `[ and `] are last line edit start/end
-xnoremap <a-k> xkP`[V`]
-xnoremap <a-j> xp`[V`]
-nnoremap <a-k> VxkP
-nnoremap <a-j> Vxp
-xnoremap <c-k> x{P`[V`]
-xnoremap <c-j> x}p`[V`]
-" NOTE: for horiz it be nice to find line boundaries or boundary pair first before moving to next space
-xnoremap <c-b> xBP`[v`]
-xnoremap <c-w> xWP`[v`]
-nnoremap <c-b> f<space>vBxBP`[v`]
-nnoremap <c-w> f<space>vBxWP`[v`]
+" " Move visual selections around
+" " NOTE: `[ and `] are last line edit start/end
+" xnoremap <a-k> xkP`[V`]
+" xnoremap <a-j> xp`[V`]
+" nnoremap <a-k> VxkP
+" nnoremap <a-j> Vxp
+" xnoremap <c-k> x{P`[V`]
+" xnoremap <c-j> x}p`[V`]
+" " NOTE: for horiz it be nice to find line boundaries or boundary pair first before moving to next space
+" xnoremap <c-b> xBP`[v`]
+" xnoremap <c-w> xWP`[v`]
+" nnoremap <c-b> f<space>vBxBP`[v`]
+" nnoremap <c-w> f<space>vBxWP`[v`]
 
 function! MakeAFileAndAddToGit(filename)
     execute 'edit ' . a:filename
