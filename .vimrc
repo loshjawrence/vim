@@ -439,7 +439,8 @@ EOF
   require'bufferline'.setup{
     -- override some options from their defaults
     options = {
-        tab_size = 10,
+        tab_size = 12,
+        max_name_length = 40,
         show_buffer_close_icons = false,
     },
     highlights = {
@@ -489,9 +490,9 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
-nnoremap <leader>as :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>am :MyGrep ""<left>
-nnoremap <leader>aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
+nnoremap <leader>as :Rooter<cr>:MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>am :Rooter<cr>:MyGrep ""<left>
+nnoremap <leader>aw :Rooter<cr>:let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
 nnoremap <leader>AS :MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
 nnoremap <leader>AW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
 " NOTE: rg's idea of word boundary is different from vim.
@@ -558,7 +559,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     -- Use a loop to conveniently both setup defined servers
     -- and map buffer local keybindings when the language server attaches
     -- tsserver(not useful)
-    local servers = {"jsonls", "tsserver", "clangd", "html", "bashls", "sumneko_lua", "cmake"}
+    local servers = {"jsonls", "clangd", "html", "bashls", "sumneko_lua", "cmake"}
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end
@@ -628,7 +629,7 @@ let g:floaterm_height=1.0
 " let g:floaterm_position='bottom'
 " let g:floaterm_width=1.0
 " let g:floaterm_height=0.40
-nnoremap <silent>   <c-\>   :FloatermToggle --winblend=100<CR>
+nnoremap <silent>   <c-\>   :FloatermToggle<CR>
 tnoremap <silent>   <c-\>   <C-\><C-n>:FloatermToggle<CR>
 " Esc quits the termial
 " NOTE: This is needed to make fzf and other termal based things not annoying
@@ -654,11 +655,12 @@ let g:terminal_color_13 = '#ad7fa8'
 let g:terminal_color_14 = '#00f5e9'
 let g:terminal_color_15 = '#eeeeec'
 highlight TermCursor ctermfg=red guifg=red
-nnoremap <silent>   <c-\>   :FloatermToggle --winblend=100<CR>
+nnoremap <silent>   <c-\>   :FloatermToggle<CR>
 " Set main floaterm window's background to black
-hi Floaterm guibg=black blend=30
-" Set floaterm border to black
-hi FloatermBorder guibg=black guifg=black blend=30
+" Set floaterm main and border to black
+set winblend=5 " set all floating windows transparent(0-100)
+hi Floaterm guibg=black
+hi FloatermBorder guibg=black guifg=black
 
 if has("nvim")
     set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
