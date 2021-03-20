@@ -493,15 +493,15 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
-nnoremap <leader>,s :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>,w :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
-" not sure i really need current-file-only version
-nnoremap <leader>,S :MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>,W :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
+nnoremap <leader>,as :let @w = "" <bar> MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>,aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
+" " not sure i really need current-file-only version
+" nnoremap <leader>,aS :let @w = "" <bar> MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+" nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
 " mapped to above. if you have something highlighted and it wasnt a word search, it will run the search version.
-" otherwise run the word version. you are responsible for <leader>cr and <leader>cd to control the directory from where its grepping
-nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>,w" : "<leader>,s" : "<leader>,w"
-nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>,W" : "<leader>,S" : "<leader>,W"
+" otherwise run the word version. a is for current dir of file (<leader>cd) and A is for root (<leader>cr)
+nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aw" : "<leader>cd<leader>,as" : "<leader>cd<leader>,aw"
+nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
 
 " g*			Like "*", but don't put "\<" and "\>" around the word.
 				" :let v:statusmsg = ""
@@ -516,10 +516,12 @@ nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>,W" : "<leader>,S
 " :h cword
 " :h s_flags (I is dont ignore, e is continue on error, g is all instances on line, c is confirm)
 " when doing something like :s//red/ the first arg is assumed to be previous search
-nnoremap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
-nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
+nnoremap <leader>,rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
+" nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
 " To be used with <leader>aw as it saves word under cursor to w register
-nnoremap <leader>rw :MyCdo %s/\V\<<c-r>w\>//gIe<left><left><left><left>
+nnoremap <leader>,rw :MyCdo %s/\<<c-r>w\>//gIe<left><left><left><left>
+" mapped to above if we took tha as or aw path above do the pick the right rs or rw
+nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 
 " COMPLETION
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
@@ -698,9 +700,13 @@ endif
 " NOTE: under cursor and phrase search works,i.e. word boundary when word under cursor and larger phrase respecting the \V very no magic
 " NOTE: leaving first arg blank in substitute will assume last search i.e. the / register
 " edit last search within vis selection
-xnoremap <leader>es :s///gI<left><left><left>
+xnoremap <leader>,es :s///gI<left><left><left>
+xnoremap <leader>,ew :s/<c-r><c-w>//gI<left><left><left>
 " edit last search across whole file
-nnoremap <leader>es :%s///gI<left><left><left>
+nnoremap <leader>,es :%s///gI<left><left><left>
+nnoremap <leader>,ew :%s/<c-r><c-w>//gI<left><left><left>
+xmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
+nmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
 
 " see "h <expr> and :help mode()
 " Make A and I work in vis line mode. They already work in the block bounds so leave that be.
