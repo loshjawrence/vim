@@ -372,9 +372,10 @@ Plug 'wellle/targets.vim'
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-colorscheme alduin2
 " make easy colorschemes with this
 Plug 'tjdevries/colorbuddy.vim'
+" Plug 'Th3Whit3Wolf/onebuddy'
+colorscheme alduin2
 " shouldnt be needed with treesitter
 " Plug 'sheerun/vim-polyglot'
 
@@ -384,6 +385,8 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'akinsho/nvim-bufferline.lua'
 
 call plug#end()
+
+" lua require('colorbuddy').colorscheme('alduinTS')
 
 " " telescope
 " lua << EOF
@@ -490,11 +493,23 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
-nnoremap <leader>as :Rooter<cr>:MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>am :Rooter<cr>:MyGrep ""<left>
-nnoremap <leader>aw :Rooter<cr>:let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
-nnoremap <leader>AS :MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>AW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
+nnoremap <leader>,s :MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>,w :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
+" not sure i really need current-file-only version
+nnoremap <leader>,S :MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>,W :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
+" mapped to above. if you have something highlighted and it wasnt a word search, it will run the search version.
+" otherwise run the word version. you are responsible for <leader>cr and <leader>cd to control the directory from where its grepping
+nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>,w" : "<leader>,s" : "<leader>,w"
+nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>,W" : "<leader>,S" : "<leader>,W"
+
+" g*			Like "*", but don't put "\<" and "\>" around the word.
+				" :let v:statusmsg = ""
+				" :silent verbose runtime foobar.vim
+				" :if v:statusmsg != ""
+				" :  " foobar.vim could not be found
+				" :endif
+
 " NOTE: rg's idea of word boundary is different from vim.
 " But <leader>rs command will not remove vim word boundary regex from the / register if it's there
 " things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
@@ -637,6 +652,7 @@ tnoremap <Esc> <C-\><C-n>:q<cr>
 tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
+
 " No fuss terminal colors
 let g:terminal_color_0  = '#2e3436'
 let g:terminal_color_1  = '#cc0000'
