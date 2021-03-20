@@ -229,6 +229,7 @@ command! -bang -nargs=? -complete=dir GFiles
 " v:oldfiles
 nnoremap <leader>fo :History<cr>
 nnoremap <leader>fm :Marks<cr>
+nnoremap <leader>b :Buffers<cr>
 
 " will eventually go into nvim proper
 Plug 'nvim-lua/popup.nvim'
@@ -372,9 +373,10 @@ Plug 'wellle/targets.vim'
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-colorscheme alduin2
 " make easy colorschemes with this
 Plug 'tjdevries/colorbuddy.vim'
+" Plug 'Th3Whit3Wolf/onebuddy'
+colorscheme alduin2
 " shouldnt be needed with treesitter
 " Plug 'sheerun/vim-polyglot'
 
@@ -384,6 +386,8 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'akinsho/nvim-bufferline.lua'
 
 call plug#end()
+
+" lua require('colorbuddy').colorscheme('alduinTS')
 
 " " telescope
 " lua << EOF
@@ -490,21 +494,35 @@ nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
-nnoremap <leader>as :Rooter<cr>:MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>am :Rooter<cr>:MyGrep ""<left>
-nnoremap <leader>aw :Rooter<cr>:let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
-nnoremap <leader>AS :MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>AW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
+nnoremap <leader>,as :let @w = "" <bar> MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>,aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
+" " not sure i really need current-file-only version
+" nnoremap <leader>,aS :let @w = "" <bar> MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+" nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
+" mapped to above. if you have something highlighted and it wasnt a word search, it will run the search version.
+" otherwise run the word version. a is for current dir of file (<leader>cd) and A is for root (<leader>cr)
+nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aw" : "<leader>cd<leader>,as" : "<leader>cd<leader>,aw"
+nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
+
+" g*            Like "*", but don't put "\<" and "\>" around the word.
+                " :let v:statusmsg = ""
+                " :silent verbose runtime foobar.vim
+                " :if v:statusmsg != ""
+                " :  " foobar.vim could not be found
+                " :endif
+
 " NOTE: rg's idea of word boundary is different from vim.
 " But <leader>rs command will not remove vim word boundary regex from the / register if it's there
 " things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
 " :h cword
 " :h s_flags (I is dont ignore, e is continue on error, g is all instances on line, c is confirm)
 " when doing something like :s//red/ the first arg is assumed to be previous search
-nnoremap <leader>rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
-nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
+nnoremap <leader>,rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
+" nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
 " To be used with <leader>aw as it saves word under cursor to w register
-nnoremap <leader>rw :MyCdo %s/\V\<<c-r>w\>//gIe<left><left><left><left>
+nnoremap <leader>,rw :MyCdo %s/\<<c-r>w\>//gIe<left><left><left><left>
+" mapped to above if we took tha as or aw path above do the pick the right rs or rw
+nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 
 " COMPLETION
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
@@ -637,6 +655,7 @@ tnoremap <Esc> <C-\><C-n>:q<cr>
 tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
+
 " No fuss terminal colors
 let g:terminal_color_0  = '#2e3436'
 let g:terminal_color_1  = '#cc0000'
@@ -682,9 +701,13 @@ endif
 " NOTE: under cursor and phrase search works,i.e. word boundary when word under cursor and larger phrase respecting the \V very no magic
 " NOTE: leaving first arg blank in substitute will assume last search i.e. the / register
 " edit last search within vis selection
-xnoremap <leader>es :s///gI<left><left><left>
+xnoremap <leader>,es :s///gI<left><left><left>
+xnoremap <leader>,ew :s/<c-r><c-w>//gI<left><left><left>
 " edit last search across whole file
-nnoremap <leader>es :%s///gI<left><left><left>
+nnoremap <leader>,es :%s///gI<left><left><left>
+nnoremap <leader>,ew :%s/<c-r><c-w>//gI<left><left><left>
+xmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
+nmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
 
 " see "h <expr> and :help mode()
 " Make A and I work in vis line mode. They already work in the block bounds so leave that be.
@@ -844,7 +867,9 @@ nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
 " Source the vimrc so we don't have to refresh
-nnoremap <silent> <leader>vs :wa! <bar> so $MYVIMRC <bar> e<cr>
+" :e is required to actually pick up vimrc changes
+" the M is there to center the mouse cursor other wise the screen will scroll when doing :e
+nnoremap <silent> <leader>vs :wa! <bar> so $MYVIMRC <cr> M:e<cr>
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
 " Diff the current local vimrc against master
