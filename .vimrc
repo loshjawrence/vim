@@ -229,6 +229,7 @@ command! -bang -nargs=? -complete=dir GFiles
 " v:oldfiles
 nnoremap <leader>fo :History<cr>
 nnoremap <leader>fm :Marks<cr>
+nnoremap <leader>b :Buffers<cr>
 
 " will eventually go into nvim proper
 Plug 'nvim-lua/popup.nvim'
@@ -503,12 +504,12 @@ nnoremap <leader>,aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
 nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aw" : "<leader>cd<leader>,as" : "<leader>cd<leader>,aw"
 nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
 
-" g*			Like "*", but don't put "\<" and "\>" around the word.
-				" :let v:statusmsg = ""
-				" :silent verbose runtime foobar.vim
-				" :if v:statusmsg != ""
-				" :  " foobar.vim could not be found
-				" :endif
+" g*            Like "*", but don't put "\<" and "\>" around the word.
+                " :let v:statusmsg = ""
+                " :silent verbose runtime foobar.vim
+                " :if v:statusmsg != ""
+                " :  " foobar.vim could not be found
+                " :endif
 
 " NOTE: rg's idea of word boundary is different from vim.
 " But <leader>rs command will not remove vim word boundary regex from the / register if it's there
