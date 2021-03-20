@@ -866,7 +866,9 @@ nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
 " Source the vimrc so we don't have to refresh
-nnoremap <silent> <leader>vs :wa! <bar> so $MYVIMRC <bar> e<cr>
+" :e is required to actually pick up vimrc changes
+" the M is there to center the mouse cursor other wise the screen will scroll when doing :e
+nnoremap <silent> <leader>vs :wa! <bar> so $MYVIMRC <cr> M:e<cr>
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
 " Diff the current local vimrc against master
