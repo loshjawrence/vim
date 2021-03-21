@@ -576,8 +576,9 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 
     -- Use a loop to conveniently both setup defined servers
     -- and map buffer local keybindings when the language server attaches
-    -- tsserver(not useful)
-    local servers = {"jsonls", "clangd", "html", "bashls", "sumneko_lua", "cmake"}
+    -- tsserver(slow)
+    -- see installSteps.txt in vim repo for installing servers via npm and pip3
+    local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "pyls", "tsserver", "sumneko_lua" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end

@@ -89,8 +89,29 @@ ctags --version
 most can be installed with :LspInstall <ls name>
 clangd:
 linux: `sudo apt update -y; sudo apt install -y clangd`
-cmake-language-server:
 pip3 install cmake-language-server
+pip3 install python-language-server
+npm install -g bash-language-server
+npm install -g vim-language-server
+npm install -g typescript-language-server
+npm install -g vscode-json-languageserver
+
+https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
+cd; cd clones; git clone https://github.com/sumneko/lua-language-server;
+cd lua-language-server
+git submodule update --init --recursive
+cd 3rd/luamake
+ninja -f ninja/linux.ninja
+cd ../..
+./3rd/luamake/luamake rebuild
+./bin/Linux/lua-language-server -E ./main.lua
+
+https://github.com/svenstaro/glsl-language-server
+cd; cd clones; git clone git@github.com:svenstaro/glsl-language-server.git
+cd glsl-language-server
+git submodule update --init
+cmake -Bbuild -GNinja
+ninja -Cbuild
 
 # Clangd
 ========
