@@ -380,10 +380,20 @@ Plug 'wellle/targets.vim'
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-" make easy colorschemes with this
-Plug 'tjdevries/colorbuddy.vim'
-" Plug 'Th3Whit3Wolf/onebuddy'
+Plug 'Junza/Spink'
+" close to original magicka, could use as base (dark green, black, red, cream)
+Plug 'marcelbeumer/spacedust.vim'
+" colorscheme alduin
+" diff from alduin: baby blue gone, hlsearch is red
 colorscheme alduin2
+" colorscheme Spink
+" colorscheme spacedust
+" " Decent default scheme
+" colorscheme slate
+
+" Colorscheme designer
+" Plug 'lifepillar/vim-colortemplate'
+
 " shouldnt be needed with treesitter
 " Plug 'sheerun/vim-polyglot'
 
@@ -393,8 +403,6 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'akinsho/nvim-bufferline.lua'
 
 call plug#end()
-
-" lua require('colorbuddy').colorscheme('alduinTS')
 
 " " telescope
 " lua << EOF
