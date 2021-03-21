@@ -320,6 +320,7 @@ nnoremap S <nop>
 " https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
 " https://vim.fandom.com/wiki/Omni_completion
 "NOTE: see the minimal vimrc here https://github.com/nvim-lua/completion-nvim/issues/143
+" NOTE: for lsps see install steps for installing via npm and pip3
 Plug 'anott03/nvim-lspinstall'
 " lspconfig got rid of :LspInstall so you need anott03's plugin
 Plug 'neovim/nvim-lspconfig'
@@ -451,6 +452,7 @@ call plug#end()
   require'colorizer'.setup{}
 EOF
 
+" nvim-bufferline
 " NOTE: Must go after plug#end()
 :lua << EOF
   local hlColor = "GreenYellow"
@@ -563,7 +565,9 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
 :lua << EOF
     require'nvim-treesitter.configs'.setup {
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json" },
+        -- NOTE: if you get errors related to abi or anything with treesitter
+        -- you may have to update your version of neovim, see neovim section of installSteps.txt
+        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json" , "python", },
         highlight = {
             enable = true,
         },
@@ -594,6 +598,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     -- tsserver(slow)
     -- see installSteps.txt in vim repo for installing servers via npm and pip3
     local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "pyls", "tsserver", "sumneko_lua" }
+    -- local servers = { "vimls", "sumneko_lua" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end
@@ -764,18 +769,6 @@ nnoremap <leader>mf :call MakeAFileAndAddToGit("")<left><left>
 nnoremap / /\V
 vnoremap / /\V
 
-if has("win32") && has("gui_running")
-    " Resize window
-    set lines=999
-    set columns=255
-    " Grow active split horizontally
-    nnoremap <s-left> :set columns-=8<cr>
-    nnoremap <s-right> :set columns+=8<cr>
-    " Grow active split vertically
-    nnoremap <s-down> :set lines-=8<cr>
-    nnoremap <s-up> :set lines+=8<cr>
-endif
-
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
 " For this single scroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
@@ -815,10 +808,7 @@ tnoremap <c-j> <c-\><c-n><c-w>j
 tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
 
-" nnoremap <a-0> :cnext<cr>
-" nnoremap <a-9> :cprevious<cr>
-" nnoremap ) :lnext<cr>
-" nnoremap ( :lprevious<cr>
+" quickfix list and local list (local list is local to buffer, i think)
 nnoremap <a-n> :cnext<cr>
 nnoremap <a-p> :cprevious<cr>
 nnoremap <a-s-n> :lnext<cr>

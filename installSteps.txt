@@ -57,9 +57,13 @@ git tag
 git checkout tags/desired_version_number -b tagName-branch
 (or just use master for latest)
 rm -rf build
+make distclean
 make CMAKE_BUILD_TYPE=Release
 sudo make install
 git branch -D tagName-branch
+
+May have to do this for the treesitter stuff
+:TSUinstall all
 
 
 # UNINSTALL NEOVIM:
@@ -93,8 +97,8 @@ pip3 install cmake-language-server
 pip3 install python-language-server
 npm install -g bash-language-server
 npm install -g vim-language-server
-npm install -g typescript-language-server
 npm install -g vscode-json-languageserver
+npm install -g typescript-language-server
 
 https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
 cd; cd clones; git clone https://github.com/sumneko/lua-language-server;
