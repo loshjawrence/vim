@@ -260,8 +260,15 @@ Plug 'tpope/vim-surround'
 " Framework for enabling repeat command on plugin commands
 " The plugin itself must explicitly support it though
 Plug 'tpope/vim-repeat'
-
 Plug 'jiangmiao/auto-pairs'
+" add more pairs, first line is default
+let b:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''",
+            \ '<':'>' }
+" Turn off mappings
+let g:AutoPairsShortcutJump=''
+let g:AutoPairsShortcutBackInsert=''
+let g:AutoPairsShortcutFastWrap=''
+let g:AutoPairsShortcutToggle=''
 
 " QUICKFIX LIST
 " can dd, visual delete and other things like undo, :v/someText/d (keep lines containing someText) or :g/someText/d (delete lines containing someText)
@@ -567,11 +574,11 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
         -- Mappings.
         local opts = { noremap=true, silent=true }
         buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-        buf_set_keymap('n', 'gk', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+        buf_set_keymap('n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         -- rename does not work, but can use *<leader>ar<leader>rs for a more accurate rename over *<leader>as<leader>rs
-        -- buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-        buf_set_keymap('n', '<leader>ar', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        buf_set_keymap('n', '<leader>ae', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+        -- buf_set_keymap('gs', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+        buf_set_keymap('n', 'gr', '<cmd>let @w = "<c-r><c-w>" <bar> lua vim.lsp.buf.references()<cr>', opts)
+        buf_set_keymap('n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
     end
 
     -- Use a loop to conveniently both setup defined servers
@@ -593,7 +600,6 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     --     cmd = { "clangd", "-j=1", "--log=verbose" };
     --     -- on_attach = on_attach
     -- }
-
 EOF
 
 " Presentation mode. Need a dir full of .vpm files (number them, for example, 00.vpm) and goyo plugin
@@ -800,6 +806,15 @@ tnoremap <c-h> <c-\><c-n><c-w>h
 tnoremap <c-j> <c-\><c-n><c-w>j
 tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
+
+" nnoremap <a-0> :cnext<cr>
+" nnoremap <a-9> :cprevious<cr>
+" nnoremap ) :lnext<cr>
+" nnoremap ( :lprevious<cr>
+nnoremap <a-n> :cnext<cr>
+nnoremap <a-p> :cprevious<cr>
+nnoremap <a-s-n> :lnext<cr>
+nnoremap <a-s-p> :lprevious<cr>
 
 " COLORCOLUMN
 " CURSORLINE (can be slower in some terminals)
