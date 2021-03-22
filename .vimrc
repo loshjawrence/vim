@@ -329,6 +329,11 @@ Plug 'nvim-lua/completion-nvim'
 " :TSInstall c cpp bash lua typescript html c_sharp
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+" " basically a ref searcher without lsp/tags
+" " <leader>j pulls up floating window to jump
+" " <leader>j pulls up floating window to jump
+" Plug 'pechorin/any-jump.vim'
+
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
 
