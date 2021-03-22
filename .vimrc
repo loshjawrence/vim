@@ -518,8 +518,10 @@ nnoremap <leader>,aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
 " nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
 " mapped to above. if you have something highlighted and it wasnt a word search, it will run the search version.
 " otherwise run the word version. a is for current dir of file (<leader>cd) and A is for root (<leader>cr)
-nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aw" : "<leader>cd<leader>,as" : "<leader>cd<leader>,aw"
-nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
+" rg from current files directory
+nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aw" : "<leader>cd<leader>,as" : "<leader>cd<leader>,aw"
+" rg from root, make sure .gitignore is ignoring things
+nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
 
 " g*            Like "*", but don't put "\<" and "\>" around the word.
                 " :let v:statusmsg = ""
@@ -809,6 +811,10 @@ tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
 
 " quickfix list and local list (local list is local to buffer, i think)
+nnoremap <a-c>c :cclose<cr>
+nnoremap <a-c>o :copen<cr>
+nnoremap <a-s-c>c :lclose<cr>
+nnoremap <a-s-c>o :lopen<cr>
 nnoremap <a-n> :cnext<cr>
 nnoremap <a-p> :cprevious<cr>
 nnoremap <a-s-n> :lnext<cr>
