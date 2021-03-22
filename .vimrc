@@ -649,6 +649,7 @@ autocmd BufWinLeave * call clearmatches()
 " Manually remove whitespace, replace tabs with 4 spaces
 nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
+" TODO: lookup new-filetype and ftdetect and create custom types for glsl hlsl
 " FILETYPE filetype
 " Associate filetypes with other filetypes
 autocmd BufRead,BufNewFile *.asm set filetype=asm
