@@ -183,7 +183,7 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
 " in terminal see rg --help for optoins to ripgrep 12
 " set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
-set grepprg=rg\ --vimgrep\ --glob\ !tags
+set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/source/**'
 
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
@@ -816,9 +816,9 @@ noremap <silent> R <nop>
 " zo zc open/close fold
 
 " NOTE: was cause of slowness at one point
-set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
-" xnoremap <c-y> "+y
-" nnoremap <c-p> "+p
+" set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+xnoremap <c-y> "+y
+nnoremap <c-p> "+p
 
 " Some default swaps
 noremap J }
