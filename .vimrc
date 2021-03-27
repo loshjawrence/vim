@@ -325,6 +325,7 @@ Plug 'anott03/nvim-lspinstall'
 " lspconfig got rid of :LspInstall so you need anott03's plugin
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
+Plug 'steelsojka/completion-buffers'
 " :TSInstallInfo lists all the languages
 " :TSInstall c cpp bash lua typescript html c_sharp
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -554,14 +555,7 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 set completeopt=menuone,noinsert,noselect
-let g:completion_trigger_on_delete = 1
-let g:completion_enable_auto_paren = 1
-" its default, but if you want a consitant list
-let g:completion_sorting = 'alphabet'
-" too laggy atm
-let g:completion_enable_auto_hover = 0
 
-command! Format execute 'lua vim.lsp.buf.formatting()'
 " lsp config
 " https://github.com/neovim/nvim-lspconfig
   " Check that an LSP client has attached to the current buffer:  >
@@ -570,6 +564,27 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
   "     make sure no ERRORS in
   "     :lua vim.cmd('e'..vim.lsp.get_log_path())
 :lua << EOF
+    ----------------
+    -- COMPLETION --
+    ----------------
+    vim.g.completion_chain_complete_list = {
+        default = {
+            { complete_items = { 'lsp' } },
+            { complete_items = { 'buffers' } },
+            { mode = { '<c-p>' } },
+            { mode = { '<c-n>' } }
+        },
+    }
+    vim.g.completion_auto_change_source = 1
+    vim.g.completion_trigger_on_delete = 1
+    vim.g.completion_enable_auto_paren = 1
+    vim.g.completion_sorting = 'none' -- none, length, alphabet
+    vim.g.completion_enable_auto_hover = 1 -- too laggy atm
+    vim.g.completion_timer_cycle = 200 -- default value is 80
+
+    ----------------
+    -- TREESITTER --
+    ----------------
     require'nvim-treesitter.configs'.setup {
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- NOTE: if you get errors related to abi or anything with treesitter
@@ -579,8 +594,12 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
             enable = true,
         },
     }
+
+    ----------------
+    -- LSPCONFIG  --
+    ----------------
     local nvim_lsp = require('lspconfig')
-    vim.lsp.set_log_level("debug")
+    -- vim.lsp.set_log_level("debug")
     local on_attach = function(client, bufnr)
         require'completion'.on_attach()
 
@@ -598,19 +617,21 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
         -- buf_set_keymap('gs', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         buf_set_keymap('n', 'gr', '<cmd>let @w = "<c-r><c-w>" <bar> lua vim.lsp.buf.references()<cr>', opts)
         buf_set_keymap('n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
+        buf_set_keymap('n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
     end
 
     -- Use a loop to conveniently both setup defined servers
     -- and map buffer local keybindings when the language server attaches
     -- tsserver(slow)
     -- see installSteps.txt in vim repo for installing servers via npm and pip3
-    local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
     -- local servers = { "vimls", "sumneko_lua" }
+    local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end
 
     -- -- NOTE: use these for debug info
+    -- -- uncomment vim.lsp.set_log_level("debug") above
     -- -- :lua print(vim.inspect(vim.lsp.buf_get_clients()))
     -- -- :LspInfo
     -- -- to look in the lsp's log:
@@ -795,9 +816,9 @@ noremap <silent> R <nop>
 " zo zc open/close fold
 
 " NOTE: was cause of slowness at one point
-" set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
-xnoremap <c-y> "+y
-nnoremap <c-p> "+p
+set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+" xnoremap <c-y> "+y
+" nnoremap <c-p> "+p
 
 " Some default swaps
 noremap J }
