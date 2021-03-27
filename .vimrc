@@ -498,7 +498,7 @@ nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
 nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
 
 " kill buffer tab
-nnoremap <silent> <a-q> :silent! up! <bar> silent! bd! <bar> call BufferLineCycleNext() <cr>
+nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
 
 " see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
 " There was a comment about making sure .viminfo is read/write
@@ -787,10 +787,17 @@ noremap <silent> <c-f> <nop>
 noremap <silent> <c-u> 12<c-y>
 noremap <silent> <c-d> 12<c-e>
 
+" Just annoying
+noremap <silent> R <nop>
+
+" Folds
+" zR zM open/close all folds
+" zo zc open/close fold
+
 " NOTE: was cause of slowness at one point
-set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
-" xnoremap <c-y> "+y
-" nnoremap <c-p> "+p
+" set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
+xnoremap <c-y> "+y
+nnoremap <c-p> "+p
 
 " Some default swaps
 noremap J }
