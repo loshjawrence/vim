@@ -574,7 +574,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- NOTE: if you get errors related to abi or anything with treesitter
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
-        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json" , "python", },
+        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json" },
         highlight = {
             enable = true,
         },
@@ -604,7 +604,7 @@ command! Format execute 'lua vim.lsp.buf.formatting()'
     -- and map buffer local keybindings when the language server attaches
     -- tsserver(slow)
     -- see installSteps.txt in vim repo for installing servers via npm and pip3
-    local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "pyls", "tsserver", "sumneko_lua" }
+    local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
     -- local servers = { "vimls", "sumneko_lua" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
