@@ -183,7 +183,7 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
 " in terminal see rg --help for optoins to ripgrep 12
 " set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
-set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/source/**'
+set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'
 
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
