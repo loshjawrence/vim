@@ -183,7 +183,7 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
 " in terminal see rg --help for optoins to ripgrep 12
 " set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
-set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'
+set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'
 
 let baseDataFolder="~/.vim"
 call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
@@ -845,12 +845,12 @@ tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
 
 " quickfix list and local list (local list is local to buffer, i think)
-nnoremap <a-c>c :cclose<cr>
 nnoremap <a-c>o :copen<cr>
-nnoremap <a-s-c>c :lclose<cr>
-nnoremap <a-s-c>o :lopen<cr>
+" nnoremap <a-c>c :cclose<cr>
 nnoremap <a-n> :cnext<cr>
 nnoremap <a-p> :cprevious<cr>
+nnoremap <a-s-c>o :lopen<cr>
+" nnoremap <a-s-c>c :lclose<cr>
 nnoremap <a-s-n> :lnext<cr>
 nnoremap <a-s-p> :lprevious<cr>
 
