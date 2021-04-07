@@ -407,18 +407,17 @@ colorscheme alduin2
 Plug 'norcalli/nvim-colorizer.lua'
 
 " Buffers as tabs setup
-" NOTE: Broken (i think) atm. Use airline for now.
-" Plug 'akinsho/nvim-bufferline.lua'
-
-Plug 'vim-airline/vim-airline'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_section_a=''
-let g:airline_section_b=''
-let g:airline_section_c=''
-let g:airline_section_x=''
-let g:airline_section_y=''
-let g:airline_section_z=''
-let g:airline_skip_empty_sections = 1
+Plug 'akinsho/nvim-bufferline.lua'
+" NOTE: if bufferline breaks use airline as backup
+" Plug 'vim-airline/vim-airline'
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline_section_a=''
+" let g:airline_section_b=''
+" let g:airline_section_c=''
+" let g:airline_section_x=''
+" let g:airline_section_y=''
+" let g:airline_section_z=''
+" let g:airline_skip_empty_sections = 1
 
 call plug#end()
 
@@ -470,30 +469,30 @@ call plug#end()
 EOF
 
 " NOTE: Must go after plug#end()
-" " nvim-bufferline
-" :lua << EOF
-"   local hlColor = "GreenYellow"
-"   -- local hlColor = "LemonChiffon3"
-"   require'bufferline'.setup{
-"     -- override some options from their defaults
-"     options = {
-"         tab_size = 12,
-"         max_name_length = 40,
-"         show_buffer_close_icons = false,
-"     },
-"      highlights = {
-"          buffer_selected = {
-"              guifg = "Black",
-"              guibg = hlColor,
-"              gui = "bold",
-"          },
-"          -- Accent the split buffer thats not selected
-"          buffer_visible = {
-"              guifg = hlColor,
-"          },
-"      },
-"   }
-" EOF
+" nvim-bufferline
+:lua << EOF
+  local hlColor = "GreenYellow"
+  -- local hlColor = "LemonChiffon3"
+  require'bufferline'.setup{
+    -- override some options from their defaults
+    options = {
+        tab_size = 12,
+        max_name_length = 40,
+        show_buffer_close_icons = false,
+    },
+     highlights = {
+         buffer_selected = {
+             guifg = "Black",
+             guibg = hlColor,
+             gui = "bold",
+         },
+         -- Accent the split buffer thats not selected
+         buffer_visible = {
+             guifg = hlColor,
+         },
+     },
+  }
+EOF
 
 " Add the terminal to unlisted buffers so that buffer line doesnt show it
 " NOTE: Tried all the Buf* stuff but only this one seemed to work
@@ -502,10 +501,8 @@ autocmd BufLeave bash* setlocal nobuflisted
 
 " These commands will honor the custom ordering if you change the order of buffers.
 " The vim commands :bnext and :bprevious will not respect the custom ordering.
-" nnoremap <silent><a-l> :BufferLineCycleNext<CR>
-" nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
-nnoremap <silent><a-l> :bnext<CR>
-nnoremap <silent><a-h> :bprevious<CR>
+nnoremap <silent><a-l> :BufferLineCycleNext<CR>
+nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
 
 " These commands will move the current buffer backwards or forwards in the bufferline.
 nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
