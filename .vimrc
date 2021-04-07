@@ -412,7 +412,6 @@ Plug 'norcalli/nvim-colorizer.lua'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-let g:airline_extensions = []
 let g:airline#extensions#tabline#enabled = 1
 
 call plug#end()
