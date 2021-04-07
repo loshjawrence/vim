@@ -407,7 +407,13 @@ colorscheme alduin2
 Plug 'norcalli/nvim-colorizer.lua'
 
 " Buffers as tabs setup
-Plug 'akinsho/nvim-bufferline.lua'
+" NOTE: Broken (i think) atm. Use airline for now.
+" Plug 'akinsho/nvim-bufferline.lua'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+let g:airline_extensions = []
+let g:airline#extensions#tabline#enabled = 1
 
 call plug#end()
 
@@ -458,31 +464,31 @@ call plug#end()
   require'colorizer'.setup{}
 EOF
 
-" nvim-bufferline
 " NOTE: Must go after plug#end()
-:lua << EOF
-  local hlColor = "GreenYellow"
-  -- local hlColor = "LemonChiffon3"
-  require'bufferline'.setup{
-    -- override some options from their defaults
-    options = {
-        tab_size = 12,
-        max_name_length = 40,
-        show_buffer_close_icons = false,
-    },
-    highlights = {
-        buffer_selected = {
-            guifg = "Black",
-            guibg = hlColor,
-            gui = "bold",
-        },
-        -- Accent the split buffer thats not selected
-        buffer_visible = {
-            guifg = hlColor,
-        },
-    },
-  }
-EOF
+" " nvim-bufferline
+" :lua << EOF
+"   local hlColor = "GreenYellow"
+"   -- local hlColor = "LemonChiffon3"
+"   require'bufferline'.setup{
+"     -- override some options from their defaults
+"     options = {
+"         tab_size = 12,
+"         max_name_length = 40,
+"         show_buffer_close_icons = false,
+"     },
+"      highlights = {
+"          buffer_selected = {
+"              guifg = "Black",
+"              guibg = hlColor,
+"              gui = "bold",
+"          },
+"          -- Accent the split buffer thats not selected
+"          buffer_visible = {
+"              guifg = hlColor,
+"          },
+"      },
+"   }
+" EOF
 
 " Add the terminal to unlisted buffers so that buffer line doesnt show it
 " NOTE: Tried all the Buf* stuff but only this one seemed to work
@@ -491,8 +497,10 @@ autocmd BufLeave bash* setlocal nobuflisted
 
 " These commands will honor the custom ordering if you change the order of buffers.
 " The vim commands :bnext and :bprevious will not respect the custom ordering.
-nnoremap <silent><a-l> :BufferLineCycleNext<CR>
-nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+" nnoremap <silent><a-l> :BufferLineCycleNext<CR>
+" nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+nnoremap <silent><a-l> :bnext<CR>
+nnoremap <silent><a-h> :bprevious<CR>
 
 " These commands will move the current buffer backwards or forwards in the bufferline.
 nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
@@ -563,6 +571,7 @@ set completeopt=menuone,noinsert,noselect
   "     :LspInfo
   "     make sure no ERRORS in
   "     :lua vim.cmd('e'..vim.lsp.get_log_path())
+nnoremap <leader><leader> :LspRestart<cr>
 :lua << EOF
     ----------------
     -- COMPLETION --
@@ -605,7 +614,7 @@ set completeopt=menuone,noinsert,noselect
 
         local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
         local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-        local cbufnvim = vim.api.nvim_exec('echo bufnr("%")', true)
+        -- local cbufnvim = vim.api.nvim_exec('echo bufnr("%")', true)
 
         buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
