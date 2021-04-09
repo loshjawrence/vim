@@ -183,6 +183,8 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
 " in terminal see rg --help for optoins to ripgrep 12
 " set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
+" NOTE: these globs work when you cd to root with Rooter using <leader>cr
+" <leader>a does this automatically
 set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'
 
 let baseDataFolder="~/.vim"
@@ -528,14 +530,18 @@ command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
 nnoremap <leader>,as :let @w = "" <bar> MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>,aw :let @w = "<c-r><c-w>" <bar> MyGrep "<c-r><c-w>" "-w"<cr>
+nnoremap <leader>,aw :let @w = "<c-r><c-w>" <bar> MyGrep "-w" "<c-r><c-w>"<cr>
+" Same as above but include current dir with -g */**
+" used in <leader>A
+nnoremap <leader>,aS :let @w = "" <bar> MyGrep "-g" "*/**" "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrep "-w" "-g" "*/**" "<c-r><c-w>"<cr>
 " " not sure i really need current-file-only version
 " nnoremap <leader>,aS :let @w = "" <bar> MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
 " nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
 " mapped to above. if you have something highlighted and it wasnt a word search, it will run the search version.
 " otherwise run the word version. a is for current dir of file (<leader>cd) and A is for root (<leader>cr)
 " rg from current files directory
-nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aw" : "<leader>cd<leader>,as" : "<leader>cd<leader>,aw"
+nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aW" : "<leader>cd<leader>,aS" : "<leader>cd<leader>,aW"
 " rg from root, make sure .gitignore is ignoring things
 nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
 
