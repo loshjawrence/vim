@@ -912,7 +912,7 @@ nnoremap < <<
 nnoremap > >>
 
 " indent scope
-nnoremap == =i{<c-o>
+nnoremap == ms=i{`s
 
 " replay macro (qq to start recording, q to stop)
 nnoremap Q @q
