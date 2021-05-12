@@ -32,7 +32,7 @@ syntax enable    " syntax highlighting
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set nrformats-=octal
 set number              " Show line numbers
-" set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
+set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
 set background=dark     " tell vim what the background color looks like
 set backspace=indent,eol,start " allow backspace to work normally
 set history=200         " how many : commands to save in history
@@ -838,10 +838,10 @@ xnoremap <c-y> "+y
 nnoremap <c-p> "+p
 
 " Some default swaps
-noremap J }
-noremap K {
-noremap { J
-noremap } K
+" noremap J }
+" noremap K {
+" noremap { J
+" noremap } K
 " noremap H ^
 " noremap L $
 " noremap $ L
