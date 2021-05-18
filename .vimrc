@@ -794,7 +794,7 @@ autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 " Distinguish terminal by making cursor red
 let g:floaterm_borderchars=''
 let g:floaterm_position='right'
-let g:floaterm_width=0.40
+let g:floaterm_width=0.60
 let g:floaterm_height=1.0
 " let g:floaterm_position='bottom'
 " let g:floaterm_width=1.0
@@ -829,7 +829,7 @@ highlight TermCursor ctermfg=red guifg=red
 nnoremap <silent>   <c-\>   :FloatermToggle<CR>
 " Set main floaterm window's background to black
 " Set floaterm main and border to black
-set winblend=5 " set all floating windows transparent(0-100)
+set winblend=15 " set all floating windows transparent(0-100)
 hi Floaterm guibg=black
 hi FloatermBorder guibg=black guifg=black
 
