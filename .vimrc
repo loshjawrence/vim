@@ -921,6 +921,7 @@ noremap <silent> R <nop>
 " NOTE: was cause of slowness at one point
 " set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
 xnoremap <c-y> "+y
+xnoremap <c-p> "+p
 nnoremap <c-p> "+p
 
 " Some default swaps
