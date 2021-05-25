@@ -783,6 +783,7 @@ autocmd BufRead,BufNewFile *.frag   set filetype=cpp
 autocmd BufRead,BufNewFile *.glsl   set filetype=cpp
 autocmd BufRead,BufNewFile *.hlsl   set filetype=cpp
 autocmd BufRead,BufNewFile *.md     set filetype=markdown
+autocmd BufRead,BufNewFile *.txt     set filetype=cpp
 " Enable spellchecking for Markdown
 autocmd FileType markdown setlocal spell
 " add support for comments in json (jsonc format used as configuration for many utilities)
