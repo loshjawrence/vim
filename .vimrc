@@ -59,7 +59,8 @@ set hidden              " enable hidden unsaved buffers
 silent! helptags ALL    " Generate help doc for all plugins
 " set iskeyword+=-        " Add chars that count as word boundaries. test: asdf-asdf
 set enc=utf-8 fenc=utf-8 termencoding=utf-8 " set UTF-8 encoding
-set complete+=kspell " Autocomplete with dictionary words when spell check is on
+set spell               " turn on spell check
+set complete+=kspell    " Turns off spell checking on code. Autocomplete with dictionary words when spell check is on.
 set nobackup
 set nowritebackup
 set noswapfile
