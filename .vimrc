@@ -547,42 +547,6 @@ call plug#end()
 " " for colorscheme highlights
 " " nnoremap <leader>fh :lua require('telescope.builtin').highlights()<cr>
 
-" NOTE: Must go after plug#end()
-:lua << EOF
-  require'colorizer'.setup{}
-EOF
-
-" NOTE: Must go after plug#end()
-:lua << EOF
-  require'colorizer'.setup{}
-EOF
-
-" NOTE: Must go after plug#end()
-" nvim-bufferline
-:lua << EOF
-  local hlColor = "GreenYellow"
-  -- local hlColor = "LemonChiffon3"
-  require'bufferline'.setup{
-    -- override some options from their defaults
-    options = {
-        tab_size = 12,
-        max_name_length = 40,
-        show_buffer_close_icons = false,
-    },
-     highlights = {
-         buffer_selected = {
-             guifg = "Black",
-             guibg = hlColor,
-             gui = "bold",
-         },
-         -- Accent the split buffer thats not selected
-         buffer_visible = {
-             guifg = hlColor,
-         },
-     },
-  }
-EOF
-
 " Add the terminal to unlisted buffers so that buffer line doesnt show it
 " NOTE: Tried all the Buf* stuff but only this one seemed to work
 " and so it only gets removed from buffer tabs when you leave the terminal
@@ -668,6 +632,36 @@ set completeopt=menuone,noinsert,noselect
   "     :lua vim.cmd('e'..vim.lsp.get_log_path())
 nnoremap <leader><leader> :LspRestart<cr>
 :lua << EOF
+    ------------------
+    --- COLORIZER ----
+    ------------------
+    require'colorizer'.setup{}
+
+    ------------------
+    --- BUFFERLINE ---
+    ------------------
+    local hlColor = "GreenYellow"
+    -- local hlColor = "LemonChiffon3"
+    require'bufferline'.setup{
+        -- override some options from their defaults
+        options = {
+            tab_size = 12,
+            max_name_length = 40,
+            show_buffer_close_icons = false,
+        },
+        highlights = {
+            buffer_selected = {
+                guifg = "Black",
+                guibg = hlColor,
+                gui = "bold",
+            },
+            -- Accent the split buffer thats not selected
+            buffer_visible = {
+                guifg = hlColor,
+            },
+        },
+    }
+
     ----------------
     -- COMPLETION --
     ----------------
