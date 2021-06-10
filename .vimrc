@@ -32,7 +32,7 @@ syntax enable    " syntax highlighting
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set nrformats-=octal
 set number              " Show line numbers
-set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
+" set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
 set background=dark     " tell vim what the background color looks like
 set backspace=indent,eol,start " allow backspace to work normally
 set history=200         " how many : commands to save in history
@@ -286,13 +286,23 @@ Plug 'dstein64/vim-startuptime'
 
 " Type s and a char of interesst then the colored letters at the char to jump to it.
 Plug 'easymotion/vim-easymotion'
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
+let g:EasyMotion_do_mapping = 0 " Disable default mappings, set our own
 let g:EasyMotion_use_upper = 1
 let g:EasyMotion_smartcase = 1
 " This will search before and after cursor in current pane
-nmap s <Plug>(easymotion-s)
-xmap s <Plug>(easymotion-s)
+" Single char search
+" nmap s <Plug>(easymotion-bd-f)
+" Start a vis then search. Will move the end of the select to that point.
+" xmap s <Plug>(easymotion-bd-f)
+" Double char search
+" -overwin- isn't working bd is just the buffer.
+nmap s <Plug>(easymotion-bd-f2)
+xmap s <Plug>(easymotion-bd-f2)
 nnoremap S <nop>
+xnoremap S <nop>
+" A way to disable linter while easymotioning
+" autocmd User EasyMotionPromptBegin silent! CocDisable
+" autocmd User EasyMotionPromptEnd silent! CocEnable
 
 " If using Tabs instead of buffers as tabs
 " when using alt keys make sure you can diasable the corresponding alt-menu key
@@ -893,7 +903,7 @@ endfunction
 " Additional .h file created when .cpp passed in
 nnoremap <leader>mf :call MakeAFileAndAddToGit("")<left><left>
 
-" \v search prefix modifier is very magic, \V prefix modifier very no magic. Only \ and / have meaning and must be escaped with \
+" \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
 vnoremap / /\V
 
@@ -919,16 +929,6 @@ noremap <silent> R <nop>
 xnoremap <c-y> "+y
 xnoremap <c-p> "+p
 nnoremap <c-p> "+p
-
-" Some default swaps
-" noremap J }
-" noremap K {
-" noremap { J
-" noremap } K
-" noremap H ^
-" noremap L $
-" noremap $ L
-" noremap ^ H
 
 " Split navigation
 inoremap <c-h> <Esc><c-w>h
