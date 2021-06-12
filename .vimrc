@@ -291,15 +291,14 @@ let g:EasyMotion_use_upper = 1
 let g:EasyMotion_smartcase = 1
 " This will search before and after cursor in current pane
 " Single char search
-" nmap s <Plug>(easymotion-bd-f)
-" Start a vis then search. Will move the end of the select to that point.
-" xmap s <Plug>(easymotion-bd-f)
+" xmap: Start a vis then search. Will move the end of the select to that point.
+nmap s <Plug>(easymotion-bd-f)
+xmap s <Plug>(easymotion-bd-f)
 " Double char search
-" -overwin- isn't working bd is just the buffer.
-nmap s <Plug>(easymotion-bd-f2)
-xmap s <Plug>(easymotion-bd-f2)
+" -overwin- isn't working, bd (bidirectional) is just for current window.
+" nmap s <Plug>(easymotion-bd-f2)
+" xmap s <Plug>(easymotion-bd-f2)
 nnoremap S <nop>
-xnoremap S <nop>
 " A way to disable linter while easymotioning
 " autocmd User EasyMotionPromptBegin silent! CocDisable
 " autocmd User EasyMotionPromptEnd silent! CocEnable
