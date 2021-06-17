@@ -48,22 +48,19 @@ sudo cpanm -n Neovim::Ext
 
 # INSTALL NEOVIM:
 ================
+91cdc11984465287539ed8f63716bb371f440ea1
 //https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
 //https://github.com/neovim/neovim/wiki/Installing-Neovim#install-from-source
 //https://github.com/neovim/neovim/wiki/Building-Neovim
+cd; mkdir clones; cd clones; git clone https://github.com/neovim/neovim.git; cd neovim
 sudo apt update -y
 sudo apt install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
-cd; mkdir clones; cd clones; git clone https://github.com/neovim/neovim.git; cd neovim
-git tag
-git checkout tags/desired_version_number -b tagName-branch
-(or just use master for latest)
 rm -rf build
 make distclean
 make CMAKE_BUILD_TYPE=Release
 sudo make install
-git branch -D tagName-branch
 
-May have to do this for the treesitter stuff
+# May have to do this for the treesitter stuff
 :TSUinstall all
 
 
