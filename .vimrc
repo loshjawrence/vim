@@ -725,6 +725,11 @@ nnoremap <leader><leader> :LspRestart<cr>
         buf_set_keymap('n', 'gr', '<cmd>let @w = "<c-r><c-w>" <bar> lua vim.lsp.buf.references()<cr>', opts)
         buf_set_keymap('n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         buf_set_keymap('n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
+
+        -- signature help hover issues:
+        -- Note sure what this means: https://github.com/neovim/neovim/issues/14846#issuecomment-863623034
+        -- local sigOpts = { noremap=true, silent=true, focusable=false }
+        -- buf_set_keymap('i', '', '<cmd>lua vim.lsp.buf.signature_help()<cr>', sigOpts)
     end
 
     -- Use a loop to conveniently both setup defined servers
@@ -912,7 +917,7 @@ vnoremap / /\V
 noremap <silent> <c-e> <nop>
 noremap <silent> <c-y> <nop>
 noremap <silent> <c-f> <nop>
-" noremap <silent> <c-b> <nop>
+noremap <silent> <c-b> <nop>
 noremap <silent> <c-u> 12<c-y>
 noremap <silent> <c-d> 12<c-e>
 
@@ -943,15 +948,14 @@ tnoremap <c-j> <c-\><c-n><c-w>j
 tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
 
-" quickfix list and local list (local list is local to buffer, i think)
-nnoremap <a-c>o :copen<cr>
-" nnoremap <a-c>c :cclose<cr>
-nnoremap <a-n> :cnext<cr>
-nnoremap <a-p> :cprevious<cr>
+"location list
 nnoremap <a-s-c>o :lopen<cr>
-" nnoremap <a-s-c>c :lclose<cr>
 nnoremap <a-s-n> :lnext<cr>
 nnoremap <a-s-p> :lprevious<cr>
+" quickfix list
+nnoremap <a-c>o :copen<cr>
+nnoremap <a-n> :cnext<cr>
+nnoremap <a-p> :cprevious<cr>
 
 " COLORCOLUMN
 " CURSORLINE (can be slower in some terminals)
