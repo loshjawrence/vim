@@ -630,6 +630,9 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 " Use <Tab> and <S-Tab> to navigate through popup menu
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <c-d> pumvisible() ? "\<PageDown>" : "\<c-d>"
+inoremap <expr> <c-u> pumvisible() ? "\<PageUp>" : "\<c-u>"
+
 set completeopt=menuone,noinsert,noselect
 
 " lsp config
@@ -674,6 +677,7 @@ nnoremap <leader><leader> :LspRestart<cr>
     ----------------
     -- COMPLETION --
     ----------------
+    -- see help for g:completion_chain_complete_list
     vim.g.completion_chain_complete_list = {
         default = {
             { complete_items = { 'lsp' } },
