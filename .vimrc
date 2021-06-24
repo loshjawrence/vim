@@ -32,6 +32,7 @@ syntax enable    " syntax highlighting
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set nrformats-=octal
 set number              " Show line numbers
+set laststatus=0        " Always hide the status line
 " set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
 set background=dark     " tell vim what the background color looks like
 set backspace=indent,eol,start " allow backspace to work normally
@@ -43,7 +44,6 @@ set incsearch           " do incremental searching
 set nowrapscan          " Don't autowrap to top of tile on searches
 set ignorecase
 set smartcase
-set laststatus=2        " Always display the status line
 set autowrite           " Automatically :write before running commands
 set magic               " Use 'magic' patterns (extended regular expressions).
 set guioptions=         " remove scrollbars on macvim
