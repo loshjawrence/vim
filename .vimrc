@@ -738,6 +738,7 @@ nnoremap <leader><leader> :LspRestart<cr>
     -------------------
     local lsp_signature_config = {
         hint_enable = true, -- virtual hint enable
+        hint_prefix = "",
         floating_window = true, -- false for virtual text only
         handler_opts = {
             border = "single" -- double, single, shadow, none
