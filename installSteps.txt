@@ -48,7 +48,8 @@ sudo cpanm -n Neovim::Ext
 
 # INSTALL NEOVIM:
 ================
-91cdc11984465287539ed8f63716bb371f440ea1
+working: 91cdc11984465287539ed8f63716bb371f440ea1
+0.5 release: 62d67de598286734536b63807d6b0f4e82b34128
 //https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
 //https://github.com/neovim/neovim/wiki/Installing-Neovim#install-from-source
 //https://github.com/neovim/neovim/wiki/Building-Neovim

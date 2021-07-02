@@ -336,8 +336,10 @@ nnoremap S <nop>
 Plug 'anott03/nvim-lspinstall'
 " lspconfig got rid of :LspInstall so you need anott03's plugin
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'steelsojka/completion-buffers'
+" Plug 'nvim-lua/completion-nvim'
+" Plug 'steelsojka/completion-buffers'
+Plug 'hrsh7th/nvim-compe'
+Plug 'ray-x/lsp_signature.nvim'
 " :TSInstallInfo lists all the languages
 " :TSInstall c cpp bash lua typescript html c_sharp
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -677,21 +679,71 @@ nnoremap <leader><leader> :LspRestart<cr>
     ----------------
     -- COMPLETION --
     ----------------
-    -- see help for g:completion_chain_complete_list
-    vim.g.completion_chain_complete_list = {
-        default = {
-            { complete_items = { 'lsp' } },
-            { complete_items = { 'buffers' } },
-            { mode = { '<c-p>' } },
-            { mode = { '<c-n>' } }
-        },
+    -- -- see help for g:completion_chain_complete_list
+    -- vim.g.completion_chain_complete_list = {
+    --     default = {
+    --         { complete_items = { 'lsp' } },
+    --         { complete_items = { 'buffers' } },
+    --         { mode = { '<c-p>' } },
+    --         { mode = { '<c-n>' } }
+    --     },
+    -- }
+    -- vim.g.completion_auto_change_source = 1
+    -- vim.g.completion_trigger_on_delete = 1
+    -- vim.g.completion_enable_auto_paren = 1
+    -- vim.g.completion_sorting = 'none' -- none, length, alphabet
+    -- vim.g.completion_enable_auto_hover = 1 -- too laggy atm
+    -- vim.g.completion_timer_cycle = 200 -- default value is 80
+
+    ------------------
+    -- COMPE ---------
+    ------------------
+    require'compe'.setup {
+        enabled = true;
+        autocomplete = true;
+        debug = false;
+        min_length = 1;
+        preselect = 'enable';
+        throttle_time = 80;
+        source_timeout = 200;
+        resolve_timeout = 800;
+        incomplete_delay = 400;
+        max_abbr_width = 100;
+        max_kind_width = 100;
+        max_menu_width = 100;
+        documentation = {
+            border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
+            winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+            max_width = 120,
+            min_width = 60,
+            max_height = math.floor(vim.o.lines * 0.3),
+            min_height = 1,
+        };
+
+        source = {
+            path = true;
+            buffer = true;
+            calc = true;
+            nvim_lsp = true;
+            nvim_lua = true;
+            vsnip = true;
+            ultisnips = true;
+            luasnip = true;
+            -- treesitter = true;
+        };
     }
-    vim.g.completion_auto_change_source = 1
-    vim.g.completion_trigger_on_delete = 1
-    vim.g.completion_enable_auto_paren = 1
-    vim.g.completion_sorting = 'none' -- none, length, alphabet
-    vim.g.completion_enable_auto_hover = 1 -- too laggy atm
-    vim.g.completion_timer_cycle = 200 -- default value is 80
+
+    -------------------
+    -- LSP_SIGNATURE --
+    -------------------
+    local lsp_signature_config = {
+        hint_enable = true, -- virtual hint enable
+        floating_window = true, -- false for virtual text only
+        handler_opts = {
+            border = "single" -- double, single, shadow, none
+        },
+        extra_trigger_chars = { "(", "," }
+    }
 
     ----------------
     -- TREESITTER --
@@ -712,7 +764,8 @@ nnoremap <leader><leader> :LspRestart<cr>
     local nvim_lsp = require('lspconfig')
     -- vim.lsp.set_log_level("debug")
     local on_attach = function(client, bufnr)
-        require'completion'.on_attach()
+        -- require'completion'.on_attach()
+        require'lsp_signature'.on_attach(lsp_signature_config)
 
         local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
         local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
