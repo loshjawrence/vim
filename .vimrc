@@ -333,13 +333,11 @@ nnoremap S <nop>
 " https://vim.fandom.com/wiki/Omni_completion
 "NOTE: see the minimal vimrc here https://github.com/nvim-lua/completion-nvim/issues/143
 " NOTE: for lsps see install steps for installing via npm and pip3
-Plug 'anott03/nvim-lspinstall'
-" lspconfig got rid of :LspInstall so you need anott03's plugin
 Plug 'neovim/nvim-lspconfig'
-" Plug 'nvim-lua/completion-nvim'
-" Plug 'steelsojka/completion-buffers'
+Plug 'kabouzeid/nvim-lspinstall'
 Plug 'hrsh7th/nvim-compe'
 Plug 'ray-x/lsp_signature.nvim'
+
 " :TSInstallInfo lists all the languages
 " :TSInstall c cpp bash lua typescript html c_sharp
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -353,7 +351,6 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'vim-scripts/star-search'
 
 Plug 'voldikss/vim-floaterm'
-
 
 " Font, size, resize
 set guifont=Monospace:h8
@@ -647,12 +644,12 @@ set completeopt=menuone,noinsert,noselect
 nnoremap <leader><leader> :LspRestart<cr>
 :lua << EOF
     ------------------
-    --- COLORIZER ----
+    --- colorizer ----
     ------------------
     require'colorizer'.setup{}
 
     ------------------
-    --- BUFFERLINE ---
+    --- bufferline ---
     ------------------
     local hlColor = "GreenYellow"
     -- local hlColor = "LemonChiffon3"
@@ -677,7 +674,7 @@ nnoremap <leader><leader> :LspRestart<cr>
     }
 
     ----------------
-    -- COMPLETION --
+    -- completion --
     ----------------
     -- -- see help for g:completion_chain_complete_list
     -- vim.g.completion_chain_complete_list = {
@@ -696,7 +693,7 @@ nnoremap <leader><leader> :LspRestart<cr>
     -- vim.g.completion_timer_cycle = 200 -- default value is 80
 
     ------------------
-    -- COMPE ---------
+    -- compe ---------
     ------------------
     require'compe'.setup {
         enabled = true;
@@ -734,7 +731,7 @@ nnoremap <leader><leader> :LspRestart<cr>
     }
 
     -------------------
-    -- LSP_SIGNATURE --
+    -- lsp_signature --
     -------------------
     local lsp_signature_config = {
         hint_enable = true, -- virtual hint enable
@@ -747,7 +744,7 @@ nnoremap <leader><leader> :LspRestart<cr>
     }
 
     ----------------
-    -- TREESITTER --
+    -- treesitter --
     ----------------
     require'nvim-treesitter.configs'.setup {
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
@@ -760,7 +757,16 @@ nnoremap <leader><leader> :LspRestart<cr>
     }
 
     ----------------
-    -- LSPCONFIG  --
+    -- lspinstall --
+    ----------------
+    require'lspinstall'.setup() -- important
+    local servers = require'lspinstall'.installed_servers()
+    for _, server in pairs(servers) do
+        require'lspconfig'[server].setup{}
+    end
+
+    ----------------
+    -- lspconfig  --
     ----------------
     local nvim_lsp = require('lspconfig')
     -- vim.lsp.set_log_level("debug")
