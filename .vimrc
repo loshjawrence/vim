@@ -337,10 +337,12 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'hrsh7th/nvim-compe'
 Plug 'ray-x/lsp_signature.nvim'
+Plug 'L3MON4D3/LuaSnip'
 
 " :TSInstallInfo lists all the languages
 " :TSInstall c cpp bash lua typescript html c_sharp
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
 " " basically a ref searcher without lsp/tags
 " " <leader>j pulls up floating window to jump
@@ -483,7 +485,7 @@ call plug#end()
 "     disable_fillchars_configuration = false,
 "     force_when_plus_one_window = false,
 "     force_hide_statusline = true,
-" 	quit_untoggles_ataraxis = false
+"     quit_untoggles_ataraxis = false
 "   },
 "   focus = {
 "     margin_of_error = 5,
@@ -627,8 +629,8 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 " COMPLETION
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
 " Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <expr> <c-d> pumvisible() ? "\<PageDown>" : "\<c-d>"
 inoremap <expr> <c-u> pumvisible() ? "\<PageUp>" : "\<c-u>"
 
@@ -643,6 +645,44 @@ set completeopt=menuone,noinsert,noselect
   "     :lua vim.cmd('e'..vim.lsp.get_log_path())
 nnoremap <leader><leader> :LspRestart<cr>
 :lua << EOF
+
+    ---------------------------
+    -----tab and shift-tab-----
+    ---------------------------
+    ----- move to prev/next item in completion menuone
+    ----- jump to prev/next snippet's placeholder
+    --local t = function(str)
+    --    return vim.api.nvim_replace_termcodes(str, true, true, true)
+    --end
+    --local check_back_space = function()
+    --    local col = vim.fn.col('.') - 1
+    --    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+    --        return true
+    --    else
+    --        return false
+    --    end
+    --end
+    --_G.tab_complete = function()
+    --    if vim.fn.pumvisible() == 1 then
+    --        return t "<C-n>"
+    --    elseif check_back_space() then
+    --        return t "<Tab>"
+    --    else
+    --        return vim.fn['compe#complete']()
+    --    end
+    --end
+    --_G.s_tab_complete = function()
+    --    if vim.fn.pumvisible() == 1 then
+    --        return t "<C-p>"
+    --    else
+    --        return t "<S-Tab>"
+    --    end
+    --end
+    --vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+    --vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+    --vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+    --vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
     ------------------
     --- colorizer ----
     ------------------
@@ -672,25 +712,6 @@ nnoremap <leader><leader> :LspRestart<cr>
             },
         },
     }
-
-    ----------------
-    -- completion --
-    ----------------
-    -- -- see help for g:completion_chain_complete_list
-    -- vim.g.completion_chain_complete_list = {
-    --     default = {
-    --         { complete_items = { 'lsp' } },
-    --         { complete_items = { 'buffers' } },
-    --         { mode = { '<c-p>' } },
-    --         { mode = { '<c-n>' } }
-    --     },
-    -- }
-    -- vim.g.completion_auto_change_source = 1
-    -- vim.g.completion_trigger_on_delete = 1
-    -- vim.g.completion_enable_auto_paren = 1
-    -- vim.g.completion_sorting = 'none' -- none, length, alphabet
-    -- vim.g.completion_enable_auto_hover = 1 -- too laggy atm
-    -- vim.g.completion_timer_cycle = 200 -- default value is 80
 
     ------------------
     -- compe ---------
@@ -754,6 +775,66 @@ nnoremap <leader><leader> :LspRestart<cr>
         highlight = {
             enable = true,
         },
+        textobjects = {
+            ------------
+            -- SELECT --
+            ------------
+            select = {
+                enable = true,
+
+                -- Automatically jump forward to textobj, similar to targets.vim
+                lookahead = true,
+
+                keymaps = {
+                    -- You can use the capture groups defined in textobjects.scm
+                    ["af"] = "@function.outer",
+                    ["if"] = "@function.inner",
+                    ["ac"] = "@conditional.outer",
+                    ["ic"] = "@conditional.inner",
+                    ["al"] = "@loop.outer",
+                    ["il"] = "@loop.inner",
+                    ["as"] = "@statement.outer",
+                },
+            },
+
+            ----------
+            -- SWAP --
+            ----------
+            swap = {
+                enable = true,
+                swap_next = {
+                    ["<a-x>"] = "@parameter.inner",
+                },
+                swap_previous = {
+                    ["<a-s-x>"] = "@parameter.inner",
+                },
+            },
+
+            ----------
+            -- MOVE --
+            ----------
+            move = {
+                enable = true,
+                set_jumps = true, -- whether to set jumps in the jumplist
+                goto_next_start = {
+                    ["<a-f>"] = "@function.outer",
+                },
+                goto_previous_start = {
+                    ["<a-s-f>"] = "@function.outer",
+                },
+            },
+
+            -----------------
+            -- LSP INTEROP --
+            -----------------
+            lsp_interop = {
+                enable = true,
+                peek_definition_code = {
+                    ["gp"] = "@function.outer",
+                    ["gP"] = "@class.outer",
+                },
+            },
+        },
     }
 
     ----------------
@@ -765,16 +846,14 @@ nnoremap <leader><leader> :LspRestart<cr>
         require'lspconfig'[server].setup{}
     end
 
-    ----------------
-    -- lspconfig  --
-    ----------------
+    ---------------------------------
+    -- lspconfig language servers  --
+    ---------------------------------
     local nvim_lsp = require('lspconfig')
     -- vim.lsp.set_log_level("debug")
     local on_attach = function(client, bufnr)
-        -- require'completion'.on_attach()
         require'lsp_signature'.on_attach(lsp_signature_config)
 
-        local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
         local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
         -- local cbufnvim = vim.api.nvim_exec('echo bufnr("%")', true)
 
@@ -782,26 +861,19 @@ nnoremap <leader><leader> :LspRestart<cr>
 
         -- Mappings.
         local opts = { noremap=true, silent=true }
-        buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-        buf_set_keymap('n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-        -- rename does not work, but can use *<leader>ar<leader>rs for a more accurate rename over *<leader>as<leader>rs
-        -- buf_set_keymap('gs', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-        buf_set_keymap('n', 'gr', '<cmd>let @w = "<c-r><c-w>" <bar> lua vim.lsp.buf.references()<cr>', opts)
-        buf_set_keymap('n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
-        buf_set_keymap('n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
-
-        -- signature help hover issues:
-        -- Note sure what this means: https://github.com/neovim/neovim/issues/14846#issuecomment-863623034
-        -- local sigOpts = { noremap=true, silent=true, focusable=false }
-        -- buf_set_keymap('i', '', '<cmd>lua vim.lsp.buf.signature_help()<cr>', sigOpts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+        -- TODO: does gR open the buffers it touches?
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+        -- rename does not work, but can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>let @w = "<c-r><c-w>" <bar> lua vim.lsp.buf.references()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
     end
 
-    -- Use a loop to conveniently both setup defined servers
-    -- and map buffer local keybindings when the language server attaches
-    -- tsserver(slow)
-    -- see installSteps.txt in vim repo for installing servers via npm and pip3
-    -- local servers = { "vimls", "sumneko_lua" }
-    local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
+    -- see lspinstall plugin page for installing language servers
+    -- local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
+    local servers = { "html", "cpp", "vim", "json", "bash", "cmake", "typescript", "lua"}
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end
