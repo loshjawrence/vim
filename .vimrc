@@ -343,6 +343,7 @@ Plug 'L3MON4D3/LuaSnip'
 " :TSInstall c cpp bash lua typescript html c_sharp
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+Plug 'nvim-treesitter/nvim-treesitter-refactor'
 
 " " basically a ref searcher without lsp/tags
 " " <leader>j pulls up floating window to jump
@@ -351,6 +352,8 @@ Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
+" Record word under cursor to register w. Can recall it in command mode with <c-r>w.
+nnoremap * :let @w = "<c-r><c-w>"<cr>*
 
 Plug 'voldikss/vim-floaterm'
 
@@ -624,6 +627,8 @@ nnoremap <leader>,rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'),
 " To be used with <leader>aw as it saves word under cursor to w register
 nnoremap <leader>,rw :MyCdo %s/\<<c-r>w\>//gIe<left><left><left><left>
 " mapped to above if we took tha as or aw path above do the pick the right rs or rw
+" NOTE: when using gr from the lsp make sure to * first this will record to @w which you can then use with <leader>r
+" and it will call the word version
 nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 
 " COMPLETION
@@ -737,17 +742,14 @@ nnoremap <leader><leader> :LspRestart<cr>
             max_height = math.floor(vim.o.lines * 0.3),
             min_height = 1,
         };
-
         source = {
-            path = true;
-            buffer = true;
-            calc = true;
-            nvim_lsp = true;
-            nvim_lua = true;
-            vsnip = true;
-            ultisnips = true;
-            luasnip = true;
-            -- treesitter = true;
+            -- higher is more important
+            nvim_lua = {priority = 10},
+            nvim_lsp = {priority = 9},
+            buffer = {priority = 7},
+            luasnip = {priority = 5},
+            path = {priority = 4},
+            calc = {priority = 3},
         };
     }
 
@@ -772,27 +774,55 @@ nnoremap <leader><leader> :LspRestart<cr>
         -- NOTE: if you get errors related to abi or anything with treesitter
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
         ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json" },
-        highlight = {
-            enable = true,
+        highlight = { enable = true, },
+        indent = { enable = true, },
+        incremental_selection = { enable = false, },
+
+        --------------
+        -- REFACTOR --
+        --------------
+        refactor = {
+            highlight_definitions = { enable = false },
+            highlight_current_scope = { enable = false },
+            -- current scope (and current file).
+            smart_rename = {
+                enable = false,
+                keymaps = {
+                    smart_rename = "R",
+                },
+            },
+            navigation = {
+                enable = false,
+                keymaps = {
+                    goto_definition_lsp_fallback = "gd",
+                    list_definitions = "<nop>",
+                    list_definitions_toc = "<nop>",
+                    goto_next_usage = "<nop>",
+                    goto_previous_usage = "<nop>",
+                },
+            },
         },
+
+        ------------------
+        -- TEXT OBJECTS --
+        ------------------
         textobjects = {
             ------------
             -- SELECT --
             ------------
             select = {
-                enable = true,
-
+                enable = false,
                 -- Automatically jump forward to textobj, similar to targets.vim
                 lookahead = true,
-
                 keymaps = {
                     -- You can use the capture groups defined in textobjects.scm
-                    ["af"] = "@function.outer",
                     ["if"] = "@function.inner",
-                    ["ac"] = "@conditional.outer",
+                    ["af"] = "@function.outer",
                     ["ic"] = "@conditional.inner",
-                    ["al"] = "@loop.outer",
+                    ["ac"] = "@conditional.outer",
                     ["il"] = "@loop.inner",
+                    ["al"] = "@loop.outer",
+                    ["is"] = "@scopename.inner",
                     ["as"] = "@statement.outer",
                 },
             },
@@ -801,7 +831,7 @@ nnoremap <leader><leader> :LspRestart<cr>
             -- SWAP --
             ----------
             swap = {
-                enable = true,
+                enable = false,
                 swap_next = {
                     ["<a-x>"] = "@parameter.inner",
                 },
@@ -814,13 +844,15 @@ nnoremap <leader><leader> :LspRestart<cr>
             -- MOVE --
             ----------
             move = {
-                enable = true,
+                enable = false,
                 set_jumps = true, -- whether to set jumps in the jumplist
                 goto_next_start = {
                     ["<a-f>"] = "@function.outer",
+                    ["<a-{>"] = "@scopename.inner",
                 },
                 goto_previous_start = {
                     ["<a-s-f>"] = "@function.outer",
+                    ["<a-}>"] = "@scopename.inner",
                 },
             },
 
@@ -863,10 +895,10 @@ nnoremap <leader><leader> :LspRestart<cr>
         local opts = { noremap=true, silent=true }
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-        -- TODO: does gR open the buffers it touches?
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-        -- rename does not work, but can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>let @w = "<c-r><c-w>" <bar> lua vim.lsp.buf.references()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr><cmd>:wa!<cr>', opts)
+        -- if rename does not work, can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
+        -- NOTE: saving to w reg wasn't working here so * now saves to w register.
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
     end
@@ -910,6 +942,12 @@ endfunction
 " set list                            " Show problematic characters.
 " NOTE see vim-better-whitespace plugin
 highlight ExtraWhitespace ctermbg=red guibg=red
+
+" treesitter
+highlight TSCurrentScope guibg=#141414
+highlight TSDefinition guibg=gray29
+highlight TSDefinitionUsage guibg=gray29
+
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
@@ -1118,7 +1156,8 @@ endif
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
-    silent! update!
+    " silent! update!
+    silent! wa!
     set cursorline cursorcolumn
     redraw
     sleep 30m
@@ -1162,7 +1201,7 @@ nnoremap <c-up>   :res +8<cr>
 " Source the vimrc so we don't have to refresh
 " :e is required to actually pick up vimrc changes
 " the M is there to center the mouse cursor other wise the screen will scroll when doing :e
-nnoremap <silent> <leader>vs :wa! <bar> so $MYVIMRC <cr> M:e<cr>
+nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr> M:e<cr><c-o>
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
 " Diff the current local vimrc against master
