@@ -353,7 +353,7 @@ Plug 'nvim-treesitter/nvim-treesitter-refactor'
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
 " Record word under cursor to register w. Can recall it in command mode with <c-r>w.
-nnoremap * :let @w = "<c-r><c-w>"<cr>*
+" nnoremap * :let @w = "<c-r><c-w>"<cr>*
 
 Plug 'voldikss/vim-floaterm'
 
@@ -895,10 +895,9 @@ nnoremap <leader><leader> :LspRestart<cr>
         local opts = { noremap=true, silent=true }
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr><cmd>:wa!<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         -- if rename does not work, can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
-        -- NOTE: saving to w reg wasn't working here so * now saves to w register.
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
     end
@@ -1201,7 +1200,7 @@ nnoremap <c-up>   :res +8<cr>
 " Source the vimrc so we don't have to refresh
 " :e is required to actually pick up vimrc changes
 " the M is there to center the mouse cursor other wise the screen will scroll when doing :e
-nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr> M:e<cr><c-o>
+nnoremap <silent> <leader>vs ms:silent! call Flash()<cr>: so $MYVIMRC <cr> M:e<cr>`s
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
 " Diff the current local vimrc against master
