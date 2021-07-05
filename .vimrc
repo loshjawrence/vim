@@ -34,6 +34,7 @@ set noshowmode          " don't show mode
 set nowrapscan          " Don't autowrap to top of tile on searches
 set nomodeline          " Was getting annoying error about modeline when opening files, turn it off
 set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
+set nofoldenable        " Turn off folding
 
 set smartcase
 set autowrite           " Automatically :write before running commands
@@ -143,6 +144,9 @@ Plug 'nvim-lua/plenary.nvim'
 " magnum is just a dependency of radical
 " Plug 'glts/vim-magnum'
 " Plug 'glts/vim-radical'
+
+" :MardownPreviewToggle to open/close webpage of preview
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 Plug 'sjl/gundo.vim'
 nnoremap <F5> :GundoToggle<CR>
