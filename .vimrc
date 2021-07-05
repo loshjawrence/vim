@@ -1,11 +1,7 @@
-﻿" TODO: add tab complete to autocomplete
-" On Windows:
-" See personal vim repo for disable capslock reg file for windows 10, double click to merge it then restart your computer.
-" "bash" in a windows term will use wsl/ubuntu on /mnt/c/
-" Terminal shortcuts/tips:
-" r-click on menu bar to configure terminal properties like colors/fonts/size,etc
-" full screen toggle: alt+enter
-" alpha blend: ctrl+shift+mouse scroll
+﻿" On Windows:
+" See repo for disable capslock reg file for windows 10, double click to merge it then restart your computer.
+" Windows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
+" linux search keyboard set to 200ms delay, 40c/s
 
 noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
@@ -23,42 +19,34 @@ let g:python_host_prog  = '/usr/bin/python2'
 let g:python3_host_prog  = '/usr/bin/python3'
 let g:perl_host_prog = '/usr/bin/perl'
 
+" See: vim-differences nvim-defaults
 filetype plugin indent on  " try to recognize filetypes and load related plugins/settings for those filetypes
-set formatoptions=rqj " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
-set formatoptions-=o " Type :help fo-table (or hit K when cursor over fo-table) to see what the different letters are for formatoptions
-set nocompatible " vim, not vi
 syntax on        " syntax highlighting
 syntax enable    " syntax highlighting
+
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
-set nrformats-=octal
 set number              " Show line numbers
 set laststatus=0        " Always hide the status line
-" set relativenumber    " Need to learn to touchtype number row to use this effectively. Slows down terminals. EasyMotion seems faster than this or search could ever be.
-set background=dark     " tell vim what the background color looks like
-set backspace=indent,eol,start " allow backspace to work normally
-set history=200         " how many : commands to save in history
-set noruler               " show the cursor position all the time
+set noruler               " dont show the cursor position
 set showcmd             " display incomplete commands
-set hlsearch           " do incremental searching
-set incsearch           " do incremental searching
+set guioptions=         " remove scrollbars
+set noshowmode          " don't show mode
 set nowrapscan          " Don't autowrap to top of tile on searches
-set ignorecase
+set nomodeline          " Was getting annoying error about modeline when opening files, turn it off
+set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
+
 set smartcase
 set autowrite           " Automatically :write before running commands
 set magic               " Use 'magic' patterns (extended regular expressions).
-set guioptions=         " remove scrollbars on macvim
-set noshowmode          " don't show mode
 set mouse=a             " enable mouse (selection, resizing windows)
-set nomodeline          " Was getting annoying error on laptop about modeline when opening files, duck said to turn it off
 set tabstop=4           " Use 4 spaces for tabs.
 set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
-set expandtab           " insert tab with right amount of spacing
+set expandtab           " tabs replaced with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
-set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
 set hidden              " enable hidden unsaved buffers
 silent! helptags ALL    " Generate help doc for all plugins
 " set iskeyword+=-        " Add chars that count as word boundaries. test: asdf-asdf
-set enc=utf-8 fenc=utf-8 termencoding=utf-8 " set UTF-8 encoding
+set fenc=utf-8          " set UTF-8 encoding
 set spell               " turn on spell check
 set complete+=kspell    " Turns off spell checking on code. Autocomplete with dictionary words when spell check is on.
 set nobackup
@@ -66,15 +54,11 @@ set nowritebackup
 set noswapfile
 set splitbelow " :sp defaults down
 " set splitright " :vs defaults right, quickfix edits cycles right split window so turn this off (TODO list usually in the :vs window)
-set switchbuf=useopen
-set ttyfast           " should make scrolling faster
+set switchbuf=useopen " if buffer already opened, use it
 set lazyredraw        " should make scrolling faster
 set diffopt+=vertical " Always use vertical diffs
 set visualbell " visual bell for errors
-
 set wildignorecase
-set wildmenu                        " enable wildmenu
-
 set textwidth=300
 set nowrap                          " Don't word wrap
 set cmdheight=2 " Better display for messages
@@ -95,101 +79,18 @@ endif
 " tell :find to recursively search
 set path+=**
 
-" UNIVERSAL CTAGS
-" =======================================================
-" include inheritance info and signatures of functions
-" it seems most of these flags are needed for :h omnicppcomplete
-" How to install from source:
-" git clone https://github.com/universal-ctags/ctags.git
-" cd ctags
-" ./autogen.sh
-" ./configure
-" make
-" sudo make install
-" ctags --version
-" TO SEE A LIST OF LANGS:
-" ctags --list-languages
-" ========================================================
-command! CScope !cscope -bcqR
-command! CTags !ctags -R
-            \ --languages=C,C++,CMake,CUDA,Javascript,TypeScript
-            \ --c++-kinds=+pl
-            \ --fields=+iaS
-            \ --extras=+q
-            \ --exclude='node_modules'
-            \ --exclude='Bin'
-            \ --exclude='bin'
-            \ --exclude='Build'
-            \ --exclude='build'
-            \ --exclude='out'
-            \ --exclude='Out'
-            \ --exclude='Data'
-            \ --exclude='data'
-            \ --exclude='Docs'
-            \ --exclude='docs'
-            \ --exclude='Documentation'
-            \ --exclude='documentation'
-            \ --exclude='Docker'
-            \ --exclude='docker'
-            \ --exclude='Specs'
-            \ --exclude='specs'
-            \ --exclude='travis'
-            \ --exclude='.git'
-            \ .
-" nnoremap <leader>t :cd %:p:h <bar> CTags<cr>
-nnoremap <leader>tc :CTags<cr>:CScope<cr>
-nnoremap <c-n> :tn<cr>
-nnoremap <c-p> :tp<cr>
-
-" " " setup cscope (need to: sudo apt update -y; sudo apt install cscope)
-" if has("cscope")
-"     " set to 1 to search tags first instead of cscope database
-"     set csto=0
-"     " also use tags file
-"     set cst
-"     " set nocsverb
-"     " add any database in current directory
-"     if filereadable("cscope.out")
-"         silent! cs add cscope.out
-"     " else add database pointed to by environment
-"     elseif $CSCOPE_DB != ""
-"         silent! cs add $CSCOPE_DB
-"     endif
-"     " set csverb
-"     " use qf window, - mean clear prev results for that particular search
-"     set cscopequickfix=s-,c-,d-,i-,t-,e-,a-
-" endif
-" " NOTE: the problem with ctags and cscope is its still not really aware of codebase.
-" " if you have same name you have to pick between everything with same name in the
-" " lookup files that they generate.
-" " therefore, you really want to use language servers instead of this stuff if you can.
-" "" cscope jump to a function declaration
-" " nnoremap <silent> <C-]> :cs find s <c-r>=expand("<cword>")<cr><cr>1<cr><cr>
-" " show a list of where function is called
-" " symbol
-" nnoremap <silent> <leader>ts :cs find s <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-" " go to def
-" nnoremap <silent> <leader>td :cs find g <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-" " functions called by this
-" nnoremap <silent> <leader>tb :cs find d <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-" " calling this function
-" nnoremap <silent> <leader>tc :cs find c <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-" " places where this symbol is assigned to
-" nnoremap <silent> <leader>ta :cs find a <c-r>=expand("<cword>")<cr><cr>:bot cw 20<cr>
-
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
 " Tell vim to use ripgrep as its grep program
-" NOTE: --sort path can be used to get consistent order, it will run with 1 thread.
-" in terminal see rg --help for optoins to ripgrep 12
+" NOTE: --sort path can be used to get consistent order, but it will run with 1 thread.
+" in terminal see rg --help for options to ripgrep 12
 " set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
 " NOTE: these globs work when you cd to root with Rooter using <leader>cr
-" <leader>a does this automatically
+" <leader>a does <leader>cr automatically
 set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'
 
-let baseDataFolder="~/.vim"
-call plug#begin(baseDataFolder . '/bundle') " Arg specifies plugin install dir
+call plug#begin("~/.vim" . '/bundle') " Arg specifies plugin install dir
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -232,13 +133,13 @@ command! -bang -nargs=? -complete=dir GFiles
 " v:oldfiles
 nnoremap <leader>fo :History<cr>
 nnoremap <leader>fm :Marks<cr>
-nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>fb :Buffers<cr>
 
 " will eventually go into nvim proper
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 " Plug 'nvim-telescope/telescope.nvim'
-" These two are for flippling between dec hex oct bin
+" These two are for flipping between dec hex oct bin
 " magnum is just a dependency of radical
 " Plug 'glts/vim-magnum'
 " Plug 'glts/vim-radical'
@@ -265,8 +166,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'jiangmiao/auto-pairs'
 " add more pairs, first line is default
-let b:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''",
-            \ '<':'>' }
+let b:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''", '<':'>' }
 " Turn off mappings
 let g:AutoPairsShortcutJump=''
 let g:AutoPairsShortcutBackInsert=''
@@ -281,10 +181,7 @@ Plug 'itchyny/vim-qfedit'
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
 
-" WIndows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
-" linux search keyboard set to 200ms delay, 40c/s
-
-" Type s and a char of interesst then the colored letters at the char to jump to it.
+" Type s and a char of interest then the colored letters at the char to jump to it.
 Plug 'easymotion/vim-easymotion'
 let g:EasyMotion_do_mapping = 0 " Disable default mappings, set our own
 let g:EasyMotion_use_upper = 1
@@ -294,50 +191,19 @@ let g:EasyMotion_smartcase = 1
 " xmap: Start a vis then search. Will move the end of the select to that point.
 nmap s <Plug>(easymotion-bd-f)
 xmap s <Plug>(easymotion-bd-f)
-" Double char search
-" -overwin- isn't working, bd (bidirectional) is just for current window.
-" nmap s <Plug>(easymotion-bd-f2)
-" xmap s <Plug>(easymotion-bd-f2)
 nnoremap S <nop>
-" A way to disable linter while easymotioning
-" autocmd User EasyMotionPromptBegin silent! CocDisable
-" autocmd User EasyMotionPromptEnd silent! CocEnable
-
-" If using Tabs instead of buffers as tabs
-" when using alt keys make sure you can diasable the corresponding alt-menu key
-" in any other IDE's you may use
-" vscode has a way to turn off the menu and msvc has a way to turn off certain
-" menu items: https://docs.microsoft.com/en-us/visualstudio/ide/how-to-customize-menus-and-toolbars-in-visual-studio?view=vs-2019
-" nnoremap <a-l> gt
-" nnoremap <a-h> gT
-" nnoremap <leader>1 :tabfirst<cr>
-" nnoremap <leader>2 2gt
-" nnoremap <leader>3 3gt
-" nnoremap <leader>4 4gt
-" nnoremap <leader>5 5gt
-" nnoremap <leader>0 :tablast<cr>
 
 " LSP for code completion options:
-" Need this in the project root/CMakeLists.txt (below the project declaration). Example "root" would be agi-asset-pipeline/
-" # Generates a compile_commands.json in /build to be used for Language Servers so that text editors like vim emacs sublime etc can understand c/c++ codebases
+" CMAKE:
 " set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 " This will spit out a compile_commands.json in the /build dir.
 " Would need to copy this file to the root dir
-" LSP for cpp. Just follow this:
-" https://clang.llvm.org/extra/clangd/Installation.html
-" Windows 10 : https://clang.llvm.org/get_started.html
 " worth looking at?: nvim-gdb
-" :checkhealth to see if running
-" " Install clang/clangd with: choco install llvm
-" https://vim.fandom.com/wiki/Using_vim_as_an_IDE_all_in_one
-" https://vim.fandom.com/wiki/Omni_completion
-"NOTE: see the minimal vimrc here https://github.com/nvim-lua/completion-nvim/issues/143
-" NOTE: for lsps see install steps for installing via npm and pip3
 Plug 'neovim/nvim-lspconfig'
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'hrsh7th/nvim-compe'
 Plug 'ray-x/lsp_signature.nvim'
-Plug 'L3MON4D3/LuaSnip'
+" Plug 'L3MON4D3/LuaSnip'
 
 " :TSInstallInfo lists all the languages
 " :TSInstall c cpp bash lua typescript html c_sharp
@@ -345,15 +211,8 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'nvim-treesitter/nvim-treesitter-refactor'
 
-" " basically a ref searcher without lsp/tags
-" " <leader>j pulls up floating window to jump
-" " <leader>j pulls up floating window to jump
-" Plug 'pechorin/any-jump.vim'
-
 " No forward jump, Can search visual selections.
 Plug 'vim-scripts/star-search'
-" Record word under cursor to register w. Can recall it in command mode with <c-r>w.
-" nnoremap * :let @w = "<c-r><c-w>"<cr>*
 
 Plug 'voldikss/vim-floaterm'
 
@@ -403,162 +262,20 @@ Plug 'wellle/targets.vim'
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-Plug 'Junza/Spink'
-" close to original magicka, could use as base (dark green, black, red, cream)
-Plug 'marcelbeumer/spacedust.vim'
-" colorscheme alduin
-" diff from alduin: baby blue gone, hlsearch is red
+" diff from alduin: baby blue gone, hlsearch is grey
 colorscheme alduin2
-" colorscheme Spink
-" colorscheme spacedust
-" " Decent default scheme
+" Decent default scheme
 " colorscheme slate
-
-" Colorscheme designer
-" Plug 'lifepillar/vim-colortemplate'
-
-" shouldnt be needed with treesitter
-" Plug 'sheerun/vim-polyglot'
 
 Plug 'norcalli/nvim-colorizer.lua'
 
+Plug 'tikhomirov/vim-glsl'
+Plug 'beyondmarc/hlsl.vim'
+
 " Buffers as tabs setup
 Plug 'akinsho/nvim-bufferline.lua'
-" NOTE: if bufferline breaks use airline as backup
-" Plug 'vim-airline/vim-airline'
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline_section_a=''
-" let g:airline_section_b=''
-" let g:airline_section_c=''
-" let g:airline_section_x=''
-" let g:airline_section_y=''
-" let g:airline_section_z=''
-" let g:airline_skip_empty_sections = 1
-
-" A better goyo
-" Plug 'kdav5758/TrueZen.nvim'
 
 call plug#end()
-
-" NOTE: must go after plug#end()
-" TODO: experiment
-" :lua << EOF
-" local true_zen = require("true-zen")
-" -- https://github.com/kdav5758/TrueZen.nvim
-" -- default setup for TrueZen.nvim
-" true_zen.setup({
-"   true_false_commands = false,
-"   cursor_by_mode = false,
-"   bottom = {
-"     hidden_laststatus = 0,
-"     hidden_ruler = false,
-"     hidden_showmode = false,
-"     hidden_showcmd = false,
-"     hidden_cmdheight = 1,
-"
-"     shown_laststatus = 2,
-"     shown_ruler = true,
-"     shown_showmode = false,
-"     shown_showcmd = false,
-"     shown_cmdheight = 1
-"   },
-"   top = {
-"     hidden_showtabline = 0,
-"
-"     shown_showtabline = 2
-"   },
-"   left = {
-"     hidden_number = false,
-"     hidden_relativenumber = false,
-"     hidden_signcolumn = "no",
-"
-"     shown_number = true,
-"     shown_relativenumber = false,
-"     shown_signcolumn = "no"
-"   },
-"   ataraxis = {
-"     ideal_writing_area_width = 0,
-"     just_do_it_for_me = false,
-"     left_padding = 40,
-"     right_padding = 40,
-"     top_padding = 0,
-"     bottom_padding = 0,
-"     custome_bg = "",
-"     disable_bg_configuration = false,
-"     disable_fillchars_configuration = false,
-"     force_when_plus_one_window = false,
-"     force_hide_statusline = true,
-"     quit_untoggles_ataraxis = false
-"   },
-"   focus = {
-"     margin_of_error = 5,
-"     focus_method = "experimental"
-"   },
-"   minimalist = {
-"     store_and_restore_settings = false,
-"     show_vals_to_read = {}
-"   },
-"   events = {
-"     before_minimalist_mode_shown = false,
-"     before_minimalist_mode_hidden = false,
-"     after_minimalist_mode_shown = false,
-"     after_minimalist_mode_hidden = false
-"   },
-"   integrations = {
-"     integration_galaxyline = false,
-"     integration_vim_airline = false,
-"     integration_vim_powerline = false,
-"     integration_tmux = false,
-"     integration_express_line = false,
-"     integration_gitgutter = false,
-"     integration_vim_signify = false,
-"     integration_limelight = false,
-"     integration_tzfocus_tzataraxis = false,
-"     integration_gitsigns = false
-"   }
-" })
-" EOF
-
-" " telescope
-" lua << EOF
-"     local actions = require'telescope.actions'
-"     require'telescope'.setup{
-"         defaults = {
-"             prompt_position = "top",
-"             sorting_strategy = "ascending",
-"             winblend = 30,
-"             mappings = {
-"                 i = {
-"                     ["<esc>"] = actions.close,
-"                     ["<tab>"] = actions.add_selection,
-"                     -- atm, there is no way to do open-all-selected without writing your own thing
-"                     -- but it is on there todo list to have this built-in
-"                     ["<cr>"] = actions.???,
-"                 },
-"             },
-"             -- file_sorter =  require'telescope.sorters'.get_fuzzy_file,
-"             -- file_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
-"             -- file_sorter =  require'telescope.sorters'.get_fzy_sorter,
-"             file_sorter =  require'telescope.sorters'.fuzzy_with_index_bias,
-"             file_ignore_patterns = {},
-"             set_env = { ['COLORTERM'] = 'truecolor' },
-"         },
-"     }
-" EOF
-" nnoremap <leader>F :Telescope find_files find_command=fd,--no-ignore,--hidden,--follow previewer=false<cr>
-" nnoremap <leader>fo :lua require('telescope.builtin').oldfiles()<cr>
-" nnoremap <leader>fm :lua require('telescope.builtin').marks()<cr>
-" nnoremap <leader>fg :lua require('telescope.builtin').git_files()<cr>
-" " list all finders
-" " nnoremap <leader>fp :lua require('telescope.builtin').builtin()<cr>
-" " nnoremap <leader>fa :lua require('telescope.builtin').live_grep()<cr>
-" " linux man pages
-" " nnoremap <leader>fm :lua require('telescope.builtin').man_pages()<cr>
-" " plugin user commands
-" " nnoremap <leader>fc :lua require('telescope.builtin').commands()<cr>
-" " nnoremap <leader>fv :lua require('telescope.builtin').vim_options()<cr>
-" " for colorscheme highlights
-" " nnoremap <leader>fh :lua require('telescope.builtin').highlights()<cr>
 
 " Add the terminal to unlisted buffers so that buffer line doesnt show it
 " NOTE: Tried all the Buf* stuff but only this one seemed to work
@@ -638,56 +355,10 @@ inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <expr> <c-d> pumvisible() ? "\<PageDown>" : "\<c-d>"
 inoremap <expr> <c-u> pumvisible() ? "\<PageUp>" : "\<c-u>"
-
 set completeopt=menuone,noinsert,noselect
 
-" lsp config
-" https://github.com/neovim/nvim-lspconfig
-  " Check that an LSP client has attached to the current buffer:  >
-  "     :lua print(vim.inspect(vim.lsp.buf_get_clients()))
-  "     :LspInfo
-  "     make sure no ERRORS in
-  "     :lua vim.cmd('e'..vim.lsp.get_log_path())
 nnoremap <leader><leader> :LspRestart<cr>
 :lua << EOF
-
-    ---------------------------
-    -----tab and shift-tab-----
-    ---------------------------
-    ----- move to prev/next item in completion menuone
-    ----- jump to prev/next snippet's placeholder
-    --local t = function(str)
-    --    return vim.api.nvim_replace_termcodes(str, true, true, true)
-    --end
-    --local check_back_space = function()
-    --    local col = vim.fn.col('.') - 1
-    --    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-    --        return true
-    --    else
-    --        return false
-    --    end
-    --end
-    --_G.tab_complete = function()
-    --    if vim.fn.pumvisible() == 1 then
-    --        return t "<C-n>"
-    --    elseif check_back_space() then
-    --        return t "<Tab>"
-    --    else
-    --        return vim.fn['compe#complete']()
-    --    end
-    --end
-    --_G.s_tab_complete = function()
-    --    if vim.fn.pumvisible() == 1 then
-    --        return t "<C-p>"
-    --    else
-    --        return t "<S-Tab>"
-    --    end
-    --end
-    --vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-    --vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-    --vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-    --vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-
     ------------------
     --- colorizer ----
     ------------------
@@ -882,7 +553,6 @@ nnoremap <leader><leader> :LspRestart<cr>
     -- lspconfig language servers  --
     ---------------------------------
     local nvim_lsp = require('lspconfig')
-    -- vim.lsp.set_log_level("debug")
     local on_attach = function(client, bufnr)
         require'lsp_signature'.on_attach(lsp_signature_config)
 
@@ -909,6 +579,13 @@ nnoremap <leader><leader> :LspRestart<cr>
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end
 
+    -- lsp config
+    -- https://github.com/neovim/nvim-lspconfig
+    -- Check that an LSP client has attached to the current buffer:  >
+    --     :lua print(vim.inspect(vim.lsp.buf_get_clients()))
+    --     :LspInfo
+    --     make sure no ERRORS in
+    --     :lua vim.cmd('e'..vim.lsp.get_log_path())
     -- -- NOTE: use these for debug info
     -- -- uncomment vim.lsp.set_log_level("debug") above
     -- -- :lua print(vim.inspect(vim.lsp.buf_get_clients()))
@@ -916,6 +593,7 @@ nnoremap <leader><leader> :LspRestart<cr>
     -- -- to look in the lsp's log:
     -- -- :lua vim.cmd('e'..vim.lsp.get_log_path())
     -- -- Use to debug clang, remove from server list above but remember to put it back when fixed
+    -- vim.lsp.set_log_level("debug")
     -- nvim_lsp.clangd.setup{
     --     cmd = { "clangd", "-j=1", "--log=verbose" };
     --     -- on_attach = on_attach
@@ -930,6 +608,7 @@ function SetVimPresentationMode()
     nnoremap <buffer> <right> :n<cr>
     nnoremap <buffer> <left> :N<cr>
 
+    " truezen is a better pluggin
     if !exists('#goyo')
         Goyo
     endif
@@ -955,24 +634,19 @@ autocmd BufWinLeave * call clearmatches()
 " Manually remove whitespace, replace tabs with 4 spaces
 nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
-" TODO: lookup new-filetype and ftdetect and create custom types for glsl hlsl
 " FILETYPE filetype
 " Associate filetypes with other filetypes
-autocmd BufRead,BufNewFile *.asm set filetype=asm
-autocmd BufRead,BufNewFile *.shader set filetype=cpp
-autocmd BufRead,BufNewFile *.vert   set filetype=cpp
-autocmd BufRead,BufNewFile *.frag   set filetype=cpp
-autocmd BufRead,BufNewFile *.glsl   set filetype=cpp
-autocmd BufRead,BufNewFile *.hlsl   set filetype=cpp
-autocmd BufRead,BufNewFile *.md     set filetype=markdown
-autocmd BufRead,BufNewFile *.txt     set filetype=cpp
+" Can view  all filetypes by doing :setfiletype and tab to try to complete (yes, no space between set and filetype)
+" Query a file's filetype by doing :set ft ?
+autocmd BufRead,BufNewFile *.txt set filetype=markdown
+
 " Enable spellchecking for Markdown
 autocmd FileType markdown setlocal spell
 " add support for comments in json (jsonc format used as configuration for many utilities)
 autocmd FileType json syntax match Comment +\/\/.\+$+
 autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 
-" TERMINAL, terminal, term, floaterm
+" terminal, floaterm
 " Go to insert mode when switching to a terminal
 " Distinguish terminal by making cursor red
 let g:floaterm_borderchars=''
@@ -984,7 +658,7 @@ let g:floaterm_height=1.0
 " let g:floaterm_height=0.40
 nnoremap <silent>   <c-\>   :FloatermToggle<CR>
 tnoremap <silent>   <c-\>   <C-\><C-n>:FloatermToggle<CR>
-" Esc quits the termial
+" Esc quits the terminal
 " NOTE: This is needed to make fzf and other termal based things not annoying
 tnoremap <Esc> <C-\><C-n>:q<cr>
 tnoremap <C-\> <C-\><C-n>
@@ -1155,7 +829,6 @@ endif
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
-    " silent! update!
     silent! wa!
     set cursorline cursorcolumn
     redraw
@@ -1228,7 +901,6 @@ function! UnMinify()
     %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
     normal ggVG=
 endfunction
-nnoremap <leader>um :UnMinify<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
