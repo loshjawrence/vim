@@ -877,6 +877,7 @@ nnoremap <c-up>   :res +8<cr>
 " Source the vimrc so we don't have to refresh
 " :e is required to actually pick up vimrc changes
 " the M is there to center the mouse cursor other wise the screen will scroll when doing :e
+" TODO: how to restore the view of the page after doing :e when it shifts the page around
 nnoremap <silent> <leader>vs ms:silent! call Flash()<cr>: so $MYVIMRC <cr> M:e<cr>`s
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
