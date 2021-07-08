@@ -185,16 +185,9 @@ Plug 'itchyny/vim-qfedit'
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
 
-" Type s and a char of interest then the colored letters at the char to jump to it.
-Plug 'easymotion/vim-easymotion'
-let g:EasyMotion_do_mapping = 0 " Disable default mappings, set our own
-let g:EasyMotion_use_upper = 1
-let g:EasyMotion_smartcase = 1
-" This will search before and after cursor in current pane
-" Single char search
-" xmap: Start a vis then search. Will move the end of the select to that point.
-nmap s <Plug>(easymotion-bd-f)
-xmap s <Plug>(easymotion-bd-f)
+Plug 'phaazon/hop.nvim'
+nnoremap s <cmd>HopChar1<cr>
+xnoremap s <cmd>HopChar1<cr>
 nnoremap S <nop>
 
 " LSP for code completion options:
@@ -552,6 +545,11 @@ nnoremap <leader><leader> :LspRestart<cr>
     for _, server in pairs(servers) do
         require'lspconfig'[server].setup{}
     end
+
+    ----------------
+    -- hop ---------
+    ----------------
+    require'hop'.setup()
 
     ---------------------------------
     -- lspconfig language servers  --
