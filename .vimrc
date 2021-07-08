@@ -571,7 +571,8 @@ nnoremap <leader><leader> :LspRestart<cr>
         -- if rename does not work, can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
+        -- happens on save (see Flash())
+        -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
     end
 
     -- see lspinstall plugin page for installing language servers
@@ -831,6 +832,7 @@ endif
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
+    lua vim.lsp.buf.formatting()
     silent! wa!
     set cursorline cursorcolumn
     redraw

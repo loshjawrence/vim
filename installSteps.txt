@@ -73,7 +73,7 @@ sudo rm -r /usr/local/share/nvim/
 # VIM-PLUG
 ==========
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # Universal Ctags
 =================
@@ -90,64 +90,67 @@ ctags --version
 # language servers
 ==================
 most can be installed with :LspInstall <ls name>
-clangd:
-linux: `sudo apt update -y; sudo apt install -y clangd`
-pip3 install cmake-language-server
-pip3 install python-language-server
-npm install -g bash-language-server
-npm install -g vim-language-server
-npm install -g vscode-json-languageserver
-npm install -g typescript-language-server
+    clangd:
+    linux: `sudo apt update -y; sudo apt install -y clangd`
+    pip3 install cmake-language-server
+    pip3 install python-language-server
+    npm install -g bash-language-server
+    npm install -g vim-language-server
+    npm install -g vscode-json-languageserver
+    npm install -g typescript-language-server
 
-https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
-cd; cd clones; git clone https://github.com/sumneko/lua-language-server;
-cd lua-language-server
-git submodule update --init --recursive
-cd 3rd/luamake
-ninja -f ninja/linux.ninja
-cd ../..
-./3rd/luamake/luamake rebuild
-./bin/Linux/lua-language-server -E ./main.lua
+    https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
+    cd; cd clones; git clone https://github.com/sumneko/lua-language-server;
+    cd lua-language-server
+    git submodule update --init --recursive
+    cd 3rd/luamake
+    ninja -f ninja/linux.ninja
+    cd ../..
+    ./3rd/luamake/luamake rebuild
+    ./bin/Linux/lua-language-server -E ./main.lua
 
-https://github.com/svenstaro/glsl-language-server
-cd; cd clones; git clone git@github.com:svenstaro/glsl-language-server.git
-cd glsl-language-server
-git submodule update --init
-cmake -Bbuild -GNinja
-ninja -Cbuild
+    https://github.com/svenstaro/glsl-language-server
+    cd; cd clones; git clone git@github.com:svenstaro/glsl-language-server.git
+    cd glsl-language-server
+    git submodule update --init
+    cmake -Bbuild -GNinja
+    ninja -Cbuild
 
-# Clangd
-========
-// https://clangd.llvm.org/installation.html
-// NOTE: if on ubuntu 20.04, clangd package is version 10
-// for nvim lsp use clang 9
-sudo apt remove -y clangd-10 clang-10
-sudo apt update -y
-sudo apt install -y clangd-9 clang-9
-sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 100
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 100
+    # Clangd
+    ========
+    // https://clangd.llvm.org/installation.html
+    // NOTE: if on ubuntu 20.04, clangd package is version 10
+    // for nvim lsp use clang 9
+    sudo apt remove -y clangd-9 clang-9
+    sudo apt update -y; sudo apt install -y clangd-10 clang-10 clang-format-10 clang-tidy-10
 
-# NVM
-=====
-// https://github.com/nvm-sh/nvm#installing-and-updating
-// dont worry about it saying some lines exists already in your bashrc
-sudo apt install curl
-curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-source ~/.profile
-nvm install node
-node --version
+    sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-10 100
+    sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-10 100
+    sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-10 100
+    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-10 100
+    sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-10 100
 
-# WSL
-=====
-upgrade ubuntu in place: https://alessio.franceschelli.me/posts/windows/wsl2-upgrade/
+    # NVM
+    =====
+    // https://github.com/nvm-sh/nvm#installing-and-updating
+    // dont worry about it saying some lines exists already in your bashrc
+    sudo apt install curl
+    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+    source ~/.profile
+    nvm install node
+    node --version
 
-go to microsoft store. hit winkey and search store
-download the latest LTS ubuntu and windows terminal
-update windows 10 to version 2004 or higher
-upgrade to WSL 2
-go to settings location and make ubuntu default. hide azure and cmd.
-/mnt/c/Users/loshj/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+    # WSL
+    =====
+    upgrade ubuntu in place: https://alessio.franceschelli.me/posts/windows/wsl2-upgrade/
+
+    go to microsoft store. hit winkey and search store
+    download the latest LTS ubuntu and windows terminal
+    update windows 10 to version 2004 or higher
+    upgrade to WSL 2
+    go to settings location and make ubuntu default. hide azure and cmd.
+    /mnt/c/Users/loshj/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
 
 
 
-Open nvim and do a :PlugInstall
+    Open nvim and do a :PlugInstall
