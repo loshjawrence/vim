@@ -443,7 +443,7 @@ nnoremap <leader><leader> :LspRestart<cr>
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
         ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json" },
         highlight = { enable = true, },
-        indent = { enable = true, },
+        indent = { enable = false, },
         incremental_selection = { enable = false, },
 
         --------------
