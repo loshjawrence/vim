@@ -128,16 +128,14 @@ export EDITOR="$VISUAL"
 # - The first argument to the function ($1) is the base path to start traversal
 # - See the source code (completion.{bash,zsh}) for the details.
 _fzf_compgen_path() {
-  fd --hidden --follow --no-ignore-vcs . "$1"
+  fd --hidden --follow --no-ignore . "$1"
 }
-
 # Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
-  fd --type directory --hidden --follow --no-ignore-vcs . "$1"
+  fd --type directory --hidden --follow --no-ignore . "$1"
 }
-
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
-export FZF_DEFAULT_COMMAND="fd --type file --hidden --follow --no-ignore-vcs"
+export FZF_DEFAULT_COMMAND="fd --type file --hidden --follow --no-ignore"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # NVM OPTIONS
@@ -159,3 +157,8 @@ export HISTFILE=$HOME/.bash_eternal_history
 # Force prompt to write history after every command.
 # http://superuser.com/questions/20900/bash-history-loss
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
