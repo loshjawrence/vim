@@ -833,7 +833,9 @@ endif
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
-    lua vim.lsp.buf.formatting()
+    if &ft != 'markdown'
+        lua vim.lsp.buf.formatting_seq_sync()
+    endif
     silent! wa!
     set cursorline cursorcolumn
     redraw
