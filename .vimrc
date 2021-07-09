@@ -36,6 +36,7 @@ set nomodeline          " Was getting annoying error about modeline when opening
 set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
 set nofoldenable        " Turn off folding
 
+set ignorecase
 set smartcase
 set autowrite           " Automatically :write before running commands
 set magic               " Use 'magic' patterns (extended regular expressions).
