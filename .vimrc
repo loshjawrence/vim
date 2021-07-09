@@ -90,7 +90,7 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
 " NOTE: these globs work when you cd to root with Rooter using <leader>cr
 " <leader>a does <leader>cr automatically
-set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'
+set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'\ -g\ 'include/**'\ -g\ 'tests/**'\ -g\ 'applications/**'\ -g\ 'cmake/**'
 
 call plug#begin("~/.vim" . '/bundle') " Arg specifies plugin install dir
 
