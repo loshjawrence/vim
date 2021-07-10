@@ -573,7 +573,7 @@ nnoremap <leader><leader> :LspRestart<cr>
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         -- happens on save (see Flash())
-        -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
+        -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>SwitchSourceHeader<cr>', opts)
     end
 
