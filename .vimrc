@@ -245,7 +245,7 @@ function! ToggleAndKillOldBuffer()
     call altr#forward()
     execute "bdelete " . b
 endfunction
-nnoremap <a-o> :call ToggleAndKillOldBuffer()<CR>
+" nnoremap <a-o> :call ToggleAndKillOldBuffer()<CR>
 
 Plug 'airblade/vim-rooter'
 let g:rooter_manual_only = 1
@@ -574,6 +574,7 @@ nnoremap <leader><leader> :LspRestart<cr>
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         -- happens on save (see Flash())
         -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
 
     -- see lspinstall plugin page for installing language servers
@@ -582,6 +583,24 @@ nnoremap <leader><leader> :LspRestart<cr>
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup { on_attach = on_attach }
     end
+
+    require'lspconfig'.clangd.setup {
+        commands = {
+            ClangdSwitchSourceHeader = {
+                function()
+                    local bufnr = require'lspconfig'.util.validate_bufnr(0)
+                    local params = { uri = vim.uri_from_bufnr(bufnr) }
+                    vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
+                        if err then error(tostring(err)) end
+                        if not result then print ("Corresponding file can’t be determined") return end
+                        vim.api.nvim_command("edit "..vim.uri_to_fname(result))
+                        vim.api.nvim_command("bdelete "..tostring(bufnr))
+                    end)
+                end
+            },
+        }
+    }
+
 
     -- lsp config
     -- https://github.com/neovim/nvim-lspconfig
