@@ -558,7 +558,6 @@ nnoremap <leader><leader> :LspRestart<cr>
     local nvim_lsp = require('lspconfig')
     local on_attach = function(client, bufnr)
         require'lsp_signature'.on_attach(lsp_signature_config)
-
         local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
         -- local cbufnvim = vim.api.nvim_exec('echo bufnr("%")', true)
 
@@ -581,7 +580,12 @@ nnoremap <leader><leader> :LspRestart<cr>
     -- local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
     local servers = { "html", "cpp", "vim", "json", "bash", "cmake", "typescript", "lua"}
     for _, lsp in ipairs(servers) do
-        nvim_lsp[lsp].setup { on_attach = on_attach }
+        nvim_lsp[lsp].setup {
+            on_attach = on_attach,
+            flags = {
+                debounce_text_changes = 500,
+            },
+        }
     end
 
     require'lspconfig'.clangd.setup {
