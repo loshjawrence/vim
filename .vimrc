@@ -566,6 +566,8 @@ nnoremap <leader><leader> :LspRestart<cr>
         -- Mappings.
         local opts = { noremap=true, silent=true }
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>PeekDefinition<cr>', opts)
+        -- can use on `auto` in cpp to get the underlying type
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         -- if rename does not work, can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
@@ -584,6 +586,19 @@ nnoremap <leader><leader> :LspRestart<cr>
             on_attach = on_attach,
             flags = {
                 debounce_text_changes = 500,
+            },
+            commands = {
+                PeekDefinition = {
+                    function()
+                        local params = vim.lsp.util.make_position_params()
+                        return vim.lsp.buf_request(0, 'textDocument/definition', params, function(_, _, result)
+                            if not result or vim.tbl_isempty(result) then
+                                return nil
+                            end
+                            vim.lsp.util.preview_location(result[1])
+                        end)
+                    end
+                },
             },
         }
     end
