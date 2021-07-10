@@ -566,7 +566,6 @@ nnoremap <leader><leader> :LspRestart<cr>
         -- Mappings.
         local opts = { noremap=true, silent=true }
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>PeekDefinition<cr>', opts)
         -- can use on `auto` in cpp to get the underlying type
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
@@ -575,7 +574,7 @@ nnoremap <leader><leader> :LspRestart<cr>
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         -- happens on save (see Flash())
         -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>SwitchSourceHeader<cr>', opts)
     end
 
     -- see lspinstall plugin page for installing language servers
@@ -588,38 +587,24 @@ nnoremap <leader><leader> :LspRestart<cr>
                 debounce_text_changes = 500,
             },
             commands = {
-                PeekDefinition = {
+                SwitchSourceHeader = {
                     function()
-                        local params = vim.lsp.util.make_position_params()
-                        return vim.lsp.buf_request(0, 'textDocument/definition', params, function(_, _, result)
-                            if not result or vim.tbl_isempty(result) then
-                                return nil
-                            end
-                            vim.lsp.util.preview_location(result[1])
+                        local bufnr = require'lspconfig'.util.validate_bufnr(0)
+                        -- ClangdSwitchSourceHeader is the build-in version, but it has some behavior that i dont like
+                        -- vim.api.nvim_command("ClangdSwitchSourceHeader")
+                        -- vim.api.nvim_command("bdelete "..tostring(bufnr))
+                        local params = { uri = vim.uri_from_bufnr(bufnr) }
+                        vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
+                            if err then error(tostring(err)) end
+                            if not result then print ("Corresponding file can’t be determined") return end
+                            vim.api.nvim_command("edit "..vim.uri_to_fname(result))
+                            vim.api.nvim_command("bdelete "..tostring(bufnr))
                         end)
                     end
                 },
             },
         }
     end
-
-    require'lspconfig'.clangd.setup {
-        commands = {
-            ClangdSwitchSourceHeader = {
-                function()
-                    local bufnr = require'lspconfig'.util.validate_bufnr(0)
-                    local params = { uri = vim.uri_from_bufnr(bufnr) }
-                    vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
-                        if err then error(tostring(err)) end
-                        if not result then print ("Corresponding file can’t be determined") return end
-                        vim.api.nvim_command("edit "..vim.uri_to_fname(result))
-                        vim.api.nvim_command("bdelete "..tostring(bufnr))
-                    end)
-                end
-            },
-        }
-    }
-
 
     -- lsp config
     -- https://github.com/neovim/nvim-lspconfig
