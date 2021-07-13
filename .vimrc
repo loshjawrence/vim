@@ -260,7 +260,7 @@ Plug 'wellle/targets.vim'
 " COLORSCHEME must come before whitespace highlighting and other color alterations
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
-" diff from alduin: baby blue gone, hlsearch is grey
+" diff from alduin: no baby blue on members, hlsearch is salmon instead of grey
 colorscheme alduin2
 " Decent default scheme
 " colorscheme slate
