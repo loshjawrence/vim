@@ -137,9 +137,6 @@ nnoremap <leader>fo :History<cr>
 nnoremap <leader>fm :Marks<cr>
 nnoremap <leader>fb :Buffers<cr>
 
-" will eventually go into nvim proper
-Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
 " Plug 'nvim-telescope/telescope.nvim'
 " These two are for flipping between dec hex oct bin
 " magnum is just a dependency of radical
@@ -147,7 +144,7 @@ Plug 'nvim-lua/plenary.nvim'
 " Plug 'glts/vim-radical'
 
 " :MardownPreviewToggle to open/close webpage of preview
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 Plug 'sjl/gundo.vim'
 nnoremap <F5> :GundoToggle<CR>
@@ -168,7 +165,6 @@ Plug 'tpope/vim-surround'
 
 " Framework for enabling repeat command on plugin commands
 " The plugin itself must explicitly support it though
-Plug 'tpope/vim-repeat'
 Plug 'jiangmiao/auto-pairs'
 " add more pairs, first line is default
 let b:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''", '<':'>' }
@@ -233,19 +229,6 @@ let g:tcomment_mapleader1=''
 let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
-
-" Use this to toggle .h/cpp buffers without polluting the buffer list
-" see https://vi.stackexchange.com/questions/11087/switch-between-header-and-source-files-in-one-buffer
-" https://github.com/kana/vim-altr/blob/master/doc/altr.txt
-" also consider vim-scripts/a.vim
-Plug 'kana/vim-altr'
-function! ToggleAndKillOldBuffer()
-    let b = bufnr("%")
-    silent! update!
-    call altr#forward()
-    execute "bdelete " . b
-endfunction
-" nnoremap <a-o> :call ToggleAndKillOldBuffer()<CR>
 
 Plug 'airblade/vim-rooter'
 let g:rooter_manual_only = 1
@@ -671,6 +654,7 @@ autocmd BufRead,BufNewFile *.txt set filetype=markdown
 autocmd FileType markdown setlocal spell
 " add support for comments in json (jsonc format used as configuration for many utilities)
 autocmd FileType json syntax match Comment +\/\/.\+$+
+" webdev community seems to love doing this
 autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 
 " terminal, floaterm

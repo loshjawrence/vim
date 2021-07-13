@@ -23,6 +23,19 @@ cd; mkdir deb; cd deb;
 curl -LO https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb
 sudo dpkg -i ripgrep_12.1.1_amd64.deb
 
+# RUST
+======
+if you need to build rust stuff from source or get them off of cargo
+curl https://sh.rustup.rs -sSf | sh
+pick option 1
+restart bash terminal
+source $HOME/.cargo/env
+make sure intstalled:
+rustc --version
+cargo --version
+example installing code-minimap:
+cargo install --locked code-minimap
+
 # VIM FILES
 ===========
 cd; git clone https://github.com/loshjawrence/vim.git
