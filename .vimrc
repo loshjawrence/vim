@@ -897,6 +897,9 @@ nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp ../.vimrc .<cr>git diff<cr>
 nmap <silent> <leader>vp <c-\>cd ~/vim<cr>git pull<cr>cp .vimrc ..<cr>cd -<cr><c-[><c-[><leader>vs<c-space>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
+" we cd to root and save the path to the l register for pasting in terminal later
+" have to run cmake twice for compile_commands.json to show up?
+nmap <silent> <leader>bl <leader>cr<cmd>let @l = getcwd()<cr><c-\>cd <c-r>l<cr>cmake -BbuildLinux; cmake -BbuildLinux; cp buildLinux/compile_commands.json .;cd -;<cr>
 
 " Fomatting
 " Pretty Json
