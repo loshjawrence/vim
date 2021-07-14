@@ -776,8 +776,19 @@ noremap <silent> <c-e> <nop>
 noremap <silent> <c-y> <nop>
 noremap <silent> <c-f> <nop>
 noremap <silent> <c-b> <nop>
-noremap <silent> <c-u> 12<c-y>
-noremap <silent> <c-d> 12<c-e>
+
+" noremap <silent> <c-u> 12<c-y>
+" noremap <silent> <c-d> 12<c-e>
+
+" Scroll by a quarter of window height (https://stackoverflow.com/a/16574696/1706778)
+" An amount based on screen size
+function! SetupScroll()
+    let scrAmount=&lines/4
+    execute 'nnoremap <c-d> ' . scrAmount . '<c-e>'
+    execute 'nnoremap <c-u> ' . scrAmount . '<c-y>'
+endfunction
+call SetupScroll()
+au VimResized * call SetupScroll()
 
 " Just annoying
 noremap <silent> R <nop>
