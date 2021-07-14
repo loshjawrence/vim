@@ -782,13 +782,13 @@ noremap <silent> <c-b> <nop>
 
 " Scroll by a quarter of window height (https://stackoverflow.com/a/16574696/1706778)
 " An amount based on screen size
-function! SetupScroll()
+function! SetScroll()
     let scrAmount=&lines/4
     execute 'nnoremap <c-d> ' . scrAmount . '<c-e>'
     execute 'nnoremap <c-u> ' . scrAmount . '<c-y>'
 endfunction
-call SetupScroll()
-au VimResized * call SetupScroll()
+call SetScroll()
+au VimResized * call SetScroll()
 
 " Just annoying
 noremap <silent> R <nop>
