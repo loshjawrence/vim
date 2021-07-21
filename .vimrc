@@ -648,7 +648,6 @@ nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 " Associate filetypes with other filetypes
 " Can view  all filetypes by doing :setfiletype and tab to try to complete (yes, no space between set and filetype)
 " Query a file's filetype by doing :set ft ?
-autocmd BufRead,BufNewFile *.txt set filetype=markdown
 
 " Enable spellchecking for Markdown
 autocmd FileType markdown setlocal spell
