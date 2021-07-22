@@ -1,18 +1,24 @@
 alias nvim="/usr/local/bin/nvim"
 alias s="source ~/.bashrc"
 alias e="explorer.exe ."
+alias ea="nvim ~/.bash_aliases"
 
-alias b="cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_CLANG_TIDY=clang-tidy; make -j8 -Cbuild"
-alias bd="cmake -Bbuild_debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_CLANG_TIDY=clang-tidy; make -j8 -Cbuild_debug"
+# normal
+alias b="cmake -Bbuild -DCMAKE_BUILD_TYPE=Release && make -j8 -Cbuild"
+alias bd="cmake -Bbuild_debug -DCMAKE_BUILD_TYPE=Debug && make -j8 -Cbuild_debug"
 
+# coverage
 alias bdc="cmake --build ./build_debug --target generate-coverage"
 
+# tidy
 alias bt="cmake --build ./build --target tidy"
 alias bdt="cmake --build ./build_debug --target tidy"
 
+# static analysis
 alias bsa="make -Cbuild cppcheck"
 alias bdsa="make -Cbuild_debug cppcheck"
 
+# help
 alias bh="cmake --build ./build --target help"
 alias bdh="cmake --build ./build_debug --target help"
 
