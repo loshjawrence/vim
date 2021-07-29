@@ -152,6 +152,20 @@ nnoremap <F5> :GundoToggle<CR>
 Plug 'majutsushi/tagbar'
 nnoremap <F8> :TagbarToggle<CR>
 
+Plug 'tpope/vim-obsession'
+" :Obsession to create a session with optional file or dir arg
+" :Obsession! throw session away
+" nvim -S or :so the session file to open it
+
+" okay but really need git integration
+" or a file tree that has really good create/move/delete with git
+Plug 'tpope/vim-eunuch'
+" :Delete: Delete a buffer and the file on disk simultaneously.
+" :Move: Rename a buffer and the file on disk simultaneously.
+" :Mkdir: Create a directory, defaulting to the parent of the current file.
+" :SudoWrite: Write a privileged file with sudo.
+" :SudoEdit: Edit a privileged file with sudo.
+
 " Surrounding things
 Plug 'tpope/vim-surround'
 " NOTE: If you use the closing version, i.e ),>,},] it will NOT be surrounded by spaces.
@@ -425,7 +439,7 @@ nnoremap <leader><leader> :LspRestart<cr>
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- NOTE: if you get errors related to abi or anything with treesitter
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
-        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json" },
+        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json", "yaml" },
         highlight = { enable = true, },
         indent = { enable = false, },
         incremental_selection = { enable = false, },
@@ -562,7 +576,7 @@ nnoremap <leader><leader> :LspRestart<cr>
 
     -- see lspinstall plugin page for installing language servers
     -- local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
-    local servers = { "html", "cpp", "vim", "json", "bash", "cmake", "typescript", "lua"}
+    local servers = { "html", "cpp", "vim", "json", "bash", "cmake", "typescript", "lua", "yaml"}
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
@@ -748,7 +762,13 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " nnoremap <c-b> f<space>vBxBP`[v`]
 " nnoremap <c-w> f<space>vBxWP`[v`]
 
-function! MakeAFileAndAddToGit(filename)
+function! MakeFileAndAddToGit(filename)
+    execute 'edit ' . a:filename
+    write
+    execute 'silent !git add ' . a:filename
+endfunction
+
+function! MakeCFileAndAddToGit(filename)
     execute 'edit ' . a:filename
     write
     execute 'silent !git add ' . a:filename
@@ -761,8 +781,9 @@ function! MakeAFileAndAddToGit(filename)
         execute 'silent !git add ' . hfile
     endif
 endfunction
-" Additional .h file created when .cpp passed in
-nnoremap <leader>mf :call MakeAFileAndAddToGit("")<left><left>
+nnoremap <leader>mf :call MakeFileAndAddToGit("")<left><left>
+" Additional .h file created in same dir when .cpp passed in
+nnoremap <leader>mc :call MakeCFileAndAddToGit("")<left><left>
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
