@@ -93,7 +93,7 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " NOTE: --sort path can be used to get consistent order, but it will run with 1 thread.
 " in terminal see rg --help for options to ripgrep 12
 " set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
-" NOTE: these globs work when you cd to root with Rooter using <leader>cr
+" NOTE: these globs work when you cd to root with Gcd using <leader>cr
 " <leader>a does <leader>cr automatically
 set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'\ -g\ 'include/**'\ -g\ 'tests/**'\ -g\ 'applications/**'\ -g\ 'cmake/**'
 
@@ -152,13 +152,13 @@ nnoremap <leader>fb :Buffers<cr>
 " Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 Plug 'sjl/gundo.vim'
-nnoremap <F5> :GundoToggle<CR>
+nnoremap <f1> :GundoToggle<CR>
 
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 
 Plug 'majutsushi/tagbar'
-nnoremap <F8> :TagbarToggle<CR>
+nnoremap <f2> :TagbarToggle<CR>
 
 " try to combine with nvim-tree ability to create/delete files and directories
 Plug 'tpope/vim-fugitive'
@@ -169,23 +169,24 @@ Plug 'tpope/vim-fugitive'
 " :Gread             - git checkout -- on this file.
 " :Gwrite            - git add the file. stage it otherwise.
 " :GRename           - git mv this file to path relative to the file
-" :GDelete!           - git rm -f this file
+" :GDelete!          - git rm -f this file
 " :GRemove           - git rm --cached (keeps the file around)
 " :[range]Gclog      - wow. vis something :Gclog for quckfix of commits relating to selected code will load up version of file for that commit!
 " G                  - place to stage and unstage files
-                     - '-' toggle stage status
-                     - U unstage all
-                     - X checkout file (a command is echoed to undo this see :messages to see again)
-" Gcd                - cd relative to the repo root
+"                    - '-' toggle stage status
+"                    - U unstage all
+"                    - X checkout file (a command is echoed to undo this see :messages to see again)
 " :G blame           - A vertical window on left showing commit hashes. Can walk backwards through git commits to follow history of changes with <cr> for patch or - to load up file at commit and rerun G blame.
 " :G difftool        - quickfix of line changes in the current file
 " :G diff            - open a split and show the normal git diff but for only this file
-" :Gclog or G log    - quickfix or split of commit hashes and their messages, press enter to open a buffer showing its patch diff.
+" :Gclog or G log    - like fzf's :Commits - open quickfix or split of commit hashes and their messages, press enter to open a buffer showing its patch diff.
+"
+" Gcd is cd relative to the repo root. So this would be cd to repo root.
+nnoremap <leader>cr :Gcd<cr>
 
-Plug 'tpope/vim-obsession'
-" :Obsession to create a session with optional file or dir arg
-" :Obsession! throw session away
-" nvim -S or :so the session file to open it
+Plug 'stsewd/fzf-checkout.vim'
+" cr switch to,  a-enter track remote, c-b create, c-d delete, c-r rebase, c-e merge,
+nnoremap <leader>gb :GCheckout<cr>
 
 " okay but really need git integration
 " or a file tree that has really good create/move/delete with git
@@ -233,6 +234,12 @@ nnoremap s <cmd>HopChar1<cr>
 xnoremap s <cmd>HopChar1<cr>
 nnoremap S <nop>
 
+Plug 'tpope/vim-obsession'
+" :Obsession to create a session with optional file or dir arg
+" :Obsession! throw session away
+" nvim -S or :so the session file to open it
+nnoremap S :Gcd <bar> so Session.vim<cr>
+
 " LSP for code completion options:
 " CMAKE:
 " set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -275,10 +282,6 @@ let g:tcomment_mapleader1=''
 let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
-
-Plug 'airblade/vim-rooter'
-let g:rooter_manual_only = 1
-nnoremap <leader>cr :Rooter<cr>
 
 " Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a.
 " Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
@@ -794,16 +797,17 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " nnoremap <c-b> f<space>vBxBP`[v`]
 " nnoremap <c-w> f<space>vBxWP`[v`]
 
+" cd or cr then run this to create a file or cpp/h pair in the same dir relative to :pwd
 function! MakeFileAndAddToGit(filename)
-    execute 'edit ' . a:filename
-    write
-    execute 'silent !git add ' . a:filename
-endfunction
+    let stem = substitute(a:filename,'[0-9A-Za-z]\+\.[0-9A-Za-z]\+$', '', '')
+    if stem =~ '[0-9A-Za-z]\+'
+        execute 'silent !mkdir -p ' . stem
+    endif
 
-function! MakeCFileAndAddToGit(filename)
     execute 'edit ' . a:filename
     write
     execute 'silent !git add ' . a:filename
+
     " match .c then 0 or 2 p's then end of line
     " see :h pattern-overview
     let hfile=substitute(a:filename, '\.c[p]\{-,2}$', '.h', '')
@@ -813,9 +817,37 @@ function! MakeCFileAndAddToGit(filename)
         execute 'silent !git add ' . hfile
     endif
 endfunction
+
+" Same as MakeFileAndAddToGit but this runs cr first.
+" Assumes root/include and root/src
+function! MakeSplitFileAndAddToGit(filename)
+    execute 'Gcd'
+
+    let stem = substitute(a:filename,'[0-9A-Za-z]\+\.[0-9A-Za-z]\+$', '', '')
+    if stem =~ '[0-9A-Za-z]\+'
+        execute 'silent !mkdir -p ' . stem
+    endif
+
+    execute 'edit ' . a:filename
+    write
+    execute 'silent !git add ' . a:filename
+
+    " .c/.cpp discovery: match .c then 0 or 2 p's then end of line
+    " see :h pattern-overview
+    let hfile = substitute(a:filename, '\.c[p]\{-,2}$', '.h', '')
+    if hfile =~ '\.h$'
+        let hstem = substitute(stem, '^src', 'include', '')
+        if hstem =~ '^include'
+            execute 'silent !mkdir -p ' . hstem
+        endif
+
+        execute 'edit ' . hfile
+        write
+        execute 'silent !git add ' . hfile
+    endif
+endfunction
 nnoremap <leader>mf :call MakeFileAndAddToGit("")<left><left>
-" Additional .h file created in same dir when .cpp passed in
-nnoremap <leader>mc :call MakeCFileAndAddToGit("")<left><left>
+nnoremap <leader>msf :call MakeSplitFileAndAddToGit("")<left><left>
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
@@ -994,13 +1026,11 @@ let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git att
 let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and file icon highlight for opened files/directories.
 let g:nvim_tree_root_folder_modifier = ':~' "This is the default. See :help filename-modifiers for more options
 let g:nvim_tree_tab_open = 1 "0 by default, will open the tree when entering a new tab and the tree was previously open
-let g:nvim_tree_auto_resize = 0 "1 by default, will resize the tree to its saved width when opening a file
-let g:nvim_tree_disable_netrw = 0 "1 by default, disables netrw
 let g:nvim_tree_add_trailing = 1 "0 by default, append a trailing slash to folder names
 let g:nvim_tree_lsp_diagnostics = 1 "0 by default, will show lsp diagnostics in the signcolumn. See :help nvim_tree_lsp_diagnostics
 let g:nvim_tree_disable_window_picker = 1 "0 by default, will disable the window picker.
 let g:nvim_tree_hijack_cursor = 0 "1 by default, when moving cursor in the tree, will position the cursor at the start of the file on the current line
-let g:nvim_tree_icon_padding = ' ' "one space by default, used for rendering the space between the icon and the filename. Use with caution, it could break rendering if you set an empty string depending on your font.
+let g:nvim_tree_icon_padding = '' "one space by default, used for rendering the space between the icon and the filename. Use with caution, it could break rendering if you set an empty string depending on your font.
 let g:nvim_tree_update_cwd = 1 "0 by default, will update the tree cwd when changing nvim's directory (DirChanged event). Behaves strangely with autochdir set.
 " Dictionary of buffer option names mapped to a list of option values that
 " indicates to the window picker that the buffer's window should not be
@@ -1044,8 +1074,7 @@ let g:nvim_tree_icons = {
     \     'error': "E",
     \   }
     \ }
-nnoremap <C-n> :NvimTreeToggle<CR>
-nnoremap <leader>r :NvimTreeRefresh<CR>
+nnoremap <leader>t :NvimTreeToggle<CR>
 " a list of groups can be found at `:help nvim_tree_highlight`
 highlight NvimTreeFolderIcon guibg=blue
 " a: add a file. Adding a directory requires leaving a leading / at the end of the path.
