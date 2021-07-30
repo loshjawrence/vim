@@ -41,6 +41,7 @@ set smartcase
 set autowrite           " Automatically :write before running commands
 set magic               " Use 'magic' patterns (extended regular expressions).
 set mouse=a             " enable mouse (selection, resizing windows)
+set mousemodel=popup_setpos
 set tabstop=4           " Use 4 spaces for tabs.
 set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
 set expandtab           " tabs replaced with right amount of spacing
@@ -49,8 +50,12 @@ set hidden              " enable hidden unsaved buffers
 silent! helptags ALL    " Generate help doc for all plugins
 " set iskeyword+=-        " Add chars that count as word boundaries. test: asdf-asdf
 set fenc=utf-8          " set UTF-8 encoding
+
 set spell               " turn on spell check
-set complete+=kspell    " Turns off spell checking on code. Autocomplete with dictionary words when spell check is on.
+" correct spelling of work under cursor. <right> required since the cursor needs to be inside the word
+nnoremap <c-s> i<right><c-x>s
+inoremap <c-s> <right><c-x>s
+
 set nobackup
 set nowritebackup
 set noswapfile
@@ -149,8 +154,33 @@ nnoremap <leader>fb :Buffers<cr>
 Plug 'sjl/gundo.vim'
 nnoremap <F5> :GundoToggle<CR>
 
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
+
 Plug 'majutsushi/tagbar'
 nnoremap <F8> :TagbarToggle<CR>
+
+" try to combine with nvim-tree ability to create/delete files and directories
+Plug 'tpope/vim-fugitive'
+" :Gdiffsplit        - show git diff for file or provide a file or commit as an arg (newer version is on right or bottom)
+"                         - do will obtain theirs (other buffer)
+"                         - dp will put ours (current buffer)
+" :Gdiffsplit!       - used for merge conflict?
+" :Gread             - git checkout -- on this file.
+" :Gwrite            - git add the file. stage it otherwise.
+" :GRename           - git mv this file to path relative to the file
+" :GDelete!           - git rm -f this file
+" :GRemove           - git rm --cached (keeps the file around)
+" :[range]Gclog      - wow. vis something :Gclog for quckfix of commits relating to selected code will load up version of file for that commit!
+" G                  - place to stage and unstage files
+                     - '-' toggle stage status
+                     - U unstage all
+                     - X checkout file (a command is echoed to undo this see :messages to see again)
+" Gcd                - cd relative to the repo root
+" :G blame           - A vertical window on left showing commit hashes. Can walk backwards through git commits to follow history of changes with <cr> for patch or - to load up file at commit and rerun G blame.
+" :G difftool        - quickfix of line changes in the current file
+" :G diff            - open a split and show the normal git diff but for only this file
+" :Gclog or G log    - quickfix or split of commit hashes and their messages, press enter to open a buffer showing its patch diff.
 
 Plug 'tpope/vim-obsession'
 " :Obsession to create a session with optional file or dir arg
@@ -176,6 +206,8 @@ Plug 'tpope/vim-surround'
 " S{  This means surround selection with {
 " When V selected:
 " S{  This means surround selected LINES with { (open and closed brackets above and below the lines)
+" When ctrl-v selected:
+" S{  This means surround selected block edges with { (open and closed brackets above and below the lines)
 
 " Framework for enabling repeat command on plugin commands
 " The plugin itself must explicitly support it though
@@ -950,6 +982,79 @@ function! UnMinify()
     %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
     normal ggVG=
 endfunction
+
+" nvim-tree
+let g:nvim_tree_width = 40 "30 by default, can be width_in_columns or 'width_in_percent%'
+let g:nvim_tree_indent_markers = 1 "0 by default, this option shows indent markers when folders are open
+let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
+let g:nvim_tree_gitignore = 1 "0 by default
+let g:nvim_tree_follow = 1 "0 by default, this option allows the cursor to be updated when entering a buffer
+let g:nvim_tree_hide_dotfiles = 1 "0 by default, this option hides files and folders starting with a dot `.`
+let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
+let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and file icon highlight for opened files/directories.
+let g:nvim_tree_root_folder_modifier = ':~' "This is the default. See :help filename-modifiers for more options
+let g:nvim_tree_tab_open = 1 "0 by default, will open the tree when entering a new tab and the tree was previously open
+let g:nvim_tree_auto_resize = 0 "1 by default, will resize the tree to its saved width when opening a file
+let g:nvim_tree_disable_netrw = 0 "1 by default, disables netrw
+let g:nvim_tree_add_trailing = 1 "0 by default, append a trailing slash to folder names
+let g:nvim_tree_lsp_diagnostics = 1 "0 by default, will show lsp diagnostics in the signcolumn. See :help nvim_tree_lsp_diagnostics
+let g:nvim_tree_disable_window_picker = 1 "0 by default, will disable the window picker.
+let g:nvim_tree_hijack_cursor = 0 "1 by default, when moving cursor in the tree, will position the cursor at the start of the file on the current line
+let g:nvim_tree_icon_padding = ' ' "one space by default, used for rendering the space between the icon and the filename. Use with caution, it could break rendering if you set an empty string depending on your font.
+let g:nvim_tree_update_cwd = 1 "0 by default, will update the tree cwd when changing nvim's directory (DirChanged event). Behaves strangely with autochdir set.
+" Dictionary of buffer option names mapped to a list of option values that
+" indicates to the window picker that the buffer's window should not be
+" selectable.
+let g:nvim_tree_window_picker_exclude = {
+    \   'filetype': [
+    \     'packer',
+    \     'qf'
+    \   ],
+    \   'buftype': [
+    \     'terminal'
+    \   ]
+    \ }
+"If 0, do not show the icons for one of 'git' 'folder' and 'files'
+"1 by default, notice that if 'files' is 1, it will only display
+"if nvim-web-devicons is installed and on your runtimepath.
+"if folder is 1, you can also tell folder_arrows 1 to show small arrows next to the folder icons.
+"but this will not work when you set indent_markers (because of UI conflict)
+let g:nvim_tree_show_icons = {
+    \ 'git': 1,
+    \ 'folders': 0,
+    \ 'files': 0,
+    \ 'folder_arrows': 0,
+    \ }
+" default will show icon by default if no icon is provided
+" default shows no icon by default
+let g:nvim_tree_icons = {
+    \ 'default': '',
+    \ 'symlink': '',
+    \ 'git': {
+    \   'unstaged': "✗",
+    \   'staged': "✓",
+    \   'unmerged': "C",
+    \   'renamed': "➜",
+    \   'untracked': "U",
+    \   'deleted': "D",
+    \   'ignored': "◌"
+    \   },
+    \   'lsp': {
+    \     'warning': "W",
+    \     'error': "E",
+    \   }
+    \ }
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <leader>r :NvimTreeRefresh<CR>
+" a list of groups can be found at `:help nvim_tree_highlight`
+highlight NvimTreeFolderIcon guibg=blue
+" a: add a file. Adding a directory requires leaving a leading / at the end of the path.
+" you can add multiple directories by doing foo/bar/baz/f and it will add foo bar and baz directories and f as a file
+" r: rename file
+" R: refresh tree
+" d: remove with confirm
+" <cr>: open file
+" <tab>: open file in preview
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
