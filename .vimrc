@@ -611,7 +611,7 @@ nnoremap <leader><leader> :LspRestart<cr>
 
     -- see lspinstall plugin page for installing language servers
     -- local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
-    local servers = { "html", "cpp", "vim", "json", "bash", "cmake", "typescript", "lua", "yaml"}
+    local servers = { "html", "cpp", "vim", "json", "bash", "cmake", "typescript", "lua"}
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
