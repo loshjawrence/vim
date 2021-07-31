@@ -797,57 +797,102 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " nnoremap <c-b> f<space>vBxBP`[v`]
 " nnoremap <c-w> f<space>vBxWP`[v`]
 
-" cd or cr then run this to create a file or cpp/h pair in the same dir relative to :pwd
-function! MakeFileAndAddToGit(filename)
-    let stem = substitute(a:filename,'[0-9A-Za-z]\+\.[0-9A-Za-z]\+$', '', '')
-    if stem =~ '[0-9A-Za-z]\+'
-        execute 'silent !mkdir -p ' . stem
-    endif
-
-    execute 'edit ' . a:filename
-    write
+" @see MakeFileAndAddToGit
+function! CreateAddFile(filename)
+    execute 'silent edit ' . a:filename
+    execute 'silent write'
     execute 'silent !git add ' . a:filename
-
-    " match .c then 0 or 2 p's then end of line
-    " see :h pattern-overview
-    let hfile=substitute(a:filename, '\.c[p]\{-,2}$', '.h', '')
-    if hfile =~ '\.h$'
-        execute 'edit ' . hfile
-        write
-        execute 'silent !git add ' . hfile
-    endif
+    echo '===== UPDATE CMAKELISTS.TXT: ' . a:filename . ' ====='
 endfunction
 
-" Same as MakeFileAndAddToGit but this runs cr first.
-" Assumes root/include and root/src
-function! MakeSplitFileAndAddToGit(filename)
-    execute 'Gcd'
+" Will make a .h from a .c/.cpp
+" if there's a root/include and it was fed a c/cpp it will use the root/src path to create the include path for the .h
+" NOTE:  cd,pwd is system cd,pwd
+function! MakeFileAddGit(filename)
+    " Open a file that is the directory already or at the base of directories we need to make.
+    execute 'cd %:p:h'
 
-    let stem = substitute(a:filename,'[0-9A-Za-z]\+\.[0-9A-Za-z]\+$', '', '')
-    if stem =~ '[0-9A-Za-z]\+'
-        execute 'silent !mkdir -p ' . stem
+    " Gets the full path by taking the path to the file we are looking at + any pathing we included in filename arg.
+    let filenameSan = substitute(a:filename, '^/', '', '')
+    let fullFilePath = getcwd() . '/' . filenameSan
+    echo 'fullFilePath: ' . fullFilePath
+
+    " Gcd is from fugitive. It will take us to the root of repo.
+    execute 'Gcd'
+    let rootPath = getcwd() . '/'
+    echo 'rootPath: ' . rootPath
+
+    " cd the system to root of directory
+    execute 'silent !cd ' . rootPath
+
+    " Capture the full path to the file we are making
+    let fileRootRel = substitute(fullFilePath, rootPath, '', '')
+    echo 'fileRootRel: ' . fileRootRel
+
+    " Chop off the file name(wonder if this can be done with :p:h thing)
+    let fileDirRootRel = substitute(fileRootRel, '[0-9A-Za-z]\+\.[0-9A-Za-z]\+$', '', '')
+    echo 'fileDirRootRel: ' . fileDirRootRel
+
+    if fileDirRootRel =~ '[0-9A-Za-z]\+'
+        echo 'Running mkdir -p ' . fileDirRootRel
+        execute 'silent !mkdir -p ' . fileDirRootRel
     endif
 
-    execute 'edit ' . a:filename
-    write
-    execute 'silent !git add ' . a:filename
+    execute CreateAddFile(fileRootRel)
+
+    " We are done if this is not a c or cpp file
+    if fileRootRel !~ '\.c[p]\{-,2}$'
+        echo 'WAS NOT A C/CPP FILE: DONE'
+        return
+    endif
+
+    echo 'THIS IS A C/CPP FILE: MAKING H FILE'
 
     " .c/.cpp discovery: match .c then 0 or 2 p's then end of line
     " see :h pattern-overview
-    let hfile = substitute(a:filename, '\.c[p]\{-,2}$', '.h', '')
-    if hfile =~ '\.h$'
-        let hstem = substitute(stem, '^src', 'include', '')
-        if hstem =~ '^include'
-            execute 'silent !mkdir -p ' . hstem
-        endif
+    let hFileRootRel = substitute(fileRootRel, '\.c[p]\{-,2}$', '.h', '')
+    echo 'hFileRootRel: ' . hFileRootRel
 
-        execute 'edit ' . hfile
-        write
-        execute 'silent !git add ' . hfile
+    let includeGrep = substitute(system('ls | grep include'), '\n\+$', '', '')
+    echo 'INCLUDE GREP: ' . includeGrep
+
+    if includeGrep != 'include'
+        echo 'DOES NOT HAVE INCLUDE DIR'
+        execute CreateAddFile(hFileRootRel)
+        return
     endif
+
+    echo 'HAS INCLUDE DIR'
+
+    " src
+    let hFileDirRootRel = substitute(fileDirRootRel, '^src', 'include', '')
+    echo 'src hFileDirRootRel: ' . hFileDirRootRel
+    if hFileDirRootRel =~ '^include'
+        echo 'HAS SRC DIR'
+        echo 'Running mkdir -p ' . hFileDirRootRel
+        execute 'silent !mkdir -p ' . hFileDirRootRel
+        let hFileStem = substitute(hFileRootRel, '^src', 'include', '')
+        echo 'hFileStem: ' . hFileStem
+        execute CreateAddFile(hFileStem)
+        return
+    endif
+
+    " source
+    let hFileDirRootRel = substitute(fileDirRootRel, '^source', 'include', '')
+    echo 'SOURCE hFileDirRootRel: ' . hFileDirRootRel
+    if hFileDirRootRel =~ '^include'
+        echo 'HAS SOURCE DIR'
+        echo 'Running mkdir -p ' . hFileDirRootRel
+        execute 'silent !mkdir -p ' . hFileDirRootRel
+        let hFileStem = substitute(hFileRootRel, '^source', 'include', '')
+        echo 'hFileStem: ' . hFileStem
+        execute CreateAddFile(hFileStem)
+        return
+    endif
+
 endfunction
-nnoremap <leader>mf :call MakeFileAndAddToGit("")<left><left>
-nnoremap <leader>msf :call MakeSplitFileAndAddToGit("")<left><left>
+" leader g is for git stuff
+nnoremap <leader>gf :call MakeFileAddGit("")<left><left>
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
