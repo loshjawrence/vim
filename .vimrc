@@ -265,7 +265,7 @@ Plug 'voldikss/vim-floaterm'
 
 " Font, size, resize
 set guifont=Monospace:h8
-let s:fontsize = 9
+let s:fontsize = 7
 function! AdjustFontSize(amount)
     let s:fontsize = s:fontsize+a:amount
     :execute "GuiFont! Monospace:h" . s:fontsize
@@ -304,6 +304,33 @@ Plug 'beyondmarc/hlsl.vim'
 
 " Buffers as tabs setup
 Plug 'akinsho/nvim-bufferline.lua'
+Plug 'puremourning/vimspector'
+let g:vimspector_base_dir=expand( '$HOME/.vim/vimspector-config' )
+" For c++ install llvm then follow directions for lldb-vscode in :h vimspector
+let g:vimspector_install_gadgets = [ 'vscode-node-debug2', 'vscode-cpptools' ]
+nnoremap <leader>dd :call vimspector#Launch()<cr>
+" Issues with f11 in windows terminal...
+nmap <s-right> :call vimspector#Continue()<cr>
+nmap <s-left> :call vimspector#Reset()<cr>
+" Quit vimspector
+nmap <down> <Plug>VimspectorStepOver
+nmap <right> <Plug>VimspectorStepInto
+nmap <left> <Plug>VimspectorStepOut
+nmap <s-down> <Plug>VimspectorRunToCursor
+nmap <F9> <Plug>VimspectorToggleBreakpoint
+nmap <leader><F9> <Plug>VimspectorToggleConditionalBreakpoint
+function! IsPopup()
+    return win_gettype() == "popup" ? 1 : 0
+endfunction
+" for norm/vis mode eval word or selection, hover
+nmap <expr> <bslash> IsPopup() ? "\<esc>" : "\<Plug>VimspectorBalloonEval"
+xmap <bslash> <Plug>VimspectorBalloonEval
+" Up/down stack
+" nmap <leader><F11> <Plug>VimspectorUpFrame
+" nmap <leader><F12> <Plug>VimspectorDownFrame
+nmap <leader>dl :call vimspector#ListBreakpoints()<cr>
+nmap <leader>dc :call vimspector#ClearBreakpoints()<cr>
+nmap <leader>dw :call vimspector#DeleteWatch()<cr>
 
 call plug#end()
 
@@ -382,10 +409,11 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
 " Use <Tab> and <S-Tab> to navigate through popup menu
 inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <expr> <cr> pumvisible() ? "\<esc>" : "\<cr>"
 inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <expr> <c-d> pumvisible() ? "\<PageDown>" : "\<c-d>"
 inoremap <expr> <c-u> pumvisible() ? "\<PageUp>" : "\<c-u>"
-set completeopt=menuone,noinsert,noselect
+set completeopt=menuone,noinsert,noselect,preview
 
 nnoremap <leader><leader> :LspRestart<cr>
 :lua << EOF
@@ -563,8 +591,8 @@ nnoremap <leader><leader> :LspRestart<cr>
             lsp_interop = {
                 enable = true,
                 peek_definition_code = {
-                    ["gp"] = "@function.outer",
-                    ["gP"] = "@class.outer",
+                    ["<bar>"] = "@class.outer",
+                    ["<bslash>"] = "@function.outer",
                 },
             },
         },
@@ -599,7 +627,7 @@ nnoremap <leader><leader> :LspRestart<cr>
         local opts = { noremap=true, silent=true }
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
         -- can use on `auto` in cpp to get the underlying type
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<tab>', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         -- if rename does not work, can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
@@ -678,7 +706,7 @@ endfunction
 " set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
 " set list                            " Show problematic characters.
 " NOTE see vim-better-whitespace plugin
-highlight ExtraWhitespace ctermbg=red guibg=red
+highlight ExtraWhitespace ctermbg=black guibg=black
 
 " treesitter
 highlight TSCurrentScope guibg=#141414
