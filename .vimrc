@@ -138,7 +138,7 @@ command! -bang -nargs=? -complete=dir GFiles
     \ }, <bang>0)
 
 " v:oldfiles
-nnoremap <leader>fo :History<cr>
+nnoremap <leader>fh :History<cr>
 nnoremap <leader>fm :Marks<cr>
 nnoremap <leader>fb :Buffers<cr>
 
@@ -304,33 +304,39 @@ Plug 'beyondmarc/hlsl.vim'
 
 " Buffers as tabs setup
 Plug 'akinsho/nvim-bufferline.lua'
-Plug 'puremourning/vimspector'
-let g:vimspector_base_dir=expand( '$HOME/.vim/vimspector-config' )
-" For c++ install llvm then follow directions for lldb-vscode in :h vimspector
-let g:vimspector_install_gadgets = [ 'vscode-node-debug2', 'vscode-cpptools' ]
-nnoremap <leader>dd :call vimspector#Launch()<cr>
-" Issues with f11 in windows terminal...
-nmap <s-right> :call vimspector#Continue()<cr>
-nmap <s-left> :call vimspector#Reset()<cr>
-" Quit vimspector
-nmap <down> <Plug>VimspectorStepOver
-nmap <right> <Plug>VimspectorStepInto
-nmap <left> <Plug>VimspectorStepOut
-nmap <s-down> <Plug>VimspectorRunToCursor
-nmap <F9> <Plug>VimspectorToggleBreakpoint
-nmap <leader><F9> <Plug>VimspectorToggleConditionalBreakpoint
-function! IsPopup()
-    return win_gettype() == "popup" ? 1 : 0
-endfunction
-" for norm/vis mode eval word or selection, hover
-nmap <expr> <bslash> IsPopup() ? "\<esc>" : "\<Plug>VimspectorBalloonEval"
-xmap <bslash> <Plug>VimspectorBalloonEval
-" Up/down stack
-" nmap <leader><F11> <Plug>VimspectorUpFrame
-" nmap <leader><F12> <Plug>VimspectorDownFrame
-nmap <leader>dl :call vimspector#ListBreakpoints()<cr>
-nmap <leader>dc :call vimspector#ClearBreakpoints()<cr>
-nmap <leader>dw :call vimspector#DeleteWatch()<cr>
+
+" NOTE: About an identical experience to vscode in terms of what kind of vars you can see and stepping speed (slow).
+" Keep around just in case
+" nvim-dap: stepping speed was great, var visibility the same, usability was worse.
+" Need to look into graphical gdb
+" Plug 'puremourning/vimspector'
+" let g:vimspector_base_dir=expand( '$HOME/.vim/vimspector-config' )
+" " For c++ install llvm then follow directions for lldb-vscode in :h vimspector
+" let g:vimspector_install_gadgets = [ 'vscode-node-debug2', 'vscode-cpptools' ]
+" nnoremap <leader>dd :call vimspector#Launch()<cr>
+" " Issues with f11 in windows terminal...
+" nmap <s-right> :call vimspector#Continue()<cr>
+" nmap <s-left> :call vimspector#Reset()<cr>
+" " Quit vimspector
+" nmap <down> <Plug>VimspectorStepOver
+" nmap <right> <Plug>VimspectorStepInto
+" nmap <left> <Plug>VimspectorStepOut
+" nmap <s-down> <Plug>VimspectorRunToCursor
+" nmap <F9> <Plug>VimspectorToggleBreakpoint
+" nmap <leader><F9> <Plug>VimspectorToggleConditionalBreakpoint
+" function! IsPopup()
+"     return win_gettype() == "popup" ? 1 : 0
+" endfunction
+" nmap <expr> <tab> IsPopup() ? "\<esc>" : "\<Plug>VimspectorBalloonEval"
+" " have to move mouse to word first with left click
+" nmap <RightMouse> <Plug>VimspectorBalloonEval
+" xmap <tab> <Plug>VimspectorBalloonEval
+" " Up/down stack
+" " nmap <leader><F11> <Plug>VimspectorUpFrame
+" " nmap <leader><F12> <Plug>VimspectorDownFrame
+" nmap <leader>dl :call vimspector#ListBreakpoints()<cr>
+" nmap <leader>dc :call vimspector#ClearBreakpoints()<cr>
+" nmap <leader>dw :call vimspector#DeleteWatch()<cr>
 
 call plug#end()
 
@@ -612,6 +618,25 @@ nnoremap <leader><leader> :LspRestart<cr>
     ----------------
     require'hop'.setup()
 
+    ----------------------
+    -- devicons ---------
+    ----------------------
+    require'nvim-web-devicons'.setup {
+        -- your personnal icons can go here (to override)
+        -- DevIcon will be appended to `name`
+        -- override = {
+        --     zsh = {
+        --         icon = "",
+        --         color = "#428850",
+        --         name = "Zsh"
+        --     }
+        -- };
+        -- globally enable default icons (default to false)
+        -- will get overriden by `get_icons` option
+        default = true;
+    }
+    require'nvim-web-devicons'.get_icons()
+
     ---------------------------------
     -- lspconfig language servers  --
     ---------------------------------
@@ -627,7 +652,7 @@ nnoremap <leader><leader> :LspRestart<cr>
         local opts = { noremap=true, silent=true }
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
         -- can use on `auto` in cpp to get the underlying type
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<tab>', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         -- if rename does not work, can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
