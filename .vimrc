@@ -24,6 +24,7 @@ filetype plugin indent on  " try to recognize filetypes and load related plugins
 syntax on        " syntax highlighting
 syntax enable    " syntax highlighting
 
+set relativenumber
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set number              " Show line numbers
 set laststatus=0        " Always hide the status line
@@ -183,6 +184,8 @@ Plug 'tpope/vim-fugitive'
 "
 " Gcd is cd relative to the repo root. So this would be cd to repo root.
 nnoremap <leader>cr :Gcd<cr>
+" see https://stackoverflow.com/questions/1269603/to-switch-from-vertical-split-to-horizontal-split-fast-in-vim
+nnoremap <leader>gg :G<cr><c-w>H
 
 Plug 'stsewd/fzf-checkout.vim'
 " cr switch to,  a-enter track remote, c-b create, c-d delete, c-r rebase, c-e merge,
