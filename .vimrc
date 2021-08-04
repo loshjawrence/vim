@@ -961,7 +961,7 @@ function! MakeFileAddGit(filename)
 
 endfunction
 " leader g is for git stuff
-nnoremap <leader>gf :call MakeFileAddGit("")<left><left>
+nnoremap <leader>ga :call MakeFileAddGit("")<left><left>
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
