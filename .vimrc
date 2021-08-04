@@ -198,10 +198,11 @@ nnoremap <leader>gg :G<cr><c-w>H
 " nnoremap <leader>gr :G fetch <bar> call GetBranchOriginSyncString()<cr>
 
 Plug 'stsewd/fzf-checkout.vim'
-" <cr> switch to,  a-enter track remote, c-b create, c-d delete, c-e merge, c-f diff (requires fugitive)
+" <cr> switch to,  a-enter track remote, c-b create, c-d delete, c-e merge, c-f (requires fugitive)
 nnoremap <leader>gb :GBranches<cr>
 " c-r rebase doesnt work. pneumonic: paste
 let g:fzf_branch_actions = { 'rebase': {'keymap': 'ctrl-v'} }
+let g:fzf_branch_actions = { 'track': {'keymap': 'ctrl-g'} }
 
 " okay but really need git integration
 " or a file tree that has really good create/move/delete with git
