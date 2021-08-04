@@ -143,6 +143,11 @@ nnoremap <leader>fh :History<cr>
 nnoremap <leader>fm :Marks<cr>
 nnoremap <leader>fb :Buffers<cr>
 
+" Insert mode completion.
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
 " Plug 'nvim-telescope/telescope.nvim'
 " These two are for flipping between dec hex oct bin
 " magnum is just a dependency of radical
