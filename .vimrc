@@ -192,9 +192,16 @@ nnoremap <leader>cr :Gcd<cr>
 " see https://stackoverflow.com/questions/1269603/to-switch-from-vertical-split-to-horizontal-split-fast-in-vim
 nnoremap <leader>gg :G<cr><c-w>H
 
+" TODO: would need a function that does :G branch and finds the line with * BRANCHNAME
+" Then extract that branch name and returns this string
+" G reset --hard origin/BRANCHNAME
+" nnoremap <leader>gr :G fetch <bar> call GetBranchOriginSyncString()<cr>
+
 Plug 'stsewd/fzf-checkout.vim'
-" cr switch to,  a-enter track remote, c-b create, c-d delete, c-r rebase, c-e merge,
-nnoremap <leader>gb :GCheckout<cr>
+" <cr> switch to,  a-enter track remote, c-b create, c-d delete, c-e merge, c-f diff (requires fugitive)
+nnoremap <leader>gb :GBranches<cr>
+" c-r rebase doesnt work. pneumonic: paste
+let g:fzf_branch_actions = { 'rebase': {'keymap': 'ctrl-v'} }
 
 " okay but really need git integration
 " or a file tree that has really good create/move/delete with git
