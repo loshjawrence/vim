@@ -870,99 +870,149 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " nnoremap <c-w> f<space>vBxWP`[v`]
 
 " @see MakeFileAndAddToGit
-function! CreateAddFile(filename)
+function! CreateAddFile(currFilename, filename)
     execute 'silent edit ' . a:filename
     execute 'silent write'
     execute 'silent !git add ' . a:filename
     echo '===== UPDATE CMAKELISTS.TXT: ' . a:filename . ' ====='
 endfunction
 
+" @see MakeFileAndAddToGit
+function! RemoveFile(currFilename, filename)
+    execute 'silent !git rm -f ' . a:currFilename
+    echo '===== UPDATE CMAKELISTS.TXT: ' . a:currFilename . ' ====='
+endfunction
+
+" @see MakeFileAndAddToGit
+function! MoveFile(currFilename, filename)
+    execute 'silent !git mv ' . a:currFilename . ' ' a:filename
+    echo '===== UPDATE CMAKELISTS.TXT: ' . a:currFilename . ' -> ' . a:filename . ' ====='
+    execute 'silent edit ' . a:filename
+
+    " TODO: here: go back to the old file with c-6
+    " silent bd!
+
+    execute 'silent edit ' . a:filename
+endfunction
+
 " Will make a .h from a .c/.cpp
 " if there's a root/include and it was fed a c/cpp it will use the root/src path to create the mirrored include path for the .h
 " NOTE:  cd,pwd is system cd,pwd
+" NOTE: echom allows you to recall messages with :mes
 " TODO: need a git mv and rm -f version of this.
-function! MakeFileAddGit(filename)
+" could be this:
+":let funcs = [function("Append"), function("Pop")]
+":echo funcs[1](['a', 'b', 'c'], 1)
+function! MakeFileAddGit(fn, filename)
     " Open a file that is the directory already or at the base of directories we need to make.
     execute 'cd %:p:h'
+    let fullCurrFilePath = expand('%:p')
+    echom 'fullCurrFilePath: ' . fullCurrFilePath
 
     " Gets the full path by taking the path to the file we are looking at + any pathing we included in filename arg.
-    let filenameSan = substitute(a:filename, '^/', '', '')
-    let fullFilePath = getcwd() . '/' . filenameSan
-    echo 'fullFilePath: ' . fullFilePath
+    let filenameSanitized = substitute(a:filename, '^/', '', '')
+    let fullFilePath = getcwd() . '/' . filenameSanitized
+    echom 'fullFilePath: ' . fullFilePath
 
     " Gcd is from fugitive. It will take us to the root of repo.
     execute 'Gcd'
     let rootPath = getcwd() . '/'
-    echo 'rootPath: ' . rootPath
+    echom 'rootPath: ' . rootPath
 
     " Capture the full path to the file we are making
     let fileRootRel = substitute(fullFilePath, rootPath, '', '')
-    echo 'fileRootRel: ' . fileRootRel
+    echom 'fileRootRel: ' . fileRootRel
+
+    " Capture the full path to the current file we have open (used for MoveFile and RemoveFile)
+    let currFileRootRel = substitute(fullCurrFilePath, rootPath, '', '')
+    echom 'currFileRootRel: ' . currFileRootRel
 
     " Chop off the file name(wonder if this can be done with :p:h thing)
     let fileDirRootRel = substitute(fileRootRel, '[0-9A-Za-z]\+\.[0-9A-Za-z]\+$', '', '')
-    echo 'fileDirRootRel: ' . fileDirRootRel
+    echom 'fileDirRootRel: ' . fileDirRootRel
 
     if fileDirRootRel =~ '[0-9A-Za-z]\+'
-        echo 'Running mkdir -p ' . fileDirRootRel
+        echom 'Running mkdir -p ' . fileDirRootRel
         execute 'silent !mkdir -p ' . fileDirRootRel
     endif
 
-    execute CreateAddFile(fileRootRel)
+    execute a:fn(currFileRootRel, fileRootRel)
 
     " We are done if this is not a c or cpp file
-    if fileRootRel !~ '\.c[p]\{-,2}$'
-        echo 'WAS NOT A C/CPP FILE: DONE'
-        return
+    if string(a:fn) =~ 'CreateAddFile'
+        echom 'CALLED CreateAddFile'
+        if fileRootRel !~ '\.c[p]\{-,2}$'
+            echom 'WAS NOT A C/CPP FILE: ' . fileRootRel . ' : DONE!'
+            return
+        endif
+    else
+        echom 'DID NOT CALL CreateAddFile'
+        if currFileRootRel !~ '\.c[p]\{-,2}$'
+            echom 'WAS NOT A C/CPP FILE: ' . currFileRootRel . ' : DONE!'
+            return
+        endif
     endif
 
-    echo 'THIS IS A C/CPP FILE: MAKING H FILE'
+    echom 'THIS IS A C/CPP FILE: RUNNING OPERATION FOR H FILE'
 
     " .c/.cpp discovery: match .c then 0 or 2 p's then end of line
     " see :h pattern-overview
     let hFileRootRel = substitute(fileRootRel, '\.c[p]\{-,2}$', '.h', '')
-    echo 'hFileRootRel: ' . hFileRootRel
+    echom 'hFileRootRel: ' . hFileRootRel
+
+    let hCurrFileRootRel = substitute(currFileRootRel, '\.c[p]\{-,2}$', '.h', '')
+    echom 'hCurrFileRootRel: ' . hCurrFileRootRel
 
     let includeGrep = substitute(system('ls | grep include'), '\n\+$', '', '')
-    echo 'INCLUDE GREP: ' . includeGrep
+    echom 'INCLUDE GREP: ' . includeGrep
 
     if includeGrep != 'include'
-        echo 'DOES NOT HAVE INCLUDE DIR'
-        execute CreateAddFile(hFileRootRel)
+        echom 'DOES NOT HAVE INCLUDE DIR: DONE'
+        execute a:fn(hCurrFileRootRel, hFileRootRel)
         return
     endif
 
-    echo 'HAS INCLUDE DIR'
+    echom 'HAS INCLUDE DIR'
 
     " src
     let hFileDirRootRel = substitute(fileDirRootRel, '^src', 'include', '')
-    echo 'src hFileDirRootRel: ' . hFileDirRootRel
+    echom 'src hFileDirRootRel: ' . hFileDirRootRel
     if hFileDirRootRel =~ '^include'
-        echo 'HAS SRC DIR'
-        echo 'Running mkdir -p ' . hFileDirRootRel
+        echom 'HAS SRC DIR'
+        echom 'Running mkdir -p ' . hFileDirRootRel
         execute 'silent !mkdir -p ' . hFileDirRootRel
         let hFileStem = substitute(hFileRootRel, '^src', 'include', '')
-        echo 'hFileStem: ' . hFileStem
-        execute CreateAddFile(hFileStem)
+        echom 'hFileStem: ' . hFileStem
+        let hCurrFileStem = substitute(hCurrFileRootRel, '^src', 'include', '')
+        echom 'hCurrFileStem: ' . hCurrFileStem
+        execute a:fn(hCurrFileStem, hFileStem)
         return
     endif
 
     " source
     let hFileDirRootRel = substitute(fileDirRootRel, '^source', 'include', '')
-    echo 'SOURCE hFileDirRootRel: ' . hFileDirRootRel
+    echom 'SOURCE hFileDirRootRel: ' . hFileDirRootRel
     if hFileDirRootRel =~ '^include'
-        echo 'HAS SOURCE DIR'
-        echo 'Running mkdir -p ' . hFileDirRootRel
+        echom 'HAS SOURCE DIR'
+        echom 'Running mkdir -p ' . hFileDirRootRel
         execute 'silent !mkdir -p ' . hFileDirRootRel
         let hFileStem = substitute(hFileRootRel, '^source', 'include', '')
-        echo 'hFileStem: ' . hFileStem
-        execute CreateAddFile(hFileStem)
+        echom 'hFileStem: ' . hFileStem
+        let hCurrFileStem = substitute(hCurrFileRootRel, '^source', 'include', '')
+        echom 'hCurrFileStem: ' . hCurrFileStem
+        execute a:fn(hCurrFileStem, hFileStem)
         return
     endif
 
 endfunction
+
 " leader g is for git stuff
-nnoremap <leader>ga :call MakeFileAddGit("")<left><left>
+" git add
+nnoremap <leader>ga :call MakeFileAddGit(function("CreateAddFile"), "")<left><left>
+" git rm -f
+nnoremap <leader>gr :call MakeFileAddGit(function("RemoveFile"), "")<left><left>
+" git mv
+nnoremap <leader>gm :call MakeFileAddGit(function("MoveFile"), "")<left><left>
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
@@ -1113,6 +1163,7 @@ nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp ../.vimrc .<cr>git diff<cr>
 nmap <silent> <leader>vp <c-\>cd ~/vim<cr>git pull<cr>cp .vimrc ..<cr>cd -<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
+
 " we cd to root and save the path to the l register for pasting in terminal later
 " have to run cmake twice for compile_commands.json to show up?
 nmap <silent> <leader>bl <leader>cr<cmd>let @l = getcwd()<cr><c-\>cd <c-r>l<cr>cmake -BbuildLinux; cmake -BbuildLinux; cp buildLinux/compile_commands.json .;cd -;<cr>
@@ -1211,6 +1262,7 @@ highlight NvimTreeFolderIcon guibg=blue
 "" NOTES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ga will tell you the different binary represenations of the char under cursor
 " fzf works in the linux terminal:
 " cd **<tab> (or fzf's alt-c)
 " nvim **<tab> (or fzfs' nvim <c-t>)
