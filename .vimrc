@@ -177,11 +177,12 @@ Plug 'tpope/vim-fugitive'
 " :GRename           - git mv this file to path relative to the file
 " :GDelete!          - git rm -f this file
 " :GRemove           - git rm --cached (keeps the file around)
-" :[range]Gclog      - wow. vis something :Gclog for quckfix of commits relating to selected code will load up version of file for that commit!
+" :[range]Gclog      - wow. vis something :Gclog for quckfix of commits relating to selected code will load up diff of the file for that commit
 " G                  - place to stage and unstage files
 "                    - '-' toggle stage status
 "                    - U unstage all
 "                    - X checkout file (a command is echoed to undo this see :messages to see again)
+"                    - = toggle diff fold
 " :G blame           - A vertical window on left showing commit hashes. Can walk backwards through git commits to follow history of changes with <cr> for patch or - to load up file at commit and rerun G blame.
 " :G difftool        - quickfix of line changes in the current file
 " :G diff            - open a split and show the normal git diff but for only this file
@@ -195,14 +196,16 @@ nnoremap <leader>gg :G<cr><c-w>H
 " TODO: would need a function that does :G branch and finds the line with * BRANCHNAME
 " Then extract that branch name and returns this string
 " G reset --hard origin/BRANCHNAME
-" nnoremap <leader>gr :G fetch <bar> call GetBranchOriginSyncString()<cr>
+" nnoremap <leader>gs :G fetch <bar> call GetBranchOriginSyncString()<cr>
 
 Plug 'stsewd/fzf-checkout.vim'
 " <cr> switch to,  a-enter track remote, c-b create, c-d delete, c-e merge, c-f (requires fugitive)
 nnoremap <leader>gb :GBranches<cr>
-" c-r rebase doesnt work. pneumonic: paste
-let g:fzf_branch_actions = { 'rebase': {'keymap': 'ctrl-v'} }
+" alt-enter doesnt work (its full screen on windows terminal). pneumonic: grab from origin
 let g:fzf_branch_actions = { 'track': {'keymap': 'ctrl-g'} }
+" c-r rebase doesnt work. pneumonic: paste
+" NOTE: rebase usually has conflicts so might not be worth it
+" let g:fzf_branch_actions = { 'rebase': {'keymap': 'ctrl-v'} }
 
 " okay but really need git integration
 " or a file tree that has really good create/move/delete with git
@@ -875,8 +878,9 @@ function! CreateAddFile(filename)
 endfunction
 
 " Will make a .h from a .c/.cpp
-" if there's a root/include and it was fed a c/cpp it will use the root/src path to create the include path for the .h
+" if there's a root/include and it was fed a c/cpp it will use the root/src path to create the mirrored include path for the .h
 " NOTE:  cd,pwd is system cd,pwd
+" TODO: need a git mv and rm -f version of this.
 function! MakeFileAddGit(filename)
     " Open a file that is the directory already or at the base of directories we need to make.
     execute 'cd %:p:h'
@@ -890,9 +894,6 @@ function! MakeFileAddGit(filename)
     execute 'Gcd'
     let rootPath = getcwd() . '/'
     echo 'rootPath: ' . rootPath
-
-    " cd the system to root of directory
-    execute 'silent !cd ' . rootPath
 
     " Capture the full path to the file we are making
     let fileRootRel = substitute(fullFilePath, rootPath, '', '')
@@ -1033,7 +1034,6 @@ nnoremap <a-p> :cprevious<cr>
 hi cursorline  gui=NONE guibg=purple4 guifg=NONE
 hi cursorcolumn  gui=NONE guibg=purple4 guifg=NONE
 
-" TODO: lookup wincents way of highlighting current window
 let g:useCursorline = 1
 if g:useCursorline == 1
     set cursorline
@@ -1082,6 +1082,13 @@ nnoremap k gk
 " yank to end of line to follow the C and D convention.
 nnoremap Y y$
 
+" This allows you to change backwards (ex: cF) and include the char under cursor.
+onoremap T vT
+onoremap F vF
+" Similar to above, Get B/b motions to include the first char
+onoremap B vB
+onoremap b vb
+
 " nvim_win_config
 " grow splits horizontally
 " Shift left/right doesn't work in terminals?
@@ -1096,7 +1103,6 @@ nnoremap <c-up>   :res +8<cr>
 " Source the vimrc so we don't have to refresh
 " :e is required to actually pick up vimrc changes
 " the M is there to center the mouse cursor other wise the screen will scroll when doing :e
-" TODO: how to restore the view of the page after doing :e when it shifts the page around
 nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr>msHmt:e<cr>`tzt`s
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs ~/.vimrc<cr>
