@@ -1082,6 +1082,7 @@ nnoremap k gk
 " yank to end of line to follow the C and D convention.
 nnoremap Y y$
 
+" mapmode-o is operator pending mode (d, y, c, t, T, f, F, etc)
 " This allows you to change backwards (ex: cF) and include the char under cursor.
 onoremap T vT
 onoremap F vF
