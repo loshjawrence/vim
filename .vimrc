@@ -903,7 +903,7 @@ endfunction
 " could be this:
 ":let funcs = [function("Append"), function("Pop")]
 ":echo funcs[1](['a', 'b', 'c'], 1)
-function! MakeFileAddGit(fn, filename)
+function! FileGit(fn, filename)
     " Open a file that is the directory already or at the base of directories we need to make.
     execute 'cd %:p:h'
     let fullCurrFilePath = expand('%:p')
@@ -1008,11 +1008,11 @@ endfunction
 
 " leader g is for git stuff
 " git add
-nnoremap <leader>ga :call MakeFileAddGit(function("CreateAddFile"), "")<left><left>
+nnoremap <leader>ga :call FileGit(function("CreateAddFile"), "")<left><left>
 " git rm -f
-nnoremap <leader>gr :call MakeFileAddGit(function("RemoveFile"), "")<left><left>
+nnoremap <leader>gr :call FileGit(function("RemoveFile"), "")<left><left>
 " git mv
-nnoremap <leader>gm :call MakeFileAddGit(function("MoveFile"), "")<left><left>
+nnoremap <leader>gm :call FileGit(function("MoveFile"), "")<left><left>
 
 " \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
 nnoremap / /\V
