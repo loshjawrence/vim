@@ -257,7 +257,6 @@ Plug 'tpope/vim-obsession'
 " :Obsession to create a session with optional file or dir arg
 " :Obsession! throw session away
 " nvim -S or :so the session file to open it
-nnoremap S :Gcd <bar> so Session.vim<cr>
 
 " LSP for code completion options:
 " CMAKE:
@@ -356,6 +355,9 @@ Plug 'akinsho/nvim-bufferline.lua'
 " nmap <leader>dl :call vimspector#ListBreakpoints()<cr>
 " nmap <leader>dc :call vimspector#ClearBreakpoints()<cr>
 " nmap <leader>dw :call vimspector#DeleteWatch()<cr>
+
+" gdb integration, doesnt work
+Plug 'vim-scripts/Conque-GDB'
 
 call plug#end()
 
@@ -1162,7 +1164,6 @@ nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp ../.vimrc .<cr>git diff<cr>
 " Pull latest vimrc, copy it to vimrc location, source it, restart coc
 nmap <silent> <leader>vp <c-\>cd ~/vim<cr>git pull<cr>cp .vimrc ..<cr>cd -<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
-
 
 " we cd to root and save the path to the l register for pasting in terminal later
 " have to run cmake twice for compile_commands.json to show up?
