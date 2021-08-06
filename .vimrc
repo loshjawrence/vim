@@ -733,14 +733,12 @@ nnoremap <leader><leader> :LspRestart<cr>
     -- }
 EOF
 
-" Presentation mode. Need a dir full of .vpm files (number them, for example, 00.vpm) and goyo plugin
-" in command line: cd dir; nvim *
+" " Presentation mode. Need a dir full of .vpm files (number them, for example, 00.vpm) and goyo plugin
+" " in command line: cd dir; nvim *
 autocmd BufNewFile,BufRead *.vpm call SetVimPresentationMode()
 function SetVimPresentationMode()
-
     nnoremap <buffer> <right> :n<cr>
     nnoremap <buffer> <left> :N<cr>
-
     " truezen is a better pluggin
     if !exists('#goyo')
         Goyo
@@ -1039,7 +1037,7 @@ function! SetScroll()
     execute 'nnoremap <c-u> ' . scrAmount . '<c-y>'
 endfunction
 call SetScroll()
-au VimResized * call SetScroll()
+autocmd VimResized * call SetScroll()
 
 " Just annoying
 noremap <silent> R <nop>
