@@ -276,9 +276,6 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'nvim-treesitter/nvim-treesitter-refactor'
 
-" No forward jump, Can search visual selections.
-Plug 'vim-scripts/star-search'
-
 Plug 'voldikss/vim-floaterm'
 
 " Font, size, resize
@@ -868,6 +865,14 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " xnoremap <c-w> xWP`[v`]
 " nnoremap <c-b> f<space>vBxBP`[v`]
 " nnoremap <c-w> f<space>vBxWP`[v`]
+
+" star search, *, visual search
+" No forward jump, Can search visual selections.
+" see uri and sebastian answer from https://stackoverflow.com/questions/4256697/vim-search-and-highlight-but-do-not-jump
+" nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
+" @"" is the "unnamed" default register, y and d go there.
+nnoremap <silent> * yiw:let @/ = @""<cr>:set hls<cr>
+xnoremap <silent> * y:let @/ = @""<cr>:set hls<cr>
 
 " @see MakeFileAndAddToGit
 function! CreateAddFile(currFilename, filename)
