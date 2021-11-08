@@ -206,3 +206,314 @@
 " xnoremap <leader>es :s/\V<c-r>=substitute(substitute(@/, '\\\\V', '', 'g'), '\\\\n$', '', '')<cr>//gI \| normal <c-left><c-left><left><left><left><left>
 " Whole file edit last search(E version being with confim). Get rid of teh extre \V then get rid of any ending \n
 " nnoremap <leader>es :%s/\V<c-r>=substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', '')<cr>//gI <bar> normal <c-o><c-left><c-left><c-left><left><left><left><left>
+"
+" noremap <silent> <c-u> 12<c-y>
+" noremap <silent> <c-d> 12<c-e>
+
+" " Move visual selections around
+" " NOTE: `[ and `] are last line edit start/end
+" xnoremap <a-k> xkP`[V`]
+" xnoremap <a-j> xp`[V`]
+" nnoremap <a-k> VxkP
+" nnoremap <a-j> Vxp
+" xnoremap <c-k> x{P`[V`]
+" xnoremap <c-j> x}p`[V`]
+" " NOTE: for horiz it be nice to find line boundaries or boundary pair first before moving to next space
+" xnoremap <c-b> xBP`[v`]
+" xnoremap <c-w> xWP`[v`]
+" nnoremap <c-b> f<space>vBxBP`[v`]
+" nnoremap <c-w> f<space>vBxWP`[v`]
+
+
+" " treesitter
+" highlight TSCurrentScope guibg=#141414
+" highlight TSDefinition guibg=gray29
+" highlight TSDefinitionUsage guibg=gray29
+"
+
+" " Insert mode completion.
+" imap <c-x><c-k> <plug>(fzf-complete-word)
+" imap <c-x><c-f> <plug>(fzf-complete-path)
+" imap <c-x><c-l> <plug>(fzf-complete-line)
+
+
+" " " Presentation mode. Need a dir full of .vpm files (number them, for example, 00.vpm) and goyo plugin
+" " " in command line: cd dir; nvim *
+" autocmd BufNewFile,BufRead *.vpm call SetVimPresentationMode()
+" function SetVimPresentationMode()
+"     nnoremap <buffer> <right> :n<cr>
+"     nnoremap <buffer> <left> :N<cr>
+"     " truezen is a better pluggin
+"     if !exists('#goyo')
+"         Goyo
+"     endif
+" endfunction
+
+        " NOTE: for nvim-treesitter
+        " --------------
+        " -- REFACTOR --
+        " --------------
+        " refactor = {
+        "     highlight_definitions = { enable = false },
+        "     highlight_current_scope = { enable = false },
+        "     -- current scope (and current file).
+        "     smart_rename = {
+        "         enable = false,
+        "         keymaps = {
+        "             smart_rename = "R",
+        "         },
+        "     },
+        "     navigation = {
+        "         enable = false,
+        "         keymaps = {
+        "             goto_definition_lsp_fallback = "gd",
+        "             list_definitions = "<nop>",
+        "             list_definitions_toc = "<nop>",
+        "             goto_next_usage = "<nop>",
+        "             goto_previous_usage = "<nop>",
+        "         },
+        "     },
+        " },
+        "
+        " ------------------
+        " -- TEXT OBJECTS --
+        " ------------------
+        " textobjects = {
+        "     ------------
+        "     -- SELECT --
+        "     ------------
+        "     select = {
+        "         enable = false,
+        "         -- Automatically jump forward to textobj, similar to targets.vim
+        "         lookahead = true,
+        "         keymaps = {
+        "             -- You can use the capture groups defined in textobjects.scm
+        "             ["if"] = "@function.inner",
+        "             ["af"] = "@function.outer",
+        "             ["ic"] = "@conditional.inner",
+        "             ["ac"] = "@conditional.outer",
+        "             ["il"] = "@loop.inner",
+        "             ["al"] = "@loop.outer",
+        "             ["is"] = "@scopename.inner",
+        "             ["as"] = "@statement.outer",
+        "         },
+        "     },
+        "
+        "     ----------
+        "     -- SWAP --
+        "     ----------
+        "     swap = {
+        "         enable = false,
+        "         swap_next = {
+        "             ["<a-x>"] = "@parameter.inner",
+        "         },
+        "         swap_previous = {
+        "             ["<a-s-x>"] = "@parameter.inner",
+        "         },
+        "     },
+        "
+        "     ----------
+        "     -- MOVE --
+        "     ----------
+        "     move = {
+        "         enable = false,
+        "         set_jumps = true, -- whether to set jumps in the jumplist
+        "         goto_next_start = {
+        "             ["<a-f>"] = "@function.outer",
+        "             ["<a-{>"] = "@scopename.inner",
+        "         },
+        "         goto_previous_start = {
+        "             ["<a-s-f>"] = "@function.outer",
+        "             ["<a-}>"] = "@scopename.inner",
+        "         },
+        "     },
+        "
+        "     -----------------
+        "     -- LSP INTEROP --
+        "     -----------------
+        "     lsp_interop = {
+        "         enable = true,
+        "         peek_definition_code = {
+        "             ["<bar>"] = "@class.outer",
+        "             ["<bslash>"] = "@function.outer",
+        "         },
+        "     },
+        " },
+
+    " ----------------------
+    " -- devicons ---------
+    " ----------------------
+    " require'nvim-web-devicons'.setup {
+    "     -- your personnal icons can go here (to override)
+    "     -- DevIcon will be appended to `name`
+    "     -- override = {
+    "     --     zsh = {
+    "     --         icon = "",
+    "     --         color = "#428850",
+    "     --         name = "Zsh"
+    "     --     }
+    "     -- };
+    "     -- globally enable default icons (default to false)
+    "     -- will get overriden by `get_icons` option
+    "     default = true;
+    " }
+    " require'nvim-web-devicons'.get_icons()
+    "
+" Plug 'tpope/vim-obsession'
+" " :Obsession to create a session with optional file or dir arg
+" " :Obsession! throw session away
+" " nvim -S or :so the session file to open it
+
+
+" NOTE: About an identical experience to vscode in terms of what kind of vars you can see and stepping speed (slow).
+" Keep around just in case
+" nvim-dap: stepping speed was great, var visibility the same, usability was worse.
+" Need to look into graphical gdb
+" Plug 'puremourning/vimspector'
+" let g:vimspector_base_dir=expand( '$HOME/.vim/vimspector-config' )
+" " For c++ install llvm then follow directions for lldb-vscode in :h vimspector
+" let g:vimspector_install_gadgets = [ 'vscode-node-debug2', 'vscode-cpptools' ]
+" nnoremap <leader>dd :call vimspector#Launch()<cr>
+" " Issues with f11 in windows terminal...
+" nmap <s-right> :call vimspector#Continue()<cr>
+" nmap <s-left> :call vimspector#Reset()<cr>
+" " Quit vimspector
+" nmap <down> <Plug>VimspectorStepOver
+" nmap <right> <Plug>VimspectorStepInto
+" nmap <left> <Plug>VimspectorStepOut
+" nmap <s-down> <Plug>VimspectorRunToCursor
+" nmap <F9> <Plug>VimspectorToggleBreakpoint
+" nmap <leader><F9> <Plug>VimspectorToggleConditionalBreakpoint
+" function! IsPopup()
+"     return win_gettype() == "popup" ? 1 : 0
+" endfunction
+" nmap <expr> <tab> IsPopup() ? "\<esc>" : "\<Plug>VimspectorBalloonEval"
+" " have to move mouse to word first with left click
+" nmap <RightMouse> <Plug>VimspectorBalloonEval
+" xmap <tab> <Plug>VimspectorBalloonEval
+" " Up/down stack
+" " nmap <leader><F11> <Plug>VimspectorUpFrame
+" " nmap <leader><F12> <Plug>VimspectorDownFrame
+" nmap <leader>dl :call vimspector#ListBreakpoints()<cr>
+" nmap <leader>dc :call vimspector#ClearBreakpoints()<cr>
+" nmap <leader>dw :call vimspector#DeleteWatch()<cr>
+
+" " try to combine with nvim-tree ability to create/delete files and directories
+" Plug 'tpope/vim-fugitive'
+" " :Gdiffsplit        - show git diff for file or provide a file or commit as an arg (newer version is on right or bottom)
+" "                         - do will obtain theirs (other buffer)
+" "                         - dp will put ours (current buffer)
+" " :Gdiffsplit!       - used for merge conflict?
+" " :Gread             - git checkout -- on this file.
+" " :Gwrite            - git add the file. stage it otherwise.
+" " :GRename           - git mv this file to path relative to the file
+" " :GDelete!          - git rm -f this file
+" " :GRemove           - git rm --cached (keeps the file around)
+" " :[range]Gclog      - wow. vis something :Gclog for quckfix of commits relating to selected code will load up diff of the file for that commit
+" " G                  - place to stage and unstage files
+" "                    - '-' toggle stage status
+" "                    - U unstage all
+" "                    - X checkout file (a command is echoed to undo this see :messages to see again)
+" "                    - = toggle diff fold
+" " :G blame           - A vertical window on left showing commit hashes. Can walk backwards through git commits to follow history of changes with <cr> for patch or - to load up file at commit and rerun G blame.
+" " :G difftool        - quickfix of line changes in the current file
+" " :G diff            - open a split and show the normal git diff but for only this file
+" " :Gclog or G log    - like fzf's :Commits - open quickfix or split of commit hashes and their messages, press enter to open a buffer showing its patch diff.
+" "
+" " Gcd is cd relative to the repo root. So this would be cd to repo root.
+" nnoremap <leader>cr :Gcd<cr>
+" " see https://stackoverflow.com/questions/1269603/to-switch-from-vertical-split-to-horizontal-split-fast-in-vim
+" nnoremap <leader>gg :G<cr><c-w>H
+
+" TODO: would need a function that does :G branch and finds the line with * BRANCHNAME
+" Then extract that branch name and returns this string
+" G reset --hard origin/BRANCHNAME
+" nnoremap <leader>gs :G fetch <bar> call GetBranchOriginSyncString()<cr>
+
+" Plug 'stsewd/fzf-checkout.vim'
+" " <cr> switch to,  a-enter track remote, c-b create, c-d delete, c-e merge, c-f (requires fugitive)
+" nnoremap <leader>gb :GBranches<cr>
+" " alt-enter doesnt work (its full screen on windows terminal). pneumonic: grab from origin
+" let g:fzf_branch_actions = { 'track': {'keymap': 'ctrl-g'} }
+" " c-r rebase doesnt work. pneumonic: paste
+" " NOTE: rebase usually has conflicts so might not be worth it
+" " let g:fzf_branch_actions = { 'rebase': {'keymap': 'ctrl-v'} }
+
+" " okay but really need git integration
+" " or a file tree that has really good create/move/delete with git
+" Plug 'tpope/vim-eunuch'
+" " :Delete: Delete a buffer and the file on disk simultaneously.
+" " :Move: Rename a buffer and the file on disk simultaneously.
+" " :Mkdir: Create a directory, defaulting to the parent of the current file.
+" " :SudoWrite: Write a privileged file with sudo.
+" " :SudoEdit: Edit a privileged file with sudo.
+" " nvim-tree
+" let g:nvim_tree_width = 40 "30 by default, can be width_in_columns or 'width_in_percent%'
+" let g:nvim_tree_indent_markers = 1 "0 by default, this option shows indent markers when folders are open
+" let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
+" let g:nvim_tree_gitignore = 1 "0 by default
+" let g:nvim_tree_follow = 1 "0 by default, this option allows the cursor to be updated when entering a buffer
+" let g:nvim_tree_hide_dotfiles = 1 "0 by default, this option hides files and folders starting with a dot `.`
+" let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
+" let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and file icon highlight for opened files/directories.
+" let g:nvim_tree_root_folder_modifier = ':~' "This is the default. See :help filename-modifiers for more options
+" let g:nvim_tree_tab_open = 1 "0 by default, will open the tree when entering a new tab and the tree was previously open
+" let g:nvim_tree_add_trailing = 1 "0 by default, append a trailing slash to folder names
+" let g:nvim_tree_lsp_diagnostics = 1 "0 by default, will show lsp diagnostics in the signcolumn. See :help nvim_tree_lsp_diagnostics
+" let g:nvim_tree_disable_window_picker = 1 "0 by default, will disable the window picker.
+" let g:nvim_tree_hijack_cursor = 0 "1 by default, when moving cursor in the tree, will position the cursor at the start of the file on the current line
+" let g:nvim_tree_icon_padding = '' "one space by default, used for rendering the space between the icon and the filename. Use with caution, it could break rendering if you set an empty string depending on your font.
+" let g:nvim_tree_update_cwd = 1 "0 by default, will update the tree cwd when changing nvim's directory (DirChanged event). Behaves strangely with autochdir set.
+" " Dictionary of buffer option names mapped to a list of option values that
+" " indicates to the window picker that the buffer's window should not be
+" " selectable.
+" let g:nvim_tree_window_picker_exclude = {
+"     \   'filetype': [
+"     \     'packer',
+"     \     'qf'
+"     \   ],
+"     \   'buftype': [
+"     \     'terminal'
+"     \   ]
+"     \ }
+" "If 0, do not show the icons for one of 'git' 'folder' and 'files'
+" "1 by default, notice that if 'files' is 1, it will only display
+" "if nvim-web-devicons is installed and on your runtimepath.
+" "if folder is 1, you can also tell folder_arrows 1 to show small arrows next to the folder icons.
+" "but this will not work when you set indent_markers (because of UI conflict)
+" let g:nvim_tree_show_icons = {
+"     \ 'git': 1,
+"     \ 'folders': 0,
+"     \ 'files': 0,
+"     \ 'folder_arrows': 0,
+"     \ }
+" " default will show icon by default if no icon is provided
+" " default shows no icon by default
+" let g:nvim_tree_icons = {
+"     \ 'default': '',
+"     \ 'symlink': '',
+"     \ 'git': {
+"     \   'unstaged': "✗",
+"     \   'staged': "✓",
+"     \   'unmerged': "C",
+"     \   'renamed': "➜",
+"     \   'untracked': "U",
+"     \   'deleted': "D",
+"     \   'ignored': "◌"
+"     \   },
+"     \   'lsp': {
+"     \     'warning': "W",
+"     \     'error': "E",
+"     \   }
+"     \ }
+" nnoremap <leader>t :NvimTreeToggle<CR>
+" " a list of groups can be found at `:help nvim_tree_highlight`
+" highlight NvimTreeFolderIcon guibg=blue
+" " a: add a file. Adding a directory requires leaving a leading / at the end of the path.
+" " you can add multiple directories by doing foo/bar/baz/f and it will add foo bar and baz directories and f as a file
+" " r: rename file
+" " R: refresh tree
+" " d: remove with confirm
+" " <cr>: open file
+" " <tab>: open file in preview
+
