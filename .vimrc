@@ -653,8 +653,8 @@ xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 " see uri and sebastian answer from https://stackoverflow.com/questions/4256697/vim-search-and-highlight-but-do-not-jump
 " nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
 " @"" is the "unnamed" default register, y and d go there.
-nnoremap <silent> * yiw:let @/ = @""<cr>:set hls<cr>
-xnoremap <silent> * y:let @/ = @""<cr>:set hls<cr>
+nnoremap <silent> * yiw:let @/ = @""<cr>:set hls<cr>:redraw<cr>
+xnoremap <silent> * y:let @/ = @""<cr>:set hls<cr>:redraw<cr>
 
 " @see MakeFileAndAddToGit
 function! CreateAddFile(currFilename, filename)
