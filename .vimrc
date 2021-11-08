@@ -154,6 +154,33 @@ nnoremap <f1> :GundoToggle<CR>
 Plug 'majutsushi/tagbar'
 nnoremap <f2> :TagbarToggle<CR>
 
+" try to combine with nvim-tree ability to create/delete files and directories
+Plug 'tpope/vim-fugitive'
+" :Gdiffsplit        - show git diff for file or provide a file or commit as an arg (newer version is on right or bottom)
+"                         - do will obtain theirs (other buffer)
+"                         - dp will put ours (current buffer)
+" :Gdiffsplit!       - used for merge conflict?
+" :Gread             - git checkout -- on this file.
+" :Gwrite            - git add the file. stage it otherwise.
+" :GRename           - git mv this file to path relative to the file
+" :GDelete!          - git rm -f this file
+" :GRemove           - git rm --cached (keeps the file around)
+" :[range]Gclog      - wow. vis something :Gclog for quckfix of commits relating to selected code will load up diff of the file for that commit
+" G                  - place to stage and unstage files
+"                    - '-' toggle stage status
+"                    - U unstage all
+"                    - X checkout file (a command is echoed to undo this see :messages to see again)
+"                    - = toggle diff fold
+" :G blame           - A vertical window on left showing commit hashes. Can walk backwards through git commits to follow history of changes with <cr> for patch or - to load up file at commit and rerun G blame.
+" :G difftool        - quickfix of line changes in the current file
+" :G diff            - open a split and show the normal git diff but for only this file
+" :Gclog or G log    - like fzf's :Commits - open quickfix or split of commit hashes and their messages, press enter to open a buffer showing its patch diff.
+"
+" Gcd is cd relative to the repo root. So this would be cd to repo root.
+nnoremap <leader>cr :Gcd<cr>
+" see https://stackoverflow.com/questions/1269603/to-switch-from-vertical-split-to-horizontal-split-fast-in-vim
+nnoremap <leader>gg :G<cr><c-w>H
+
 " Surrounding things
 Plug 'tpope/vim-surround'
 " NOTE: If you use the closing version, i.e ),>,},] it will NOT be surrounded by spaces.
