@@ -491,3 +491,12 @@
 " " <cr>: open file
 " " <tab>: open file in preview
 
+
+" " star search, *, visual search
+" " No forward jump, Can search visual selections.
+" " see uri and sebastian answer from https://stackoverflow.com/questions/4256697/vim-search-and-highlight-but-do-not-jump
+" " nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
+" " @"" is the "unnamed" default register, y and d go there.
+" nnoremap <silent> * yiw:let @/ = '\<' . @"" . '\>'<cr>:set hls<cr>:redraw<cr>
+" xnoremap <silent> * y:let @/ = @""<cr>:set hls<cr>:redraw<cr>
+

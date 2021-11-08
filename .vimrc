@@ -213,6 +213,8 @@ Plug 'itchyny/vim-qfedit'
 " :StartupTime to see a graph of startup timings
 Plug 'dstein64/vim-startuptime'
 
+Plug 'vim-scripts/star-search'
+
 Plug 'phaazon/hop.nvim'
 nnoremap s <cmd>HopChar1<cr>
 xnoremap s <cmd>HopChar1<cr>
@@ -647,14 +649,6 @@ nmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
 " gv is highlight previous visual selection, `> and `< is jump to end and beg of vis selection
 xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
 xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
-
-" star search, *, visual search
-" No forward jump, Can search visual selections.
-" see uri and sebastian answer from https://stackoverflow.com/questions/4256697/vim-search-and-highlight-but-do-not-jump
-" nnoremap <silent> * :let @/= '\<' . expand('<cword>') . '\>' <bar> set hls <cr>
-" @"" is the "unnamed" default register, y and d go there.
-nnoremap <silent> * yiw:let @/ = @""<cr>:set hls<cr>:redraw<cr>
-xnoremap <silent> * y:let @/ = @""<cr>:set hls<cr>:redraw<cr>
 
 " @see MakeFileAndAddToGit
 function! CreateAddFile(currFilename, filename)
