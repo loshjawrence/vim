@@ -511,15 +511,15 @@ nnoremap <leader><leader> :LspRestart<cr>
                     function()
                         local bufnr = require'lspconfig'.util.validate_bufnr(0)
                         -- ClangdSwitchSourceHeader is the build-in version, but it has some behavior that i dont like
-                        -- vim.api.nvim_command("ClangdSwitchSourceHeader")
-                        -- vim.api.nvim_command("bdelete "..tostring(bufnr))
-                        local params = { uri = vim.uri_from_bufnr(bufnr) }
-                        vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
-                            if err then error(tostring(err)) end
-                            if not result then print ("Corresponding file can’t be determined") return end
-                            vim.api.nvim_command("edit "..vim.uri_to_fname(result))
-                            vim.api.nvim_command("bdelete "..tostring(bufnr))
-                        end)
+                        vim.api.nvim_command("ClangdSwitchSourceHeader")
+                        vim.api.nvim_command("bdelete "..tostring(bufnr))
+                        -- local params = { uri = vim.uri_from_bufnr(bufnr) }
+                        -- vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
+                        --     if err then error(tostring(err)) end
+                        --     if not result then print ("Corresponding file can’t be determined") return end
+                        --     vim.api.nvim_command("edit "..vim.uri_to_fname(result))
+                        --     vim.api.nvim_command("bdelete "..tostring(bufnr))
+                        -- end)
                     end
                 },
             },
