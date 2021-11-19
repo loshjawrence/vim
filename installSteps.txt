@@ -53,6 +53,9 @@ python2 -m pip install --user --upgrade pip pynvim
 python3 -m pip install --user --upgrade pip pynvim
 pip3 install pynvim
 
+# Getting snap to work on wsl2:
+https://github.com/microsoft/WSL/issues/5126
+
 # PERL MODULES REQS
 ===================
 sudo apt update -y
@@ -62,6 +65,7 @@ sudo cpanm -n Neovim::Ext
 # INSTALL NEOVIM:
 ================
 working: 91cdc11984465287539ed8f63716bb371f440ea1
+pending: 2ecf0a4c6183bba1c65d440711038f040d355fef
 0.5 release: 62d67de598286734536b63807d6b0f4e82b34128
 //https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
 //https://github.com/neovim/neovim/wiki/Installing-Neovim#install-from-source

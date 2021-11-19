@@ -235,7 +235,7 @@ nnoremap S <nop>
 " " Would need to copy this file to the root dir
 " " worth looking at?: nvim-gdb
 Plug 'neovim/nvim-lspconfig'
-Plug 'kabouzeid/nvim-lspinstall'
+Plug 'williamboman/nvim-lsp-installer'
 Plug 'hrsh7th/nvim-compe'
 Plug 'ray-x/lsp_signature.nvim'
 " " Plug 'L3MON4D3/LuaSnip'
@@ -469,15 +469,6 @@ nnoremap <leader><leader> :LspRestart<cr>
         incremental_selection = { enable = false, },
     }
 
-    ----------------
-    -- lspinstall --
-    ----------------
-    require'lspinstall'.setup() -- important
-    local servers = require'lspinstall'.installed_servers()
-    for _, server in pairs(servers) do
-        require'lspconfig'[server].setup{}
-    end
-
     ---------------------------------
     -- lspconfig language servers  --
     ---------------------------------
@@ -503,34 +494,32 @@ nnoremap <leader><leader> :LspRestart<cr>
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>SwitchSourceHeader<cr>', opts)
     end
 
-    -- see lspinstall plugin page for installing language servers
-    -- local servers = { "html", "clangd", "vimls", "jsonls", "bashls", "cmake", "tsserver", "sumneko_lua" }
-    local servers = { "html", "cpp", "vim", "json", "bash", "cmake", "typescript", "lua"}
-    for _, lsp in ipairs(servers) do
-        nvim_lsp[lsp].setup {
-            on_attach = on_attach,
-            flags = {
-                debounce_text_changes = 500,
-            },
-            commands = {
-                SwitchSourceHeader = {
-                    function()
-                        local bufnr = require'lspconfig'.util.validate_bufnr(0)
-                        -- ClangdSwitchSourceHeader is the build-in version, but it has some behavior that i dont like
-                        -- vim.api.nvim_command("ClangdSwitchSourceHeader")
-                        -- vim.api.nvim_command("bdelete "..tostring(bufnr))
-                        local params = { uri = vim.uri_from_bufnr(bufnr) }
-                        vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
-                            if err then error(tostring(err)) end
-                            if not result then print ("Corresponding file can’t be determined") return end
-                            vim.api.nvim_command("edit "..vim.uri_to_fname(result))
-                            vim.api.nvim_command("bdelete "..tostring(bufnr))
-                        end)
-                    end
-                },
-            },
-        }
-    end
+    -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
+    -- for _, lsp in ipairs(servers) do
+    --     nvim_lsp[lsp].setup {
+    --         on_attach = on_attach,
+    --         flags = {
+    --             debounce_text_changes = 500,
+    --         },
+    --         commands = {
+    --             SwitchSourceHeader = {
+    --                 function()
+    --                     local bufnr = require'lspconfig'.util.validate_bufnr(0)
+    --                     -- ClangdSwitchSourceHeader is the build-in version, but it has some behavior that i dont like
+    --                     -- vim.api.nvim_command("ClangdSwitchSourceHeader")
+    --                     -- vim.api.nvim_command("bdelete "..tostring(bufnr))
+    --                     local params = { uri = vim.uri_from_bufnr(bufnr) }
+    --                     vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
+    --                         if err then error(tostring(err)) end
+    --                         if not result then print ("Corresponding file can’t be determined") return end
+    --                         vim.api.nvim_command("edit "..vim.uri_to_fname(result))
+    --                         vim.api.nvim_command("bdelete "..tostring(bufnr))
+    --                     end)
+    --                 end
+    --             },
+    --         },
+    --     }
+    -- end
 
     -- -- lsp config
     -- -- https://github.com/neovim/nvim-lspconfig
@@ -545,12 +534,18 @@ nnoremap <leader><leader> :LspRestart<cr>
     -- -- -- :LspInfo
     -- -- -- to look in the lsp's log:
     -- -- -- :lua vim.cmd('e'..vim.lsp.get_log_path())
-    -- -- -- Use to debug clang, remove from server list above but remember to put it back when fixed
-    -- -- vim.lsp.set_log_level("debug")
-    -- -- nvim_lsp.clangd.setup{
-    -- --     cmd = { "clangd", "-j=1", "--log=verbose" };
-    -- --     -- on_attach = on_attach
-    -- -- }
+
+    -- -- Use to debug clangd, remove from server list above but remember to put it back when fixed
+    -- nvim_lsp.clangd.setup{
+    --     cmd = { "clangd", "-j=1", "--log=verbose" };
+    --     -- on_attach = on_attach
+    -- }
+
+    -- Turn on debug logging
+    vim.lsp.set_log_level("debug")
+
+    -- Disable inline diagnostics
+    vim.lsp.diagnostic.disable()
 EOF
 
 " trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
