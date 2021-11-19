@@ -541,17 +541,31 @@ nnoremap <leader><leader> :LspRestart<cr>
     -- -- -- :lua vim.cmd('e'..vim.lsp.get_log_path())
 
     -- Use to debug clangd, remove from server list above but remember to put it back when fixed
-    nvim_lsp.clangd.setup{
-        cmd = { "clangd", "-j=1", "--log=verbose" };
-        -- on_attach = on_attach
-    }
+    nvim_lsp.clangd.setup{}
+    --     -- cmd = { "clangd", "-j=1", "--log=verbose" };
+    --     flags = {
+    --         debounce_text_changes = 500,
+    --     },
+    --     on_attach = on_attach,
+    -- }
 
     -- Turn on debug logging
     vim.lsp.set_log_level("debug")
 
-    -- Disable inline diagnostics
-    vim.lsp.diagnostic.disable()
+    -- Disable diagnostic
+    vim.diagnostic.config {
+        virtual_text = false,
+        signs = false,
+        underline = false,
+    }
+
 EOF
+
+" Prevents navigation into diagnostic windows
+autocmd CursorHold <buffer> lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false })
+
+" Disable diagnostic
+autocmd BufEnter * lua vim.lsp.diagnostic.disable()
 
 " trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
 " Also highlight all tabs and trailing whitespace characters.
@@ -940,9 +954,9 @@ nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr>msHmt:e<
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
 " Diff the current local vimrc against master
-nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
+nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
 " Pull latest vimrc, copy it to vimrc location, source it, restart coc
-nmap <silent> <leader>vp <c-\>cd ~/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
+nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
 " we cd to root and save the path to the l register for pasting in terminal later
