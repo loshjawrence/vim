@@ -1,9 +1,10 @@
 " I am $MYVIMRC for nvim
 " Put me in ~/.config/nvim/ on linux and ~\AppData\Local\nvim\ on windows
 " make sure colors bundle autoload and all that is in those folders
-set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &runtimepath.=',~/.vim/bundle/neoterm'
-let &packpath = &runtimepath
+" set runtimepath^=~/.vim runtimepath+=~/.vim/after
+" set runtimepath^=~/.local/share/nvim runtimepath+=~/.local/share/nvim/after
+" set runtimepath^=stdpath('data')
+" let &packpath = &runtimepath
 
 
 " On Windows:
@@ -108,7 +109,9 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " <leader>a does <leader>cr automatically
 set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'\ -g\ 'include/**'\ -g\ 'tests/**'\ -g\ 'applications/**'\ -g\ 'cmake/**'
 
-call plug#begin("~/.vim" . '/bundle') " Arg specifies plugin install dir
+" call plug#begin("~/.vim" . '/bundle') " Arg specifies plugin install dir
+" call plug#begin("~/.local/share/nvim/plugged" . '/bundle') " Arg specifies plugin install dir
+call plug#begin() " Arg specifies plugin install dir
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -269,6 +272,8 @@ Plug 'wellle/targets.vim'
 
 " Colorschemes
 " COLORSCHEME must come before whitespace highlighting and other color alterations
+" Linux: ~/.config/nvim/colors
+" Windows: %UserProfile%\AppData\Local\nvim\colors
 set t_Co=256
 Plug 'AlessandroYorba/Alduin'
 " diff from alduin: no baby blue on members, hlsearch is salmon instead of grey
@@ -535,11 +540,11 @@ nnoremap <leader><leader> :LspRestart<cr>
     -- -- -- to look in the lsp's log:
     -- -- -- :lua vim.cmd('e'..vim.lsp.get_log_path())
 
-    -- -- Use to debug clangd, remove from server list above but remember to put it back when fixed
-    -- nvim_lsp.clangd.setup{
-    --     cmd = { "clangd", "-j=1", "--log=verbose" };
-    --     -- on_attach = on_attach
-    -- }
+    -- Use to debug clangd, remove from server list above but remember to put it back when fixed
+    nvim_lsp.clangd.setup{
+        cmd = { "clangd", "-j=1", "--log=verbose" };
+        -- on_attach = on_attach
+    }
 
     -- Turn on debug logging
     vim.lsp.set_log_level("debug")
@@ -937,7 +942,7 @@ nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
 " Diff the current local vimrc against master
 nmap <silent> <leader>vd <c-\>cd ~/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
 " Pull latest vimrc, copy it to vimrc location, source it, restart coc
-nmap <silent> <leader>vp <c-\>cd ~/vim<cr>git pull<cr>cp init.vim ../.config/nvim/<cr>cd -<cr>
+nmap <silent> <leader>vp <c-\>cd ~/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
 " we cd to root and save the path to the l register for pasting in terminal later
