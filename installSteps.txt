@@ -134,6 +134,7 @@ most can be installed with :LspInstall <ls name>
 
     # Clangd
     ========
+    // 10 doesnt work, 12 does-ish
     // https://clangd.llvm.org/installation.html
     // NOTE: if on ubuntu 20.04, clangd package is version 10
     sudo apt remove -y clangd-9 clang-9 clangd-10 clang-10

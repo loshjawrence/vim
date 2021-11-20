@@ -107,7 +107,12 @@ autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 " set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
 " NOTE: these globs work when you cd to root with Gcd using <leader>cr
 " <leader>a does <leader>cr automatically
-set grepprg=rg\ --vimgrep\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'\ -g\ 'include/**'\ -g\ 'tests/**'\ -g\ 'applications/**'\ -g\ 'cmake/**'
+" set grepprg=rg\ --vimgrep\ --path-separator\ /\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'\ -g\ 'include/**'\ -g\ 'tests/**'\ -g\ 'applications/**'\ -g\ 'cmake/**'
+"
+" NOTE: one slash for line break, one for space
+" NOTE: keep --vimgrep at the end
+" add root level folders you want to search with -g
+set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
 
 " call plug#begin("~/.vim" . '/bundle') " Arg specifies plugin install dir
 " call plug#begin("~/.local/share/nvim/plugged" . '/bundle') " Arg specifies plugin install dir
@@ -121,7 +126,7 @@ let g:fzf_buffers_jump = 1
 let g:fzf_preview_window = ''
 " Allow passing other args to Rg command
 " Example, :Rg '#include "Shader.h"' -g "*{.cpp,.h}"
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
+command! -bang -nargs=* Rg call fzf#vim#grep("rg -S --path-separator / ".shellescape(<q-args>), 0, fzf#vim#with_preview({'options': ['--layout=reverse']}), <bang>0)
 " choco install ripgrep fd fzf
 " USE FD https://github.com/sharkdp/fd
 " put in .bashrc for fd/other things
