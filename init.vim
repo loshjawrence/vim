@@ -920,63 +920,6 @@ nnoremap <leader>xx :%!xxd<cr>
 nnoremap <leader>xr :%!xxd -r<cr>
 
 """"""""""""""""""""" RETIRED """""""""""""""""""""
-
-" " Simple re-format for minified Javascript
-" command! UnMinify call UnMinify()
-" function! UnMinify()
-"     %s/{\ze[^\r\n]/{\r/g
-"     %s/){/) {/g
-"     %s/};\?\ze[^\r\n]/\0\r/g
-"     %s/;\ze[^\r\n]/;\r/g
-"     %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
-"     normal ggVG=
-" endfunction
-
-" " Font, size, resize
-" set guifont=Monospace:h8
-" let s:fontsize = 7
-" function! AdjustFontSize(amount)
-"     let s:fontsize = s:fontsize+a:amount
-"     :execute "GuiFont! Monospace:h" . s:fontsize
-" endfunction
-" noremap <c-=> :call AdjustFontSize(1)<CR>
-" noremap <c--> :call AdjustFontSize(-1)<CR>
-
-" " Add the terminal to unlisted buffers so that buffer line doesnt show it
-" " NOTE: Tried all the Buf* stuff but only this one seemed to work
-" " and so it only gets removed from buffer tabs when you leave the terminal
-" autocmd BufLeave bash* setlocal nobuflisted
-
-" set runtimepath^=~/.vim runtimepath+=~/.vim/after
-" set runtimepath^=~/.local/share/nvim runtimepath+=~/.local/share/nvim/after
-" set runtimepath^=stdpath('data')
-" let &packpath = &runtimepath
-
-" if has('gui')
-"     " Turn off scrollbars. (Default on macOS is "egmrL").
-"     set winaltkeys=no
-"     set guioptions-=L
-"     set guioptions-=R
-"     set guioptions-=b
-"     set guioptions-=l
-"     set guioptions-=r
-"     set guioptions-=T
-"     set guioptions-=m
-" endif
-
-
-" syntax on        " syntax highlighting
-
-" " So git bash or whatever doesn't throw up errors everywhere when it needs you to edit a commit message
-" if v:progname == 'vi'
-"     set noloadplugins
-" endif
-
-" " helps startup speed
-" let g:python_host_prog  = '/usr/bin/python2'
-" let g:python3_host_prog  = '/usr/bin/python3'
-" let g:perl_host_prog = '/usr/bin/perl'
-
 """"""""""""""""""""" RETIRED """""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
