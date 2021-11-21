@@ -237,7 +237,6 @@ set updatetime=300 " You will have bad experience for diagnostic messages when i
 set shortmess+=c " don't give |ins-completion-menu| messages.
 " tell :find to recursively search
 set path+=**
-set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
 set completeopt=menuone,noinsert,noselect,preview
 
 " Tell vim to use ripgrep as its grep program
