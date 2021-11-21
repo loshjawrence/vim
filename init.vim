@@ -6,16 +6,13 @@
 " Windows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
 " linux search keyboard set to 200ms delay, 40c/s
 
-noremap <space> <nop>
 let mapleader="\<space>" " Map the leader key to space bar
 
-" The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
-" autocmd-events for executing : commands (full explanations: autocmd-events-abc)
+call plug#begin()
 
-" call plug#begin("~/.vim" . '/bundle') " Arg specifies plugin install dir
-" call plug#begin("~/.local/share/nvim/plugged" . '/bundle') " Arg specifies plugin install dir
-call plug#begin() " Arg specifies plugin install dir
-
+""""""""""""""""""""""""""""""""""""""""
+""""""""""""""" FZF """"""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " Jump to buffer if open
@@ -142,14 +139,14 @@ nnoremap S <nop>
 " " worth looking at?: nvim-gdb
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
-" Plug 'hrsh7th/nvim-compe'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-nvim-lua'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'hrsh7th/nvim-compe'
+" Plug 'hrsh7th/nvim-cmp'
+" Plug 'hrsh7th/cmp-buffer'
+" Plug 'hrsh7th/cmp-path'
+" Plug 'hrsh7th/cmp-nvim-lua'
+" Plug 'hrsh7th/cmp-nvim-lsp'
+" Plug 'hrsh7th/cmp-cmdline'
+" Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'ray-x/lsp_signature.nvim'
 
 " :TSInstallInfo lists all the languages
@@ -324,7 +321,6 @@ inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <expr> <cr> pumvisible() ? "\<esc>" : "\<cr>"
 inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
-nnoremap <leader><leader> :LspRestart<cr>
 :lua << EOF
     ------------------
     --- bufferline ---
@@ -356,85 +352,80 @@ nnoremap <leader><leader> :LspRestart<cr>
     ----------------
     require'hop'.setup()
 
-    -- ------------------
-    -- -- compe ---------
-    -- ------------------
-    -- require'compe'.setup {
-    --     enabled = true;
-    --     autocomplete = true;
-    --     debug = false;
-    --     min_length = 1;
-    --     preselect = 'enable';
-    --     throttle_time = 80;
-    --     source_timeout = 200;
-    --     resolve_timeout = 800;
-    --     incomplete_delay = 400;
-    --     max_abbr_width = 100;
-    --     max_kind_width = 100;
-    --     max_menu_width = 100;
-    --     documentation = {
-    --         border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
-    --         winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-    --         max_width = 120,
-    --         min_width = 60,
-    --         max_height = math.floor(vim.o.lines * 0.3),
-    --         min_height = 1,
-    --     };
-    --     source = {
-    --         -- higher is more important
-    --         nvim_lua = {priority = 10},
-    --         nvim_lsp = {priority = 9},
-    --         buffer = {priority = 7},
-    --         luasnip = {priority = 5},
-    --         path = {priority = 4},
-    --         calc = {priority = 3},
-    --     };
-    -- }
-
-    ---------------------
-    ----- cmp -----------
-    ---------------------
-    local cmp = require'cmp'
-    cmp.setup({
-        mapping = {
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
-            ['<Tab>'] = function(fallback) if cmp.visible() then cmp.select_next_item() else fallback() end end,
-            ['<S-Tab>'] = function(fallback) if cmp.visible() then cmp.select_prev_item() else fallback() end end,
-        },
-        sources = {
-            { name = "nvim_lsp" },
-            { name = "buffer" },
-            { name = "lua_snip" },
-            { name = "nvim_lua" },
-            { name = "path" },
-        },
-        snippet = {
-            expand = function(args)
-                require("luasnip").lsp_expand(args.body)
-            end,
-        },
-        experimental = {
-            native_menu = false,
-            ghost_text = true,
-        },
+    ------------------
+    -- compe ---------
+    ------------------
+    require'compe'.setup {
+        enabled = true;
+        autocomplete = true;
+        debug = false;
+        min_length = 1;
+        preselect = 'enable';
+        throttle_time = 80;
+        source_timeout = 200;
+        resolve_timeout = 800;
+        incomplete_delay = 400;
+        max_abbr_width = 100;
+        max_kind_width = 100;
+        max_menu_width = 100;
         documentation = {
-            maxheight = math.floor(vim.o.lines * 0.3),
-        },
-    })
-    cmp.setup.cmdline('/', {
-        sources = {
-            { name = 'buffer' },
-            { name = 'nvim_lsp' },
-        },
-    })
-    cmp.setup.cmdline(':', {
-        sources = {
-            { name = 'cmdline' },
-            { name = 'nvim_lsp' },
-            { name = 'path' },
-        },
-    })
+            border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
+            winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+            max_width = 120,
+            min_width = 60,
+            max_height = math.floor(vim.o.lines * 0.3),
+            min_height = 1,
+        };
+        source = {
+            -- higher is more important
+            nvim_lua = {priority = 10},
+            nvim_lsp = {priority = 9},
+            buffer = {priority = 7},
+            luasnip = {priority = 5},
+            path = {priority = 4},
+            calc = {priority = 3},
+        };
+    }
 
+    -- ---------------------
+    -- ----- cmp -----------
+    -- ---------------------
+    -- local cmp = require'cmp'
+    -- cmp.setup({
+    --     mapping = {
+    --         ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    --         ['<C-d>'] = function(fallback) if cmp.visible() then cmp.mapping.scroll_docs(4) else fallback() end end,
+    --         ['<C-u>'] = function(fallback) if cmp.visible() then cmp.mapping.scroll_docs(-4) else fallback() end end,
+    --     },
+    --     sources = {
+    --         { name = "nvim_lsp" },
+    --         { name = "buffer" },
+    --         { name = "lua_snip" },
+    --         { name = "nvim_lua" },
+    --         { name = "path" },
+    --     },
+    --     snippet = {
+    --         expand = function(args)
+    --             require("luasnip").lsp_expand(args.body)
+    --         end,
+    --     },
+    --     experimental = {
+    --         ghost_text = true,
+    --     },
+    -- })
+    -- cmp.setup.cmdline('/', {
+    --     sources = {
+    --         { name = 'buffer' },
+    --         { name = 'nvim_lsp' },
+    --     },
+    -- })
+    -- cmp.setup.cmdline(':', {
+    --     sources = {
+    --         { name = 'cmdline' },
+    --         { name = 'nvim_lsp' },
+    --         { name = 'path' },
+    --     },
+    -- })
 
     -------------------
     -- lsp_signature --
@@ -494,7 +485,7 @@ nnoremap <leader><leader> :LspRestart<cr>
             flags = {
                 debounce_text_changes = 500,
             },
-            capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+            -- capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
             commands = {
                 SwitchSourceHeader = {
                     function()
@@ -814,6 +805,7 @@ nnoremap <leader>gm :call FileGit(function("MoveFile"), "")<left><left>
 nnoremap / /\V
 xnoremap / /\V
 
+nnoremap <leader><leader> :LspRestart<cr>
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
 " For this single scroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
@@ -905,6 +897,11 @@ nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
 nnoremap > >>
+xnoremap < <gv
+xnoremap > >gv
+
+" force write in linux
+cmap w!! %!sudo tee > /dev/null %
 
 " indent scope
 nnoremap == ms=i{`s
