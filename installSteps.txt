@@ -112,7 +112,7 @@ most can be installed with :LspInstall <ls name>
     pip3 install python-language-server
     npm install -g bash-language-server
     npm install -g vim-language-server
-    npm install -g vscode-json-languageserver
+    npm install -g json-language-server
     npm install -g typescript-language-server
 
     https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
