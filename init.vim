@@ -142,9 +142,15 @@ nnoremap S <nop>
 " " worth looking at?: nvim-gdb
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
-Plug 'hrsh7th/nvim-compe'
+" Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-nvim-lua'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'ray-x/lsp_signature.nvim'
-" " Plug 'L3MON4D3/LuaSnip'
 
 " :TSInstallInfo lists all the languages
 " :TSInstall c cpp bash lua typescript html c_sharp
@@ -189,7 +195,7 @@ call plug#end()
 
 " See: vim-differences nvim-defaults
 filetype plugin indent on  " try to recognize filetypes and load related plugins/settings for those filetypes
-
+syntax on
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set number              " Show line numbers
 set laststatus=0        " Always hide the status line
@@ -350,40 +356,85 @@ nnoremap <leader><leader> :LspRestart<cr>
     ----------------
     require'hop'.setup()
 
-    ------------------
-    -- compe ---------
-    ------------------
-    require'compe'.setup {
-        enabled = true;
-        autocomplete = true;
-        debug = false;
-        min_length = 1;
-        preselect = 'enable';
-        throttle_time = 80;
-        source_timeout = 200;
-        resolve_timeout = 800;
-        incomplete_delay = 400;
-        max_abbr_width = 100;
-        max_kind_width = 100;
-        max_menu_width = 100;
+    -- ------------------
+    -- -- compe ---------
+    -- ------------------
+    -- require'compe'.setup {
+    --     enabled = true;
+    --     autocomplete = true;
+    --     debug = false;
+    --     min_length = 1;
+    --     preselect = 'enable';
+    --     throttle_time = 80;
+    --     source_timeout = 200;
+    --     resolve_timeout = 800;
+    --     incomplete_delay = 400;
+    --     max_abbr_width = 100;
+    --     max_kind_width = 100;
+    --     max_menu_width = 100;
+    --     documentation = {
+    --         border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
+    --         winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+    --         max_width = 120,
+    --         min_width = 60,
+    --         max_height = math.floor(vim.o.lines * 0.3),
+    --         min_height = 1,
+    --     };
+    --     source = {
+    --         -- higher is more important
+    --         nvim_lua = {priority = 10},
+    --         nvim_lsp = {priority = 9},
+    --         buffer = {priority = 7},
+    --         luasnip = {priority = 5},
+    --         path = {priority = 4},
+    --         calc = {priority = 3},
+    --     };
+    -- }
+
+    ---------------------
+    ----- cmp -----------
+    ---------------------
+    local cmp = require'cmp'
+    cmp.setup({
+        mapping = {
+            ['<CR>'] = cmp.mapping.confirm({ select = true }),
+            ['<Tab>'] = function(fallback) if cmp.visible() then cmp.select_next_item() else fallback() end end,
+            ['<S-Tab>'] = function(fallback) if cmp.visible() then cmp.select_prev_item() else fallback() end end,
+        },
+        sources = {
+            { name = "nvim_lsp" },
+            { name = "buffer" },
+            { name = "lua_snip" },
+            { name = "nvim_lua" },
+            { name = "path" },
+        },
+        snippet = {
+            expand = function(args)
+                require("luasnip").lsp_expand(args.body)
+            end,
+        },
+        experimental = {
+            native_menu = false,
+            ghost_text = true,
+        },
         documentation = {
-            border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
-            winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-            max_width = 120,
-            min_width = 60,
-            max_height = math.floor(vim.o.lines * 0.3),
-            min_height = 1,
-        };
-        source = {
-            -- higher is more important
-            nvim_lua = {priority = 10},
-            nvim_lsp = {priority = 9},
-            buffer = {priority = 7},
-            luasnip = {priority = 5},
-            path = {priority = 4},
-            calc = {priority = 3},
-        };
-    }
+            maxheight = math.floor(vim.o.lines * 0.3),
+        },
+    })
+    cmp.setup.cmdline('/', {
+        sources = {
+            { name = 'buffer' },
+            { name = 'nvim_lsp' },
+        },
+    })
+    cmp.setup.cmdline(':', {
+        sources = {
+            { name = 'cmdline' },
+            { name = 'nvim_lsp' },
+            { name = 'path' },
+        },
+    })
+
 
     -------------------
     -- lsp_signature --
@@ -443,6 +494,7 @@ nnoremap <leader><leader> :LspRestart<cr>
             flags = {
                 debounce_text_changes = 500,
             },
+            capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
             commands = {
                 SwitchSourceHeader = {
                     function()
