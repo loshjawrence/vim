@@ -1,12 +1,6 @@
 " I am $MYVIMRC for nvim
 " Put me in ~/.config/nvim/ on linux and ~\AppData\Local\nvim\ on windows
 " make sure colors bundle autoload and all that is in those folders
-" set runtimepath^=~/.vim runtimepath+=~/.vim/after
-" set runtimepath^=~/.local/share/nvim runtimepath+=~/.local/share/nvim/after
-" set runtimepath^=stdpath('data')
-" let &packpath = &runtimepath
-
-
 " On Windows:
 " See repo for disable capslock reg file for windows 10, double click to merge it then restart your computer.
 " Windows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
@@ -17,102 +11,6 @@ let mapleader="\<space>" " Map the leader key to space bar
 
 " The different events you can listen to http://vimdoc.sourceforge.net/htmldoc/autocmd.html#autocmd-execute
 " autocmd-events for executing : commands (full explanations: autocmd-events-abc)
-
-" So git bash or whatever doesn't throw up errors everywhere when it needs you to edit a commit message
-if v:progname == 'vi'
-    set noloadplugins
-endif
-
-" helps startup speed
-let g:python_host_prog  = '/usr/bin/python2'
-let g:python3_host_prog  = '/usr/bin/python3'
-let g:perl_host_prog = '/usr/bin/perl'
-
-" See: vim-differences nvim-defaults
-filetype plugin indent on  " try to recognize filetypes and load related plugins/settings for those filetypes
-syntax on        " syntax highlighting
-syntax enable    " syntax highlighting
-
-set relativenumber
-set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
-set number              " Show line numbers
-set laststatus=0        " Always hide the status line
-set noruler               " dont show the cursor position
-set showcmd             " display incomplete commands
-set guioptions=         " remove scrollbars
-set noshowmode          " don't show mode
-set nowrapscan          " Don't autowrap to top of tile on searches
-set nomodeline          " Was getting annoying error about modeline when opening files, turn it off
-set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
-set nofoldenable        " Turn off folding
-
-set ignorecase
-set smartcase
-set autowrite           " Automatically :write before running commands
-set magic               " Use 'magic' patterns (extended regular expressions).
-set mouse=a             " enable mouse (selection, resizing windows)
-set mousemodel=popup_setpos
-set tabstop=4           " Use 4 spaces for tabs.
-set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
-set expandtab           " tabs replaced with right amount of spacing
-set shiftround          " Round indent to multiple of 'shiftwidth'
-set hidden              " enable hidden unsaved buffers
-silent! helptags ALL    " Generate help doc for all plugins
-" set iskeyword+=-        " Add chars that count as word boundaries. test: asdf-asdf
-set fenc=utf-8          " set UTF-8 encoding
-
-set spell               " turn on spell check
-" correct spelling of work under cursor. <right> required since the cursor needs to be inside the word
-nnoremap <c-s> i<right><c-x>s
-inoremap <c-s> <right><c-x>s
-
-" schedulesss
-
-set nobackup
-set nowritebackup
-set noswapfile
-set splitbelow " :sp defaults down
-" set splitright " :vs defaults right, quickfix edits cycles right split window so turn this off (TODO list usually in the :vs window)
-set switchbuf=useopen " if buffer already opened, use it
-set lazyredraw        " should make scrolling faster
-set diffopt+=vertical " Always use vertical diffs
-set visualbell " visual bell for errors
-set wildignorecase
-set textwidth=300
-set nowrap                          " Don't word wrap
-set cmdheight=2 " Better display for messages
-set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
-set shortmess+=c " don't give |ins-completion-menu| messages.
-if has('gui')
-    " Turn off scrollbars. (Default on macOS is "egmrL").
-    set winaltkeys=no
-    set guioptions-=L
-    set guioptions-=R
-    set guioptions-=b
-    set guioptions-=l
-    set guioptions-=r
-    set guioptions-=T
-    set guioptions-=m
-endif
-
-" tell :find to recursively search
-set path+=**
-
-" notify if file changed outside of vim to avoid multiple versions
-autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
-
-" Tell vim to use ripgrep as its grep program
-" NOTE: --sort path can be used to get consistent order, but it will run with 1 thread.
-" in terminal see rg --help for options to ripgrep 12
-" set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
-" NOTE: these globs work when you cd to root with Gcd using <leader>cr
-" <leader>a does <leader>cr automatically
-" set grepprg=rg\ --vimgrep\ --path-separator\ /\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'\ -g\ 'include/**'\ -g\ 'tests/**'\ -g\ 'applications/**'\ -g\ 'cmake/**'
-"
-" NOTE: one slash for line break, one for space
-" NOTE: keep --vimgrep at the end
-" add root level folders you want to search with -g
-set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
 
 " call plug#begin("~/.vim" . '/bundle') " Arg specifies plugin install dir
 " call plug#begin("~/.local/share/nvim/plugged" . '/bundle') " Arg specifies plugin install dir
@@ -254,7 +152,6 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 " Plug 'nvim-treesitter/nvim-treesitter-refactor'
 
-Plug 'norcalli/nvim-colorizer.lua'
 " " Buffers as tabs setup
 Plug 'akinsho/nvim-bufferline.lua'
 
@@ -290,20 +187,71 @@ Plug 'beyondmarc/hlsl.vim'
 
 call plug#end()
 
-" Font, size, resize
-set guifont=Monospace:h8
-let s:fontsize = 7
-function! AdjustFontSize(amount)
-    let s:fontsize = s:fontsize+a:amount
-    :execute "GuiFont! Monospace:h" . s:fontsize
-endfunction
-noremap <c-=> :call AdjustFontSize(1)<CR>
-noremap <c--> :call AdjustFontSize(-1)<CR>
+" See: vim-differences nvim-defaults
+filetype plugin indent on  " try to recognize filetypes and load related plugins/settings for those filetypes
 
-" Add the terminal to unlisted buffers so that buffer line doesnt show it
-" NOTE: Tried all the Buf* stuff but only this one seemed to work
-" and so it only gets removed from buffer tabs when you leave the terminal
-autocmd BufLeave bash* setlocal nobuflisted
+set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
+set number              " Show line numbers
+set laststatus=0        " Always hide the status line
+set noruler               " dont show the cursor position
+set showcmd             " display incomplete commands
+set guioptions=         " remove scrollbars
+set noshowmode          " don't show mode
+set nowrapscan          " Don't autowrap to top of tile on searches
+set nomodeline          " Was getting annoying error about modeline when opening files, turn it off
+set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
+set nofoldenable        " Turn off folding
+
+set ignorecase
+set smartcase
+set autowrite           " Automatically :write before running commands
+set magic               " Use 'magic' patterns (extended regular expressions).
+set mouse=a             " enable mouse (selection, resizing windows)
+set mousemodel=popup_setpos
+set tabstop=4           " Use 4 spaces for tabs.
+set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
+set expandtab           " tabs replaced with right amount of spacing
+set shiftround          " Round indent to multiple of 'shiftwidth'
+silent! helptags ALL    " Generate help doc for all plugins
+" set iskeyword+=-        " Add chars that count as word boundaries. test: asdf-asdf
+set fenc=utf-8          " set UTF-8 encoding
+
+set spell               " turn on spell check
+" correct spelling of work under cursor. <right> required since the cursor needs to be inside the word
+nnoremap <c-s> i<right><c-x>s
+inoremap <c-s> <right><c-x>s
+
+set nowritebackup
+set noswapfile
+set splitbelow " :sp defaults down
+" set splitright " :vs defaults right, quickfix edits cycles right split window so turn this off (TODO list usually in the :vs window)
+set switchbuf=useopen " if buffer already opened, use it
+set lazyredraw        " should make scrolling faster
+set diffopt+=vertical " Always use vertical diffs
+set visualbell " visual bell for errors
+set wildignorecase
+set textwidth=300
+set nowrap                          " Don't word wrap
+set cmdheight=2 " Better display for messages
+set updatetime=300 " You will have bad experience for diagnostic messages when it's default 4000.
+set shortmess+=c " don't give |ins-completion-menu| messages.
+" tell :find to recursively search
+set path+=**
+set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
+set completeopt=menuone,noinsert,noselect,preview
+
+" Tell vim to use ripgrep as its grep program
+" NOTE: --sort path can be used to get consistent order, but it will run with 1 thread.
+" in terminal see rg --help for options to ripgrep 12
+" set grepprg=rg\ --vimgrep\ --glob\ !tags\ --sort\ path
+" NOTE: these globs work when you cd to root with Gcd using <leader>cr
+" <leader>a does <leader>cr automatically
+" set grepprg=rg\ --vimgrep\ --path-separator\ /\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'\ -g\ 'include/**'\ -g\ 'tests/**'\ -g\ 'applications/**'\ -g\ 'cmake/**'
+"
+" NOTE: one slash for line break, one for space
+" NOTE: keep --vimgrep at the end
+" add root level folders you want to search with -g
+set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
 
 " These commands will honor the custom ordering if you change the order of buffers.
 " The vim commands :bnext and :bprevious will not respect the custom ordering.
@@ -316,13 +264,6 @@ nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
 
 " kill buffer tab
 nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
-
-" see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
-" There was a comment about making sure .viminfo is read/write
-autocmd BufReadPost *
-\ if line("'\"") > 0 && line("'\"") <= line("$") |
-\   exe "normal! g`\"" |
-\ endif
 
 " Change pwd to this files location. local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
 nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
@@ -377,17 +318,9 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <expr> <cr> pumvisible() ? "\<esc>" : "\<cr>"
 inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-inoremap <expr> <c-d> pumvisible() ? "\<PageDown>" : "\<c-d>"
-inoremap <expr> <c-u> pumvisible() ? "\<PageUp>" : "\<c-u>"
-set completeopt=menuone,noinsert,noselect,preview
 
 nnoremap <leader><leader> :LspRestart<cr>
 :lua << EOF
-    ------------------
-    --- colorizer ----
-    ------------------
-    require'colorizer'.setup{}
-
     ------------------
     --- bufferline ---
     ------------------
@@ -554,8 +487,8 @@ nnoremap <leader><leader> :LspRestart<cr>
     --     on_attach = on_attach,
     -- }
 
-    -- Turn on debug logging
-    vim.lsp.set_log_level("debug")
+    -- -- Turn on debug logging
+    -- vim.lsp.set_log_level("debug")
 
     -- Disable diagnostic
     vim.diagnostic.config {
@@ -565,6 +498,17 @@ nnoremap <leader><leader> :LspRestart<cr>
     }
 
 EOF
+
+" notify if file changed outside of vim to avoid multiple versions
+autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
+
+" see https://stackoverflow.com/questions/7894330/preserve-last-editing-position-in-vim
+" There was a comment about making sure .viminfo is read/write
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\   exe "normal! g`\"" |
+\ endif
+
 
 " Prevents navigation into diagnostic windows
 autocmd CursorHold <buffer> lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false })
@@ -606,9 +550,6 @@ let g:floaterm_borderchars=''
 let g:floaterm_position='right'
 let g:floaterm_width=0.60
 let g:floaterm_height=1.0
-" let g:floaterm_position='bottom'
-" let g:floaterm_width=1.0
-" let g:floaterm_height=0.40
 nnoremap <silent>   <c-\>   :FloatermToggle<CR>
 tnoremap <silent>   <c-\>   <C-\><C-n>:FloatermToggle<CR>
 " Esc quits the terminal
@@ -642,10 +583,6 @@ nnoremap <silent>   <c-\>   :FloatermToggle<CR>
 set winblend=15 " set all floating windows transparent(0-100)
 hi Floaterm guibg=black
 hi FloatermBorder guibg=black guifg=black
-
-if has("nvim")
-    set inccommand=nosplit " Remove horizontal split that shows a preview of whats changing
-endif
 
 " SEARCH
 " * and # search does not use smartcase
@@ -959,7 +896,13 @@ nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr>msHmt:e<
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
 " Diff the current local vimrc against master
-nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
+let uname = substitute(system('uname'),'\n','','')
+if uname == 'Linux'
+    nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
+else
+    nmap <silent> <leader>vd <c-\>cd C:/Users/lol/clones/vim<cr>copy /y ..\..\AppData\Local\nvim\init.vim .<cr>git diff<cr>
+endif
+
 " Pull latest vimrc, copy it to vimrc location, source it, restart coc
 nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
@@ -968,26 +911,73 @@ nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 " have to run cmake twice for compile_commands.json to show up?
 nmap <silent> <leader>bl <leader>cr<cmd>let @l = getcwd()<cr><c-\>cd <c-r>l<cr>cmake -BbuildLinux; cmake -BbuildLinux; cp buildLinux/compile_commands.json .;cd -;<cr>
 
-" Fomatting
-" Pretty Json
+" Prettier format Json
 nnoremap <leader>p :%!python -m json.tool<cr>
+
 " NOTE xxd is a linux thing
 " convert to hex view
 nnoremap <leader>xx :%!xxd<cr>
 " undo convert to hex view
 nnoremap <leader>xr :%!xxd -r<cr>
-" Simple re-format for minified Javascript
-command! UnMinify call UnMinify()
-function! UnMinify()
-    %s/{\ze[^\r\n]/{\r/g
-    %s/){/) {/g
-    %s/};\?\ze[^\r\n]/\0\r/g
-    %s/;\ze[^\r\n]/;\r/g
-    %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
-    normal ggVG=
-endfunction
 
 """"""""""""""""""""" RETIRED """""""""""""""""""""
+
+" " Simple re-format for minified Javascript
+" command! UnMinify call UnMinify()
+" function! UnMinify()
+"     %s/{\ze[^\r\n]/{\r/g
+"     %s/){/) {/g
+"     %s/};\?\ze[^\r\n]/\0\r/g
+"     %s/;\ze[^\r\n]/;\r/g
+"     %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
+"     normal ggVG=
+" endfunction
+
+" " Font, size, resize
+" set guifont=Monospace:h8
+" let s:fontsize = 7
+" function! AdjustFontSize(amount)
+"     let s:fontsize = s:fontsize+a:amount
+"     :execute "GuiFont! Monospace:h" . s:fontsize
+" endfunction
+" noremap <c-=> :call AdjustFontSize(1)<CR>
+" noremap <c--> :call AdjustFontSize(-1)<CR>
+
+" " Add the terminal to unlisted buffers so that buffer line doesnt show it
+" " NOTE: Tried all the Buf* stuff but only this one seemed to work
+" " and so it only gets removed from buffer tabs when you leave the terminal
+" autocmd BufLeave bash* setlocal nobuflisted
+
+" set runtimepath^=~/.vim runtimepath+=~/.vim/after
+" set runtimepath^=~/.local/share/nvim runtimepath+=~/.local/share/nvim/after
+" set runtimepath^=stdpath('data')
+" let &packpath = &runtimepath
+
+" if has('gui')
+"     " Turn off scrollbars. (Default on macOS is "egmrL").
+"     set winaltkeys=no
+"     set guioptions-=L
+"     set guioptions-=R
+"     set guioptions-=b
+"     set guioptions-=l
+"     set guioptions-=r
+"     set guioptions-=T
+"     set guioptions-=m
+" endif
+
+
+" syntax on        " syntax highlighting
+
+" " So git bash or whatever doesn't throw up errors everywhere when it needs you to edit a commit message
+" if v:progname == 'vi'
+"     set noloadplugins
+" endif
+
+" " helps startup speed
+" let g:python_host_prog  = '/usr/bin/python2'
+" let g:python3_host_prog  = '/usr/bin/python3'
+" let g:perl_host_prog = '/usr/bin/perl'
+
 """"""""""""""""""""" RETIRED """""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
