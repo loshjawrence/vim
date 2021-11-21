@@ -897,13 +897,15 @@ nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
 " Diff the current local vimrc against master
 let uname = substitute(system('uname'),'\n','','')
 if uname == 'Linux'
+    " diff the current state of init.vim with whats in the repo
     nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
+    " Pull latest vimrc, copy it to vimrc location, source it, restart coc
+    nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
 else
     nmap <silent> <leader>vd <c-\>cd C:/Users/lol/clones/vim<cr>copy /y ..\..\AppData\Local\nvim\init.vim .<cr>git diff<cr>
+    nmap <silent> <leader>vp <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y init.vim ..\..\AppData\Local\nvim<cr>popd<cr>
 endif
 
-" Pull latest vimrc, copy it to vimrc location, source it, restart coc
-nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
 " we cd to root and save the path to the l register for pasting in terminal later
