@@ -5,7 +5,6 @@
 " set runtimepath^=~/.local/share/nvim runtimepath+=~/.local/share/nvim/after
 " set runtimepath^=stdpath('data')
 " let &packpath = &runtimepath
-"
 
 
 " On Windows:
