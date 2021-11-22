@@ -258,11 +258,7 @@ set completeopt=menuone,noinsert,noselect,preview
 " NOTE: one slash for line break, one for space
 " NOTE: keep --vimgrep at the end
 " add root level folders you want to search with -g
-if uname == 'Linux'
-    set grepprg=rg\ --path-separator\ / -g\ src/**\ --vimgrep
-else
-    set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
-endif
+set grepprg=rg\ --path-separator\ /\ -g\ 'src/**'\ --vimgrep
 
 " These commands will honor the custom ordering if you change the order of buffers.
 " The vim commands :bnext and :bprevious will not respect the custom ordering.
