@@ -8,6 +8,8 @@
 
 let mapleader="\<space>" " Map the leader key to space bar
 
+let uname = substitute(system('uname'),'\n','','')
+
 call plug#begin()
 
 """"""""""""""""""""""""""""""""""""""""
@@ -256,7 +258,11 @@ set completeopt=menuone,noinsert,noselect,preview
 " NOTE: one slash for line break, one for space
 " NOTE: keep --vimgrep at the end
 " add root level folders you want to search with -g
-set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
+if uname == 'Linux'
+    set grepprg=rg\ --path-separator\ / -g\ src/**\ --vimgrep
+else
+    set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
+endif
 
 " These commands will honor the custom ordering if you change the order of buffers.
 " The vim commands :bnext and :bprevious will not respect the custom ordering.
@@ -995,8 +1001,7 @@ nnoremap <c-up>   :res +8<cr>
 nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr>msHmt:e<cr>`tzt`s
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
-" Diff the current local vimrc against master
-let uname = substitute(system('uname'),'\n','','')
+
 if uname == 'Linux'
     " diff the current state of init.vim with whats in the repo
     nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
