@@ -8,8 +8,6 @@
 
 let mapleader="\<space>" " Map the leader key to space bar
 
-let uname = substitute(system('uname'),'\n','','')
-
 call plug#begin()
 
 """"""""""""""""""""""""""""""""""""""""
@@ -258,7 +256,11 @@ set completeopt=menuone,noinsert,noselect,preview
 " NOTE: one slash for line break, one for space
 " NOTE: keep --vimgrep at the end
 " add root level folders you want to search with -g
-set grepprg=rg\ --path-separator\ /\ -g\ 'src/**'\ --vimgrep
+if has('win32')
+    set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
+else
+    set grepprg=rg\ --path-separator\ /\ -g\ 'src/**'\ --vimgrep
+endif
 
 " These commands will honor the custom ordering if you change the order of buffers.
 " The vim commands :bnext and :bprevious will not respect the custom ordering.
@@ -998,14 +1000,14 @@ nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr>msHmt:e<
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
 
-if uname == 'Linux'
+if has('win32')
     " diff the current state of init.vim with whats in the repo
-    nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
-    " Pull latest vimrc, copy it to vimrc location, source it, restart coc
-    nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
-else
     nmap <silent> <leader>vd <c-\>cd C:/Users/lol/clones/vim<cr>copy /y ..\..\AppData\Local\nvim\init.vim .<cr>git diff<cr>
+    " Pull latest vimrc, copy it to vimrc location, source it, restart coc
     nmap <silent> <leader>vp <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y init.vim ..\..\AppData\Local\nvim<cr>popd<cr>
+else
+    nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
+    nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
 endif
 
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
