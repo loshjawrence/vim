@@ -861,7 +861,7 @@ nnoremap <leader>gm :call FileGit(function("MoveFile"), "")<left><left>
 nnoremap / /\V
 xnoremap / /\V
 
-nnoremap <leader><leader> :LspRestart<cr>
+nnoremap <leader><leader> :LspStart<cr>
 " I don't wan't to think through vim's 6 different ways to scroll the screen
 " Bonus: frees up ctrl e, y, f, b
 " For this single scroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
@@ -888,6 +888,9 @@ noremap <silent> R <nop>
 xnoremap <c-y> "+y
 xnoremap <c-p> "+p
 nnoremap <c-p> "+p
+
+" BLOCK COMMENT
+nnoremap <leader>/ O/****************************************************<cr><backspace>***************************************************/<esc>ko
 
 " Split navigation
 inoremap <c-h> <Esc><c-w>h
@@ -953,8 +956,9 @@ nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
 nnoremap > >>
-xnoremap < <gv
-xnoremap > >gv
+" you can keep the visual selection with this but i never really need that
+" xnoremap < <gv
+" xnoremap > >gv
 
 " force write in linux
 cmap w!! %!sudo tee > /dev/null %
@@ -996,7 +1000,8 @@ nnoremap <c-up>   :res +8<cr>
 " Source the vimrc so we don't have to refresh
 " :e is required to actually pick up vimrc changes
 " the M is there to center the mouse cursor other wise the screen will scroll when doing :e
-nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr>msHmt:e<cr>`tzt`s
+" nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr>msHmt:e<cr>`tzt`s
+nnoremap <silent> <leader>vs :LspStop<cr>:so $MYVIMRC<cr>:LspStart<cr>
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
 
