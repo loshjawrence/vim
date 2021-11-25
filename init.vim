@@ -5,141 +5,27 @@
 " See repo for disable capslock reg file for windows 10, double click to merge it then restart your computer.
 " Windows key repeat rate: https://ludditus.com/2016/07/15/microsoft-the-keyboard-repeat-rate-and-sleeping-how-to-work-around-their-idiocy/
 " linux search keyboard set to 200ms delay, 40c/s
+" colors:
+" Linux: ~/.config/nvim/colors
+" Windows: %UserProfile%\AppData\Local\nvim\colors
+" try to set kb pollrate (~40 keys/s) and delay (~200ms)
+" TODO: 
+" [] why the hl screwup on load?
+" [] so $MYVIMRC causes clinet quit error
 
-let mapleader="\<space>" " Map the leader key to space bar
-
+""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""" PLUG """""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin()
-
-""""""""""""""""""""""""""""""""""""""""
-""""""""""""""" FZF """"""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-" Jump to buffer if open
 let g:fzf_buffers_jump = 1
-" disable preview window with '' set it to right with 'right'
 let g:fzf_preview_window = ''
-" Allow passing other args to Rg command
-" Example, :Rg '#include "Shader.h"' -g "*{.cpp,.h}"
-command! -bang -nargs=* Rg call fzf#vim#grep("rg -S --path-separator / ".shellescape(<q-args>), 0, fzf#vim#with_preview({'options': ['--layout=reverse']}), <bang>0)
-" choco install ripgrep fd fzf
-" USE FD https://github.com/sharkdp/fd
-" put in .bashrc for fd/other things
-" in your ~/.bashrc, or somthing like 6:37 of https://www.youtube.com/watch?v=qgG5Jhi_Els
-" see .bashrc in personal vim repo
-" fzf plugin shortcuts :Marks :Tags :Buffers :History :History: :History/ :Files :Rg :GFiles :Windows
-" all files under pwd (recursive)
-"
-" NOTE: calls with fzf#wrap will honor this global setting
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'border': 'horizontal' } }
-" run custom, see :h fzf#run
 
-" override the Files command, see fzf-vim-advanced-customization
-nnoremap <leader>F :Files<cr>
-command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>,
-    \ {
-    \   'options': ['--layout=reverse'],
-    \   'source': 'fd --no-ignore --hidden --follow --type f'
-    \ }, <bang>0)
-
-" files in `git ls-files``
-nnoremap <leader>fg :GFiles<cr>
-command! -bang -nargs=? -complete=dir GFiles
-    \ call fzf#vim#gitfiles(<q-args>,
-    \ {
-    \   'options': ['--layout=reverse'],
-    \ }, <bang>0)
-
-" History looks up v:oldfiles
-nnoremap <leader>fh :History<cr>
-nnoremap <leader>fm :Marks<cr>
-nnoremap <leader>fb :Buffers<cr>
-
-" :MardownPreviewToggle to open/close webpage of preview
-" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
-
-Plug 'sjl/gundo.vim'
-nnoremap <f1> :GundoToggle<CR>
-
-Plug 'majutsushi/tagbar'
-nnoremap <f2> :TagbarToggle<CR>
-
-" try to combine with nvim-tree ability to create/delete files and directories
-Plug 'tpope/vim-fugitive'
-" :Gdiffsplit        - show git diff for file or provide a file or commit as an arg (newer version is on right or bottom)
-"                         - do will obtain theirs (other buffer)
-"                         - dp will put ours (current buffer)
-" :Gdiffsplit!       - used for merge conflict?
-" :Gread             - git checkout -- on this file.
-" :Gwrite            - git add the file. stage it otherwise.
-" :GRename           - git mv this file to path relative to the file
-" :GDelete!          - git rm -f this file
-" :GRemove           - git rm --cached (keeps the file around)
-" :[range]Gclog      - wow. vis something :Gclog for quckfix of commits relating to selected code will load up diff of the file for that commit
-" G                  - place to stage and unstage files
-"                    - '-' toggle stage status
-"                    - U unstage all
-"                    - X checkout file (a command is echoed to undo this see :messages to see again)
-"                    - = toggle diff fold
-" :G blame           - A vertical window on left showing commit hashes. Can walk backwards through git commits to follow history of changes with <cr> for patch or - to load up file at commit and rerun G blame.
-" :G difftool        - quickfix of line changes in the current file
-" :G diff            - open a split and show the normal git diff but for only this file
-" :Gclog or G log    - like fzf's :Commits - open quickfix or split of commit hashes and their messages, press enter to open a buffer showing its patch diff.
-"
-" Gcd is cd relative to the repo root. So this would be cd to repo root.
-nnoremap <leader>cr :Gcd<cr>
-" see https://stackoverflow.com/questions/1269603/to-switch-from-vertical-split-to-horizontal-split-fast-in-vim
-nnoremap <leader>gg :G<cr><c-w>H
-
-" Surrounding things
-Plug 'tpope/vim-surround'
-" NOTE: If you use the closing version, i.e ),>,},] it will NOT be surrounded by spaces.
-" NOTE: behavior of S< is such that it expects a tag enclosure so only S> is able to surround as <>.
-" cs'"  This means change surround ' to "
-" ds[  This means delete surround [
-" When v selected:
-" S{  This means surround selection with {
-" When V selected:
-" S{  This means surround selected LINES with { (open and closed brackets above and below the lines)
-" When ctrl-v selected:
-" S{  This means surround selected block edges with { (open and closed brackets above and below the lines)
-
-" Framework for enabling repeat command on plugin commands
-" The plugin itself must explicitly support it though
-Plug 'jiangmiao/auto-pairs'
-" add more pairs, first line is default
-let b:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''", '<':'>' }
-" Turn off mappings
-let g:AutoPairsShortcutJump=''
-let g:AutoPairsShortcutBackInsert=''
-let g:AutoPairsShortcutFastWrap=''
-let g:AutoPairsShortcutToggle=''
-
-" QUICKFIX LIST
-" can dd, visual delete and other things like undo, :v/someText/d (keep lines containing someText) or :g/someText/d (delete lines containing someText)
-" used in the mappings for global ack and replace
-Plug 'itchyny/vim-qfedit'
-
-" :StartupTime to see a graph of startup timings
-Plug 'dstein64/vim-startuptime'
-
-Plug 'vim-scripts/star-search'
-
-Plug 'phaazon/hop.nvim'
-nnoremap s <cmd>HopChar1<cr>
-xnoremap s <cmd>HopChar1<cr>
-nnoremap S <nop>
-
-" " LSP for code completion options:
-" " CMAKE:
-" " set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
-" " This will spit out a compile_commands.json in the /build dir.
-" " Would need to copy this file to the root dir
-" " worth looking at?: nvim-gdb
+" :TSUninstall all<cr>:TSInstall c cpp cmake lua typescript html
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
-" Plug 'hrsh7th/nvim-compe'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
@@ -150,46 +36,36 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'ray-x/lsp_signature.nvim'
 
-" :TSInstallInfo lists all the languages
-" :TSInstall c cpp bash lua typescript html c_sharp
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-" Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-" Plug 'nvim-treesitter/nvim-treesitter-refactor'
-
-" " Buffers as tabs setup
+Plug 'dstein64/vim-startuptime'
+Plug 'vim-scripts/star-search'
+Plug 'phaazon/hop.nvim'
+Plug 'wellle/targets.vim'
 Plug 'akinsho/nvim-bufferline.lua'
-
 Plug 'voldikss/vim-floaterm'
-
 Plug 'tomtom/tcomment_vim'
-" gcc toggles line
-" gc on selection to toggle
-" gcip gci{ etc. will toggle within those motions
-" Prevent tcomment from making a zillion mappings (we just want the gc operator).
 let g:tcomment_mapleader1=''
 let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
-
-" Can target next(n) and last(l) text object. Adds new delimiter pairs and can target function args with a.
-" Ex: dina cila vina function(cow, mouse, pig) |asdf|asdf| [thing 1] [thing  2]
-" d2ina skips an arg and deletes the next one
-Plug 'wellle/targets.vim'
-
-" Colorschemes
-" COLORSCHEME must come before whitespace highlighting and other color alterations
-" Linux: ~/.config/nvim/colors
-" Windows: %UserProfile%\AppData\Local\nvim\colors
-" Plug 'AlessandroYorba/Alduin'
-" diff from alduin: no baby blue on members, hlsearch is salmon instead of grey
-
-" Decent default scheme: colorscheme slate
-
-Plug 'tikhomirov/vim-glsl'
-Plug 'beyondmarc/hlsl.vim'
-
+Plug 'sjl/gundo.vim'
+Plug 'majutsushi/tagbar'
+Plug 'itchyny/vim-qfedit'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'jiangmiao/auto-pairs'
+let b:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''", '<':'>' }
+let g:AutoPairsShortcutJump=''
+let g:AutoPairsShortcutBackInsert=''
+let g:AutoPairsShortcutFastWrap=''
+let g:AutoPairsShortcutToggle=''
 call plug#end()
 
+"""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""" SET """""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader="\<space>" " Map the leader key to space bar
+
+" COLORSCHEME must come before any hl or color overrides
 colorscheme alduin2
 
 " See: vim-differences nvim-defaults
@@ -262,72 +138,75 @@ else
     set grepprg=rg\ --path-separator\ /\ -g\ 'src/**'\ --vimgrep
 endif
 
-" These commands will honor the custom ordering if you change the order of buffers.
-" The vim commands :bnext and :bprevious will not respect the custom ordering.
-nnoremap <silent><a-l> :BufferLineCycleNext<CR>
-nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+" COLORCOLUMN
+" CURSORLINE (can be slower in some terminals)
+" purple4 black
+" You can also specify a color by its RGB (red, green, blue) values.
+" The format is "#rrggbb", where
+" hi Comment guifg=#11f0c3 guibg=#ff00ff
+hi cursorline  gui=NONE guibg=purple4 guifg=NONE
+hi cursorcolumn  gui=NONE guibg=purple4 guifg=NONE
 
-" These commands will move the current buffer backwards or forwards in the bufferline.
-nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
-nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
+let g:useCursorline = 1
+if g:useCursorline == 1
+    set cursorline
+    autocmd InsertEnter,WinLeave * setlocal nocursorline
+    autocmd InsertLeave,VimEnter,WinEnter * setlocal cursorline | silent! update!
+else
+    set nocursorline
+    autocmd InsertEnter * setlocal cursorline
+    autocmd InsertLeave * setlocal nocursorline | silent! update!
+endif
 
-" kill buffer tab
-nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
+" No fuss terminal colors
+let g:terminal_color_0  = '#2e3436'
+let g:terminal_color_1  = '#cc0000'
+let g:terminal_color_2  = '#4e9a06'
+let g:terminal_color_3  = '#c4a000'
+let g:terminal_color_4  = '#3465a4'
+let g:terminal_color_5  = '#75507b'
+let g:terminal_color_6  = '#0b939b'
+let g:terminal_color_7  = '#d3d7cf'
+let g:terminal_color_8  = '#555753'
+let g:terminal_color_9  = '#ef2929'
+let g:terminal_color_10 = '#8ae234'
+let g:terminal_color_11 = '#fce94f'
+let g:terminal_color_12 = '#729fcf'
+let g:terminal_color_13 = '#ad7fa8'
+let g:terminal_color_14 = '#00f5e9'
+let g:terminal_color_15 = '#eeeeec'
+highlight TermCursor ctermfg=red guifg=red
+" Set main floaterm window's background to black
+" Set floaterm main and border to black
+set winblend=15 " set all floating windows transparent(0-100)
+hi Floaterm guibg=black
+hi FloatermBorder guibg=black guifg=black
+" terminal, floaterm
+" Go to insert mode when switching to a terminal
+" Distinguish terminal by making cursor red
+let g:floaterm_borderchars=''
+let g:floaterm_position='right'
+let g:floaterm_width=0.60
+let g:floaterm_height=1.0
 
-" Change pwd to this files location. local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
-nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
+" trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
+" Also highlight all tabs and trailing whitespace characters.
+" set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
+" set list                            " Show problematic characters.
+" NOTE see vim-better-whitespace plugin
+highlight ExtraWhitespace ctermbg=black guibg=black
 
-" mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
-" TODO: need proper word boundary versions(aw, rw) for better var name changes.
-" NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
-command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
-command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
-command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
-nnoremap <leader>,as :let @w = "" <bar> MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>,aw :let @w = "<c-r><c-w>" <bar> MyGrep "-w" "<c-r><c-w>"<cr>
-" Same as above but include current dir with -g */**
-" used in <leader>A
-nnoremap <leader>,aS :let @w = "" <bar> MyGrep "-g" "*/**" "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrep "-w" "-g" "*/**" "<c-r><c-w>"<cr>
-" " not sure i really need current-file-only version
-" nnoremap <leader>,aS :let @w = "" <bar> MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
-" nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
-" mapped to above. if you have something highlighted and it wasnt a word search, it will run the search version.
-" otherwise run the word version. a is for current dir of file (<leader>cd) and A is for root (<leader>cr)
-" rg from current files directory
-nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aW" : "<leader>cd<leader>,aS" : "<leader>cd<leader>,aW"
-" rg from root, make sure .gitignore is ignoring things
-nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
 
-" g*            Like "*", but don't put "\<" and "\>" around the word.
-                " :let v:statusmsg = ""
-                " :silent verbose runtime foobar.vim
-                " :if v:statusmsg != ""
-                " :  " foobar.vim could not be found
-                " :endif
 
-" NOTE: rg's idea of word boundary is different from vim.
-" But <leader>rs command will not remove vim word boundary regex from the / register if it's there
-" things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
-" :h cword
-" :h s_flags (I is dont ignore, e is continue on error, g is all instances on line, c is confirm)
-" when doing something like :s//red/ the first arg is assumed to be previous search
-nnoremap <leader>,rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
-" nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
-" To be used with <leader>aw as it saves word under cursor to w register
-nnoremap <leader>,rw :MyCdo %s/\<<c-r>w\>//gIe<left><left><left><left>
-" mapped to above if we took tha as or aw path above do the pick the right rs or rw
-" NOTE: when using gr from the lsp make sure to * first this will record to @w which you can then use with <leader>r
-" and it will call the word version
-nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 
-" COMPLETION
-" " nvim-lsp NOTE: This must go after plug section ----------------------------------------
-" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <expr> <cr> pumvisible() ? "\<esc>" : "\<cr>"
-inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
+
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""" LUA """""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""
 :lua << EOF
     ------------------
     --- bufferline ---
@@ -358,41 +237,6 @@ inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
     -- hop ---------
     ----------------
     require'hop'.setup()
-
-    -- ------------------
-    -- -- compe ---------
-    -- ------------------
-    -- require'compe'.setup {
-    --     enabled = true;
-    --     autocomplete = true;
-    --     debug = false;
-    --     min_length = 1;
-    --     preselect = 'enable';
-    --     throttle_time = 80;
-    --     source_timeout = 200;
-    --     resolve_timeout = 800;
-    --     incomplete_delay = 400;
-    --     max_abbr_width = 100;
-    --     max_kind_width = 100;
-    --     max_menu_width = 100;
-    --     documentation = {
-    --         border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
-    --         winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-    --         max_width = 120,
-    --         min_width = 60,
-    --         max_height = math.floor(vim.o.lines * 0.3),
-    --         min_height = 1,
-    --     };
-    --     source = {
-    --         -- higher is more important
-    --         nvim_lua = {priority = 10},
-    --         nvim_lsp = {priority = 9},
-    --         buffer = {priority = 7},
-    --         luasnip = {priority = 5},
-    --         path = {priority = 4},
-    --         calc = {priority = 3},
-    --     };
-    -- }
 
     -------------------------
     ----- cmp ---------------
@@ -503,7 +347,7 @@ inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- NOTE: if you get errors related to abi or anything with treesitter
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
-        ensure_installed = { "c", "cpp", 'bash', "lua", "typescript", "javascript", "html", "json", "yaml" },
+        ensure_installed = { "c", "cpp", "cmake", "lua",  'bash', "typescript", "json" },
         highlight = { enable = true, },
         indent = { enable = false, },
         incremental_selection = { enable = false, },
@@ -597,6 +441,16 @@ inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
 EOF
 
+
+
+
+
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""" AUTOCMD """"""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
@@ -614,26 +468,16 @@ autocmd CursorHold <buffer> lua vim.lsp.diagnostic.show_line_diagnostics({ focus
 " Disable diagnostic
 autocmd BufEnter * lua vim.lsp.diagnostic.disable()
 
-" trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
-" Also highlight all tabs and trailing whitespace characters.
-" set listchars=tab:»·,trail:·,nbsp:· " Display extra whitespace
-" set list                            " Show problematic characters.
-" NOTE see vim-better-whitespace plugin
-highlight ExtraWhitespace ctermbg=black guibg=black
-
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
-" Manually remove whitespace, replace tabs with 4 spaces
-nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
 " FILETYPE filetype
 " Associate filetypes with other filetypes
 " Can view  all filetypes by doing :setfiletype and tab to try to complete (yes, no space between set and filetype)
 " Query a file's filetype by doing :set ft ?
-
 " Enable spellchecking for Markdown
 autocmd FileType markdown setlocal spell
 " add support for comments in json (jsonc format used as configuration for many utilities)
@@ -641,77 +485,22 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 " webdev community seems to love doing this
 autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 
-" terminal, floaterm
-" Go to insert mode when switching to a terminal
-" Distinguish terminal by making cursor red
-let g:floaterm_borderchars=''
-let g:floaterm_position='right'
-let g:floaterm_width=0.60
-let g:floaterm_height=1.0
-nnoremap <silent>   <c-\>   :FloatermToggle<CR>
-tnoremap <silent>   <c-\>   <C-\><C-n>:FloatermToggle<CR>
-" Esc quits the terminal
-" NOTE: This is needed to make fzf and other termal based things not annoying
-tnoremap <Esc> <C-\><C-n>:q<cr>
-tnoremap <C-\> <C-\><C-n>
-" To simulate i_CTRL-R in terminal-mode
-tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
-" No fuss terminal colors
-let g:terminal_color_0  = '#2e3436'
-let g:terminal_color_1  = '#cc0000'
-let g:terminal_color_2  = '#4e9a06'
-let g:terminal_color_3  = '#c4a000'
-let g:terminal_color_4  = '#3465a4'
-let g:terminal_color_5  = '#75507b'
-let g:terminal_color_6  = '#0b939b'
-let g:terminal_color_7  = '#d3d7cf'
-let g:terminal_color_8  = '#555753'
-let g:terminal_color_9  = '#ef2929'
-let g:terminal_color_10 = '#8ae234'
-let g:terminal_color_11 = '#fce94f'
-let g:terminal_color_12 = '#729fcf'
-let g:terminal_color_13 = '#ad7fa8'
-let g:terminal_color_14 = '#00f5e9'
-let g:terminal_color_15 = '#eeeeec'
-highlight TermCursor ctermfg=red guifg=red
-nnoremap <silent>   <c-\>   :FloatermToggle<CR>
-" Set main floaterm window's background to black
-" Set floaterm main and border to black
-set winblend=15 " set all floating windows transparent(0-100)
-hi Floaterm guibg=black
-hi FloatermBorder guibg=black guifg=black
 
-" SEARCH
-" * and # search does not use smartcase
-" see s_flags pattern and substitute.  I is dont ignore case, c is confirm.
-" NOTE: vim has a gn text object(next search item), star-search plugin (or vim-slash) combined with cgn and . covers alot of cases
-" gv selects the last vis selection (line, block or select), does not work with star select since it selects multiple items
-" Problem is it follows smartcase settings
-" Even with very no magic (\V) modifier, still need to escape / and \ with \
-" see :h escape() (escape the chars in teh second arg with backslash)
-" <c-r>=escape() means paste the result of escape(), substitute(), etc.
-" The \< and \> means don't do a raw string replace but a word replace (only operate on that string if its a stand-alone word)
-" so if you want to replace someVar, it won't touch vars named someVarOther
 
-" NOTE: just use * to grab word, vis select lines with word, then <leader>es
-" NOTE: under cursor and phrase search works,i.e. word boundary when word under cursor and larger phrase respecting the \V very no magic
-" NOTE: leaving first arg blank in substitute will assume last search i.e. the / register
-" edit last search within vis selection
-xnoremap <leader>,es :s///gI<left><left><left>
-xnoremap <leader>,ew :s/<c-r><c-w>//gI<left><left><left>
-" edit last search across whole file
-nnoremap <leader>,es :%s///gI<left><left><left>
-nnoremap <leader>,ew :%s/<c-r><c-w>//gI<left><left><left>
-xmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
-nmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
 
-" see "h <expr> and :help mode()
-" Make A and I work in vis line mode. They already work in the block bounds so leave that be.
-" gv is highlight previous visual selection, `> and `< is jump to end and beg of vis selection
-xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
-xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
 
+
+
+
+
+
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""" FUNCTION """""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " @see MakeFileAndAddToGit
 function! CreateAddFile(currFilename, filename)
     execute 'silent edit ' . a:filename
@@ -849,26 +638,82 @@ function! FileGit(fn, filename)
 
 endfunction
 
-" leader g is for git stuff
-" git add
-nnoremap <leader>ga :call FileGit(function("CreateAddFile"), "")<left><left>
-" git rm -f
-nnoremap <leader>gr :call FileGit(function("RemoveFile"), "")<left><left>
-" git mv
-nnoremap <leader>gm :call FileGit(function("MoveFile"), "")<left><left>
+" Pressing enter flashes the cursoline and column and removes the search highlight
+" Was needed for terminals where the cursor was hard to find where linecoloring
+" was slow in normal mode so you had to turn it off
+function! Flash()
+    set cursorline cursorcolumn
+    redraw
+    if &ft != 'markdown'
+        lua vim.lsp.buf.formatting_seq_sync()
+    endif
+    silent! w!
+    sleep 30m
+    set nocursorcolumn
+    if g:useCursorline == 0
+        set nocursorline
+    endif
+endfunction
 
-" \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
-nnoremap / /\V
-xnoremap / /\V
+" mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
+" TODO: need proper word boundary versions(aw, rw) for better var name changes.
+" NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
+command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
+command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
+command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
 
-nnoremap <leader><leader> :LspStart<cr>
-" I don't wan't to think through vim's 6 different ways to scroll the screen
-" Bonus: frees up ctrl e, y, f, b
-" For this single scroll setup, it's best to set really fast pollrate (~40 keys/s) and really short delay (~200ms) on the system (this is good to do in general)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""" MAP """""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""
+" put nop's at the top of mappings
 noremap <silent> <c-e> <nop>
 noremap <silent> <c-y> <nop>
 noremap <silent> <c-f> <nop>
 noremap <silent> <c-b> <nop>
+noremap <silent> R <nop>
+nnoremap <silent> S <nop>
+
+nnoremap <leader><leader> :LspStart<cr>
+" Source the vimrc so we don't have to refresh
+" :e is required to actually pick up vimrc changes
+" the M is there to center the mouse cursor other wise the screen will scroll when doing :e
+nnoremap <silent> <leader>vs :so $MYVIMRC<cr>msHmt:e<cr>`tzt`s
+nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
+
+nnoremap <silent> <c-\> :FloatermToggle<CR>
+tnoremap <silent>   <c-\>   <C-\><C-n>:FloatermToggle<CR>
+" NOTE: This is needed to make fzf and other termal based things not annoying
+tnoremap <Esc> <C-\><C-n>:q<cr>
+tnoremap <C-\> <C-\><C-n>
+" To simulate i_CTRL-R in terminal-mode
+tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
+
+" Manually remove whitespace, replace tabs with 4 spaces
+nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
+
+" These commands will honor the custom ordering if you change the order of buffers.
+" The vim commands :bnext and :bprevious will not respect the custom ordering.
+nnoremap <silent><a-l> :BufferLineCycleNext<CR>
+nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+
+" These commands will move the current buffer backwards or forwards in the bufferline.
+nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
+nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
+
 
 " Scroll by a quarter of window height (https://stackoverflow.com/a/16574696/1706778)
 " An amount based on screen size
@@ -880,8 +725,67 @@ endfunction
 call SetScroll()
 autocmd VimResized * call SetScroll()
 
-" Just annoying
-noremap <silent> R <nop>
+command! -bang -nargs=* Rg call fzf#vim#grep("rg -S --path-separator / ".shellescape(<q-args>), 0, fzf#vim#with_preview({'options': ['--layout=reverse']}), <bang>0)
+" NOTE: Any calls with fzf#wrap will should honor this global setting
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'border': 'horizontal' } }
+" run custom, see :h fzf#run
+" override the Files command, see fzf-vim-advanced-customization
+nnoremap <leader>F :Files<cr>
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>,
+    \ {
+    \   'options': ['--layout=reverse'],
+    \   'source': 'fd --no-ignore --hidden --follow --type f'
+    \ }, <bang>0)
+
+" files in `git ls-files``
+nnoremap <leader>fg :GFiles<cr>
+command! -bang -nargs=? -complete=dir GFiles
+    \ call fzf#vim#gitfiles(<q-args>,
+    \ {
+    \   'options': ['--layout=reverse'],
+    \ }, <bang>0)
+
+" History looks up v:oldfiles
+nnoremap <leader>fh :History<cr>
+nnoremap <leader>fm :Marks<cr>
+nnoremap <leader>fb :Buffers<cr>
+
+nnoremap <f1> :GundoToggle<CR>
+nnoremap <f2> :TagbarToggle<CR>
+
+" fugitive
+" Gcd is cd relative to the repo root. So this would be cd to repo root.
+nnoremap <leader>cr :Gcd<cr>
+" see https://stackoverflow.com/questions/1269603/to-switch-from-vertical-split-to-horizontal-split-fast-in-vim
+nnoremap <leader>gg :G<cr><c-w>H
+
+nnoremap s <cmd>HopChar1<cr>
+xnoremap s <cmd>HopChar1<cr>
+
+" kill buffer tab
+nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
+
+" Change pwd to this files location. local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
+nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
+
+" see "h <expr> and :help mode()
+" Make A and I work in vis line mode. They already work in the block bounds so leave that be.
+" gv is highlight previous visual selection, `> and `< is jump to end and beg of vis selection
+xnoremap <expr> A mode() ==# "V" ? ":norm A" : "A"
+xnoremap <expr> I mode() ==# "V" ? ":norm I"  : "I"
+
+" leader g is for git stuff
+" git add
+nnoremap <leader>ga :call FileGit(function("CreateAddFile"), "")<left><left>
+" git rm -f
+nnoremap <leader>gr :call FileGit(function("RemoveFile"), "")<left><left>
+" git mv
+nnoremap <leader>gm :call FileGit(function("MoveFile"), "")<left><left>
+
+" \v search prefix modifier is very magic, \V prefix modifier very no magic. With \V Only \ and / have meaning and must be escaped with \
+nnoremap / /\V
+xnoremap / /\V
 
 " NOTE: was cause of slowness at one point
 " set clipboard+=unnamedplus " To ALWAYS use the system clipboard for ALL operations
@@ -915,50 +819,9 @@ nnoremap <a-c>o :copen<cr>
 nnoremap <a-n> :cnext<cr>
 nnoremap <a-p> :cprevious<cr>
 
-" COLORCOLUMN
-" CURSORLINE (can be slower in some terminals)
-" purple4 black
-" You can also specify a color by its RGB (red, green, blue) values.
-" The format is "#rrggbb", where
-" hi Comment guifg=#11f0c3 guibg=#ff00ff
-hi cursorline  gui=NONE guibg=purple4 guifg=NONE
-hi cursorcolumn  gui=NONE guibg=purple4 guifg=NONE
-
-let g:useCursorline = 1
-if g:useCursorline == 1
-    set cursorline
-    autocmd InsertEnter,WinLeave * setlocal nocursorline
-    autocmd InsertLeave,VimEnter,WinEnter * setlocal cursorline | silent! update!
-else
-    set nocursorline
-    autocmd InsertEnter * setlocal cursorline
-    autocmd InsertLeave * setlocal nocursorline | silent! update!
-endif
-
-" Pressing enter flashes the cursoline and column and removes the search highlight
-" Was needed for terminals where the cursor was hard to find where linecoloring
-" was slow in normal mode so you had to turn it off
-function! Flash()
-    set cursorline cursorcolumn
-    redraw
-    if &ft != 'markdown'
-        lua vim.lsp.buf.formatting_seq_sync()
-    endif
-    silent! w!
-    " sleep 30m
-    set nocursorcolumn
-    if g:useCursorline == 0
-        set nocursorline
-    endif
-endfunction
-nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
-
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
 nnoremap > >>
-" you can keep the visual selection with this but i never really need that
-" xnoremap < <gv
-" xnoremap > >gv
 
 " force write in linux
 cmap w!! %!sudo tee > /dev/null %
@@ -997,11 +860,6 @@ nnoremap <c-right> :vert res +8<cr>
 nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
-" Source the vimrc so we don't have to refresh
-" :e is required to actually pick up vimrc changes
-" the M is there to center the mouse cursor other wise the screen will scroll when doing :e
-" nnoremap <silent> <leader>vs :silent! call Flash()<cr>: so $MYVIMRC <cr>msHmt:e<cr>`tzt`s
-nnoremap <silent> <leader>vs :LspStop<cr>:so $MYVIMRC<cr>:LspStart<cr>
 " Edit the vimrc in a new tab
 nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
 
@@ -1017,21 +875,94 @@ endif
 
 nnoremap <silent> <leader>qq :wa!<cr>:qa!<cr>
 
-" we cd to root and save the path to the l register for pasting in terminal later
-" have to run cmake twice for compile_commands.json to show up?
-nmap <silent> <leader>bl <leader>cr<cmd>let @l = getcwd()<cr><c-\>cd <c-r>l<cr>cmake -BbuildLinux; cmake -BbuildLinux; cp buildLinux/compile_commands.json .;cd -;<cr>
-
 " Prettier format Json
 nnoremap <leader>p :%!python -m json.tool<cr>
 
-" NOTE xxd is a linux thing
-" convert to hex view
+" convert to from hex view on linux
 nnoremap <leader>xx :%!xxd<cr>
-" undo convert to hex view
 nnoremap <leader>xr :%!xxd -r<cr>
 
+" SEARCH
+" * and # search does not use smartcase
+" see s_flags pattern and substitute.  I is dont ignore case, c is confirm.
+" NOTE: vim has a gn text object(next search item), star-search plugin (or vim-slash) combined with cgn and . covers alot of cases
+" gv selects the last vis selection (line, block or select), does not work with star select since it selects multiple items
+" Problem is it follows smartcase settings
+" Even with very no magic (\V) modifier, still need to escape / and \ with \
+" see :h escape() (escape the chars in teh second arg with backslash)
+" <c-r>=escape() means paste the result of escape(), substitute(), etc.
+" The \< and \> means don't do a raw string replace but a word replace (only operate on that string if its a stand-alone word)
+" so if you want to replace someVar, it won't touch vars named someVarOther
+
+" NOTE: just use * to grab word, vis select lines with word, then <leader>es
+" NOTE: under cursor and phrase search works,i.e. word boundary when word under cursor and larger phrase respecting the \V very no magic
+" NOTE: leaving first arg blank in substitute will assume last search i.e. the / register
+" edit last search within vis selection
+xnoremap <leader>,es :s///gI<left><left><left>
+xnoremap <leader>,ew :s/<c-r><c-w>//gI<left><left><left>
+" edit last search across whole file
+nnoremap <leader>,es :%s///gI<left><left><left>
+nnoremap <leader>,ew :%s/<c-r><c-w>//gI<left><left><left>
+xmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
+nmap <expr> <leader>e v:hlsearch ==# 1 ? "<leader>,es" : "<leader>,ew"
+
+nnoremap <leader>,as :let @w = "" <bar> MyGrep "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>,aw :let @w = "<c-r><c-w>" <bar> MyGrep "-w" "<c-r><c-w>"<cr>
+" Same as above but include current dir with -g */**
+" used in <leader>A
+nnoremap <leader>,aS :let @w = "" <bar> MyGrep "-g" "*/**" "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrep "-w" "-g" "*/**" "<c-r><c-w>"<cr>
+" " not sure i really need current-file-only version
+" nnoremap <leader>,aS :let @w = "" <bar> MyGrepCurrentFile "<c-r>=substitute(substitute(substitute(substitute(substitute(@/, '\\V', '', 'g'), '\\n$', '', 'g'), '\\<', '', 'g'), '\\>', '', 'g'), '\\', '\\\\', 'g')<cr>"<cr>
+" nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
+" mapped to above. if you have something highlighted and it wasnt a word search, it will run the search version.
+" otherwise run the word version. a is for current dir of file (<leader>cd) and A is for root (<leader>cr)
+" rg from current files directory
+nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aW" : "<leader>cd<leader>,aS" : "<leader>cd<leader>,aW"
+" rg from root, make sure .gitignore is ignoring things
+nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
+
+" g*            Like "*", but don't put "\<" and "\>" around the word.
+                " :let v:statusmsg = ""
+                " :silent verbose runtime foobar.vim
+                " :if v:statusmsg != ""
+                " :  " foobar.vim could not be found
+                " :endif
+
+" NOTE: rg's idea of word boundary is different from vim.
+" But <leader>rs command will not remove vim word boundary regex from the / register if it's there
+" things around the word if you * searched it. similar for rw if done in the quickfix window over your word.
+" :h cword
+" :h s_flags (I is dont ignore, e is continue on error, g is all instances on line, c is confirm)
+" when doing something like :s//red/ the first arg is assumed to be previous search
+nnoremap <leader>,rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
+" nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
+" To be used with <leader>aw as it saves word under cursor to w register
+nnoremap <leader>,rw :MyCdo %s/\<<c-r>w\>//gIe<left><left><left><left>
+" mapped to above if we took tha as or aw path above do the pick the right rs or rw
+" NOTE: when using gr from the lsp make sure to * first this will record to @w which you can then use with <leader>r
+" and it will call the word version
+nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""" RETIRED """""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" " we cd to root and save the path to the l register for pasting in terminal later
+" " have to run cmake twice for compile_commands.json to show up?
+" nmap <silent> <leader>bl <leader>cr<cmd>let @l = getcwd()<cr><c-\>cd <c-r>l<cr>cmake -BbuildLinux; cmake -BbuildLinux; cp buildLinux/compile_commands.json .;cd -;<cr>
+
+" " COMPLETION
+" " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
+" " Use <Tab> and <S-Tab> to navigate through popup menu
+" inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" inoremap <expr> <cr> pumvisible() ? "\<esc>" : "\<cr>"
+" inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""" RETIRED """""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1235,3 +1166,24 @@ nnoremap <leader>xr :%!xxd -r<cr>
 " the X123X is just for putting an X123X extension on it.
 " this only works if in the same directory
 " nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<cr>
+"
+" fugitive notes:
+" :Gdiffsplit        - show git diff for file or provide a file or commit as an arg (newer version is on right or bottom)
+"                         - do will obtain theirs (other buffer)
+"                         - dp will put ours (current buffer)
+" :Gdiffsplit!       - used for merge conflict?
+" :Gread             - git checkout -- on this file.
+" :Gwrite            - git add the file. stage it otherwise.
+" :GRename           - git mv this file to path relative to the file
+" :GDelete!          - git rm -f this file
+" :GRemove           - git rm --cached (keeps the file around)
+" :[range]Gclog      - wow. vis something :Gclog for quckfix of commits relating to selected code will load up diff of the file for that commit
+" G                  - place to stage and unstage files
+"                    - '-' toggle stage status
+"                    - U unstage all
+"                    - X checkout file (a command is echoed to undo this see :messages to see again)
+"                    - = toggle diff fold
+" :G blame           - A vertical window on left showing commit hashes. Can walk backwards through git commits to follow history of changes with <cr> for patch or - to load up file at commit and rerun G blame.
+" :G difftool        - quickfix of line changes in the current file
+" :G diff            - open a split and show the normal git diff but for only this file
+" :Gclog or G log    - like fzf's :Commits - open quickfix or split of commit hashes and their messages, press enter to open a buffer showing its patch diff.
