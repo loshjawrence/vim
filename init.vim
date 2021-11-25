@@ -17,6 +17,7 @@
 """"""""""""""""""""" PLUG """""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin()
+
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 let g:fzf_buffers_jump = 1
@@ -25,7 +26,7 @@ let g:fzf_preview_window = ''
 " :TSUninstall all<cr>:TSInstall c cpp cmake lua typescript html
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'neovim/nvim-lspconfig'
-Plug 'williamboman/nvim-lsp-installer'
+Plug 'ray-x/lsp_signature.nvim'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
@@ -34,10 +35,10 @@ Plug 'hrsh7th/cmp-nvim-lua'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'saadparwaiz1/cmp_luasnip'
-Plug 'ray-x/lsp_signature.nvim'
+Plug 'williamboman/nvim-lsp-installer'
 
-Plug 'dstein64/vim-startuptime'
 Plug 'vim-scripts/star-search'
+Plug 'dstein64/vim-startuptime'
 Plug 'phaazon/hop.nvim'
 Plug 'wellle/targets.vim'
 Plug 'akinsho/nvim-bufferline.lua'
@@ -58,7 +59,20 @@ let g:AutoPairsShortcutJump=''
 let g:AutoPairsShortcutBackInsert=''
 let g:AutoPairsShortcutFastWrap=''
 let g:AutoPairsShortcutToggle=''
+
 call plug#end()
+
+
+
+
+
+
+
+
+
+
+
+
 
 """""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""" SET """""""""""""""""""""
@@ -72,6 +86,14 @@ colorscheme alduin2
 filetype plugin indent on  " try to recognize filetypes and load related plugins/settings for those filetypes
 syntax on
 set t_Co=256
+set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
+set tabstop=4           " Use 4 spaces for tabs.
+set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
+set expandtab           " tabs replaced with right amount of spacing
+set shiftround          " Round indent to multiple of 'shiftwidth'
+set mouse=a             " enable mouse (selection, resizing windows)
+set mousemodel=popup_setpos
+
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set number              " Show line numbers
 set laststatus=0        " Always hide the status line
@@ -81,28 +103,15 @@ set guioptions=         " remove scrollbars
 set noshowmode          " don't show mode
 set nowrapscan          " Don't autowrap to top of tile on searches
 set nomodeline          " Was getting annoying error about modeline when opening files, turn it off
-set termguicolors       " enable true colors, if off nvim (not qt) will use default term colors
 set nofoldenable        " Turn off folding
-
 set ignorecase
 set smartcase
 set autowrite           " Automatically :write before running commands
 set magic               " Use 'magic' patterns (extended regular expressions).
-set mouse=a             " enable mouse (selection, resizing windows)
-set mousemodel=popup_setpos
-set tabstop=4           " Use 4 spaces for tabs.
-set shiftwidth=4        " Number of spaces to use for each step of (auto)indent.
-set expandtab           " tabs replaced with right amount of spacing
-set shiftround          " Round indent to multiple of 'shiftwidth'
 silent! helptags ALL    " Generate help doc for all plugins
 " set iskeyword+=-        " Add chars that count as word boundaries. test: asdf-asdf
 set fenc=utf-8          " set UTF-8 encoding
-
-set spell               " turn on spell check
-" correct spelling of work under cursor. <right> required since the cursor needs to be inside the word
-nnoremap <c-s> i<right><c-x>s
-inoremap <c-s> <right><c-x>s
-
+" set spell " NOTE: causes red on startup               " turn on spell check
 set nowritebackup
 set noswapfile
 set splitbelow " :sp defaults down
@@ -120,7 +129,6 @@ set shortmess+=c " don't give |ins-completion-menu| messages.
 " tell :find to recursively search
 set path+=**
 set completeopt=menuone,noinsert,noselect,preview
-
 " Tell vim to use ripgrep as its grep program
 " NOTE: --sort path can be used to get consistent order, but it will run with 1 thread.
 " in terminal see rg --help for options to ripgrep 12
@@ -128,7 +136,6 @@ set completeopt=menuone,noinsert,noselect,preview
 " NOTE: these globs work when you cd to root with Gcd using <leader>cr
 " <leader>a does <leader>cr automatically
 " set grepprg=rg\ --vimgrep\ --path-separator\ /\ -g\ 'src/**'\ -g\ 'public/src/**'\ -g\ 'specs/**'\ -g\ 'lib/**'\ -g\ 'include/**'\ -g\ 'tests/**'\ -g\ 'applications/**'\ -g\ 'cmake/**'
-"
 " NOTE: one slash for line break, one for space
 " NOTE: keep --vimgrep at the end
 " add root level folders you want to search with -g
@@ -148,15 +155,6 @@ hi cursorline  gui=NONE guibg=purple4 guifg=NONE
 hi cursorcolumn  gui=NONE guibg=purple4 guifg=NONE
 
 let g:useCursorline = 1
-if g:useCursorline == 1
-    set cursorline
-    autocmd InsertEnter,WinLeave * setlocal nocursorline
-    autocmd InsertLeave,VimEnter,WinEnter * setlocal cursorline | silent! update!
-else
-    set nocursorline
-    autocmd InsertEnter * setlocal cursorline
-    autocmd InsertLeave * setlocal nocursorline | silent! update!
-endif
 
 " No fuss terminal colors
 let g:terminal_color_0  = '#2e3436'
@@ -349,8 +347,15 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
         ensure_installed = { "c", "cpp", "cmake", "lua",  'bash', "typescript", "json" },
         highlight = { enable = true, },
-        indent = { enable = false, },
+        -- disable = { "c", "cpp" },
         incremental_selection = { enable = false, },
+        indent = { enable = false, },
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+        -- Using this option may slow down your editor, and you may see some duplicate highlights.
+        -- Instead of true it can also be a list of languages
+        additional_vim_regex_highlighting = false,
+
     }
 
     ---------------------------------
@@ -432,13 +437,12 @@ highlight ExtraWhitespace ctermbg=black guibg=black
     -- -- Turn on debug logging
     -- vim.lsp.set_log_level("debug")
 
-    -- Disable diagnostic
-    vim.diagnostic.config {
-        virtual_text = false,
-        signs = false,
-        underline = false,
-    }
-
+    -- -- Disable diagnostic
+    -- vim.diagnostic.config {
+    --     virtual_text = false,
+    --     signs = false,
+    --     underline = false,
+    -- }
 EOF
 
 
@@ -451,6 +455,16 @@ EOF
 """""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""" AUTOCMD """"""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""
+if g:useCursorline == 1
+    set cursorline
+    autocmd InsertEnter,WinLeave * setlocal nocursorline
+    autocmd InsertLeave,VimEnter,WinEnter * setlocal cursorline | silent! update!
+else
+    set nocursorline
+    autocmd InsertEnter * setlocal cursorline
+    autocmd InsertLeave * setlocal nocursorline | silent! update!
+endif
+
 " notify if file changed outside of vim to avoid multiple versions
 autocmd FocusGained,BufEnter,WinEnter,CursorHold,CursorHoldI * :checktime
 
@@ -762,6 +776,10 @@ nnoremap <leader>gg :G<cr><c-w>H
 
 nnoremap s <cmd>HopChar1<cr>
 xnoremap s <cmd>HopChar1<cr>
+
+" correct spelling of work under cursor. <right> required since the cursor needs to be inside the word
+nnoremap <c-s> i<right><c-x>s
+inoremap <c-s> <right><c-x>s
 
 " kill buffer tab
 nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
