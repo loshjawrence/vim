@@ -967,17 +967,6 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 """"""""""""""""""""" RETIRED """""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
-" " we cd to root and save the path to the l register for pasting in terminal later
-" " have to run cmake twice for compile_commands.json to show up?
-" nmap <silent> <leader>bl <leader>cr<cmd>let @l = getcwd()<cr><c-\>cd <c-r>l<cr>cmake -BbuildLinux; cmake -BbuildLinux; cp buildLinux/compile_commands.json .;cd -;<cr>
-
-" " COMPLETION
-" " " nvim-lsp NOTE: This must go after plug section ----------------------------------------
-" " Use <Tab> and <S-Tab> to navigate through popup menu
-" inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" inoremap <expr> <cr> pumvisible() ? "\<esc>" : "\<cr>"
-" inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-
 """""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""" RETIRED """""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""
