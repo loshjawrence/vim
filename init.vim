@@ -919,11 +919,11 @@ nnoremap <silent> <leader>ve :tab drop $MYVIMRC<cr>
 
 if has('win32')
     " diff the current state of init.vim with whats in the repo
-    nmap <silent> <leader>vd <c-\>cd C:/Users/lol/clones/vim<cr>copy /y ..\..\AppData\Local\nvim\init.vim .<cr>git diff<cr>
+    nmap <silent> <leader>vd <c-\>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y ..\..\AppData\Local\nvim\init.vim .<cr>git diff<cr>
     " Pull latest vimrc, copy it to vimrc location, source it, restart coc
     nmap <silent> <leader>vp <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y init.vim ..\..\AppData\Local\nvim<cr>popd<cr>
 else
-    nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>cp $MYVIMRC .<cr>git diff<cr>
+    nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>git pull<cr>cp $MYVIMRC .<cr>git diff<cr>
     nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
 endif
 
