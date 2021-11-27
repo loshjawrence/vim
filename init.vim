@@ -44,18 +44,11 @@ Plug 'phaazon/hop.nvim'
 Plug 'wellle/targets.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'voldikss/vim-floaterm'
-
-" NOTE: GITHUB NOT WORKING OR SOMETHING, MOVE TCOMMENT TO RETIRED
-Plug 'terrortylor/nvim-comment'
 Plug 'tomtom/tcomment_vim'
 let g:tcomment_mapleader1=''
 let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
-
-" TRY THESE COLOR
-Plug 'sainnhe/gruvbox-material'
-Plug 'tomasiser/vim-code-dark'
 
 Plug 'sjl/gundo.vim'
 Plug 'majutsushi/tagbar'
@@ -243,30 +236,6 @@ let g:lightline = {
     require'hop'.setup()
 
     -------------------------
-    -- nvim_comment ---------
-    -------------------------
-    -- require('nvim_comment').setup()
-    -- NOTE: may not need these
-    -- {
-    --     -- Linters prefer comment and line to have a space in between markers
-    --     marker_padding = true,
-    --     -- should comment out empty or whitespace only lines
-    --     comment_empty = true,
-    --     -- Should key mappings be created
-    --     create_mappings = true,
-    --     -- Normal mode mapping left hand side
-    --     line_mapping = "gcc",
-    --     -- Visual/Operator mapping left hand side
-    --     operator_mapping = "gc",
-    -- }
-
-    -------------------------
-    -- COLOR ---------
-    -------------------------
-    -- require('gruvbox-material').setup()
-    -- require('vim-code-dark').setup()
-
-    -------------------------
     ----- cmp ---------------
     -------------------------
     -------------------------
@@ -377,15 +346,6 @@ let g:lightline = {
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
         ensure_installed = { "c", "cpp", "cmake", "lua",  'bash', "typescript", "json" },
         highlight = { enable = true, },
-        -- disable = { "c", "cpp" },
-        incremental_selection = { enable = false, },
-        indent = { enable = false, },
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-        -- Using this option may slow down your editor, and you may see some duplicate highlights.
-        -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
-
     }
 
     ---------------------------------
@@ -399,8 +359,7 @@ let g:lightline = {
 
         -- Mappings.
         local opts = { noremap=true, silent=true }
-        -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>tab drop % <bar> lua vim.lsp.buf.definition()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', 'lua vim.lsp.buf.definition()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
         -- can use on `auto` in cpp to get the underlying type
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
@@ -449,12 +408,12 @@ let g:lightline = {
     -- -- Turn on debug logging
     -- vim.lsp.set_log_level("debug")
 
-    -- -- Disable diagnostic
-    -- vim.diagnostic.config {
-    --     virtual_text = false,
-    --     signs = false,
-    --     underline = false,
-    -- }
+    -- Disable diagnostic
+    vim.diagnostic.config {
+        virtual_text = false,
+        signs = false,
+        underline = false,
+    }
 EOF
 
 
@@ -487,10 +446,6 @@ autocmd BufReadPost *
 \   exe "normal! g`\"" |
 \ endif
 
-
-" Prevents navigation into diagnostic windows
-autocmd CursorHold <buffer> lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false })
-
 " Disable diagnostic
 autocmd BufEnter * lua vim.lsp.diagnostic.disable()
 
@@ -510,8 +465,6 @@ autocmd FileType markdown setlocal spell
 autocmd FileType json syntax match Comment +\/\/.\+$+
 " webdev community seems to love doing this
 autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
-
-
 
 
 
