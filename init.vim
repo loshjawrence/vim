@@ -42,14 +42,21 @@ Plug 'vim-scripts/star-search'
 Plug 'dstein64/vim-startuptime'
 Plug 'phaazon/hop.nvim'
 Plug 'wellle/targets.vim'
-" Plug 'akinsho/nvim-bufferline.lua'
 Plug 'itchyny/lightline.vim'
 Plug 'voldikss/vim-floaterm'
+
+" NOTE: GITHUB NOT WORKING OR SOMETHING, MOVE TCOMMENT TO RETIRED
+Plug 'terrortylor/nvim-comment'
 Plug 'tomtom/tcomment_vim'
 let g:tcomment_mapleader1=''
 let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
+
+" TRY THESE COLOR
+Plug 'sainnhe/gruvbox-material'
+Plug 'tomasiser/vim-code-dark'
+
 Plug 'sjl/gundo.vim'
 Plug 'majutsushi/tagbar'
 Plug 'itchyny/vim-qfedit'
@@ -197,9 +204,8 @@ let g:floaterm_height=1.0
 " NOTE see vim-better-whitespace plugin
 highlight ExtraWhitespace ctermbg=black guibg=black
 
-" c-t on windows terminal doesnt work now opens a buffer in a tab instead of a buffer
-" let g:fzf_action = {'ctrl-o': 'tab drop'}
-let g:fzf_action = {'enter': 'tab drop'}
+" NOTE: even though fzf say c-t does tab it doesn't out of the box (at least on windows)
+let g:fzf_action = { 'enter': 'tab drop' }
 
 
 " ligthline settings
@@ -231,35 +237,34 @@ let g:lightline = {
 """"""""""""""""""""""" LUA """""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""
 :lua << EOF
-    -- ------------------
-    -- --- bufferline ---
-    -- ------------------
-    -- local hlColor = "GreenYellow"
-    -- -- local hlColor = "LemonChiffon3"
-    -- require'bufferline'.setup{
-    --     -- override some options from their defaults
-    --     options = {
-    --         tab_size = 12,
-    --         max_name_length = 40,
-    --         show_buffer_close_icons = false,
-    --     },
-    --     highlights = {
-    --         buffer_selected = {
-    --             guifg = "Black",
-    --             guibg = hlColor,
-    --             gui = "bold",
-    --         },
-    --         -- Accent the split buffer thats not selected
-    --         buffer_visible = {
-    --             guifg = hlColor,
-    --         },
-    --     },
+    -------------------------
+    -- hop ------------------
+    -------------------------
+    require'hop'.setup()
+
+    -------------------------
+    -- nvim_comment ---------
+    -------------------------
+    -- require('nvim_comment').setup()
+    -- NOTE: may not need these
+    -- {
+    --     -- Linters prefer comment and line to have a space in between markers
+    --     marker_padding = true,
+    --     -- should comment out empty or whitespace only lines
+    --     comment_empty = true,
+    --     -- Should key mappings be created
+    --     create_mappings = true,
+    --     -- Normal mode mapping left hand side
+    --     line_mapping = "gcc",
+    --     -- Visual/Operator mapping left hand side
+    --     operator_mapping = "gc",
     -- }
 
-    ----------------
-    -- hop ---------
-    ----------------
-    require'hop'.setup()
+    -------------------------
+    -- COLOR ---------
+    -------------------------
+    -- require('gruvbox-material').setup()
+    -- require('vim-code-dark').setup()
 
     -------------------------
     ----- cmp ---------------
@@ -390,13 +395,12 @@ let g:lightline = {
     local on_attach = function(client, bufnr)
         require'lsp_signature'.on_attach(lsp_signature_config)
         local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-        -- local cbufnvim = vim.api.nvim_exec('echo bufnr("%")', true)
-
         buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
         -- Mappings.
         local opts = { noremap=true, silent=true }
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+        -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>tab drop % <bar> lua vim.lsp.buf.definition()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', 'lua vim.lsp.buf.definition()<cr>', opts)
         -- can use on `auto` in cpp to get the underlying type
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
@@ -405,7 +409,7 @@ let g:lightline = {
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         -- happens on save (see Flash())
         -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>SwitchSourceHeader<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
 
     local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
@@ -416,24 +420,6 @@ let g:lightline = {
                 debounce_text_changes = 500,
             },
             capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
-            commands = {
-                SwitchSourceHeader = {
-                    function()
-                        local bufnr = require'lspconfig'.util.validate_bufnr(0)
-                        -- ClangdSwitchSourceHeader is the build-in version, but it has some behavior that i dont like
-                        vim.api.nvim_command("ClangdSwitchSourceHeader")
-                        -- NOTE: only do this if using bufferline
-                        -- vim.api.nvim_command("bdelete "..tostring(bufnr))
-                        -- local params = { uri = vim.uri_from_bufnr(bufnr) }
-                        -- vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
-                        --     if err then error(tostring(err)) end
-                        --     if not result then print ("Corresponding file can’t be determined") return end
-                        --     vim.api.nvim_command("edit "..vim.uri_to_fname(result))
-                        --     vim.api.nvim_command("bdelete "..tostring(bufnr))
-                        -- end)
-                    end
-                },
-            },
         }
     end
 
@@ -745,23 +731,12 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " Manually remove whitespace, replace tabs with 4 spaces
 nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
-" " These commands will honor the custom ordering if you change the order of buffers.
-" " The vim commands :bnext and :bprevious will not respect the custom ordering.
-" nnoremap <silent><a-l> :BufferLineCycleNext<CR>
-" nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
-" " These commands will move the current buffer backwards or forwards in the bufferline.
-" nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
-" nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
-" These commands will honor the custom ordering if you change the order of buffers.
-" The vim commands :bnext and :bprevious will not respect the custom ordering.
-" kill buffer tab
-" nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
 nnoremap <silent><a-l> gt
 nnoremap <silent><a-h> gT
 " goto file as new tab
 nnoremap <silent>gf <c-w>gf
-" These commands will move the current buffer backwards or forwards in the bufferline.
-" kill buffer tab, make it aware of quickfix buffer
+" These commands will move the current tab backwards or forwards in the tabline.
+" kill tab, make it aware of quickfix buffer
 autocmd BufEnter * if &buftype == 'quickfix' | nnoremap <a-q> :cclose<cr> | else | nnoremap <silent> <a-q> :silent! up!<cr>:silent! tabclose!<cr> | endif
 nnoremap <silent><a-s-l> :+tabmove<CR>
 nnoremap <silent><a-s-h> :-tabmove<CR>
