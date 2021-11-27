@@ -41,7 +41,7 @@ Plug 'vim-scripts/star-search'
 Plug 'dstein64/vim-startuptime'
 Plug 'phaazon/hop.nvim'
 Plug 'wellle/targets.vim'
-Plug 'akinsho/nvim-bufferline.lua'
+" Plug 'akinsho/nvim-bufferline.lua'
 Plug 'voldikss/vim-floaterm'
 Plug 'tomtom/tcomment_vim'
 let g:tcomment_mapleader1=''
@@ -93,6 +93,7 @@ set expandtab           " tabs replaced with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
 set mouse=a             " enable mouse (selection, resizing windows)
 set mousemodel=popup_setpos
+set showtabline=2       " Always show tabline
 
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set number              " Show line numbers
@@ -194,10 +195,11 @@ let g:floaterm_height=1.0
 " NOTE see vim-better-whitespace plugin
 highlight ExtraWhitespace ctermbg=black guibg=black
 
-
-
-
-
+" enter now opens a buffer in  a tab instead of a buffer
+let g:fzf_action = {
+  \ 'enter': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
 
 
@@ -206,30 +208,30 @@ highlight ExtraWhitespace ctermbg=black guibg=black
 """"""""""""""""""""""" LUA """""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""
 :lua << EOF
-    ------------------
-    --- bufferline ---
-    ------------------
-    local hlColor = "GreenYellow"
-    -- local hlColor = "LemonChiffon3"
-    require'bufferline'.setup{
-        -- override some options from their defaults
-        options = {
-            tab_size = 12,
-            max_name_length = 40,
-            show_buffer_close_icons = false,
-        },
-        highlights = {
-            buffer_selected = {
-                guifg = "Black",
-                guibg = hlColor,
-                gui = "bold",
-            },
-            -- Accent the split buffer thats not selected
-            buffer_visible = {
-                guifg = hlColor,
-            },
-        },
-    }
+    -- ------------------
+    -- --- bufferline ---
+    -- ------------------
+    -- local hlColor = "GreenYellow"
+    -- -- local hlColor = "LemonChiffon3"
+    -- require'bufferline'.setup{
+    --     -- override some options from their defaults
+    --     options = {
+    --         tab_size = 12,
+    --         max_name_length = 40,
+    --         show_buffer_close_icons = false,
+    --     },
+    --     highlights = {
+    --         buffer_selected = {
+    --             guifg = "Black",
+    --             guibg = hlColor,
+    --             gui = "bold",
+    --         },
+    --         -- Accent the split buffer thats not selected
+    --         buffer_visible = {
+    --             guifg = hlColor,
+    --         },
+    --     },
+    -- }
 
     ----------------
     -- hop ---------
@@ -719,14 +721,27 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " Manually remove whitespace, replace tabs with 4 spaces
 nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
+" " These commands will honor the custom ordering if you change the order of buffers.
+" " The vim commands :bnext and :bprevious will not respect the custom ordering.
+" nnoremap <silent><a-l> :BufferLineCycleNext<CR>
+" nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+" " These commands will move the current buffer backwards or forwards in the bufferline.
+" nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
+" nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
 " These commands will honor the custom ordering if you change the order of buffers.
 " The vim commands :bnext and :bprevious will not respect the custom ordering.
-nnoremap <silent><a-l> :BufferLineCycleNext<CR>
-nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
-
+" kill buffer tab
+" nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
+nnoremap <silent><a-l> gt
+nnoremap <silent><a-h> gT
+" goto file as new tab
+nnoremap <silent>gf <c-w>gf
 " These commands will move the current buffer backwards or forwards in the bufferline.
-nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
-nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
+" kill buffer tab
+nnoremap <silent> <a-q> :silent! up! <bar> silent! tabclose!<cr>
+nnoremap <silent><a-s-l> :+tabmove<CR>
+nnoremap <silent><a-s-h> :-tabmove<CR>
+" NOTE: <c-<tab>> will switch back to last accessed tab
 
 
 " Scroll by a quarter of window height (https://stackoverflow.com/a/16574696/1706778)
@@ -780,9 +795,6 @@ xnoremap s <cmd>HopChar1<cr>
 " correct spelling of work under cursor. <right> required since the cursor needs to be inside the word
 nnoremap <c-s> i<right><c-x>s
 inoremap <c-s> <right><c-x>s
-
-" kill buffer tab
-nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
 
 " Change pwd to this files location. local cd (change for current vim 'window') to current file's dir (% is file name :p expands to full path :h takes the head)
 nnoremap <leader>cd :lcd %:p:h <bar> pwd <cr>
@@ -879,7 +891,7 @@ nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
 " Edit the vimrc in a new tab
-nnoremap <silent> <leader>ve :vs $MYVIMRC<cr>
+nnoremap <silent> <leader>ve :tabnew $MYVIMRC<cr>
 
 if has('win32')
     " diff the current state of init.vim with whats in the repo
