@@ -205,7 +205,7 @@ let g:fzf_action = {
 " ligthline settings
 let s:baseBlack = "Black"
 let s:baseGreenYellow = "GreenYellow"
-let s:baseWhite = "LemonChiffon3"
+let s:baseWhite = "White"
 let s:p = {'normal': {}, 'tabline': {}}
 let s:p.normal.left = [ [ s:baseBlack, s:baseBlack ] ]
 let s:p.normal.middle = [ [ s:baseBlack, s:baseBlack ] ]
