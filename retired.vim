@@ -556,4 +556,60 @@
 " let g:python_host_prog  = '/usr/bin/python2'
 " let g:python3_host_prog  = '/usr/bin/python3'
 " let g:perl_host_prog = '/usr/bin/perl'
+"
+"lua switchSourceHeader
+                        " -- local params = { uri = vim.uri_from_bufnr(bufnr) }
+                        " -- vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
+                        " --     if err then error(tostring(err)) end
+                        " --     if not result then print ("Corresponding file can’t be determined") return end
+                        " --     vim.api.nvim_command("edit "..vim.uri_to_fname(result))
+                        " --     vim.api.nvim_command("bdelete "..tostring(bufnr))
+                        " -- end)
 
+
+" BUFFERLINE
+" Plug 'akinsho/nvim-bufferline.lua'
+" set switchbuf=useopen  " if buffer already opened, use it. if doing bufferline: useopen
+" get rid of let g:fzf_action settings
+" LUA:
+"
+    " ------------------
+    " --- bufferline ---
+    " ------------------
+    " local hlColor = "GreenYellow"
+    " -- local hlColor = "LemonChiffon3"
+    " require'bufferline'.setup{
+    "     -- override some options from their defaults
+    "     options = {
+    "         tab_size = 12,
+    "         max_name_length = 40,
+    "         show_buffer_close_icons = false,
+    "     },
+    "     highlights = {
+    "         buffer_selected = {
+    "             guifg = "Black",
+    "             guibg = hlColor,
+    "             gui = "bold",
+    "         },
+    "         -- Accent the split buffer thats not selected
+    "         buffer_visible = {
+    "             guifg = hlColor,
+    "         },
+    "     },
+    " }
+" in the switch source header: section in lua
+" -- NOTE: only do this if using bufferline
+" local bufnr = require'lspconfig'.util.validate_bufnr(0)
+" -- vim.api.nvim_command("bdelete "..tostring(bufnr))
+"
+" " These commands will honor the custom ordering if you change the order of buffers.
+" " The vim commands :bnext and :bprevious will not respect the custom ordering.
+" nnoremap <silent><a-l> :BufferLineCycleNext<CR>
+" nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+" " These commands will move the current buffer backwards or forwards in the bufferline.
+" nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
+" nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
+" These commands will honor the custom ordering if you change the order of buffers.
+" The vim commands :bnext and :bprevious will not respect the custom ordering.
+" kill buffer tab
+" nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>

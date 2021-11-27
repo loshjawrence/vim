@@ -42,7 +42,6 @@ Plug 'vim-scripts/star-search'
 Plug 'dstein64/vim-startuptime'
 Plug 'phaazon/hop.nvim'
 Plug 'wellle/targets.vim'
-" Plug 'akinsho/nvim-bufferline.lua'
 Plug 'itchyny/lightline.vim'
 Plug 'voldikss/vim-floaterm'
 Plug 'tomtom/tcomment_vim'
@@ -198,7 +197,6 @@ let g:floaterm_height=1.0
 highlight ExtraWhitespace ctermbg=black guibg=black
 
 " c-t on windows terminal doesnt work now opens a buffer in a tab instead of a buffer
-" let g:fzf_action = {'ctrl-o': 'tab drop'}
 let g:fzf_action = {'enter': 'tab drop'}
 
 
@@ -231,31 +229,6 @@ let g:lightline = {
 """"""""""""""""""""""" LUA """""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""
 :lua << EOF
-    -- ------------------
-    -- --- bufferline ---
-    -- ------------------
-    -- local hlColor = "GreenYellow"
-    -- -- local hlColor = "LemonChiffon3"
-    -- require'bufferline'.setup{
-    --     -- override some options from their defaults
-    --     options = {
-    --         tab_size = 12,
-    --         max_name_length = 40,
-    --         show_buffer_close_icons = false,
-    --     },
-    --     highlights = {
-    --         buffer_selected = {
-    --             guifg = "Black",
-    --             guibg = hlColor,
-    --             gui = "bold",
-    --         },
-    --         -- Accent the split buffer thats not selected
-    --         buffer_visible = {
-    --             guifg = hlColor,
-    --         },
-    --     },
-    -- }
-
     ----------------
     -- hop ---------
     ----------------
@@ -419,18 +392,7 @@ let g:lightline = {
             commands = {
                 SwitchSourceHeader = {
                     function()
-                        local bufnr = require'lspconfig'.util.validate_bufnr(0)
-                        -- ClangdSwitchSourceHeader is the build-in version, but it has some behavior that i dont like
                         vim.api.nvim_command("ClangdSwitchSourceHeader")
-                        -- NOTE: only do this if using bufferline
-                        -- vim.api.nvim_command("bdelete "..tostring(bufnr))
-                        -- local params = { uri = vim.uri_from_bufnr(bufnr) }
-                        -- vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
-                        --     if err then error(tostring(err)) end
-                        --     if not result then print ("Corresponding file can’t be determined") return end
-                        --     vim.api.nvim_command("edit "..vim.uri_to_fname(result))
-                        --     vim.api.nvim_command("bdelete "..tostring(bufnr))
-                        -- end)
                     end
                 },
             },
@@ -745,23 +707,12 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " Manually remove whitespace, replace tabs with 4 spaces
 nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
-" " These commands will honor the custom ordering if you change the order of buffers.
-" " The vim commands :bnext and :bprevious will not respect the custom ordering.
-" nnoremap <silent><a-l> :BufferLineCycleNext<CR>
-" nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
-" " These commands will move the current buffer backwards or forwards in the bufferline.
-" nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
-" nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
-" These commands will honor the custom ordering if you change the order of buffers.
-" The vim commands :bnext and :bprevious will not respect the custom ordering.
-" kill buffer tab
-" nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
 nnoremap <silent><a-l> gt
 nnoremap <silent><a-h> gT
 " goto file as new tab
 nnoremap <silent>gf <c-w>gf
-" These commands will move the current buffer backwards or forwards in the bufferline.
-" kill buffer tab, make it aware of quickfix buffer
+" These commands will move the current tab backwards or forwards in the tabline.
+" kill tab, make it aware of quickfix buffer
 autocmd BufEnter * if &buftype == 'quickfix' | nnoremap <a-q> :cclose<cr> | else | nnoremap <silent> <a-q> :silent! up!<cr>:silent! tabclose!<cr> | endif
 nnoremap <silent><a-s-l> :+tabmove<CR>
 nnoremap <silent><a-s-h> :-tabmove<CR>
