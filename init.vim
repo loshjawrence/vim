@@ -9,9 +9,10 @@
 " Linux: ~/.config/nvim/colors
 " Windows: %UserProfile%\AppData\Local\nvim\colors
 " try to set kb pollrate (~40 keys/s) and delay (~200ms)
-" TODO: 
+" TODO:
 " [] why the hl screwup on load?
 " [] so $MYVIMRC causes clinet quit error
+" Good poast on teh quickfix list https://vonheikemen.github.io/devlog/tools/vim-and-the-quickfix-list/``
 
 """"""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""" PLUG """""""""""""""""""""
@@ -196,11 +197,10 @@ let g:floaterm_height=1.0
 " NOTE see vim-better-whitespace plugin
 highlight ExtraWhitespace ctermbg=black guibg=black
 
-" enter now opens a buffer in  a tab instead of a buffer
-let g:fzf_action = {
-  \ 'enter': 'tab drop',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
+" c-t on windows terminal doesnt work now opens a buffer in a tab instead of a buffer
+" let g:fzf_action = {'ctrl-o': 'tab drop'}
+let g:fzf_action = {'enter': 'tab drop'}
+
 
 " ligthline settings
 let s:baseBlack = "Black"
@@ -761,8 +761,8 @@ nnoremap <silent><a-h> gT
 " goto file as new tab
 nnoremap <silent>gf <c-w>gf
 " These commands will move the current buffer backwards or forwards in the bufferline.
-" kill buffer tab
-nnoremap <silent> <a-q> :silent! up! <bar> silent! tabclose!<cr>
+" kill buffer tab, make it aware of quickfix buffer
+autocmd BufEnter * if &buftype == 'quickfix' | nnoremap <a-q> :cclose<cr> | else | nnoremap <silent> <a-q> :silent! up!<cr>:silent! tabclose!<cr> | endif
 nnoremap <silent><a-s-l> :+tabmove<CR>
 nnoremap <silent><a-s-h> :-tabmove<CR>
 " NOTE: <c-<tab>> will switch back to last accessed tab
@@ -872,6 +872,7 @@ nnoremap <a-s-p> :lprevious<cr>
 nnoremap <a-c>o :copen<cr>
 nnoremap <a-n> :cnext<cr>
 nnoremap <a-p> :cprevious<cr>
+
 
 " Only hit < or > once to tab indent, can be vis selected and repeated like normal with '.'
 nnoremap < <<
