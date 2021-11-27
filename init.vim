@@ -42,6 +42,7 @@ Plug 'dstein64/vim-startuptime'
 Plug 'phaazon/hop.nvim'
 Plug 'wellle/targets.vim'
 " Plug 'akinsho/nvim-bufferline.lua'
+Plug 'itchyny/lightline.vim'
 Plug 'voldikss/vim-floaterm'
 Plug 'tomtom/tcomment_vim'
 let g:tcomment_mapleader1=''
@@ -117,7 +118,7 @@ set nowritebackup
 set noswapfile
 set splitbelow " :sp defaults down
 " set splitright " :vs defaults right, quickfix edits cycles right split window so turn this off (TODO list usually in the :vs window)
-set switchbuf=useopen " if buffer already opened, use it
+set switchbuf=usetab  " if buffer already opened, use it. if doing bufferline: useopen
 set lazyredraw        " should make scrolling faster
 set diffopt+=vertical " Always use vertical diffs
 set visualbell " visual bell for errors
@@ -197,12 +198,34 @@ highlight ExtraWhitespace ctermbg=black guibg=black
 
 " enter now opens a buffer in  a tab instead of a buffer
 let g:fzf_action = {
-  \ 'enter': 'tab split',
+  \ 'enter': 'tab drop',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-
-
+" ligthline settings
+let s:baseBlack = "Black"
+let s:baseGreenYellow = "GreenYellow"
+let s:baseWhite = "LemonChiffon3"
+let s:p = {'normal': {}, 'tabline': {}}
+let s:p.normal.left = [ [ s:baseBlack, s:baseBlack ] ]
+let s:p.normal.middle = [ [ s:baseBlack, s:baseBlack ] ]
+let s:p.normal.right = [ [ s:baseBlack, s:baseBlack ] ]
+let s:p.tabline.tabsel = [ [ s:baseBlack, s:baseGreenYellow ] ]
+let s:p.tabline.left = [ [ s:baseWhite, s:baseBlack ] ]
+let s:p.tabline.middle = [ [ s:baseWhite, s:baseBlack ] ]
+let s:p.tabline.right = [ [ s:baseWhite, s:baseBlack ] ]
+let g:lightline#colorscheme#frick#palette = lightline#colorscheme#fill(s:p)
+let g:lightline = {
+        \ 'enable': {
+        \   'statusline': 0,
+        \   'tabline': 1,
+        \ },
+        \ 'tab': {
+        \    'active': [ 'filename', 'modified' ],
+        \    'inactive': [ 'filename', 'modified' ],
+        \ },
+        \ 'colorscheme': 'frick',
+        \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""" LUA """""""""""""""""""""""
@@ -399,7 +422,8 @@ let g:fzf_action = {
                         local bufnr = require'lspconfig'.util.validate_bufnr(0)
                         -- ClangdSwitchSourceHeader is the build-in version, but it has some behavior that i dont like
                         vim.api.nvim_command("ClangdSwitchSourceHeader")
-                        vim.api.nvim_command("bdelete "..tostring(bufnr))
+                        -- NOTE: only do this if using bufferline
+                        -- vim.api.nvim_command("bdelete "..tostring(bufnr))
                         -- local params = { uri = vim.uri_from_bufnr(bufnr) }
                         -- vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
                         --     if err then error(tostring(err)) end
@@ -891,7 +915,7 @@ nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
 " Edit the vimrc in a new tab
-nnoremap <silent> <leader>ve :tabnew $MYVIMRC<cr>
+nnoremap <silent> <leader>ve :tab drop $MYVIMRC<cr>
 
 if has('win32')
     " diff the current state of init.vim with whats in the repo
@@ -1079,6 +1103,9 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 " gd go to def of word under cursor in current function
 " g; goes to last edited position
 " gt (next tab) gT(prev tab) #gt (jump to tab #)
+" gf will open file under cursor, <c-w>gf to open file under cursor in a new tab
+" <c-<tab>> toggles to last used tab
+" :+tabmove,:-tabmove moves tabs around in the tablinee
 " gf will open file under cursor, <c-w>gf to open file under cursor in a new tab
 " :g/^\s*$/d - global delete lines containing regex(blank or whitespace-only lines)
 " :g/pattern/d _ - fast delete lines matching pattern
