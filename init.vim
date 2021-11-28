@@ -696,6 +696,8 @@ call SetScroll()
 autocmd VimResized * call SetScroll()
 
 command! -bang -nargs=* Rg call fzf#vim#grep("rg -S --path-separator / ".shellescape(<q-args>), 0, fzf#vim#with_preview({'options': ['--layout=reverse']}), <bang>0)
+nnoremap <leader>fr :Rg<cr>
+
 " NOTE: Any calls with fzf#wrap will should honor this global setting
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'border': 'horizontal' } }
 " run custom, see :h fzf#run
@@ -716,10 +718,16 @@ command! -bang -nargs=? -complete=dir GFiles
     \   'options': ['--layout=reverse'],
     \ }, <bang>0)
 
+nnoremap <leader>fb :Buffers<cr>
+command! -bang -nargs=? -complete=dir Buffers
+    \ call fzf#vim#buffers(<q-args>,
+    \ {
+    \   'options': ['--layout=reverse'],
+    \ }, <bang>0)
+
 " History looks up v:oldfiles
 nnoremap <leader>fh :History<cr>
 nnoremap <leader>fm :Marks<cr>
-nnoremap <leader>fb :Buffers<cr>
 
 nnoremap <f1> :GundoToggle<CR>
 nnoremap <f2> :TagbarToggle<CR>
