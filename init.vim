@@ -38,11 +38,11 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'williamboman/nvim-lsp-installer'
 
+Plug 'akinsho/nvim-bufferline.lua'
 Plug 'vim-scripts/star-search'
 Plug 'dstein64/vim-startuptime'
 Plug 'phaazon/hop.nvim'
 Plug 'wellle/targets.vim'
-Plug 'itchyny/lightline.vim'
 Plug 'voldikss/vim-floaterm'
 Plug 'tomtom/tcomment_vim'
 let g:tcomment_mapleader1=''
@@ -95,7 +95,6 @@ set expandtab           " tabs replaced with right amount of spacing
 set shiftround          " Round indent to multiple of 'shiftwidth'
 set mouse=a             " enable mouse (selection, resizing windows)
 set mousemodel=popup_setpos
-set showtabline=2       " Always show tabline
 
 set signcolumn=yes " Always draw the signcolumn so errors don't move the window left and right
 set number              " Show line numbers
@@ -197,39 +196,35 @@ let g:floaterm_height=1.0
 " NOTE see vim-better-whitespace plugin
 highlight ExtraWhitespace ctermbg=black guibg=black
 
-" NOTE: even though fzf say c-t does tab it doesn't out of the box (at least on windows)
-let g:fzf_action = { 'enter': 'tab drop' }
-
-
-" ligthline settings
-let s:baseBlack = "Black"
-let s:baseGreenYellow = "GreenYellow"
-let s:baseWhite = "White"
-let s:p = {'normal': {}, 'tabline': {}}
-let s:p.normal.left = [ [ s:baseBlack, s:baseBlack ] ]
-let s:p.normal.middle = [ [ s:baseBlack, s:baseBlack ] ]
-let s:p.normal.right = [ [ s:baseBlack, s:baseBlack ] ]
-let s:p.tabline.tabsel = [ [ s:baseBlack, s:baseGreenYellow ] ]
-let s:p.tabline.left = [ [ s:baseWhite, s:baseBlack ] ]
-let s:p.tabline.middle = [ [ s:baseWhite, s:baseBlack ] ]
-let s:p.tabline.right = [ [ s:baseWhite, s:baseBlack ] ]
-let g:lightline#colorscheme#frick#palette = lightline#colorscheme#fill(s:p)
-let g:lightline = {
-        \ 'enable': {
-        \   'statusline': 0,
-        \   'tabline': 1,
-        \ },
-        \ 'tab': {
-        \    'active': [ 'filename', 'modified' ],
-        \    'inactive': [ 'filename', 'modified' ],
-        \ },
-        \ 'colorscheme': 'frick',
-        \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""" LUA """""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""
 :lua << EOF
+    ------------------
+    --- bufferline ---
+    ------------------
+    local hlColor = "GreenYellow"
+    -- local hlColor = "LemonChiffon3"
+    require'bufferline'.setup{
+        -- override some options from their defaults
+        options = {
+            tab_size = 12,
+            max_name_length = 40,
+            show_buffer_close_icons = false,
+        },
+        highlights = {
+            buffer_selected = {
+                guifg = "Black",
+                guibg = hlColor,
+                gui = "bold",
+            },
+            -- Accent the split buffer thats not selected
+            buffer_visible = {
+                guifg = hlColor,
+            },
+        },
+    }
     -------------------------
     -- hop ------------------
     -------------------------
@@ -357,17 +352,12 @@ let g:lightline = {
         local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
         buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        -- Mappings.
         local opts = { noremap=true, silent=true }
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-        -- can use on `auto` in cpp to get the underlying type
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-        -- if rename does not work, can use gr<leader>r for a more accurate rename over *<leader>a<leader>r
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
-        -- happens on save (see Flash())
-        -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
 
@@ -684,17 +674,16 @@ tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 " Manually remove whitespace, replace tabs with 4 spaces
 nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
 
-nnoremap <silent><a-l> gt
-nnoremap <silent><a-h> gT
-" goto file as new tab
-nnoremap <silent>gf <c-w>gf
-" These commands will move the current tab backwards or forwards in the tabline.
-" kill tab, make it aware of quickfix buffer
-autocmd BufEnter * if &buftype == 'quickfix' | nnoremap <a-q> :cclose<cr> | else | nnoremap <silent> <a-q> :silent! up!<cr>:silent! tabclose!<cr> | endif
-nnoremap <silent><a-s-l> :+tabmove<CR>
-nnoremap <silent><a-s-h> :-tabmove<CR>
-" NOTE: <c-<tab>> will switch back to last accessed tab
-
+" These commands will honor the custom ordering if you change the order of buffers.
+" The vim commands :bnext and :bprevious will not respect the custom ordering.
+nnoremap <silent><a-l> :BufferLineCycleNext<CR>
+nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
+" These commands will move the current buffer backwards or forwards in the bufferline.
+nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
+nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
+" These commands will honor the custom ordering if you change the order of buffers.
+" The vim commands :bnext and :bprevious will not respect the custom ordering. kill buffer tab
+nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
 
 " Scroll by a quarter of window height (https://stackoverflow.com/a/16574696/1706778)
 " An amount based on screen size
@@ -843,8 +832,8 @@ nnoremap <c-right> :vert res +8<cr>
 nnoremap <c-down> :res -8<cr>
 nnoremap <c-up>   :res +8<cr>
 
-" Edit the vimrc in a new tab
-nnoremap <silent> <leader>ve :tab drop $MYVIMRC<cr>
+" Edit the vimrc
+nnoremap <silent> <leader>ve :e $MYVIMRC<cr>
 
 if has('win32')
     " diff the current state of init.vim with whats in the repo

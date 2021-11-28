@@ -566,6 +566,53 @@
                         " --     vim.api.nvim_command("bdelete "..tostring(bufnr))
                         " -- end)
 
+" TABLINE
+" set showtabline=2       " Always show tabline
+" " Edit the vimrc in a new tab
+" nnoremap <silent> <leader>ve :tab drop $MYVIMRC<cr>
+" get rid of bufferline plugin and its lua code
+" experiment with usetab and useopen on set switchbuf=
+" " NOTE: even though fzf say c-t does tab it doesn't out of the box (at least on windows)
+" let g:fzf_action = { 'enter': 'tab drop' }
+" use lightline plugin with these settings
+" Plug 'itchyny/lightline.vim'
+" " ligthline settings
+" let s:baseBlack = "Black"
+" let s:baseGreenYellow = "GreenYellow"
+" let s:baseWhite = "White"
+" let s:p = {'normal': {}, 'tabline': {}}
+" let s:p.normal.left = [ [ s:baseBlack, s:baseBlack ] ]
+" let s:p.normal.middle = [ [ s:baseBlack, s:baseBlack ] ]
+" let s:p.normal.right = [ [ s:baseBlack, s:baseBlack ] ]
+" let s:p.tabline.tabsel = [ [ s:baseBlack, s:baseGreenYellow ] ]
+" let s:p.tabline.left = [ [ s:baseWhite, s:baseBlack ] ]
+" let s:p.tabline.middle = [ [ s:baseWhite, s:baseBlack ] ]
+" let s:p.tabline.right = [ [ s:baseWhite, s:baseBlack ] ]
+" let g:lightline#colorscheme#frick#palette = lightline#colorscheme#fill(s:p)
+" let g:lightline = {
+"         \ 'enable': {
+"         \   'statusline': 0,
+"         \   'tabline': 1,
+"         \ },
+"         \ 'tab': {
+"         \    'active': [ 'filename', 'modified' ],
+"         \    'inactive': [ 'filename', 'modified' ],
+"         \ },
+"         \ 'colorscheme': 'frick',
+"         \ }
+"
+" use these tab switching commands
+" nnoremap <silent><a-l> gt
+" nnoremap <silent><a-h> gT
+" " goto file as new tab
+" nnoremap <silent>gf <c-w>gf
+" " These commands will move the current tab backwards or forwards in the tabline.
+" " kill tab, make it aware of quickfix buffer
+" autocmd BufEnter * if &buftype == 'quickfix' | nnoremap <a-q> :cclose<cr> | else | nnoremap <silent> <a-q> :silent! up!<cr>:silent! tabclose!<cr> | endif
+" nnoremap <silent><a-s-l> :+tabmove<CR>
+" nnoremap <silent><a-s-h> :-tabmove<CR>
+" " NOTE: <c-<tab>> will switch back to last accessed tab
+
 
 " BUFFERLINE
 " Plug 'akinsho/nvim-bufferline.lua'
@@ -602,14 +649,3 @@
 " local bufnr = require'lspconfig'.util.validate_bufnr(0)
 " -- vim.api.nvim_command("bdelete "..tostring(bufnr))
 "
-" " These commands will honor the custom ordering if you change the order of buffers.
-" " The vim commands :bnext and :bprevious will not respect the custom ordering.
-" nnoremap <silent><a-l> :BufferLineCycleNext<CR>
-" nnoremap <silent><a-h> :BufferLineCyclePrev<CR>
-" " These commands will move the current buffer backwards or forwards in the bufferline.
-" nnoremap <silent><a-s-l> :BufferLineMoveNext<CR>
-" nnoremap <silent><a-s-h> :BufferLineMovePrev<CR>
-" These commands will honor the custom ordering if you change the order of buffers.
-" The vim commands :bnext and :bprevious will not respect the custom ordering.
-" kill buffer tab
-" nnoremap <silent> <a-q> :silent! up! <bar> silent! bd!<cr>
