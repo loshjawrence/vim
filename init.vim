@@ -616,7 +616,7 @@ function! Flash()
     if &ft != 'markdown'
         lua vim.lsp.buf.formatting_seq_sync()
     endif
-    silent! w!
+    silent! up!
     sleep 30m
     set nocursorcolumn
     if g:useCursorline == 0
