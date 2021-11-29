@@ -353,10 +353,10 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
         local opts = { noremap=true, silent=true }
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'g<space>', '<cmd>call RunLSPFormatter()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
@@ -607,15 +607,18 @@ function! FileGit(fn, filename)
 
 endfunction
 
+function! RunLSPFormatter()
+    if &ft != 'markdown'
+        lua vim.lsp.buf.formatting_seq_sync()
+    endif
+endfunction
+
 " Pressing enter flashes the cursoline and column and removes the search highlight
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
     set cursorline cursorcolumn
     redraw
-    if &ft != 'markdown'
-        lua vim.lsp.buf.formatting_seq_sync()
-    endif
     silent! up!
     sleep 30m
     set nocursorcolumn
