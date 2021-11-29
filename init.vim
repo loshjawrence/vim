@@ -617,14 +617,14 @@ endfunction
 " Was needed for terminals where the cursor was hard to find where linecoloring
 " was slow in normal mode so you had to turn it off
 function! Flash()
-    set cursorline cursorcolumn
-    redraw
+    " set cursorline cursorcolumn
+    " redraw
     silent! up!
-    sleep 30m
-    set nocursorcolumn
-    if g:useCursorline == 0
-        set nocursorline
-    endif
+    " sleep 30m
+    " set nocursorcolumn
+    " if g:useCursorline == 0
+    "     set nocursorline
+    " endif
 endfunction
 
 " mapping nomenclature: e is edit, a is ack, r is replace, s is search, m is manual, w is word, y is yank
