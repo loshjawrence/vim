@@ -355,13 +355,15 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         local opts = { noremap=true, silent=true }
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '"wyiw<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'g<space>', '<cmd>call RunLSPFormatter()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
 
-    local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
+    -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
+    local servers = { "clangd", "cmake", "vimls", "sumneko_lua", "tsserver", "html", "bashls"  }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
@@ -663,7 +665,7 @@ nnoremap <leader><leader> :LspRestart<cr>
 " Source the vimrc so we don't have to refresh
 " :e is required to actually pick up vimrc changes
 " the M is there to center the mouse cursor other wise the screen will scroll when doing :e
-nnoremap <silent> <leader>vs :so $MYVIMRC<cr>msHmt:e<cr>`tzt`s
+" nnoremap <silent> <leader>vs :so $MYVIMRC<cr>msHmt:e<cr>`tzt`s
 nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
 
 nnoremap <silent> <c-\> :FloatermToggle<CR>
