@@ -613,6 +613,7 @@ function! RunLSPFormatter()
     if &ft != 'markdown'
         lua vim.lsp.buf.formatting_seq_sync()
     endif
+    silent! up!
 endfunction
 
 " Pressing enter flashes the cursoline and column and removes the search highlight
