@@ -118,7 +118,7 @@ set nowritebackup
 set noswapfile
 set splitbelow " :sp defaults down
 " set splitright " :vs defaults right, quickfix edits cycles right split window so turn this off (TODO list usually in the :vs window)
-set switchbuf=useopen  " if buffer already opened, use it. if doing bufferline: useopen
+set switchbuf+=useopen  " if buffer already opened, use it. if doing bufferline: useopen
 set lazyredraw        " should make scrolling faster
 set diffopt+=vertical " Always use vertical diffs
 set visualbell " visual bell for errors
