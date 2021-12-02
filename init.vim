@@ -19,7 +19,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin()
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 let g:fzf_buffers_jump = 1
 let g:fzf_preview_window = ''
