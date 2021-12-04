@@ -678,7 +678,7 @@ tnoremap <C-\> <C-\><C-n>
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
 " Manually remove whitespace, replace tabs with 4 spaces
-nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:noh<cr>`w
+nnoremap <leader>w mw:%s/\s\+$//ge<cr>:%s/\t/    /ge<cr>:%s/\r//ge<cr>:noh<cr>`w
 
 " These commands will honor the custom ordering if you change the order of buffers.
 " The vim commands :bnext and :bprevious will not respect the custom ordering.
