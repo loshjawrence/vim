@@ -62,6 +62,8 @@ let g:AutoPairsShortcutBackInsert=''
 let g:AutoPairsShortcutFastWrap=''
 let g:AutoPairsShortcutToggle=''
 
+Plug 'kalvinpearce/ShaderHighlight'
+
 call plug#end()
 
 
