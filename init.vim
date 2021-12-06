@@ -612,9 +612,15 @@ function! FileGit(fn, filename)
 endfunction
 
 function! RunLSPFormatter()
+    " Format file if its not markdown
     if &ft != 'markdown'
         lua vim.lsp.buf.formatting_seq_sync()
     endif
+
+    " Remove ^M
+    execute "%s/\r//ge"
+
+    " Save file if it changed
     silent! up!
 endfunction
 
