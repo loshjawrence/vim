@@ -812,7 +812,8 @@ nnoremap < <<
 nnoremap > >>
 
 " force write in linux
-cmap w!! %!sudo tee > /dev/null %
+" causes delay when writing a 'w' in command mode
+"cmap w!! %!sudo tee > /dev/null %
 
 " indent scope
 nnoremap == ms=i{`s
