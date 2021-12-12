@@ -360,7 +360,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '"wyiw<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'g<space>', '<cmd>call RunLSPFormatter()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.diagnostic.setloclist()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
 
@@ -404,7 +404,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
 
     -- Disable diagnostic
     vim.diagnostic.config {
-        virtual_text = false,
+        virtual_text = true,
         signs = false,
         underline = false,
     }
@@ -439,9 +439,6 @@ autocmd BufReadPost *
 \ if line("'\"") > 0 && line("'\"") <= line("$") |
 \   exe "normal! g`\"" |
 \ endif
-
-" Disable diagnostic
-autocmd BufEnter * lua vim.lsp.diagnostic.disable()
 
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
