@@ -78,9 +78,9 @@ call plug#end()
 
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""" SET """""""""""""""""""""
-"""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""" SETTINGS """""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""
 let mapleader="\<space>" " Map the leader key to space bar
 
 " COLORSCHEME must come before any hl or color overrides
@@ -675,9 +675,9 @@ nnoremap <leader><leader> :LspRestart<cr>
 nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
 
 nnoremap <silent> <c-\> :FloatermToggle<CR>
-tnoremap <silent>   <c-\>   <C-\><C-n>:FloatermToggle<CR>
-" NOTE: This is needed to make fzf and other termal based things not annoying
-tnoremap <Esc> <C-\><C-n>:q<cr>
+tnoremap <silent> <c-\> <C-\><C-n>:FloatermToggle<CR>
+" NOTE: This is needed to make fzf and other terminal based things not annoying
+tnoremap <Esc> <C-\><C-n>:hide<cr>
 tnoremap <C-\> <C-\><C-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
