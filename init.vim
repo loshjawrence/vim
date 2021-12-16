@@ -738,7 +738,12 @@ command! -bang -nargs=? -complete=dir Buffers
 
 " History looks up v:oldfiles
 nnoremap <leader>fh :History<cr>
-nnoremap <leader>fm :Marks<cr>
+command! -bang -nargs=? -complete=dir History
+    \ call fzf#vim#history(
+    \ {
+    \   'options': ['--layout=reverse'],
+    \   'source': 'fd --no-ignore --hidden --follow --type f'
+    \ }, <bang>0)
 
 nnoremap <f1> :GundoToggle<CR>
 nnoremap <f2> :TagbarToggle<CR>
