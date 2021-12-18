@@ -64,6 +64,8 @@ let g:AutoPairsShortcutToggle=''
 
 Plug 'kalvinpearce/ShaderHighlight'
 
+" Plug 'rktjmp/lush.nvim'
+" Plug 'savq/melange'
 call plug#end()
 
 
@@ -81,10 +83,19 @@ call plug#end()
 """"""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""" SETTINGS """""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader="\<space>" " Map the leader key to space bar
+set background=dark
 
 " COLORSCHEME must come before any hl or color overrides
-colorscheme alduin2
+" Copy this to your alduin.vim file in colors folder
+" https://raw.githubusercontent.com/AlessandroYorba/Alduin/nightly/colors/alduin.vim
+" Replace the baby blue "Cyan" with a Custom_Cyan color. That or Soft_Yellow
+" highlight! Custom_Cyan guifg=#505f5f guibg=NONE gui=NONE ctermfg=23 ctermbg=NONE cterm=NONE
+" highlight! link Identifier Custom_Cyan
+" Black background
+let g:alduin_Shout_Become_Ethereal = 1
+colorscheme alduin
+
+let mapleader="\<space>" " Map the leader key to space bar
 
 " See: vim-differences nvim-defaults
 filetype plugin indent on  " try to recognize filetypes and load related plugins/settings for those filetypes
