@@ -63,10 +63,8 @@ let g:AutoPairsShortcutFastWrap=''
 let g:AutoPairsShortcutToggle=''
 
 Plug 'kalvinpearce/ShaderHighlight'
-
-" Plug 'rktjmp/lush.nvim'
-" Plug 'savq/melange'
 call plug#end()
+
 
 
 
@@ -93,7 +91,7 @@ set background=dark
 " highlight! link Identifier Custom_Cyan
 " Black background
 let g:alduin_Shout_Become_Ethereal = 1
-colorscheme alduin
+colorscheme alduin2
 
 let mapleader="\<space>" " Map the leader key to space bar
 
