@@ -72,7 +72,7 @@ let g:terminal_ansi_colors = [
 	\ '#875f5f',
 	\ '#87afaf',
 	\ '#dfdfaf',]
-
+"" #dfaf87  #dfdfaf
 "COLORS
 highlight! Orange guifg=#af875f guibg=NONE gui=NONE ctermfg=137 ctermbg=NONE cterm=NONE
 highlight! Soft_Orange guifg=#dfaf87 guibg=NONE gui=NONE ctermfg=180 ctermbg=NONE cterm=NONE
@@ -85,8 +85,10 @@ highlight! Red_Reverse guifg=#af5f5f guibg=#121212 gui=reverse ctermfg=131 cterm
 highlight! Dark_Red_Reverse guifg=#dfdfaf guibg=#875f5f gui=NONE ctermfg=187 ctermbg=95 cterm=NONE
 highlight! Cyan guifg=#87afaf guibg=NONE gui=NONE ctermfg=109 ctermbg=NONE cterm=NONE
 highlight! Dark_Cyan_Reverse guifg=#005f5f guibg=NONE gui=reverse ctermfg=23 ctermbg=NONE cterm=reverse
-highlight! aSearchCurrent guifg=NONE guibg=#875f5f gui=NONE ctermfg=NONE ctermbg=NONE cterm=NONE
-highlight! aSearch guifg=NONE guibg=#303f3f gui=NONE ctermfg=NONE ctermbg=NONE cterm=NONE
+highlight! aSearchCurrent guifg=NONE guibg=#00d7d7 gui=NONE ctermfg=NONE ctermbg=NONE cterm=NONE
+" highlight! aSearch guifg=NONE guibg=#00ffaf gui=NONE ctermfg=NONE ctermbg=NONE cterm=NONE
+" highlight! aSearch guifg=NONE guibg=#dfaf87 gui=NONE ctermfg=NONE ctermbg=NONE cterm=NONE
+highlight! aSearch guifg=NONE guibg=#505f5f gui=NONE ctermfg=NONE ctermbg=NONE cterm=NONE
 highlight! Grey guifg=#878787 guibg=NONE gui=NONE ctermfg=102 ctermbg=NONE cterm=NONE
 highlight! Green guifg=#87875f guibg=NONE gui=NONE ctermfg=101 ctermbg=NONE cterm=NONE
 highlight! Green_Reverse guifg=#87875f guibg=NONE gui=reverse ctermfg=101 ctermbg=NONE cterm=reverse
