@@ -649,7 +649,7 @@ endfunction
 " NOTE: looks like <args> (the thing after :MyGrep) has to be a space separated list of quoted items
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
-command! -nargs=+ MyCdo execute 'silent cfdo! <args>' | cfdo update | cclose | execute 'normal! `A'
+command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cfdo update | cclose | execute 'normal! `A'
 
 
 
@@ -940,10 +940,10 @@ nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : 
 " :h cword
 " :h s_flags (I is dont ignore, e is continue on error, g is all instances on line, c is confirm)
 " when doing something like :s//red/ the first arg is assumed to be previous search
-nnoremap <leader>,rs :MyCdo %s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
-" nnoremap <leader>rm :MyCdo %s/\VgIe<left><left><left>
+nnoremap <leader>,rs :MyCdo s/<c-r>=substitute(substitute(@/, '\\n$', '', 'g'), '/', '\\/', 'g')<cr>//gIe<left><left><left><left>
+" nnoremap <leader>rm :MyCdo s/\VgIe<left><left><left>
 " To be used with <leader>aw as it saves word under cursor to w register
-nnoremap <leader>,rw :MyCdo %s/\<<c-r>w\>//gIe<left><left><left><left>
+nnoremap <leader>,rw :MyCdo s/\<<c-r>w\>//gIe<left><left><left><left>
 " mapped to above if we took tha as or aw path above do the pick the right rs or rw
 " NOTE: when using gr from the lsp make sure to * first this will record to @w which you can then use with <leader>r
 " and it will call the word version
