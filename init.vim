@@ -278,7 +278,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
                 end
             end, { "i", "s" }),
 
-            ["<C-n>"] = cmp.mapping(function(fallback)
+            ["<c-n>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
                 elseif luasnip.expand_or_jumpable() then
@@ -290,7 +290,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
                 end
             end, { "i", "s" }),
 
-            ["<C-p>"] = cmp.mapping(function(fallback)
+            ["<c-p>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
                 elseif luasnip.jumpable(-1) then
@@ -681,13 +681,13 @@ nnoremap <leader><leader> :LspRestart<cr>
 " :e is required to actually pick up vimrc changes
 " the M is there to center the mouse cursor other wise the screen will scroll when doing :e
 " nnoremap <silent> <leader>vs :so $MYVIMRC<cr>msHmt:e<cr>`tzt`s
-nnoremap <c-[> :silent! call Flash()<cr>:noh<cr>
+nnoremap <silent> <esc> :call Flash()<cr>:noh<cr>
 
 nnoremap <silent> <c-\> :FloatermToggle<CR>
-tnoremap <silent> <c-\> <C-\><C-n>:FloatermToggle<CR>
+tnoremap <silent> <c-\> <c-\><c-n>:FloatermToggle<CR>
 " NOTE: This is needed to make fzf and other terminal based things not annoying
-tnoremap <Esc> <C-\><C-n>:hide<cr>
-tnoremap <C-\> <C-\><C-n>
+tnoremap <esc> <c-\><c-n>:hide<cr>
+tnoremap <c-\> <c-\><c-n>
 " To simulate i_CTRL-R in terminal-mode
 tnoremap <expr> <c-r> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 
