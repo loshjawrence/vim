@@ -3,6 +3,7 @@
   * Start-up:
 vim --startuptime startup.report
 
+
   * Executing things:
 :profile start profile.log
 :profile func *
