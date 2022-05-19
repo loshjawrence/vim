@@ -11,6 +11,10 @@ make sure to run from an elevated terminal
 vim-plug needs to be explicitly installed see git repo for powershell command
 fzf is installed via vim-plug
 llvm has an .exe in the git release that will install llvm and clang stuff
+get python windows installer, run as admin then:
+py.exe -m pip install cmake-language-server
+py.exe -m pip install python-language-server
+py.exe -m pip install pynvim
 
 # FZF
 =====
