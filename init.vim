@@ -236,6 +236,8 @@ highlight ExtraWhitespace ctermbg=black guibg=black
             },
         },
     }
+
+
     -------------------------
     -- hop ------------------
     -------------------------
@@ -374,7 +376,8 @@ highlight ExtraWhitespace ctermbg=black guibg=black
     end
 
     -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
-    local servers = { "clangd", "cmake", "vimls", "sumneko_lua", "tsserver", "html", "bashls"  }
+    -- local servers = { "clangd", "cmake", "vimls", "sumneko_lua", "pylsp", "yamlls" }
+    local servers = { "cmake", "clangd", "vimls" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
@@ -650,7 +653,7 @@ endfunction
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cfdo update | cclose | execute 'normal! `A'
-
+ 
 
 
 
@@ -730,9 +733,7 @@ command! -bang -nargs=? -complete=dir Files
     \   'source': 'fd --no-ignore --hidden --follow --type f'
     \ }, <bang>0)
 
-" If you want fd to ignore these patterns globally, you can put them in fd's global ignore file. This is usually located in ~/.config/fd/ignore in macOS or Linux, and %APPDATA%\fd\ignore in Windows.
-
-"" files in `git ls-files``
+" files in `git ls-files``
 nnoremap <leader>fg :GFiles<cr>
 command! -bang -nargs=? -complete=dir GFiles
     \ call fzf#vim#gitfiles(<q-args>,
@@ -869,10 +870,14 @@ nnoremap <c-up>   :res +8<cr>
 nnoremap <silent> <leader>ve :e $MYVIMRC<cr>
 
 if has('win32')
+    " " diff the current state of init.vim with whats in the repo
+    " nmap <silent> <leader>vd <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y ..\..\AppData\Local\nvim\init.vim .<cr>git diff<cr>
+    " " Pull latest vimrc, copy it to vimrc location, source it, restart coc
+    " nmap <silent> <leader>vp <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y init.vim ..\..\AppData\Local\nvim<cr>popd<cr>
     " diff the current state of init.vim with whats in the repo
-    nmap <silent> <leader>vd <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y ..\..\AppData\Local\nvim\init.vim .<cr>git diff<cr>
+    nmap <silent> <leader>vd <c-\>pushd .<cr>cd %userprofile%\clones\vim<cr>git pull<cr>copy /y %userprofile%\AppData\Local\nvim\init.vim .<cr>git diff<cr>
     " Pull latest vimrc, copy it to vimrc location, source it, restart coc
-    nmap <silent> <leader>vp <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y init.vim ..\..\AppData\Local\nvim<cr>popd<cr>
+    nmap <silent> <leader>vp <c-\>pushd .<cr>cd %userprofile%\clones\vim<cr>git pull<cr>copy /y init.vim %userprofile%\AppData\Local\nvim<cr>popd<cr>
 else
     nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>git pull<cr>cp $MYVIMRC .<cr>git diff<cr>
     nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
@@ -924,10 +929,12 @@ nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrep "-w" "-g" "*" "<c-r><c-
 " nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrepCurrentFile "<c-r><c-w>" "-w"<cr>
 " mapped to above. if you have something highlighted and it wasnt a word search, it will run the search version.
 " otherwise run the word version. a is for current dir of file (<leader>cd) and A is for root (<leader>cr)
+" rg from current dir
+nmap <expr> <leader>aa v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>,aW" : "<leader>,aS" : "<leader>,aW"
 " rg from current files directory
-nmap <expr> <leader>A v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aW" : "<leader>cd<leader>,aS" : "<leader>cd<leader>,aW"
+nmap <expr> <leader>ad v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aW:lcd -<cr>" : "<leader>cd<leader>,aS:lcd -<cr>" : "<leader>cd<leader>,aW:lcd -<cr>"
 " rg from root, make sure .gitignore is ignoring things
-nmap <expr> <leader>a v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw" : "<leader>cr<leader>,as" : "<leader>cr<leader>,aw"
+nmap <expr> <leader>ar v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw:cd -<cr>" : "<leader>cr<leader>,as:cd -<cr>" : "<leader>cr<leader>,aw:cd -<cr>"
 
 " g*            Like "*", but don't put "\<" and "\>" around the word.
                 " :let v:statusmsg = ""
