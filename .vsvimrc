@@ -1,0 +1,42 @@
+" TODO: use visual assist's functions instead of msvc
+" You can explore the commands available in Visual Studio with the Command Window (View → Other Windows → Command Window)
+" or by going to Tools → Options → Environment → Keyboard.
+
+nnoremap gr :vsc Edit.FindAllReferences<CR>
+" NOTE: had to be done in tools options Environment keyboard
+" nnoremap <A-n> :vsc VAssistX.RefResultsNext<CR>
+" nnoremap <A-p> :vsc VAssistX.RefResultsPrevious<CR>
+
+nnoremap Y y$
+
+nnoremap gp :vsc Edit.PeekDefinition<CR>
+
+" Renames the symbol/word under cursor
+nnoremap gR :vsc VAssistX.RefactorRename<CR>
+
+" Renames the file you have open
+nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
+
+xnoremap gc :vsc Edit.ToggleLineComment<CR>
+nnoremap gcc :vsc Edit.ToggleLineComment<CR>
+nnoremap <A-o> :vsc EditorContextMenus.CodeWindow.ToggleHeaderCodeFile<CR>
+nnoremap <A-q> :q<CR>
+
+" NOTE: had to be done in tools options Environment keyboard
+" nnoremap <A-h> :vsc Window.PrevoiusTab<CR>
+" nnoremap <A-l> :vsc Window.NextTab<CR>
+
+xnoremap S{ :vsc VAssistX.SurroundSelctionWithBraces<CR>
+xnoremap S( :vsc VAssistX.SurroundSelctionWithParentheses<CR>
+
+nnoremap <C-O> :vsc View.NavigateBackward<CR>
+nnoremap <C-I> :vsc View.NavigateForward<CR>
+
+" find in files (ctrl shift f, which should be like grep)
+nnoremap <Space>a :vsc Edit.FindinFiles<CR>
+" "nnoremap <Space>a :vsc VAssistX.FindSymbolDialog<CR>
+
+" open file (shift alt o)
+nnoremap <Space>fg :vsc VAssistX.OpenFileInSolutionDialog<CR>
+
+nnoremap <Space>vs :so ~/.vsvimrc<CR>

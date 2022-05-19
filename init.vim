@@ -154,6 +154,8 @@ set completeopt=menuone,noinsert,noselect,preview
 " add root level folders you want to search with -g
 if has('win32')
     set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
+    " " set grepprg=rg\ --path-separator\ /\ --type-add\ 'hlsl:*.hlsl'\ -thlsl\ -tcpp\ -tpy\ -tlua\ --vimgrep
+    " set grepprg=rg\ --path-separator\ /\ -tcpp\ -tpy\ -tlua\ --vimgrep
 else
     set grepprg=rg\ --path-separator\ /\ -g\ 'src/**'\ --vimgrep
 endif
@@ -871,13 +873,9 @@ nnoremap <silent> <leader>ve :e $MYVIMRC<cr>
 
 if has('win32')
     " " diff the current state of init.vim with whats in the repo
-    " nmap <silent> <leader>vd <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y ..\..\AppData\Local\nvim\init.vim .<cr>git diff<cr>
-    " " Pull latest vimrc, copy it to vimrc location, source it, restart coc
-    " nmap <silent> <leader>vp <c-\>pushd .<cr>cd C:/Users/lol/clones/vim<cr>git pull<cr>copy /y init.vim ..\..\AppData\Local\nvim<cr>popd<cr>
-    " diff the current state of init.vim with whats in the repo
-    nmap <silent> <leader>vd <c-\>pushd .<cr>cd %userprofile%\clones\vim<cr>git pull<cr>copy /y %userprofile%\AppData\Local\nvim\init.vim .<cr>git diff<cr>
+    nmap <silent> <leader>vd <c-\>pushd .<cr>cd %userprofile%\clones\vim<cr>git pull<cr>copy /y %userprofile%\AppData\Local\nvim\init.vim .<cr>copy /y %userprofile%\.vsvimrc .<cr>git diff<cr>
     " Pull latest vimrc, copy it to vimrc location, source it, restart coc
-    nmap <silent> <leader>vp <c-\>pushd .<cr>cd %userprofile%\clones\vim<cr>git pull<cr>copy /y init.vim %userprofile%\AppData\Local\nvim<cr>popd<cr>
+    nmap <silent> <leader>vp <c-\>pushd .<cr>cd %userprofile%\clones\vim<cr>git pull<cr>copy /y init.vim %userprofile%\AppData\Local\nvim<cr>copy /y .vsvimrc %userprofile%<cr>popd<cr>
 else
     nmap <silent> <leader>vd <c-\>cd ~/clones/vim<cr>git pull<cr>cp $MYVIMRC .<cr>git diff<cr>
     nmap <silent> <leader>vp <c-\>cd ~/clones/vim<cr>git pull<cr>cp init.vim $MYVIMRC<cr>cd -<cr>
