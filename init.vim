@@ -730,7 +730,9 @@ command! -bang -nargs=? -complete=dir Files
     \   'source': 'fd --no-ignore --hidden --follow --type f'
     \ }, <bang>0)
 
-" files in `git ls-files``
+" If you want fd to ignore these patterns globally, you can put them in fd's global ignore file. This is usually located in ~/.config/fd/ignore in macOS or Linux, and %APPDATA%\fd\ignore in Windows.
+
+"" files in `git ls-files``
 nnoremap <leader>fg :GFiles<cr>
 command! -bang -nargs=? -complete=dir GFiles
     \ call fzf#vim#gitfiles(<q-args>,
