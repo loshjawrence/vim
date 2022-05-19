@@ -16,6 +16,15 @@ nnoremap gR :vsc VAssistX.RefactorRename<CR>
 
 " Renames the file you have open
 nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
+" no good way to do this in msvc, rclick the filter folder and add class in the solution explorer
+" nnoremap <Space>ga :vsc Edit.NewFile<CR>
+
+" PEFORCE
+" File.Perforce.P4VS.Checkout
+" File.Perforce.P4VS.Mark_for_Add
+" File.Perforce.P4VS.Revert
+" File.Perforce.P4VS.Shelve
+" File.Perforce.P4VS.Submit
 
 xnoremap gc :vsc Edit.ToggleLineComment<CR>
 nnoremap gcc :vsc Edit.ToggleLineComment<CR>
