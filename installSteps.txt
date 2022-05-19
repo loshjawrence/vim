@@ -2,8 +2,10 @@ For intstalling on linux (WSL/bash on Windows, edit windows files through /mnt/c
 
 # WINDOWS
 ==========
-choco upgrade -y neovim llvm git cmake fd ripgrep fzf
+choco upgrade -y neovim llvm git cmake fd ripgrep fzf python nodejs
 follow this for git ssh: https://dev.to/bdbch/setting-up-ssh-and-git-on-windows-10-2khk
+when installing language servers via python and nodejs
+make sure to run from an elevated terminal
 
 # FZF
 =====
