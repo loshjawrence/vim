@@ -1,3 +1,6 @@
+" NOTE:make sure tools->options->VsVim is using vim for some of these
+" NOTE:make sure tools->options->Environment->Keyboard has exlicit keybindings for some of these
+
 " TODO: use visual assist's functions instead of msvc
 " You can explore the commands available in Visual Studio with the Command Window (View → Other Windows → Command Window)
 " or by going to Tools → Options → Environment → Keyboard.
