@@ -16,6 +16,19 @@ nnoremap Y y$
 
 nnoremap gp :vsc Edit.PeekDefinition<CR>
 
+" intent is to go back and foward through the gp previews that were invoked in the preview window
+" NOTE: since this is vim and not neovim there is no way to do ctrl shift t
+" so you need to override these in msvc
+" nnoremap <C-S-t> :vsc Edit.PeekForward<CR>
+nnoremap <C-t> :vsc Edit.PeekBackward<CR>
+
+" intent is to go back and forth between window and gp preview window
+" NOTE: not working in msvc override or this direct usage of the VS shortcut
+" nnoremap <C-j> :vsc Window.CloseToolWindow<CR>
+" nnoremap <C-k> :vsc Window.CloseToolWindow<CR>
+" nnoremap <C-j> <S-Esc>
+" nnoremap <C-k> <S-Esc>
+
 map s nop
 nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
 
