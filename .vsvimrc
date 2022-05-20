@@ -3,6 +3,8 @@
 " or by going to Tools → Options → Environment → Keyboard.
 
 nnoremap gr :vsc Edit.FindAllReferences<CR>
+" TODO: is this one faster?
+" nnoremap gr :vsc VAssistX.FindReferences<CR>
 " NOTE: had to be done in tools options Environment keyboard
 " nnoremap <A-n> :vsc VAssistX.RefResultsNext<CR>
 " nnoremap <A-p> :vsc VAssistX.RefResultsPrevious<CR>
@@ -19,7 +21,14 @@ nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
 " no good way to do this in msvc, rclick the filter folder and add class in the solution explorer
 " nnoremap <Space>ga :vsc Edit.NewFile<CR>
 
-" PEFORCE
+nnoremap <F2> :vsc VAssistX.ListMethodsInCurrentFile<CR>
+
+nnoremap <C-e> nop
+nnoremap <C-y> nop
+nnoremap <C-d> 12<C-e>
+nnoremap <C-u> 12<C-y>
+
+" PEFORCE (NOTE: looks like these not available)
 " File.Perforce.P4VS.Checkout
 " File.Perforce.P4VS.Mark_for_Add
 " File.Perforce.P4VS.Revert
@@ -43,7 +52,7 @@ nnoremap <C-I> :vsc View.NavigateForward<CR>
 
 " find in files (ctrl shift f, which should be like grep)
 nnoremap <Space>a :vsc Edit.FindinFiles<CR>
-" "nnoremap <Space>a :vsc VAssistX.FindSymbolDialog<CR>
+nnoremap <Space>A :vsc VAssistX.FindSymbolDialog<CR>
 
 " open file (shift alt o)
 nnoremap <Space>fg :vsc VAssistX.OpenFileInSolutionDialog<CR>
