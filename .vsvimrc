@@ -1,3 +1,5 @@
+set ignorecase
+set smartcase
 " NOTE:make sure tools->options->VsVim is using vim for some of these
 " NOTE:make sure tools->options->Environment->Keyboard has exlicit keybindings for some of these
 
