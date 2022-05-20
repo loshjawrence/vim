@@ -22,7 +22,8 @@ nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
 nnoremap <Space>ga :vsc VAssistX.RefactorCreateFile<CR>
 
 nnoremap <F2> :vsc VAssistX.ListMethodsInCurrentFile<CR>
-noremap <C-[> <esc>:w<CR>
+nnoremap <esc> :w<CR>
+inoremap <esc> <esc>:w<CR>
 
 nnoremap <C-e> nop
 nnoremap <C-y> nop
