@@ -154,8 +154,7 @@ set completeopt=menuone,noinsert,noselect,preview
 " add root level folders you want to search with -g
 if has('win32')
     set grepprg=rg\ --path-separator\ /\ -g\ src/**\ --vimgrep
-    " " set grepprg=rg\ --path-separator\ /\ --type-add\ 'hlsl:*.hlsl'\ -thlsl\ -tcpp\ -tpy\ -tlua\ --vimgrep
-    " set grepprg=rg\ --path-separator\ /\ -tcpp\ -tpy\ -tlua\ --vimgrep
+    " set grepprg=rg\ --path-separator\ /\ --type-add\ hlsl:*.hlsl\ -thlsl\ -tcpp\ --vimgrep
 else
     set grepprg=rg\ --path-separator\ /\ -g\ 'src/**'\ --vimgrep
 endif
@@ -734,6 +733,12 @@ command! -bang -nargs=? -complete=dir Files
     \   'options': ['--layout=reverse'],
     \   'source': 'fd --no-ignore --hidden --follow --type f'
     \ }, <bang>0)
+" command! -bang -nargs=? -complete=dir Files
+"     \ call fzf#vim#files(<q-args>,
+"     \ {
+"     \   'options': ['--layout=reverse'],
+"     \   'source': 'fd --type f -e cpp -e h -e hlsl'
+"     \ }, <bang>0)
 
 " files in `git ls-files``
 nnoremap <leader>fg :GFiles<cr>

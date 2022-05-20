@@ -18,8 +18,8 @@ nnoremap gR :vsc VAssistX.RefactorRename<CR>
 
 " Renames the file you have open
 nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
-" no good way to do this in msvc, rclick the filter folder and add class in the solution explorer
-" nnoremap <Space>ga :vsc Edit.NewFile<CR>
+" Will create at the location of current file, need to run twice for h and cpp
+nnoremap <Space>ga :vsc VAssistX.RefactorCreateFile<CR>
 
 nnoremap <F2> :vsc VAssistX.ListMethodsInCurrentFile<CR>
 
@@ -51,8 +51,8 @@ nnoremap <C-O> :vsc View.NavigateBackward<CR>
 nnoremap <C-I> :vsc View.NavigateForward<CR>
 
 " find in files (ctrl shift f, which should be like grep)
-nnoremap <Space>a :vsc Edit.FindinFiles<CR>
-nnoremap <Space>A :vsc VAssistX.FindSymbolDialog<CR>
+nnoremap <Space>aa :vsc Edit.FindinFiles<CR>
+nnoremap <Space>ar :vsc VAssistX.FindSymbolDialog<CR>
 
 " open file (shift alt o)
 nnoremap <Space>fg :vsc VAssistX.OpenFileInSolutionDialog<CR>
