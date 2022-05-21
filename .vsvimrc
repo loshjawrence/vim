@@ -13,6 +13,9 @@ nnoremap Y y$
 
 nnoremap gp :vsc Edit.PeekDefinition<CR>
 
+map s nop
+nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
+
 " Renames the symbol/word under cursor
 nnoremap gR :vsc VAssistX.RefactorRename<CR>
 
