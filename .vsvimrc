@@ -1,5 +1,13 @@
 set ignorecase
 set smartcase
+
+noremap <c-e> <nop>
+noremap <c-y> <nop>
+noremap <c-f> <nop>
+noremap <c-b> <nop>
+noremap R <nop>
+nnoremap S <nop>
+
 " NOTE:make sure tools->options->VsVim is using vim for some of these
 " NOTE:make sure tools->options->Environment->Keyboard has exlicit keybindings for some of these
 
@@ -20,6 +28,8 @@ nnoremap gr :vsc Edit.FindAllReferences<CR>
 nnoremap Y y$
 
 nnoremap gp :vsc Edit.PeekDefinition<CR>
+" View function definition documentation
+nnoremap gk :vsc Edit.QuickInfo<CR>
 
 " intent is to go back and foward through the gp previews that were invoked in the preview window
 " NOTE: since this is vim and not neovim there is no way to do ctrl shift t
@@ -34,7 +44,6 @@ nnoremap <C-t> :vsc Edit.PeekBackward<CR>
 " nnoremap <C-j> <S-Esc>
 " nnoremap <C-k> <S-Esc>
 
-map s nop
 nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
 
 " Renames the symbol/word under cursor
@@ -49,8 +58,6 @@ nnoremap <F2> :vsc VAssistX.ListMethodsInCurrentFile<CR>
 nnoremap <esc> :w<CR>
 inoremap <esc> <esc>:w<CR>
 
-nnoremap <C-e> nop
-nnoremap <C-y> nop
 nnoremap <C-d> 12<C-e>
 nnoremap <C-u> 12<C-y>
 
@@ -84,6 +91,20 @@ nnoremap <Space>ar :vsc VAssistX.FindSymbolDialog<CR>
 nnoremap <Space>fg :vsc VAssistX.OpenFileInSolutionDialog<CR>
 
 nnoremap <Space>vs :so ~/.vsvimrc<CR>
+
+" edit last search across selection
+xnoremap <Space>e :s///gI<left><left><left>
+" edit last search across whole file
+nnoremap <Space>e :%s///gI<left><left><left>
+nnoremap <c-r> :vsc Edit.Redo<CR>
+
+nnoremap j gj
+nnoremap k gk
+nnoremap < <<
+nnoremap > >>
+xnoremap <c-y> "+y
+xnoremap <c-p> "+p
+nnoremap <c-p> "+p
 
 nnoremap ma mA
 nnoremap mb mB
