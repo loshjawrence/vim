@@ -7,6 +7,7 @@ noremap <c-f> <nop>
 noremap <c-b> <nop>
 noremap R <nop>
 nnoremap S <nop>
+nnoremap s <nop>
 
 " NOTE:make sure tools->options->VsVim is using vim for some of these
 " NOTE:make sure tools->options->Environment->Keyboard has exlicit keybindings for some of these
@@ -97,6 +98,19 @@ xnoremap <Space>e :s///gI<left><left><left>
 " edit last search across whole file
 nnoremap <Space>e :%s///gI<left><left><left>
 nnoremap <c-r> :vsc Edit.Redo<CR>
+
+" replay macro (qq to start recording, q to stop)
+nnoremap Q @q
+" apply macro across visual selection, VG to select until end of file
+vnoremap Q :norm @q<cr>
+
+" mapmode-o is operator pending mode (d, y, c, t, T, f, F, etc)
+" This allows you to change backwards (ex: cF) and include the char under cursor.
+onoremap T vT
+onoremap F vF
+" Similar to above, Get B/b motions to include the first char
+onoremap B vB
+onoremap b vb
 
 nnoremap j gj
 nnoremap k gk

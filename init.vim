@@ -773,8 +773,8 @@ nnoremap <leader>cr :Gcd<cr>
 " see https://stackoverflow.com/questions/1269603/to-switch-from-vertical-split-to-horizontal-split-fast-in-vim
 nnoremap <leader>gg :G<cr><c-w>H
 
-nnoremap s <cmd>HopChar1<cr>
-xnoremap s <cmd>HopChar1<cr>
+nnoremap s <cmd>HopChar2<cr>
+xnoremap s <cmd>HopChar2<cr>
 
 " correct spelling of work under cursor. <right> required since the cursor needs to be inside the word
 nnoremap <c-s> i<right><c-x>s
@@ -934,7 +934,7 @@ nnoremap <leader>,aW :let @w = "<c-r><c-w>" <bar> MyGrep "-w" "-g" "*" "<c-r><c-
 " otherwise run the word version. a is for current dir of file (<leader>cd) and A is for root (<leader>cr)
 " rg from current dir
 nmap <expr> <leader>aa v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>,aW" : "<leader>,aS" : "<leader>,aW"
-" rg from current files directory
+" rg from current file's directory
 nmap <expr> <leader>ad v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cd<leader>,aW:lcd -<cr>" : "<leader>cd<leader>,aS:lcd -<cr>" : "<leader>cd<leader>,aW:lcd -<cr>"
 " rg from root, make sure .gitignore is ignoring things
 nmap <expr> <leader>ar v:hlsearch ==# 1 ? @/ =~ "\<" ? "<leader>cr<leader>,aw:cd -<cr>" : "<leader>cr<leader>,as:cd -<cr>" : "<leader>cr<leader>,aw:cd -<cr>"
