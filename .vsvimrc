@@ -1,5 +1,7 @@
 set ignorecase
 set smartcase
+set nowrapscan
+set visualbell
 
 noremap <c-e> <nop>
 noremap <c-y> <nop>
