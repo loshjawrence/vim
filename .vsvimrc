@@ -42,8 +42,8 @@ nnoremap gk :vsc Edit.QuickInfo<CR>
 " nnoremap <C-S-t> :vsc Edit.PeekForward<CR>
 nnoremap <C-t> :vsc Edit.PeekBackward<CR>
 
-" intent is to go back and forth between window and gp preview window
-" NOTE: not working in msvc override or this direct usage of the VS shortcut
+" intent is to go back and forth between window and gp preview w
+" NOTE: not working in msvc override or this direct usage of the VS shortc
 " nnoremap <C-j> :vsc Window.CloseToolWindow<CR>
 " nnoremap <C-k> :vsc Window.CloseToolWindow<CR>
 " nnoremap <C-j> <S-Esc>
@@ -51,10 +51,7 @@ nnoremap <C-t> :vsc Edit.PeekBackward<CR>
 
 nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
 
-" <C-Backspace> did not work
-" l is needed since esc puts you in a shifted left spot
-" then db to delete back a word then i to go into insert mode
-inoremap <C-w> <Esc>ldbi
+inoremap <c-w> <C-BS>
 
 " Renames the symbol/word under cursor
 nnoremap gR :vsc Refactor.Rename<CR>
