@@ -27,16 +27,16 @@ let g:fzf_preview_window = ''
 " :TSUninstall all<cr>:TSInstall c cpp cmake lua typescript html
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/nvim-lsp-installer'
 Plug 'ray-x/lsp_signature.nvim'
-Plug 'L3MON4D3/LuaSnip'
-Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-nvim-lua'
-Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
-Plug 'williamboman/nvim-lsp-installer'
 
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'vim-scripts/star-search'
@@ -244,94 +244,55 @@ highlight ExtraWhitespace ctermbg=black guibg=black
     -------------------------
     require'hop'.setup()
 
-    -------------------------
-    ----- cmp ---------------
-    -------------------------
-    -------------------------
-    ----- luasnip -----------
-    -------------------------
-    local has_words_before = function()
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-    end
+    ---------------------------
+    ------- cmp ---------------
+    ---------------------------
+    ---------------------------
+    ------- luasnip -----------
+    ---------------------------
     local luasnip = require'luasnip'
     local cmp = require'cmp'
+    -- Global setup.
     cmp.setup({
-        mapping = {
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
-            ["<Tab>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item()
-                elseif luasnip.expand_or_jumpable() then
-                    luasnip.expand_or_jump()
-                elseif has_words_before() then
-                    cmp.complete()
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
-
-            ["<S-Tab>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
-
-            ["<c-n>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item()
-                elseif luasnip.expand_or_jumpable() then
-                    luasnip.expand_or_jump()
-                elseif has_words_before() then
-                    cmp.complete()
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
-
-            ["<c-p>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
-        },
-        sources = {
-            { name = "nvim_lsp" },
-            { name = "buffer" },
-            { name = "lua_snip" },
-            { name = "nvim_lua" },
-            { name = "path" },
-        },
-        snippet = {
-            expand = function(args)
-                require("luasnip").lsp_expand(args.body)
-            end,
-        },
-        experimental = {
-            ghost_text = true,
-        },
+      snippet = {
+        expand = function(args)
+          require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        end,
+      },
+      window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+      },
+      mapping = cmp.mapping.preset.insert({
+        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+      }),
+      sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' }, -- For luasnip users.
+      }, {
+        { name = 'buffer' },
+      })
     })
+    -- `/` cmdline setup.
     cmp.setup.cmdline('/', {
-        sources = {
-            { name = 'buffer' },
-            { name = 'nvim_lsp' },
-        },
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = 'buffer' }
+      }
     })
+    -- `:` cmdline setup.
     cmp.setup.cmdline(':', {
-        sources = {
-            { name = 'cmdline' },
-            { name = 'nvim_lsp' },
-            { name = 'path' },
-        },
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = cmp.config.sources({
+        { name = 'path' }
+      }, {
+        { name = 'cmdline' }
+      })
     })
+
 
     -------------------
     -- lsp_signature --
@@ -353,7 +314,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- NOTE: if you get errors related to abi or anything with treesitter
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
-        ensure_installed = { "c", "cpp", "cmake", "lua",  'bash', "typescript", "json" },
+        ensure_installed = { "c", "cpp", "vim", "cmake", "lua", 'bash', "typescript", "json", "python" },
         highlight = { enable = true, },
     }
 
