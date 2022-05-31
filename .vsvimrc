@@ -26,6 +26,9 @@ nnoremap gr :vsc Edit.FindAllReferences<CR>
 " NOTE: had to be done in tools options Environment keyboard
 " nnoremap <A-n> :vsc VAssistX.RefResultsNext<CR>
 " nnoremap <A-p> :vsc VAssistX.RefResultsPrevious<CR>
+" NOTE: had to be done int tools options evn keyboard
+" nnoremap <A-n> :vsc Edit.LineDown<CR>
+" nnoremap <A-p> :vsc Edit.LineUp<CR>
 
 nnoremap Y y$
 
