@@ -343,9 +343,6 @@ highlight ExtraWhitespace ctermbg=black guibg=black
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
-            flags = {
-                debounce_text_changes = 500,
-            },
             capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
         }
     end
