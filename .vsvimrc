@@ -55,7 +55,8 @@ nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
 inoremap <c-w> <C-BS>
 
 " Renames the symbol/word under cursor
-nnoremap gR :vsc Refactor.Rename<CR>
+" nnoremap gR :vsc Refactor.Rename<CR>
+nnoremap gR :vsc VAssistX.RefactorRename<CR>
 
 " Renames the file you have open
 nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
