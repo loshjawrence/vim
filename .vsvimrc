@@ -63,9 +63,13 @@ nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
 " Will create at the location of current file, need to run twice for h and cpp
 nnoremap <Space>ga :vsc VAssistX.RefactorCreateFile<CR>
 
+
 nnoremap <F2> :vsc VAssistX.ListMethodsInCurrentFile<CR>
-nnoremap <esc> :w<CR>
-inoremap <esc> <esc>:w<CR>
+nnoremap <Esc> :w<CR>
+inoremap <Esc> <Esc>:w<CR>
+" p4 edit is command 4, add is command 5
+nnoremap <Space>pe :vsc Tools.ExternalCommand4<CR>
+nnoremap <Space>pa :vsc Tools.ExternalCommand5<CR>
 
 nnoremap <C-d> 12<C-e>
 nnoremap <C-u> 12<C-y>
