@@ -37,6 +37,7 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'ziglang/zig.vim'
 
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'vim-scripts/star-search'
@@ -227,13 +228,13 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         },
         highlights = {
             buffer_selected = {
-                guifg = "Black",
-                guibg = hlColor,
-                gui = "bold",
+                fg = "Black",
+                bg = hlColor,
+                bold = true,
             },
             -- Accent the split buffer thats not selected
             buffer_visible = {
-                guifg = hlColor,
+                fg = hlColor,
             },
         },
     }
@@ -314,7 +315,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- NOTE: if you get errors related to abi or anything with treesitter
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
-        ensure_installed = { "c", "cpp", "vim", "cmake", "lua", 'bash', "typescript", "json", "python" },
+        ensure_installed = { "c", "cpp", "vim", "cmake", "lua", "json", "zig" },
         highlight = { enable = true, },
     }
 
@@ -337,9 +338,8 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
 
-    -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
-    -- local servers = { "clangd", "cmake", "vimls", "sumneko_lua", "pylsp", "yamlls" }
-    local servers = { "cmake", "clangd", "vimls" }
+    -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls", "pylsp", "yamlls"   }
+    local servers = { "clangd", "cmake", "vimls", "zls" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
