@@ -315,7 +315,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- NOTE: if you get errors related to abi or anything with treesitter
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
-        ensure_installed = { "c", "cpp", "vim", "cmake", "lua", "json", "zig" },
+        ensure_installed = { "c", "cpp", "vim", "cmake", "json", "python", "zig" },
         highlight = { enable = true, },
     }
 
@@ -338,8 +338,9 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
 
-    -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls", "pylsp", "yamlls"   }
-    local servers = { "clangd", "cmake", "vimls", "zls" }
+    -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
+    -- local servers = { "clangd", "cmake", "vimls", "sumneko_lua", "pylsp", "yamlls" }
+    local servers = { "cmake", "clangd", "vimls", "zls" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,

@@ -55,13 +55,15 @@ nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
 inoremap <c-w> <C-BS>
 
 " Renames the symbol/word under cursor
-" nnoremap gR :vsc Refactor.Rename<CR>
-nnoremap gR :vsc VAssistX.RefactorRename<CR>
+nnoremap gR :vsc Refactor.Rename<CR>
+" nnoremap gR :vsc VAssistX.RefactorRename<CR>
 
 " Renames the file you have open
 nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
+" nnoremap <Space>gm :vsc File.Rename<CR>
 " Will create at the location of current file, need to run twice for h and cpp
 nnoremap <Space>ga :vsc VAssistX.RefactorCreateFile<CR>
+" nnoremap <Space>gm :vsc File.NewFile<CR>
 
 
 nnoremap <F2> :vsc VAssistX.ListMethodsInCurrentFile<CR>
@@ -90,16 +92,16 @@ nnoremap <A-q> :q<CR>
 " nnoremap <A-h> :vsc Window.PrevoiusTab<CR>
 " nnoremap <A-l> :vsc Window.NextTab<CR>
 
-xnoremap S{ :vsc VAssistX.SurroundSelctionWithBraces<CR>
-xnoremap S( :vsc VAssistX.SurroundSelctionWithParentheses<CR>
+" xnoremap S{ :vsc VAssistX.SurroundSelctionWithBraces<CR>
+" xnoremap S( :vsc VAssistX.SurroundSelctionWithParentheses<CR>
 
 nnoremap <C-O> :vsc View.NavigateBackward<CR>
 nnoremap <C-I> :vsc View.NavigateForward<CR>
 
 " find in files (ctrl shift f, which should be like grep)
 nnoremap <Space>aa :vsc Edit.FindinFiles<CR>
-" nnoremap <Space>ar :vsc Edit.FindSymbol<CR>
-nnoremap <Space>ar :vsc VAssistX.FindSymbolDialog<CR>
+nnoremap <Space>ar :vsc Edit.GoToSymbol<CR>
+" nnoremap <Space>ar :vsc VAssistX.FindSymbolDialog<CR>
 
 " open file (shift alt o)
 " nnoremap <Space>fg :vsc VAssistX.OpenFileInSolutionDialog<CR>
