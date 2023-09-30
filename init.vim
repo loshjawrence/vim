@@ -27,7 +27,9 @@ let g:fzf_preview_window = ''
 " :TSUninstall all<cr>:TSInstall c cpp cmake lua typescript html
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'neovim/nvim-lspconfig'
-Plug 'williamboman/nvim-lsp-installer'
+" Plug 'williamboman/nvim-lsp-installer'
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -245,6 +247,12 @@ highlight ExtraWhitespace ctermbg=black guibg=black
     -------------------------
     require'hop'.setup()
 
+    -------------------------
+    -- mason ----------------
+    -------------------------
+    require'mason'.setup()
+    require'mason-lspconfig'.setup()
+
     ---------------------------
     ------- cmp ---------------
     ---------------------------
@@ -315,7 +323,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- NOTE: if you get errors related to abi or anything with treesitter
         -- you may have to update your version of neovim, see neovim section of installSteps.txt
-        ensure_installed = { "c", "cpp", "vim", "cmake", "json", "python", "zig" },
+        ensure_installed = { "c", "cpp", "vim", "cmake", "json", "python" },
         highlight = { enable = true, },
     }
 
@@ -340,11 +348,12 @@ highlight ExtraWhitespace ctermbg=black guibg=black
 
     -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
     -- local servers = { "clangd", "cmake", "vimls", "sumneko_lua", "pylsp", "yamlls" }
-    local servers = { "cmake", "clangd", "vimls", "zls" }
+    -- To install: LspInstall cmake clangd vimls pyright lua_ls
+    local servers = { "cmake", "clangd", "vimls", "pyright", "lua_ls" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
-            capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+            capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
         }
     end
 
@@ -643,7 +652,7 @@ nnoremap <leader><leader> :LspRestart<cr>
 " Source the vimrc so we don't have to refresh
 " :e is required to actually pick up vimrc changes
 " the M is there to center the mouse cursor other wise the screen will scroll when doing :e
-" nnoremap <silent> <leader>vs :so $MYVIMRC<cr>msHmt:e<cr>`tzt`s
+nnoremap <silent> <leader>vs :so $MYVIMRC<cr>msHmt:e<cr>`tzt`s
 nnoremap <silent> <esc> :call Flash()<cr>:noh<cr>
 
 nnoremap <silent> <c-\> :FloatermToggle<CR>

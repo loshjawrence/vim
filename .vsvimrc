@@ -62,16 +62,18 @@ nnoremap gR :vsc Refactor.Rename<CR>
 nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
 " nnoremap <Space>gm :vsc File.Rename<CR>
 " Will create at the location of current file, need to run twice for h and cpp
-nnoremap <Space>ga :vsc VAssistX.RefactorCreateFile<CR>
+" noremap <Space>ga :vsc ProjectAndSolutionContextMenus.Project.Add.NewEmptyFile<CR>
+noremap <Space>ga :vsc VAssistX.RefactorCreateFile<CR>
 " nnoremap <Space>gm :vsc File.NewFile<CR>
+
 
 
 nnoremap <F2> :vsc VAssistX.ListMethodsInCurrentFile<CR>
 nnoremap <Esc> :w<CR>
 inoremap <Esc> <Esc>:w<CR>
 " p4 edit is command 4, add is command 5
-nnoremap <Space>pe :vsc Tools.ExternalCommand4<CR>
-nnoremap <Space>pa :vsc Tools.ExternalCommand5<CR>
+nnoremap <Space>pe :vsc Tools.ExternalCommand6<CR>
+nnoremap <Space>pa :vsc Tools.ExternalCommand7<CR>
 
 nnoremap <C-d> 12<C-e>
 nnoremap <C-u> 12<C-y>
@@ -136,6 +138,7 @@ xnoremap <c-y> "+y
 xnoremap <c-p> "+p
 nnoremap <c-p> "+p
 
+" make your marks global (jump across buffers)
 nnoremap ma mA
 nnoremap mb mB
 nnoremap mc mC
