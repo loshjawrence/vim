@@ -59,7 +59,7 @@ Plug 'itchyny/vim-qfedit'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
-let b:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''", '<':'>' }
+let b:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''" }
 let g:AutoPairsShortcutJump=''
 let g:AutoPairsShortcutBackInsert=''
 let g:AutoPairsShortcutFastWrap=''
