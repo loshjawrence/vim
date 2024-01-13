@@ -39,7 +39,6 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
-Plug 'ziglang/zig.vim'
 
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'vim-scripts/star-search'
@@ -53,7 +52,6 @@ let g:tcomment_mapleader2=''
 let g:tcomment_mapleader_comment_anyway=''
 let g:tcomment_textobject_inlinecomment=''
 
-Plug 'sjl/gundo.vim'
 Plug 'majutsushi/tagbar'
 Plug 'itchyny/vim-qfedit'
 Plug 'tpope/vim-surround'
@@ -766,7 +764,6 @@ command! -bang -nargs=? -complete=dir History
     \   'source': 'fd --no-ignore --hidden --follow --type f'
     \ }, <bang>0)
 
-nnoremap <f1> :GundoToggle<CR>
 nnoremap <f2> :TagbarToggle<CR>
 
 " fugitive
