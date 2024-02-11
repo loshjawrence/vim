@@ -27,7 +27,6 @@ let g:fzf_preview_window = ''
 " :TSUninstall all<cr>:TSInstall c cpp cmake lua typescript html
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'neovim/nvim-lspconfig'
-" Plug 'williamboman/nvim-lsp-installer'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'ray-x/lsp_signature.nvim'
@@ -39,6 +38,10 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
+
+Plug 'vimwiki/vimwiki'
+let g:vimwiki_list = [{'path': '~/clones/NOTES/', 'path_html': '~/clones/NOTES/public_html/'}]
+let g:vimwiki_global_ext = 0
 
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'vim-scripts/star-search'
@@ -318,45 +321,45 @@ highlight ExtraWhitespace ctermbg=black guibg=black
     -- treesitter --
     ----------------
     require'nvim-treesitter.configs'.setup {
-        -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-        -- NOTE: if you get errors related to abi or anything with treesitter
-        -- you may have to update your version of neovim, see neovim section of installSteps.txt
-        -- For issues try:
-        -- TSUninstall all
-        -- TSUpdate
+         -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+         -- NOTE: if you get errors related to abi or anything with treesitter
+         -- you may have to update your version of neovim, see neovim section of installSteps.txt
+         -- For issues try:
+         -- TSUninstall all
+         -- TSUpdate
 
-        -- Install parsers synchronously (only applied to `ensure_installed`)
-        sync_install = false,
+         -- Install parsers synchronously (only applied to `ensure_installed`)
+         sync_install = false,
 
-        -- Automatically install missing parsers when entering buffer
-        -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-        auto_install = true,
+         -- Automatically install missing parsers when entering buffer
+         -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+         auto_install = false,
 
-        -- A list of parser names, or "all" (the five listed parsers should always be installed)
-        ensure_installed = { "c", "cpp", "lua", "vim", "cmake", "json", "python", "vimdoc", "query" },
-       highlight = {
-           enable = true,
-            -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-            -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-            -- the name of the parser)
-            -- list of language that will be disabled
-            -- disable = { "c" },
+         -- A list of parser names, or "all" (the five listed parsers should always be installed)
+         -- ensure_installed = { "c", "cpp", "lua", "vim", "cmake", "json", "python", "vimdoc", "query" },
+         highlight = {
+                 enable = true,
+                 -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+                 -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+                 -- the name of the parser)
+                 -- list of language that will be disabled
+                 -- disable = { "c" },
 
-            -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-            disable = function(lang, buf)
-                local max_filesize = 100 * 1024 -- 100 KB
-                local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                if ok and stats and stats.size > max_filesize then
-                    return true
-                end
-            end,
+                 -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+                 disable = function(lang, buf)
+                     local max_filesize = 100 * 1024 -- 100 KB
+                     local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+                     if ok and stats and stats.size > max_filesize then
+                         return true
+                     end
+                 end,
 
-            -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-            -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-            -- Using this option may slow down your editor, and you may see some duplicate highlights.
-            -- Instead of true it can also be a list of languages
-            additional_vim_regex_highlighting = false,
-        },
+                 -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+                 -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+                 -- Using this option may slow down your editor, and you may see some duplicate highlights.
+                 -- Instead of true it can also be a list of languages
+                 additional_vim_regex_highlighting = false,
+         },
     }
 
     ---------------------------------
@@ -622,9 +625,13 @@ function! FileGit(fn, filename)
 endfunction
 
 function! RunLSPFormatter()
+    " ALL WORK:
+    " lua vim.print(vim)
+    " call v:lua.vim.print("fart")
+    " call v:lua.vim.lsp.buf.definition()
     " Format file if its not markdown
     if &ft != 'markdown'
-        lua vim.lsp.buf.formatting_seq_sync()
+        call v:lua.vim.lsp.buf.formatting_seq_sync()
     endif
 
     " Remove ^M
@@ -654,7 +661,7 @@ endfunction
 command! -nargs=+ MyGrep mark A | execute 'silent grep! <args>' | bot cw 20
 command! -nargs=+ MyGrepCurrentFile mark A | execute 'silent grep! <args> %' | bot cw 20
 command! -nargs=+ MyCdo execute 'silent cdo! <args>' | cfdo update | cclose | execute 'normal! `A'
- 
+
 
 
 
@@ -965,7 +972,7 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 " I tend to put marks in a call stack
 " starting from q then going w,e,r,t,y, etc
 " can have multiple stacks i.e. a mark stack that starts on q one on a and one on z
-" kind of annoying to do ` then shift Q 
+" kind of annoying to do ` then shift Q
 nnoremap ma mA
 nnoremap mb mB
 nnoremap mc mC
