@@ -94,7 +94,7 @@ set background=dark
 " highlight! Custom_Cyan guifg=#505f5f guibg=NONE gui=NONE ctermfg=23 ctermbg=NONE cterm=NONE
 " highlight! link Identifier Custom_Cyan
 " Black background
-let g:alduin_Shout_Become_Ethereal = 1
+" let g:alduin_Shout_Become_Ethereal = 1
 colorscheme alduin2
 
 let mapleader="\<space>" " Map the leader key to space bar
