@@ -7,6 +7,12 @@ choco upgrade -y neovim llvm git cmake fd ripgrep fzf python nodejs
 - open nvim and run :checkhealth, see where its looking for init.vim and copy copy the vim/init.vim there
 - see vim-plug readme for neovim install(not vim): https://github.com/junegunn/vim-plug
 - open nvim and :PlugInstall
+- If having issues with treesitter errors, try:
+    :TSUninstall all
+    :TSUpdate
+- If having issues on <leader>ve, i.e. when opening your init.vim and it complains about vim language server, try:
+    :LspInfo
+    :LspInstall vim
 - see these for installing ssh for windows and doing the ssh stuff for github
 https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement
 https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
