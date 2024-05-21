@@ -336,7 +336,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
          auto_install = false,
 
          -- A list of parser names, or "all" (the five listed parsers should always be installed)
-         -- ensure_installed = { "c", "cpp", "lua", "vim", "cmake", "json", "python", "vimdoc", "query" },
+         ensure_installed = { "c", "cpp", "lua", "vim", "cmake", "json", "python", "vimdoc", "query" },
          highlight = {
                  enable = true,
                  -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
