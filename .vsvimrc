@@ -8,13 +8,18 @@ noremap <c-y> <nop>
 noremap <c-f> <nop>
 noremap <c-b> <nop>
 noremap R <nop>
+
 nnoremap S <nop>
+" TODO: various surrounds
+
 nnoremap s <nop>
+nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
+
+" NOTE: ALT SHORTCUTS NEED TO BE SET VIA TOOLS->OPTIONS->ENVIRONMENT->KEYBOARD
 
 " NOTE:make sure tools->options->VsVim is using vim for some of these
 " NOTE:make sure tools->options->Environment->Keyboard has exlicit keybindings for some of these
 
-" TODO: use visual assist's functions instead of msvc
 " You can explore the commands available in Visual Studio with the Command Window (View → Other Windows → Command Window)
 " or by going to Tools → Options → Environment → Keyboard.
 
@@ -22,13 +27,14 @@ nnoremap gd :vsc Edit.GoToDefinition<CR>
 nnoremap <C-]> :vsc Edit.GoToDefinition<CR>
 
 nnoremap gr :vsc Edit.FindAllReferences<CR>
-" nnoremap gr :vsc VAssistX.FindReferences<CR>
+" TODO: rename symbol
+nnoremap gR :vsc Refactor.Rename<CR>
 " NOTE: had to be done in tools options Environment keyboard
-" nnoremap <A-n> :vsc VAssistX.RefResultsNext<CR>
-" nnoremap <A-p> :vsc VAssistX.RefResultsPrevious<CR>
-" NOTE: had to be done int tools options evn keyboard
 " nnoremap <A-n> :vsc Edit.LineDown<CR>
 " nnoremap <A-p> :vsc Edit.LineUp<CR>
+" nnoremap <A-n> :vsc Edit.GoToNextLocation<CR>
+" nnoremap <A-p> :vsc Edit.GoToPrevLocation<CR>
+" nnoremap <A-q> :vsc Window.Close<CR>
 
 nnoremap Y y$
 
@@ -49,26 +55,19 @@ nnoremap <C-t> :vsc Edit.PeekBackward<CR>
 " nnoremap <C-j> <S-Esc>
 " nnoremap <C-k> <S-Esc>
 
-nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
 
 " Does not work
 inoremap <c-w> <C-BS>
 
 " Renames the symbol/word under cursor
 nnoremap gR :vsc Refactor.Rename<CR>
-" nnoremap gR :vsc VAssistX.RefactorRename<CR>
 
-" Renames the file you have open
-nnoremap <Space>gm :vsc VAssistX.RefactorRenameFiles<CR>
+" Wouldnt want to do file add/rename this way anyway
+" For rename you want to git mv, and adding you want to use git again
+" would want Open file in nvim then do the shortcuts in there
 " nnoremap <Space>gm :vsc File.Rename<CR>
-" Will create at the location of current file, need to run twice for h and cpp
-" noremap <Space>ga :vsc ProjectAndSolutionContextMenus.Project.Add.NewEmptyFile<CR>
-noremap <Space>ga :vsc VAssistX.RefactorCreateFile<CR>
-" nnoremap <Space>gm :vsc File.NewFile<CR>
+" nnoremap <Space>ga :vsc File.NewFile<CR>
 
-
-
-nnoremap <F2> :vsc VAssistX.ListMethodsInCurrentFile<CR>
 nnoremap <Esc> :w<CR>
 inoremap <Esc> <Esc>:w<CR>
 " p4 edit is command 4, add is command 5
@@ -77,13 +76,6 @@ nnoremap <Space>pa :vsc Tools.ExternalCommand7<CR>
 
 nnoremap <C-d> 12<C-e>
 nnoremap <C-u> 12<C-y>
-
-" PEFORCE (NOTE: looks like these not available)
-" File.Perforce.P4VS.Checkout
-" File.Perforce.P4VS.Mark_for_Add
-" File.Perforce.P4VS.Revert
-" File.Perforce.P4VS.Shelve
-" File.Perforce.P4VS.Submit
 
 xnoremap gc :vsc Edit.ToggleLineComment<CR>
 nnoremap gcc :vsc Edit.ToggleLineComment<CR>
@@ -94,8 +86,12 @@ nnoremap <A-q> :q<CR>
 " nnoremap <A-h> :vsc Window.PrevoiusTab<CR>
 " nnoremap <A-l> :vsc Window.NextTab<CR>
 
-" xnoremap S{ :vsc VAssistX.SurroundSelctionWithBraces<CR>
-" xnoremap S( :vsc VAssistX.SurroundSelctionWithParentheses<CR>
+xnoremap S{ :vsc Edit.SurroundWithBraces<CR>
+xnoremap S( :vsc Edit.SurroundWithParens<CR>
+xnoremap S" :vsc Edit.SurroundWithQuotes<CR>
+xnoremap S' :vsc Edit.SurroundWithCharacterQuotes<CR>
+xnoremap S[ :vsc Edit.SurroundWithBrackets<CR>
+xnoremap S< :vsc Edit.SurroundWithAngleBrackets<CR>
 
 nnoremap <C-O> :vsc View.NavigateBackward<CR>
 nnoremap <C-I> :vsc View.NavigateForward<CR>
@@ -103,10 +99,8 @@ nnoremap <C-I> :vsc View.NavigateForward<CR>
 " find in files (ctrl shift f, which should be like grep)
 nnoremap <Space>aa :vsc Edit.FindinFiles<CR>
 nnoremap <Space>ar :vsc Edit.GoToSymbol<CR>
-" nnoremap <Space>ar :vsc VAssistX.FindSymbolDialog<CR>
 
 " open file (shift alt o)
-" nnoremap <Space>fg :vsc VAssistX.OpenFileInSolutionDialog<CR>
 nnoremap <Space>fg :vsc Edit.GoToFile<CR>
 
 nnoremap <Space>vs :so ~/.vsvimrc<CR>
