@@ -791,7 +791,7 @@ nnoremap <f2> :TagbarToggle<CR>
 
 " fugitive
 " Gcd is cd relative to the repo root. So this would be cd to repo root.
-nnoremap <leader>cr :Gcd<cr>
+nnoremap <leader>cr :Gcd<cr>:pwd<cr>
 " see https://stackoverflow.com/questions/1269603/to-switch-from-vertical-split-to-horizontal-split-fast-in-vim
 nnoremap <leader>gg :G<cr><c-w>H
 
