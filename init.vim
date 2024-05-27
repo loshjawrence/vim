@@ -989,6 +989,7 @@ nmap <expr> <leader>r @w != "" ? "<leader>,rw" : "<leader>,rs"
 " starting from q then going w,e,r,t,y, etc
 " can have multiple stacks i.e. a mark stack that starts on q one on a and one on z
 " kind of annoying to do ` then shift Q
+nnoremap <leader>` :Marks<cr>
 nnoremap ma mA
 nnoremap mb mB
 nnoremap mc mC
