@@ -647,7 +647,7 @@ function! RunLSPFormatter()
     " call v:lua.vim.lsp.buf.definition()
     " Format file if its not markdown
     if &ft != 'markdown'
-        call v:lua.vim.lsp.buf.formatting_seq_sync()
+        call v:lua.vim.lsp.buf.format()
     endif
 
     " Remove ^M
