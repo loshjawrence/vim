@@ -35,6 +35,7 @@ nnoremap gR :vsc Refactor.Rename<CR>
 " nnoremap <A-n> :vsc Edit.GoToNextLocation<CR>
 " nnoremap <A-p> :vsc Edit.GoToPrevLocation<CR>
 " nnoremap <A-q> :vsc Window.Close<CR>
+" nnoremap <A-f> :vsc Edit.FormatDocument<CR>
 
 nnoremap Y y$
 
