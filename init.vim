@@ -392,7 +392,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gk', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gR', '"wyiw<cmd>lua vim.lsp.buf.rename()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '"wyiw<cmd>lua vim.lsp.buf.references()<cr>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'g<space>', '<cmd>call RunLSPFormatter()<cr>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-f>', '<cmd>call RunLSPFormatter()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.diagnostic.setloclist()<cr>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<a-o>', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
