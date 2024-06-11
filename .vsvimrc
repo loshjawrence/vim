@@ -30,12 +30,15 @@ nnoremap gr :vsc Edit.FindAllReferences<CR>
 " TODO: rename symbol
 nnoremap gR :vsc Refactor.Rename<CR>
 " NOTE: had to be done in tools options Environment keyboard
-" nnoremap <A-n> :vsc Edit.LineDown<CR>
-" nnoremap <A-p> :vsc Edit.LineUp<CR>
 " nnoremap <A-n> :vsc Edit.GoToNextLocation<CR>
 " nnoremap <A-p> :vsc Edit.GoToPrevLocation<CR>
-" nnoremap <A-q> :vsc Window.Close<CR>
 " nnoremap <A-f> :vsc Edit.FormatDocument<CR>
+" nnoremap <A-h> :vsc Window.PrevoiusTab<CR>
+" nnoremap <A-l> :vsc Window.NextTab<CR>
+" nnoremap <c-F7> :vsc Build.EBF.Compile<CR>
+" nnoremap <c-F7> :vsc Build.EBF.Compile<CR>
+" nnoremap <c-s-B> :vsc Build.RebuildSelection<CR>
+" nnoremap <c-B> :vsc Build.BuildSelection<CR>
 
 nnoremap Y y$
 
@@ -81,11 +84,9 @@ nnoremap <C-u> 12<C-y>
 xnoremap gc :vsc Edit.ToggleLineComment<CR>
 nnoremap gcc :vsc Edit.ToggleLineComment<CR>
 nnoremap <A-o> :vsc EditorContextMenus.CodeWindow.ToggleHeaderCodeFile<CR>
-nnoremap <A-q> :q<CR>
+nnoremap <A-q> :wq!<cr>
 
-" NOTE: had to be done in tools options Environment keyboard
-" nnoremap <A-h> :vsc Window.PrevoiusTab<CR>
-" nnoremap <A-l> :vsc Window.NextTab<CR>
+
 
 xnoremap S{ :vsc Edit.SurroundWithBraces<CR>
 xnoremap S( :vsc Edit.SurroundWithParens<CR>
