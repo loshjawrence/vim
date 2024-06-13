@@ -1160,6 +1160,12 @@ nnoremap `z `Z
 " :g/pattern/m$  - move all lines matching pattern to the end of the file
 " qaq:g/pattern/y A Copy all lines matching a pattern to register 'a'. qa starts recording a macro to register a, then q stops recording, leaving the 'a' reg empty. y is yank, A is append to register a.
 " :g/pattern/normal @q - run macro recorded in q on matching lines
+" g<c-a> say you had a numbered list like this 1.1.1. example. if you select from the second 1 to the end and go g<c-a> it will increment them appropriately
+" 1.
+" 1.
+" 1.
+" 1.
+" 1.
 
 " INSERT MODE:
 " c-w   Delete word to the left of cursor
