@@ -89,11 +89,15 @@ nnoremap <A-q> :wq!<cr>
 
 
 xnoremap S{ :vsc Edit.SurroundWithBraces<CR>
+xnoremap S} :vsc Edit.SurroundWithBraces<CR>
 xnoremap S( :vsc Edit.SurroundWithParens<CR>
+xnoremap S) :vsc Edit.SurroundWithParens<CR>
 xnoremap S" :vsc Edit.SurroundWithQuotes<CR>
 xnoremap S' :vsc Edit.SurroundWithCharacterQuotes<CR>
 xnoremap S[ :vsc Edit.SurroundWithBrackets<CR>
+xnoremap S] :vsc Edit.SurroundWithBrackets<CR>
 xnoremap S< :vsc Edit.SurroundWithAngleBrackets<CR>
+xnoremap S> :vsc Edit.SurroundWithAngleBrackets<CR>
 
 nnoremap <C-O> :vsc View.NavigateBackward<CR>
 nnoremap <C-I> :vsc View.NavigateForward<CR>
