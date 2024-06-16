@@ -24,7 +24,7 @@ nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
 " or by going to Tools → Options → Environment → Keyboard.
 
 nnoremap gd :vsc Edit.GoToDefinition<CR>
-nnoremap <C-]> :vsc Edit.GoToDefinition<CR>
+nnoremap <C-]> :vsc Edit.GoToDefinition<CR><esc>
 
 nnoremap gr :vsc Edit.FindAllReferences<CR>
 " TODO: rename symbol
