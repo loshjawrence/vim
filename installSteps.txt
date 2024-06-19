@@ -4,6 +4,7 @@ For intstalling on linux (WSL/bash on Windows, edit windows files through /mnt/c
 ==========
 see chocolatey install: https://chocolatey.org/install
 choco upgrade -y neovim llvm git cmake fd ripgrep fzf python nodejs
+- git sometimes fails on clones need to winget search Microsoft.OpenSSH then winget install the thing it mentions(at the time it was Microsoft.OpenSSH.Beta)
 - open nvim and run :checkhealth, see where its looking for init.vim and copy copy the vim/init.vim there
 - see vim-plug readme for neovim install(not vim): https://github.com/junegunn/vim-plug
 - open nvim and :PlugInstall
