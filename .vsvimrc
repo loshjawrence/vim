@@ -139,32 +139,33 @@ xnoremap <c-p> "+p
 nnoremap <c-p> "+p
 
 " make your marks global (jump across buffers)
-nnoremap ma mA
-nnoremap mb mB
-nnoremap mc mC
-nnoremap md mD
-nnoremap me mE
-nnoremap mf mF
-nnoremap mg mG
-nnoremap mh mH
-nnoremap mi mI
-nnoremap mj mJ
-nnoremap mk mK
-nnoremap ml mL
-nnoremap mm mM
-nnoremap mn mN
-nnoremap mo mO
-nnoremap mp mP
-nnoremap mq mQ
-nnoremap mr mR
-nnoremap ms mS
-nnoremap mt mT
-nnoremap mu mU
-nnoremap mv mV
-nnoremap mw mW
-nnoremap mx mX
-nnoremap my mY
-nnoremap mz mZ
+" put Edit.ToggleBookmark() on alt+/
+nnoremap ma mA:vsc Edit.ToggleBookmark<cr>
+nnoremap mb mB:vsc Edit.ToggleBookmark<cr>
+nnoremap mc mC:vsc Edit.ToggleBookmark<cr>
+nnoremap md mD:vsc Edit.ToggleBookmark<cr>
+nnoremap me mE:vsc Edit.ToggleBookmark<cr>
+nnoremap mf mF:vsc Edit.ToggleBookmark<cr>
+nnoremap mg mG:vsc Edit.ToggleBookmark<cr>
+nnoremap mh mH:vsc Edit.ToggleBookmark<cr>
+nnoremap mi mI:vsc Edit.ToggleBookmark<cr>
+nnoremap mj mJ:vsc Edit.ToggleBookmark<cr>
+nnoremap mk mK:vsc Edit.ToggleBookmark<cr>
+nnoremap ml mL:vsc Edit.ToggleBookmark<cr>
+nnoremap mm mM:vsc Edit.ToggleBookmark<cr>
+nnoremap mn mN:vsc Edit.ToggleBookmark<cr>
+nnoremap mo mO:vsc Edit.ToggleBookmark<cr>
+nnoremap mp mP:vsc Edit.ToggleBookmark<cr>
+nnoremap mq mQ:vsc Edit.ToggleBookmark<cr>
+nnoremap mr mR:vsc Edit.ToggleBookmark<cr>
+nnoremap ms mS:vsc Edit.ToggleBookmark<cr>
+nnoremap mt mT:vsc Edit.ToggleBookmark<cr>
+nnoremap mu mU:vsc Edit.ToggleBookmark<cr>
+nnoremap mv mV:vsc Edit.ToggleBookmark<cr>
+nnoremap mw mW:vsc Edit.ToggleBookmark<cr>
+nnoremap mx mX:vsc Edit.ToggleBookmark<cr>
+nnoremap my mY:vsc Edit.ToggleBookmark<cr>
+nnoremap mz mZ:vsc Edit.ToggleBookmark<cr>
 nnoremap `a `A
 nnoremap `b `B
 nnoremap `c `C
