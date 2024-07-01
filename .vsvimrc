@@ -23,8 +23,8 @@ nnoremap s :vsc Tools.InvokePeasyMotionTwoCharJump<CR>
 " You can explore the commands available in Visual Studio with the Command Window (View → Other Windows → Command Window)
 " or by going to Tools → Options → Environment → Keyboard.
 
-nnoremap gd :vsc Edit.GoToDefinition<CR>
-nnoremap <C-]> :vsc Edit.GoToDefinition<CR><esc>
+nnoremap gd :vsc Edit.GoToDefinition<CR><esc>
+nnoremap <c-]> :vsc Edit.GoToDefinition<CR><esc>
 
 nnoremap gr :vsc Edit.FindAllReferences<CR>
 " TODO: rename symbol
@@ -139,7 +139,6 @@ xnoremap <c-p> "+p
 nnoremap <c-p> "+p
 
 " make your marks global (jump across buffers)
-" put Edit.ToggleBookmark() on alt+/
 nnoremap ma mA:vsc Edit.ToggleBookmark<cr>
 nnoremap mb mB:vsc Edit.ToggleBookmark<cr>
 nnoremap mc mC:vsc Edit.ToggleBookmark<cr>
