@@ -351,7 +351,6 @@ highlight ExtraWhitespace ctermbg=black guibg=black
          -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
          auto_install = false,
 
-         -- IMPORTANT: install the tree-sitter cli first via using: npm install -g tree-sitter-cli
          -- A list of parser names, or "all" (the five listed parsers should always be installed)
          -- ensure_installed = { "c", "cpp", "lua", "vim", "cmake", "json", "python", "vimdoc" },
          highlight = {
@@ -401,7 +400,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
     -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
     -- local servers = { "clangd", "cmake", "vimls", "sumneko_lua", "pylsp", "yamlls" }
     -- To install: LspInstall cmake clangd vimls pyright lua_ls
-    local servers = { "cmake", "clangd", "vimls", "pyright", "lua_ls" }
+    local servers = { "cmake", "clangd", "vimls", "pylsp", "lua_ls" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
