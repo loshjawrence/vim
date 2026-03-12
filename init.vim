@@ -400,7 +400,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
     -- local servers = { "clangd", "cmake", "jsonls", "vimls", "tsserver", "sumneko_lua", "html", "bashls"  }
     -- local servers = { "clangd", "cmake", "vimls", "sumneko_lua", "pylsp", "yamlls" }
     -- To install: LspInstall cmake clangd vimls pyright lua_ls
-    local servers = { "cmake", "clangd", "vimls", "pylsp", "lua_ls" }
+    local servers = { "cmake", "clangd", "vimls", "pyright", "lua_ls" }
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
