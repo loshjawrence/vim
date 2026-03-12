@@ -351,6 +351,7 @@ highlight ExtraWhitespace ctermbg=black guibg=black
          -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
          auto_install = false,
 
+         -- IMPORTANT: install the tree-sitter cli first via using: npm install -g tree-sitter-cli
          -- A list of parser names, or "all" (the five listed parsers should always be installed)
          -- ensure_installed = { "c", "cpp", "lua", "vim", "cmake", "json", "python", "vimdoc" },
          highlight = {
