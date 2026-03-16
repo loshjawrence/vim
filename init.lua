@@ -34,7 +34,6 @@ require("lazy").setup({
     { 'junegunn/fzf', build = "./install --all" },
     { 'junegunn/fzf.vim' },
     { 'phaazon/hop.nvim', config = true },
-    { 'chentoast/marks.nvim' },
 
     -- LSP, Treesitter & Completion (The Engines)
     { 'nvim-treesitter/nvim-treesitter',
@@ -56,28 +55,6 @@ require("lazy").setup({
         },
         indent = { enable = true },
     },
-    -- config = function()
-    --     require('nvim-treesitter.configs').setup({
-    --         -- A list of parser names, or "all"
-    --         ensure_installed = { "c", "cpp", "lua", "vim", "cmake", "json", "python", "vimdoc" },
-    --         -- Install parsers synchronously (only applied to `ensure_installed`)
-    --         sync_install = false,
-    --         -- Automatically install missing parsers when entering buffer
-    --         auto_install = false,
-    --         highlight = {
-    --             enable = true,
-    --             -- Disable slow treesitter highlight for large files (>100 KB)
-    --             disable = function(lang, buf)
-    --                 local max_filesize = 100 * 1024 -- 100 KB
-    --                 local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-    --                 if ok and stats and stats.size > max_filesize then
-    --                     return true
-    --                 end
-    --             end,
-    --             additional_vim_regex_highlighting = false,
-    --         },
-    --     })
-    -- end
     },
     { 'williamboman/mason.nvim', config = true },
     {
@@ -91,7 +68,6 @@ require("lazy").setup({
             })
         end
     },
-    { 'neovim/nvim-lspconfig' },
     { 'neovim/nvim-lspconfig' },
     { 'ray-x/lsp_signature.nvim' },
     { 'hrsh7th/nvim-cmp', dependencies = {
@@ -109,7 +85,6 @@ require("lazy").setup({
     { 'tpope/vim-surround' },
     { 'tomtom/tcomment_vim' },
     { 'jiangmiao/auto-pairs' },
-    { 'jiangmiao/auto-pairs' },
     { 'kalvinpearce/ShaderHighlight' },
     { 'itchyny/vim-qfedit' },
     { 'vim-scripts/star-search' },
@@ -117,7 +92,6 @@ require("lazy").setup({
     -- Git & Utilities
     { 'tpope/vim-fugitive' },
     { 'wellle/targets.vim' },
-    { 'dstein64/vim-startuptime', cmd = "StartupTime" },
 })
 --------------------------------------------------------------------------------
 -- 3.5. PLUGIN SETTINGS
@@ -198,7 +172,7 @@ vim.opt.updatetime = 300
 vim.opt.shortmess:append("c")
 vim.opt.path:append("**")
 vim.opt.completeopt = { "menuone", "noinsert", "noselect", "preview" }
-vim.opt.winblend = 15
+vim.opt.winblend = 15 -- set all floating windows transparent(0-100)
 
 -- Tell vim to use ripgrep as its grep program
 -- NOTE: --sort path can be used to get consistent order, but it will run with 1 thread.
@@ -243,44 +217,15 @@ vim.g.terminal_color_12 = '#729fcf'
 vim.g.terminal_color_13 = '#ad7fa8'
 vim.g.terminal_color_14 = '#00f5e9'
 vim.g.terminal_color_15 = '#eeeeec'
--- Distinguish terminal by making cursor red
-vim.api.nvim_set_hl(0, "TermCursor", { ctermfg = "red", fg = "red" })
--- Set main floaterm window's background to black
--- Set floaterm main and border to black
-vim.opt.winblend = 15 -- set all floating windows transparent(0-100)
-vim.api.nvim_set_hl(0, "Floaterm", { bg = "black" })
-vim.api.nvim_set_hl(0, "FloatermBorder", { bg = "black", fg = "black" })
--- terminal, floaterm settings
-vim.g.floaterm_borderchars = ''
 vim.g.floaterm_position = 'right'
-vim.g.floaterm_width = 0.60
-vim.g.floaterm_height = 1.0
+vim.g.floaterm_height = 0.99
+
 -- trailing whitespace, and end-of-lines. Very useful if in a code base that requires it.
 -- Also highlight all tabs and trailing whitespace characters.
 -- vim.opt.listchars = { tab = '»·', trail = '·', nbsp = '·' } -- Display extra whitespace
 -- vim.opt.list = true                                       -- Show problematic characters.
 -- NOTE see vim-better-whitespace plugin
 vim.api.nvim_set_hl(0, "ExtraWhitespace", { ctermbg = "black", bg = "black" })
-
---------------------------------------------------------------------------------
--- 4. KEYMAPS
---------------------------------------------------------------------------------
-local map = vim.keymap.set
-
--- General Binds
-map('n', '<leader>L', '<cmd>Lazy<cr>', { desc = "Lazy Menu" })
-map('n', '<leader>vs', ':so $MYVIMRC<cr>', { desc = "Reload Config" })
-map('n', '<esc>', ':noh<cr>', { silent = true })
-map('n', '<c-\\>', ':FloatermToggle<CR>')
-map('t', '<c-\\>', [[<c-\><c-n>:FloatermToggle<CR>]])
-
--- FZF Binds
-map('n', '<leader>fr', ':Rg<cr>')
-map('n', '<leader>F', ':Files<cr>')
-
--- Buffer Navigation
-map('n', '<a-l>', ':BufferLineCycleNext<CR>')
-map('n', '<a-h>', ':BufferLineCyclePrev<CR>')
 
 --------------------------------------------------------------------------------
 -- BUFFERLINE CONFIGURATION
@@ -305,20 +250,6 @@ require('bufferline').setup({
             fg = hlColor,
         },
     },
-})
-
---------------------------------------------------------------------------------
--- MARKS CONFIGURATION
---------------------------------------------------------------------------------
-require('marks').setup({
-    -- whether to map keybinds or not. default true
-    default_mappings = false,
-    -- which builtin marks to show. default {}
-    -- see https://vim.fandom.com/wiki/Using_marks#Special_marks
-    -- . is last edit, ` is last jump
-    builtin_marks = { ".", "`" },
-    -- whether movements cycle back to the beginning/end of buffer. default true
-    cyclic = false,
 })
 
 --------------------------------------------------------------------------------
@@ -388,7 +319,7 @@ require('lsp_signature').setup({
 --------------------------------------------------------------------------------
 -- LSPCONFIG LANGUAGE SERVERS
 --------------------------------------------------------------------------------
-local nvim_lsp = require('lspconfig')
+local lspconfig = require('lspconfig')
 
 local on_attach = function(client, bufnr)
     -- Activate lsp_signature when attaching to a buffer
@@ -421,12 +352,14 @@ local servers = { "cmake", "clangd", "vimls", "pyright", "lua_ls" }
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-    }
+    if lsp ~= "clangd" then
+        lspconfig[lsp].setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+        }
+    end
 end
-nvim_lsp.clangd.setup({
+lspconfig.clangd.setup({
     on_attach = on_attach,
     capabilities = capabilities,
     cmd = { "clangd", "--background-index", "--clang-tidy" },
@@ -542,14 +475,14 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = "json",
     command = "syntax match Comment +\\/\\/.\\+$+",
 })
-vim.api.nvim_create_autocmd("FileType", {
-    group = my_augroup,
-    pattern = "javascript",
-    callback = function()
-        vim.opt_local.tabstop = 2
-        vim.opt_local.shiftwidth = 2
-    end,
-})
+-- vim.api.nvim_create_autocmd("FileType", {
+--     group = my_augroup,
+--     pattern = "javascript",
+--     callback = function()
+--         vim.opt_local.tabstop = 2
+--         vim.opt_local.shiftwidth = 2
+--     end,
+-- })
 
 --------------------------------------------------------------------------------
 -- GIT & FILE MANAGEMENT FUNCTIONS
@@ -601,13 +534,16 @@ function FileGit(fn, filename)
     local rootPath = vim.fn.getcwd() .. '/'
     print('rootPath: ' .. rootPath)
 
-    -- 4. Calculate relative paths
-    -- Lua's gsub is used here as a substitute for Vim's substitute()
-    local fileRootRel = fullFilePath:gsub(vim.fn.escape(rootPath, '%.'), '')
-    print('fileRootRel: ' .. fileRootRel)
-
-    local currFileRootRel = fullCurrFilePath:gsub(vim.fn.escape(rootPath, '%.'), '')
-    print('currFileRootRel: ' .. currFileRootRel)
+    -- 4. Calculate relative paths (Windows Safe)
+    -- Normalize everything to forward slashes first to avoid \ vs / confusion
+    local normFull = fullFilePath:gsub("\\", "/")
+    local normCurr = fullCurrFilePath:gsub("\\", "/")
+    local normRoot = rootPath:gsub("\\", "/"):gsub("/$", "") -- remove trailing slash for clean math
+    -- Instead of gsub, we find the length of the root and slice the string
+    -- This ignores all "magic" characters in the path
+    local fileRootRel = normFull:sub(#normRoot + 2) -- +2 to skip the leading slash
+    local currFileRootRel = normCurr:sub(#normRoot + 2)
+    -- print('DEBUG: Corrected fileRootRel: ' .. fileRootRel)
 
     -- 5. Calculate directory and mkdir -p
     local fileDirRootRel = fileRootRel:match("(.*[/\\])") or ""
@@ -647,11 +583,12 @@ function FileGit(fn, filename)
     local hFileRootRel = fileRootRel:gsub("%.c[p]?[p]?$", ".h")
     local hCurrFileRootRel = currFileRootRel:gsub("%.c[p]?[p]?$", ".h")
 
-    -- 8. Check for 'include' directory
-    local includeGrep = vim.fn.system('ls | grep -w include'):gsub('\n', '')
-    print('INCLUDE GREP: ' .. includeGrep)
+    -- 8. Check for 'include' directory (Platform Independent)
+    -- vim.uv.fs_stat returns information about a path if it exists
+    local stat = vim.uv.fs_stat(vim.fn.getcwd() .. '/include')
+    local hasIncludeDir = stat and stat.type == 'directory'
 
-    if includeGrep ~= 'include' then
+    if not hasIncludeDir then
         print('DOES NOT HAVE INCLUDE DIR: DONE')
         fn(hCurrFileRootRel, hFileRootRel)
         return
@@ -662,17 +599,29 @@ function FileGit(fn, filename)
     -- 9. Mirror src -> include or source -> include
     local prefixes = { "src", "source" }
     for _, prefix in ipairs(prefixes) do
-        if fileDirRootRel:sub(1, #prefix) == prefix then
-            print('HAS ' .. prefix:upper() .. ' DIR')
+        -- Use a pattern to find the prefix regardless of leading slashes
+        -- This looks for the prefix at the start (^) optionally preceded by a /
+        -- and ensures it is followed by a separator so "src_extra" doesn't match "src"
+        local pattern = "^" .. prefix .. "/"  -- Simple and clean
 
-            local hFileDirRootRel = fileDirRootRel:gsub('^' .. prefix, 'include')
-            print(prefix .. ' hFileDirRootRel: ' .. hFileDirRootRel)
+        -- print("DEBUG: Prefix is '" .. prefix .. "'")
+        -- print("DEBUG: Path start is '" .. fileDirRootRel:sub(1, #prefix) .. "'")
+        -- print("DEBUG: pattern is '" .. pattern .. "'")
+
+        if fileDirRootRel:match(pattern) then
+            print('MATCHED PREFIX: ' .. prefix:upper())
+
+            -- Replace the prefix with 'include' at the start of the string
+            local hFileDirRootRel = fileDirRootRel:gsub("^/?" .. prefix, "include")
+
+            -- Normalize slashes for Windows compatibility
+            hFileDirRootRel = hFileDirRootRel:gsub("\\", "/")
 
             print('Running mkdir -p ' .. hFileDirRootRel)
-            vim.fn.system('mkdir -p ' .. hFileDirRootRel)
+            vim.fn.mkdir(hFileDirRootRel, "p")
 
-            local hFileStem = hFileRootRel:gsub('^' .. prefix, 'include')
-            local hCurrFileStem = hCurrFileRootRel:gsub('^' .. prefix, 'include')
+            local hFileStem = hFileRootRel:gsub("^/?" .. prefix, "include")
+            local hCurrFileStem = hCurrFileRootRel:gsub("^/?" .. prefix, "include")
 
             fn(hCurrFileStem, hFileStem)
             return
@@ -733,10 +682,24 @@ end, { nargs = '+' })
 -- KEY BINDINGS
 --------------------------------------------------------------------------------
 -- put nop's at the top of mappings
-local nop_keys = { '<c-e>', '<c-y>', '<c-f>', '<c-b>', 'R', 'S' }
+local nop_keys = { '<c-e>', '<c-y>', '<c-f>', '<c-b>', 'R', }
 for _, key in ipairs(nop_keys) do
-    vim.keymap.set({ 'n', 'v' }, key, '<nop>', { silent = true })
+    vim.keymap.set({ '' }, key, '<nop>', { silent = true })
 end
+vim.keymap.set({ 'n', }, 'S', '<nop>', { silent = true })
+
+
+vim.keymap.set('n', '<leader>L', '<cmd>Lazy<cr>', { desc = "Lazy Menu" })
+vim.keymap.set('n', '<leader>vs', ':so $MYVIMRC<cr>', { desc = "Reload Config" })
+vim.keymap.set('n', '<esc>', ':noh<cr>', { silent = true })
+
+-- FZF Binds
+vim.keymap.set('n', '<leader>fr', ':Rg<cr>')
+vim.keymap.set('n', '<leader>F', ':Files<cr>')
+
+-- Buffer Navigation
+vim.keymap.set('n', '<a-l>', ':BufferLineCycleNext<CR>')
+vim.keymap.set('n', '<a-h>', ':BufferLineCyclePrev<CR>')
 
 vim.keymap.set('n', '<leader><leader>', '<cmd>LspRestart<cr>')
 
@@ -854,7 +817,7 @@ vim.keymap.set('n', '<leader>fb', '<cmd>Buffers<cr>', { silent = true })
 vim.keymap.set('n', '<leader>fh', '<cmd>History<cr>', { silent = true })
 
 -- Tagbar
-vim.keymap.set('n', '<f2>', '<cmd>TagbarToggle<cr>', { silent = true })
+-- vim.keymap.set('n', '<f2>', '<cmd>TagbarToggle<cr>', { silent = true })
 
 -- Fugitive: Repo root navigation
 vim.keymap.set('n', '<leader>cr', '<cmd>Gcd<cr><cmd>pwd<cr>', { silent = true })
@@ -880,14 +843,13 @@ vim.keymap.set('x', 'I', function()
 end, { expr = true })
 
 -- Git Add
-vim.keymap.set('n', '<leader>ga', [[:lua FileGit(CreateAddFile, "")]], { remap = false })
-vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<left><left>', true, false, true), 'n', true)
+vim.keymap.set('n', '<leader>ga', [[:lua FileGit(CreateAddFile, "")<left><left>]], { remap = false })
 
 -- Git Remove
-vim.keymap.set('n', '<leader>gr', [[:lua FileGit(RemoveFile, "")]], { remap = false })
+vim.keymap.set('n', '<leader>gr', [[:lua FileGit(RemoveFile, "")<left><left>]], { remap = false })
 
 -- Git Move
-vim.keymap.set('n', '<leader>gm', [[:lua FileGit(MoveFile, "")]], { remap = false })
+vim.keymap.set('n', '<leader>gm', [[:lua FileGit(MoveFile, "")<left><left>]], { remap = false })
 
 -- Force "Very No Magic" search by default
 vim.keymap.set({ 'n', 'x' }, '/', [[/\V]])
@@ -897,7 +859,7 @@ vim.keymap.set('x', '<c-y>', '"+y')
 vim.keymap.set({ 'n', 'x' }, '<c-p>', '"+p')
 
 -- Insert specialized C++ style block comment
-vim.keymap.set('n', '<leader>/', [[O/****************************************************<cr><backspace>***************************************************/<esc>ko]])
+-- vim.keymap.set('n', '<leader>/', [[O/****************************************************<cr><backspace>***************************************************/<esc>ko]])
 
 -- Normal Mode navigation
 vim.keymap.set('n', '<c-h>', '<c-w>h')
@@ -959,11 +921,6 @@ vim.keymap.set('n', '<c-up>',    '<cmd>res +8<cr>')
 vim.keymap.set('n', '<leader>ve', '<cmd>e $MYVIMRC<cr>', { silent = true })
 vim.keymap.set('n', '<leader>qq', '<cmd>wa! | qa!<cr>', { silent = true })
 
--- Formatters
-vim.keymap.set('n', '<leader>p', '<cmd>%!python -m json.tool<cr>')
-vim.keymap.set('n', '<leader>xx', '<cmd>%!xxd<cr>')
-vim.keymap.set('n', '<leader>xr', '<cmd>%!xxd -r<cr>')
-
 if vim.fn.has('win32') == 1 then
     -- Windows paths (using %userprofile%)
     vim.keymap.set('n', '<leader>vd', [[<c-\>pushd .<cr>cd %userprofile%\clones\vim<cr>git pull<cr>copy /y %userprofile%\AppData\Local\nvim\init.lua .<cr>git diff<cr>]], { silent = true })
@@ -988,21 +945,44 @@ vim.keymap.set('n', '<leader>xr', '<cmd>%!xxd -r<cr>', { desc = "Reverse Hex to 
 --------------------------------------------------------------------------------
 -- SEARCH & SUBSTITUTE LOGIC
 --------------------------------------------------------------------------------
-
--- 1. Edit last search within visual selection or whole file
--- These use <leader>,es for "last search" and <leader>,ew for "word under cursor"
-vim.keymap.set('x', '<leader>,es', [[:s///gI<left><left><left>]])
-vim.keymap.set('x', '<leader>,ew', [[:s/<c-r><c-w>//gI<left><left><left>]])
-vim.keymap.set('n', '<leader>,es', [[:%s///gI<left><left><left>]])
-vim.keymap.set('n', '<leader>,ew', [[:%s/<c-r><c-w>//gI<left><left><left>]])
-
+-- thing thang thong
+-- thing thang thong
+-- thing thang thong
+-- thing thang thong
+-- thing thang thong
+-- -- 1. Edit last search within visual selection or whole file
+-- -- These use <leader>,es for "last search" and <leader>,ew for "word under cursor"
+-- vim.keymap.set('x', '<leader>,es', [[:s///gI<left><left><left>]])
+-- vim.keymap.set('x', '<leader>,ew', [[:s/<c-r><c-w>//gI<left><left><left>]])
+-- vim.keymap.set('n', '<leader>,es', [[:%s///gI<left><left><left>]])
+-- vim.keymap.set('n', '<leader>,ew', [[:%s/<c-r><c-w>//gI<left><left><left>]])
+-- -- Expression maps to choose between last search or word under cursor
+-- vim.keymap.set('x', '<leader>e', function()
+--     return vim.v.hlsearch == 1 and "<leader>,es" or "<leader>,ew"
+-- end, { expr = true })
+-- vim.keymap.set('n', '<leader>e', function()
+--     return vim.v.hlsearch == 1 and "<leader>,es" or "<leader>,ew"
+-- end, { expr = true })
 -- Expression maps to choose between last search or word under cursor
-vim.keymap.set('x', '<leader>e', function()
-    return vim.v.hlsearch == 1 and "<leader>,es" or "<leader>,ew"
+vim.keymap.set('n', '<leader>e', function()
+    local search_reg = vim.fn.getreg('/')
+    -- If search highlighting is on AND the search register isn't empty,
+    -- prioritize the search register. Otherwise, use word under cursor.
+    if vim.v.hlsearch == 1 and search_reg ~= "" then
+        return ":%s///gI<left><left><left>"
+    else
+        return ":%s/<c-r><c-w>//gI<left><left><left>"
+    end
 end, { expr = true })
 
-vim.keymap.set('n', '<leader>e', function()
-    return vim.v.hlsearch == 1 and "<leader>,es" or "<leader>,ew"
+-- Do the same for Visual Mode
+vim.keymap.set('x', '<leader>e', function()
+    local search_reg = vim.fn.getreg('/')
+    if vim.v.hlsearch == 1 and search_reg ~= "" then
+        return ":s///gI<left><left><left>"
+    else
+        return ":s/<c-r><c-w>//gI<left><left><left>"
+    end
 end, { expr = true })
 
 -- 2. Grep / Ripgrep Integration (Automated Clean-up of Search Register)
@@ -1017,48 +997,117 @@ local function clean_search_reg()
     return search
 end
 
--- Grep from current location
-vim.keymap.set('n', '<leader>,as', function()
-    vim.fn.setreg('w', "")
-    vim.cmd('MyGrep "' .. clean_search_reg() .. '"')
-end)
+-- -- Grep from current location
+-- vim.keymap.set('n', '<leader>,as', function()
+--     vim.fn.setreg('w', "")
+--     vim.cmd('MyGrep "' .. clean_search_reg() .. '"')
+-- end)
+--
+-- vim.keymap.set('n', '<leader>,aw', function()
+--     vim.fn.setreg('w', vim.fn.expand('<cword>'))
+--     vim.cmd('MyGrep "-w" "' .. vim.fn.expand('<cword>') .. '"')
+-- end)
+--
+-- -- Grep from root or with glob patterns
+-- vim.keymap.set('n', '<leader>,aS', function()
+--     vim.fn.setreg('w', "")
+--     vim.cmd('MyGrep "-g" "*/**" "' .. clean_search_reg() .. '"')
+-- end)
+--
+-- vim.keymap.set('n', '<leader>,aW', function()
+--     vim.fn.setreg('w', vim.fn.expand('<cword>'))
+--     vim.cmd('MyGrep "-w" "-g" "*" "' .. vim.fn.expand('<cword>') .. '"')
+-- end)
+--
+-- -- 3. Context-Aware Grep Mappings (Current dir vs Root)
+-- -- Leader aa: Local search
+-- vim.keymap.set('n', '<leader>aa', function()
+--     local search = vim.fn.getreg('/')
+--     return (vim.v.hlsearch == 1 and search:match([[\<]])) and "<leader>,aW" or "<leader>,aS"
+-- end, { expr = true })
+--
+-- -- Leader ad: Search in current file's directory
+-- vim.keymap.set('n', '<leader>ad', function()
+--     local search = vim.fn.getreg('/')
+--     local target = (vim.v.hlsearch == 1 and search:match([[\<]])) and "<leader>,aW" or "<leader>,aS"
+--     return "<leader>cd" .. target .. ":lcd -<cr>"
+-- end, { expr = true })
+--
+-- -- Leader ar: Search from Root (Fugitive Gcd)
+-- vim.keymap.set('n', '<leader>ar', function()
+--     local search = vim.fn.getreg('/')
+--     local target = (vim.v.hlsearch == 1 and search:match([[\<]])) and "<leader>,aw" or "<leader>,as"
+--     return "<leader>cr" .. target .. ":cd -<cr>"
+-- end, { expr = true })
+--------------------------------------------------------------------------------
+-- CONTEXT-AWARE GREP
+--------------------------------------------------------------------------------
+local function smart_grep(target_dir)
+    local search_reg = vim.fn.getreg('/')
+    local cword = vim.fn.expand('<cword>')
+    -- Using 'getcwd(0)' ensures we get the global CWD for the current window
+    local original_cwd = vim.fn.getcwd(0)
 
-vim.keymap.set('n', '<leader>,aw', function()
-    vim.fn.setreg('w', vim.fn.expand('<cword>'))
-    vim.cmd('MyGrep "-w" "' .. vim.fn.expand('<cword>') .. '"')
-end)
+    -- 1. Determine the search term
+    local final_search = ""
+    local is_word_search = false
 
--- Grep from root or with glob patterns
-vim.keymap.set('n', '<leader>,aS', function()
-    vim.fn.setreg('w', "")
-    vim.cmd('MyGrep "-g" "*/**" "' .. clean_search_reg() .. '"')
-end)
+    if vim.v.hlsearch == 1 and search_reg ~= "" then
+        final_search = clean_search_reg()
+        is_word_search = false
+    else
+        final_search = cword
+        is_word_search = true
+    end
 
-vim.keymap.set('n', '<leader>,aW', function()
-    vim.fn.setreg('w', vim.fn.expand('<cword>'))
-    vim.cmd('MyGrep "-w" "-g" "*" "' .. vim.fn.expand('<cword>') .. '"')
-end)
+    if final_search == "" then
+        print("Grep: No term found.")
+        return
+    end
 
--- 3. Context-Aware Grep Mappings (Current dir vs Root)
--- Leader aa: Local search
+    -- 2. Handle Directory Jump
+    if target_dir then
+        if target_dir == "Gcd" then
+            pcall(vim.cmd, "Gcd")
+        else
+            -- On Windows, we must wrap the path in quotes and handle backslashes
+            -- We use 'cd' instead of 'lcd' temporarily to ensure the tool sees it
+            vim.cmd('cd ' .. vim.fn.fnameescape(target_dir))
+        end
+    end
+
+    -- 3. Execute the Grep
+    local flag = is_word_search and "-w " or ""
+    -- We wrap the search term in double quotes for the shell
+    local cmd = 'MyGrep ' .. flag .. '"' .. final_search .. '"'
+
+    -- Perform the search
+    local status, err = pcall(vim.cmd, cmd)
+    if not status then
+        print("Grep Error: " .. tostring(err))
+    end
+
+    -- 4. Return Home (Crucial: always return to original_cwd)
+    if target_dir then
+        vim.cmd('cd ' .. vim.fn.fnameescape(original_cwd))
+    end
+end
+-- Leader aa: Search in current project/cwd
 vim.keymap.set('n', '<leader>aa', function()
-    local search = vim.fn.getreg('/')
-    return (vim.v.hlsearch == 1 and search:match([[\<]])) and "<leader>,aW" or "<leader>,aS"
-end, { expr = true })
+    smart_grep()
+end)
 
 -- Leader ad: Search in current file's directory
 vim.keymap.set('n', '<leader>ad', function()
-    local search = vim.fn.getreg('/')
-    local target = (vim.v.hlsearch == 1 and search:match([[\<]])) and "<leader>,aW" or "<leader>,aS"
-    return "<leader>cd" .. target .. ":lcd -<cr>"
-end, { expr = true })
+    -- Expand the path in Lua before passing it to the function
+    local dir = vim.fn.expand("%:p:h")
+    smart_grep(dir)
+end)
 
--- Leader ar: Search from Root (Fugitive Gcd)
+-- Leader ar: Search from Git Root
 vim.keymap.set('n', '<leader>ar', function()
-    local search = vim.fn.getreg('/')
-    local target = (vim.v.hlsearch == 1 and search:match([[\<]])) and "<leader>,aw" or "<leader>,as"
-    return "<leader>cr" .. target .. ":cd -<cr>"
-end, { expr = true })
+    smart_grep("Gcd")
+end)
 
 -- 4. Global Refactoring (MyCdo)
 -- Uses the 'w' register for word boundaries or the clean search register
